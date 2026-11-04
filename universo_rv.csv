@@ -1,0 +1,446 @@
+byma,ticker_us,nombre,ratio,estado,motivo
+AABA,AABA,Altaba,3:1,EXCLUIDO,Ya no existe
+AAL,AAL,American Airlines,2:1,INCLUIDO,
+AAP,AAP,Advance Auto Parts,14:1,INCLUIDO,
+AAPL,AAPL,Apple,20:1,INCLUIDO,
+ABBV,ABBV,AbbVie,10:1,INCLUIDO,
+ABEV,ABEV,Ambev,1:3,EXCLUIDO,Emergente (Brasil)
+ABEV3,ABEV3,Ambev,1:1,EXCLUIDO,Cotiza en B3
+ABNB,ABNB,Airbnb,15:1,INCLUIDO,
+ABT,ABT,Abbott,4:1,INCLUIDO,
+ACN,ACN,Accenture,75:1,INCLUIDO,
+ACWI,ACWI,iShares MSCI ACWI,26:1,EXCLUIDO,ETF
+ADBE,ADBE,Adobe,44:1,INCLUIDO,
+ADGO,AGRO,Adecoagro,1:1,EXCLUIDO,Emergente (Argentina/Latam)
+ADI,ADI,Analog Devices,15:1,INCLUIDO,
+ADP,ADP,Automatic Data Processing,6:1,INCLUIDO,
+ADS,ADS.DE,Adidas,22:1,EXCLUIDO,"Subyacente en Europa (EUR), sin liquidez"
+AEG,AEG,Aegon,1:1,INCLUIDO,
+AEM,AEM,Agnico Eagle,6:1,INCLUIDO,
+AI,AI,C3.ai,5:1,INCLUIDO,
+AIG,AIG,AIG,5:1,INCLUIDO,
+AKO.B,AKO-B,Embotelladora Andina,1:1,EXCLUIDO,Emergente (Chile)
+ALAB,ALAB,Astera Labs,44:1,INCLUIDO,Historia corta
+AMAT,AMAT,Applied Materials,5:1,INCLUIDO,
+AMD,AMD,AMD,10:1,INCLUIDO,
+AMGN,AMGN,Amgen,30:1,INCLUIDO,
+AMX,AMX,America Movil,1:1,EXCLUIDO,Emergente (Mexico)
+AMZN,AMZN,Amazon,144:1,INCLUIDO,
+ANET,ANET,Arista Networks,29:1,INCLUIDO,
+ANF,ANF,Abercrombie & Fitch,1:1,INCLUIDO,
+AOCA,ACH,Aluminum Corp of China,1:1,EXCLUIDO,Emergente (China) / deslistada
+ARCO,ARCO,Arcos Dorados,1:2,EXCLUIDO,Emergente (Latam)
+ARKK,ARKK,ARK Innovation,10:1,EXCLUIDO,ETF
+ARM,ARM,ARM Holdings,27:1,INCLUIDO,
+ASML,ASML,ASML,146:1,INCLUIDO,
+ASR,ASR,Grupo Aeroportuario del Sureste,20:1,EXCLUIDO,Emergente (Mexico)
+ASTS,ASTS,AST SpaceMobile,15:1,INCLUIDO,
+ATAD,ATAD,Tatneft,4:1,EXCLUIDO,Rusia / sin operar
+AUY,AUY,Yamana Gold,1:1,EXCLUIDO,Ya no existe
+AVGO,AVGO,Broadcom,39:1,INCLUIDO,
+AVY,AVY,Avery Dennison,18:1,INCLUIDO,
+AXP,AXP,American Express,15:1,INCLUIDO,
+AZN,AZN,AstraZeneca,4:1,INCLUIDO,
+B,B,Barrick Mining,2:1,INCLUIDO,
+BA,BA,Boeing,24:1,INCLUIDO,
+BA.C,BAC,Bank of America,4:1,INCLUIDO,
+BABA,BABA,Alibaba,9:1,EXCLUIDO,Emergente (China)
+BAK,BAK,Braskem,2:1,EXCLUIDO,Emergente (Brasil)
+BAS,BAS.DE,BASF,2:1,EXCLUIDO,"Subyacente en Europa (EUR), sin liquidez"
+BAYN,BAYN.DE,Bayer,3:1,EXCLUIDO,"Subyacente en Europa (EUR), sin liquidez"
+BB,BB,BlackBerry,3:1,INCLUIDO,
+BBAS3,BBAS3,Banco do Brasil,2:1,EXCLUIDO,Cotiza en B3
+BBAX,BBAX,JPM BetaBuilders Asia ex Japan,13:1,EXCLUIDO,ETF
+BBCA,BBCA,JPM BetaBuilders Canada,20:1,EXCLUIDO,ETF
+BBD,BBD,Bradesco,1:1,EXCLUIDO,Emergente (Brasil)
+BBDC3,BBDC3,Bradesco,1:1,EXCLUIDO,Cotiza en B3
+BBV,BBVA,BBVA,1:1,INCLUIDO,Exposicion fuerte a Mexico/Turquia
+BCS,BCS,Barclays,1:1,INCLUIDO,
+BHP,BHP,BHP,2:1,INCLUIDO,
+BIDU,BIDU,Baidu,11:1,EXCLUIDO,Emergente (China)
+BIIB,BIIB,Biogen,13:1,INCLUIDO,
+BIOX,BIOX,Bioceres,1:1,EXCLUIDO,Emergente (Argentina)
+BK,BK,BNY Mellon,2:1,INCLUIDO,
+BKNG,BKNG,Booking,700:1,INCLUIDO,
+BKR,BKR,Baker Hughes,7:1,INCLUIDO,
+BMNR,BMNR,Bitmine,8:1,EXCLUIDO,Vehiculo cripto
+BMY,BMY,Bristol-Myers Squibb,3:1,INCLUIDO,
+BNG,BG,Bunge,5:1,INCLUIDO,
+BP,BP,BP,5:1,INCLUIDO,
+BPA11,BPAC11,BTG Pactual,1:1,EXCLUIDO,Cotiza en B3
+BRFS,BRFS,BRF,1:3,EXCLUIDO,Emergente (Brasil)
+BRKB,BRK-B,Berkshire Hathaway,22:1,INCLUIDO,
+BSBR,BSBR,Santander Brasil,1:1,EXCLUIDO,Emergente (Brasil)
+BSN,BN.PA,Danone,20:1,EXCLUIDO,"Subyacente en Europa (EUR), sin liquidez"
+BX,BX,Blackstone,30:1,INCLUIDO,
+C,C,Citigroup,3:1,INCLUIDO,
+CAAP,CAAP,Corporacion America Airports,1:4,EXCLUIDO,Emergente (Argentina)
+CAH,CAH,Cardinal Health,3:1,INCLUIDO,
+CAJ,CAJPY,Canon,2:1,INCLUIDO,ADR OTC
+CAR,CAR,Avis Budget,26:1,INCLUIDO,
+CAT,CAT,Caterpillar,20:1,INCLUIDO,
+CBRD,CBRD,GPA,1:1,EXCLUIDO,Emergente (Brasil)
+CCJ,CCJ,Cameco,23:1,INCLUIDO,
+CCL,CCL,Carnival,3:1,INCLUIDO,
+CDE,CDE,Coeur Mining,1:1,INCLUIDO,
+CEG,CEG,Constellation Energy,45:1,INCLUIDO,
+CIBR,CIBR,First Trust Cybersecurity,10:1,EXCLUIDO,ETF
+CL,CL,Colgate-Palmolive,3:1,INCLUIDO,
+CLS,CLS,Celestica,20:1,INCLUIDO,
+COIN,COIN,Coinbase,27:1,INCLUIDO,
+COP,COP,ConocoPhillips,25:1,INCLUIDO,
+COPX,COPX,Global X Copper Miners,14:1,EXCLUIDO,ETF
+CORN,CORN,Teucrium Corn,4:1,EXCLUIDO,ETF
+COST,COST,Costco,48:1,INCLUIDO,
+CRM,CRM,Salesforce,18:1,INCLUIDO,
+CRWD,CRWD,CrowdStrike,79:1,INCLUIDO,
+CRWV,CRWV,CoreWeave,27:1,INCLUIDO,Historia corta
+CS,CS,Credit Suisse,1:1,EXCLUIDO,Ya no existe
+CSCO,CSCO,Cisco,5:1,INCLUIDO,
+CSNA3,CSNA3,CSN,1:1,EXCLUIDO,Cotiza en B3
+CVS,CVS,CVS Health,15:1,INCLUIDO,
+CVX,CVX,Chevron,16:1,INCLUIDO,
+CX,CX,Cemex,1:1,EXCLUIDO,Emergente (Mexico)
+DAL,DAL,Delta Air Lines,8:1,INCLUIDO,
+DD,DD,DuPont,5:1,INCLUIDO,
+DE,DE,Deere,40:1,INCLUIDO,
+DECK,DECK,Deckers,25:1,INCLUIDO,
+DELL,DELL,Dell,74:1,INCLUIDO,
+DEO,DEO,Diageo,6:1,INCLUIDO,
+DHR,DHR,Danaher,54:1,INCLUIDO,
+DIA,DIA,SPDR Dow Jones,20:1,EXCLUIDO,ETF
+DISN,DIS,Disney,12:1,INCLUIDO,
+DOCU,DOCU,DocuSign,22:1,INCLUIDO,
+DOW,DOW,Dow,6:1,INCLUIDO,
+DTEA,DTEGY,Deutsche Telekom,3:1,INCLUIDO,ADR OTC
+E,E,Eni,4:1,INCLUIDO,
+EA,EA,Electronic Arts,14:1,EXCLUIDO,Compra apalancada (deja de cotizar)
+EBAY,EBAY,eBay,2:1,INCLUIDO,
+EBR,EBR,Eletrobras,1:4,EXCLUIDO,Emergente (Brasil)
+ECL,ECL,Ecolab,56:1,INCLUIDO,
+EEM,EEM,iShares MSCI Emerging Markets,5:1,EXCLUIDO,ETF
+EFA,EFA,iShares MSCI EAFE,18:1,EXCLUIDO,ETF
+EFX,EFX,Equifax,16:1,INCLUIDO,
+ELP,ELP,Copel,1:3,EXCLUIDO,Emergente (Brasil)
+EOAN,EOAN.DE,E.ON,6:1,EXCLUIDO,"Subyacente en Europa (EUR), sin liquidez"
+EQNR,EQNR,Equinor,6:1,INCLUIDO,
+ERIC,ERIC,Ericsson,2:1,INCLUIDO,
+ERJ,EMBJ,Embraer,1:1,EXCLUIDO,Emergente (Brasil)
+ESGU,ESGU,iShares ESG Aware USA,30:1,EXCLUIDO,ETF
+ETHA,ETHA,iShares Ethereum,5:1,EXCLUIDO,ETF
+ETSY,ETSY,Etsy,16:1,INCLUIDO,
+EWJ,EWJ,iShares MSCI Japan,14:1,EXCLUIDO,ETF
+EWY,EWY,iShares MSCI South Korea,50:1,EXCLUIDO,ETF
+EWZ,EWZ,iShares MSCI Brazil,2:1,EXCLUIDO,ETF
+F,F,Ford,1:1,INCLUIDO,
+FCX,FCX,Freeport-McMoRan,3:1,INCLUIDO,
+FDX,FDX,FedEx,10:1,INCLUIDO,
+FISV,FISV,Fiserv,11:1,INCLUIDO,
+FMCC,FMCC,Freddie Mac,1:1,EXCLUIDO,Intervenida por el Estado (precio depende de politica)
+FMX,FMX,Femsa,6:1,EXCLUIDO,Emergente (Mexico)
+FNMA,FNMA,Fannie Mae,1:1,EXCLUIDO,Intervenida por el Estado (precio depende de politica)
+FSLR,FSLR,First Solar,18:1,INCLUIDO,
+FXI,FXI,iShares China Large-Cap,5:1,EXCLUIDO,ETF
+GDX,GDX,VanEck Gold Miners,10:1,EXCLUIDO,ETF
+GE,GE,GE Aerospace,8:1,INCLUIDO,
+GEV,GEV,GE Vernova,180:1,INCLUIDO,Historia corta
+GFI,GFI,Gold Fields,1:1,EXCLUIDO,Emergente (Sudafrica)
+GGB,GGB,Gerdau,1:4,EXCLUIDO,Emergente (Brasil)
+GILD,GILD,Gilead,4:1,INCLUIDO,
+GLD,GLD,SPDR Gold,50:1,EXCLUIDO,ETF
+GLNG,GLNG,Golar LNG,10:1,INCLUIDO,
+GLOB,GLOB,Globant,18:1,INCLUIDO,Operacion en Latam
+GLW,GLW,Corning,4:1,INCLUIDO,
+GM,GM,General Motors,6:1,INCLUIDO,
+GOOGL,GOOGL,Alphabet,58:1,INCLUIDO,
+GPRK,GPRK,GeoPark,1:1,EXCLUIDO,Emergente (Colombia)
+GRMN,GRMN,Garmin,3:1,INCLUIDO,
+GS,GS,Goldman Sachs,13:1,INCLUIDO,
+GSG,GSG,iShares GSCI Commodity,6:1,EXCLUIDO,ETF
+GSK,GSK,GSK,4:1,INCLUIDO,
+GT,GT,Goodyear,2:1,INCLUIDO,
+HAL,HAL,Halliburton,2:1,INCLUIDO,
+HAPV3,HAPV3,Hapvida,1:1,EXCLUIDO,Cotiza en B3
+HD,HD,Home Depot,32:1,INCLUIDO,
+HDB,HDB,HDFC Bank,2:1,EXCLUIDO,Emergente (India)
+HHPD,HHPD,Hon Hai,2:1,EXCLUIDO,"GDR en Londres, datos poco confiables"
+HIMS,HIMS,Hims & Hers,4:1,INCLUIDO,
+HL,HL,Hecla Mining,1:1,INCLUIDO,
+HMC,HMC,Honda,1:1,INCLUIDO,
+HMY,HMY,Harmony Gold,1:1,EXCLUIDO,Emergente (Sudafrica)
+HNPIY,HNPIY,Huaneng Power,1:1,EXCLUIDO,Emergente (China) / deslistada
+HOG,HOG,Harley-Davidson,3:1,INCLUIDO,
+HON,HON,Honeywell,8:1,INCLUIDO,
+HOOD,HOOD,Robinhood,29:1,INCLUIDO,
+HPQ,HPQ,HP,1:1,INCLUIDO,
+HSBC,HSBC,HSBC,2:1,INCLUIDO,
+HSY,HSY,Hershey,21:1,INCLUIDO,
+HUT,HUT,Hut 8,5:1,INCLUIDO,Mineria cripto / data centers
+HWM,HWM,Howmet Aerospace,1:1,INCLUIDO,
+IBB,IBB,iShares Nasdaq Biotech,27:1,EXCLUIDO,ETF
+IBIT,IBIT,iShares Bitcoin,10:1,EXCLUIDO,ETF
+IBKR,IBKR,Interactive Brokers,17:1,INCLUIDO,
+IBM,IBM,IBM,15:1,INCLUIDO,
+IBN,IBN,ICICI Bank,1:1,EXCLUIDO,Emergente (India)
+ICLN,ICLN,iShares Clean Energy,5:1,EXCLUIDO,ETF
+IEMG,IEMG,iShares Core EM,12:1,EXCLUIDO,ETF
+IEUR,IEUR,iShares Core Europe,11:1,EXCLUIDO,ETF
+IFF,IFF,International Flavors & Fragrances,12:1,INCLUIDO,
+IJH,IJH,iShares Core S&P Mid-Cap,12:1,EXCLUIDO,ETF
+ILF,ILF,iShares Latin America 40,6:1,EXCLUIDO,ETF
+INFY,INFY,Infosys,1:1,EXCLUIDO,Emergente (India)
+ING,ING,ING,3:1,INCLUIDO,
+INTC,INTC,Intel,5:1,INCLUIDO,
+IP,IP,International Paper,4:1,INCLUIDO,
+IREN,IREN,IREN,12:1,INCLUIDO,Mineria cripto / data centers
+ISRG,ISRG,Intuitive Surgical,90:1,INCLUIDO,
+ITA,ITA,iShares US Aerospace & Defense,50:1,EXCLUIDO,ETF
+ITUB,ITUB,Itau Unibanco,1:1,EXCLUIDO,Emergente (Brasil)
+ITUB3,ITUB3,Itau Unibanco,1:1,EXCLUIDO,Cotiza en B3
+IVE,IVE,iShares S&P 500 Value,40:1,EXCLUIDO,ETF
+IVV,IVV,iShares Core S&P 500,692:1,EXCLUIDO,ETF
+IVW,IVW,iShares S&P 500 Growth,20:1,EXCLUIDO,ETF
+IWM,IWM,iShares Russell 2000,10:1,EXCLUIDO,ETF
+JCI,JCI,Johnson Controls,2:1,INCLUIDO,
+JD,JD,JD.com,4:1,EXCLUIDO,Emergente (China)
+JMIA,JMIA,Jumia,1:1,EXCLUIDO,Emergente (Africa)
+JNJ,JNJ,Johnson & Johnson,15:1,INCLUIDO,
+JOYY,JOYY,JOYY,5:1,EXCLUIDO,Emergente (China)
+JPM,JPM,JPMorgan,15:1,INCLUIDO,
+KB,KB,KB Financial,2:1,EXCLUIDO,Emergente (Corea)
+KEEL,BITF,Bitfarms,1:5,EXCLUIDO,"Mineria cripto chica, ticker sin confirmar"
+KEP,KEP,Korea Electric Power,1:1,EXCLUIDO,Emergente (Corea)
+KGC,KGC,Kinross Gold,1:1,INCLUIDO,
+KLAC,KLAC,KLA,34:1,INCLUIDO,
+KMB,KMB,Kimberly-Clark,6:1,INCLUIDO,
+KO,KO,Coca-Cola,5:1,INCLUIDO,
+KOFM,KOF,Coca-Cola Femsa,2:1,EXCLUIDO,Emergente (Mexico)
+LAC,LAC,Lithium Americas,1:1,INCLUIDO,
+LAR,LAR,Lithium Argentina,1:1,EXCLUIDO,Emergente (Argentina)
+LFC,LFC,China Life,2:1,EXCLUIDO,Emergente (China) / deslistada
+LIN,LIN,Linde,102:1,INCLUIDO,
+LKOD,LKOD,Lukoil,4:1,EXCLUIDO,Rusia / sin operar
+LLY,LLY,Eli Lilly,56:1,INCLUIDO,
+LMT,LMT,Lockheed Martin,20:1,INCLUIDO,
+LND,LND,BrasilAgro,1:1,EXCLUIDO,Emergente (Brasil)
+LRCX,LRCX,Lam Research,56:1,INCLUIDO,
+LREN3,LREN3,Lojas Renner,1:1,EXCLUIDO,Cotiza en B3
+LVS,LVS,Las Vegas Sands,2:1,INCLUIDO,
+LYG,LYG,Lloyds,2:1,INCLUIDO,
+MA,MA,Mastercard,33:1,INCLUIDO,
+MBG,MBG.DE,Mercedes-Benz,4:1,EXCLUIDO,"Subyacente en Europa (EUR), sin liquidez"
+MBT,MBT,MTS,2:1,EXCLUIDO,Rusia / sin operar
+MCD,MCD,McDonald's,24:1,INCLUIDO,
+MDLZ,MDLZ,Mondelez,15:1,INCLUIDO,
+MDT,MDT,Medtronic,4:1,INCLUIDO,
+MELI,MELI,MercadoLibre,120:1,EXCLUIDO,Emergente (Latam)
+META,META,Meta,24:1,INCLUIDO,
+MFG,MFG,Mizuho,1:1,INCLUIDO,
+MGLU3,MGLU3,Magazine Luiza,1:1,EXCLUIDO,Cotiza en B3
+MMC,MMC,Marsh McLennan,16:1,INCLUIDO,
+MMM,MMM,3M,10:1,INCLUIDO,
+MO,MO,Altria,4:1,INCLUIDO,
+MOS,MOS,Mosaic,5:1,INCLUIDO,
+MP,MP,MP Materials,10:1,INCLUIDO,
+MRK,MRK,Merck,5:1,INCLUIDO,
+MRNA,MRNA,Moderna,19:1,INCLUIDO,
+MRVL,MRVL,Marvell,14:1,INCLUIDO,
+MS,MS,Morgan Stanley,41:1,INCLUIDO,
+MSFT,MSFT,Microsoft,30:1,INCLUIDO,
+MSI,MSI,Motorola Solutions,20:1,INCLUIDO,
+MSTR,MSTR,Strategy,20:1,EXCLUIDO,Vehiculo bitcoin
+MU,MU,Micron,5:1,INCLUIDO,
+MUFG,MUFG,Mitsubishi UFJ,1:1,INCLUIDO,
+MUX,MUX,McEwen Mining,2:1,INCLUIDO,
+NATU3,NATU3,Natura,1:1,EXCLUIDO,Cotiza en B3
+NBIS,NBIS,Nebius,27:1,INCLUIDO,Historia corta
+NEC1,NEC1,NEC,1:3,EXCLUIDO,"Subyacente en Europa (EUR), sin liquidez"
+NEE,NEE,NextEra Energy,19:1,INCLUIDO,
+NEM,NEM,Newmont,3:1,INCLUIDO,
+NFLX,NFLX,Netflix,48:1,INCLUIDO,
+NG,NG,NovaGold,1:4,INCLUIDO,
+NGG,NGG,National Grid,2:1,INCLUIDO,
+NIO,NIO,NIO,4:1,EXCLUIDO,Emergente (China)
+NKE,NKE,Nike,12:1,INCLUIDO,
+NLM,NLM,Novolipetsk,2:1,EXCLUIDO,Rusia / sin operar
+NMR,NMR,Nomura,1:1,INCLUIDO,
+NOKA,NOK,Nokia,1:1,INCLUIDO,
+NOW,NOW,ServiceNow,172:1,INCLUIDO,
+NSAN,NSANY,Nissan,1:1,INCLUIDO,ADR OTC
+NTES,NTES,NetEase,14:1,EXCLUIDO,Emergente (China)
+NTRA,NTRA,Natera,51:1,INCLUIDO,
+NUE,NUE,Nucor,16:1,INCLUIDO,
+NVDA,NVDA,Nvidia,24:1,INCLUIDO,
+NVO,NVO,Novo Nordisk,7:1,INCLUIDO,
+NVS,NVS,Novartis,4:1,INCLUIDO,
+NXE,NXE,NexGen Energy,1:1,INCLUIDO,
+O,O,Realty Income,13:1,INCLUIDO,
+OGZD,OGZD,Gazprom,2:1,EXCLUIDO,Rusia / sin operar
+OKLO,OKLO,Oklo,28:1,INCLUIDO,Historia corta
+ONDS,ONDS,Ondas,2:1,INCLUIDO,
+ORAN,ORAN,Orange,1:1,INCLUIDO,Verificar ticker (posible ADR OTC)
+ORCL,ORCL,Oracle,3:1,INCLUIDO,
+ORLY,ORLY,O'Reilly Automotive,222:1,INCLUIDO,
+OXY,OXY,Occidental,5:1,INCLUIDO,
+PAAS,PAAS,Pan American Silver,3:1,INCLUIDO,
+PAC,PAC,Grupo Aeroportuario del Pacifico,16:1,EXCLUIDO,Emergente (Mexico)
+PAGS,PAGS,PagSeguro,3:1,EXCLUIDO,Emergente (Brasil)
+PANW,PANW,Palo Alto Networks,50:1,INCLUIDO,
+PATH,PATH,UiPath,2:1,INCLUIDO,
+PBI,PBI,Pitney Bowes,1:1,INCLUIDO,
+PBR,PBR,Petrobras,1:1,EXCLUIDO,Emergente (Brasil)
+PCAR,PCAR,Paccar,3:1,INCLUIDO,
+PCRF,PCRFY,Panasonic,2:1,INCLUIDO,ADR OTC
+PDD,PDD,PDD Holdings,25:1,EXCLUIDO,Emergente (China)
+PEP,PEP,PepsiCo,18:1,INCLUIDO,
+PETR3,PETR3,Petrobras,1:1,EXCLUIDO,Cotiza en B3
+PFE,PFE,Pfizer,4:1,INCLUIDO,
+PG,PG,Procter & Gamble,15:1,INCLUIDO,
+PHG,PHG,Philips,5:1,INCLUIDO,
+PINS,PINS,Pinterest,7:1,INCLUIDO,
+PKS,PKX,Posco,3:1,EXCLUIDO,Emergente (Corea)
+PLD,PLD,Prologis,29:1,INCLUIDO,
+PLTR,PLTR,Palantir,3:1,INCLUIDO,
+PM,PM,Philip Morris,18:1,INCLUIDO,
+PRIO3,PRIO3,PetroRio,2:1,EXCLUIDO,Cotiza en B3
+PSO,PSO,Pearson,1:1,INCLUIDO,
+PSQ,PSQ,ProShares Short QQQ,8:1,EXCLUIDO,ETF
+PSX,PSX,Phillips 66,6:1,INCLUIDO,
+PTR,PTR,PetroChina,4:1,EXCLUIDO,Emergente (China) / deslistada
+PYPL,PYPL,PayPal,8:1,INCLUIDO,
+QCOM,QCOM,Qualcomm,11:1,INCLUIDO,
+QQQ,QQQ,Invesco QQQ,20:1,EXCLUIDO,ETF
+RACE,RACE,Ferrari,83:1,INCLUIDO,
+RBLX,RBLX,Roblox,2:1,INCLUIDO,
+RCTB4,RCTB4,Telebras,1:1000,EXCLUIDO,Cotiza en B3
+RENT3,RENT3,Localiza,2:1,EXCLUIDO,Cotiza en B3
+RGTI,RGTI,Rigetti,2:1,INCLUIDO,
+RIO,RIO,Rio Tinto,8:1,INCLUIDO,
+RIOT,RIOT,Riot Platforms,3:1,INCLUIDO,Mineria cripto / data centers
+RKLB,RKLB,Rocket Lab,12:1,INCLUIDO,
+ROKU,ROKU,Roku,13:1,INCLUIDO,
+ROST,ROST,Ross Stores,4:1,INCLUIDO,
+RSP,RSP,Invesco S&P 500 Equal Weight,30:1,EXCLUIDO,ETF
+RTX,RTX,RTX,5:1,INCLUIDO,
+SAN,SAN,Banco Santander,1:4,INCLUIDO,Exposicion fuerte a Latam
+SAP,SAP,SAP,6:1,INCLUIDO,
+SATL,SATL,Satellogic,1:1,INCLUIDO,Empresa chica
+SBS,SBS,Sabesp,1:2,EXCLUIDO,Emergente (Brasil)
+SBSP3,SBSP3,Sabesp,1:1,EXCLUIDO,Cotiza en B3
+SBUX,SBUX,Starbucks,12:1,INCLUIDO,
+SCCO,SCCO,Southern Copper,2:1,INCLUIDO,Operacion en Peru/Mexico
+SCHW,SCHW,Charles Schwab,13:1,INCLUIDO,
+SDA,SDA,SunCar Technology,2:1,EXCLUIDO,Emergente (China)
+SE,SE,Sea Ltd,32:1,EXCLUIDO,Emergente (Sudeste asiatico)
+SH,SH,ProShares Short S&P 500,8:1,EXCLUIDO,ETF
+SHEL,SHEL,Shell,2:1,INCLUIDO,
+SHOP,SHOP,Shopify,107:1,INCLUIDO,
+SHPW,SHPW,Shapeways,1:2,EXCLUIDO,Quebro
+SHW,SHW,Sherwin-Williams,69:1,INCLUIDO,
+SI,SI,Silvergate,10:1,EXCLUIDO,Ya no existe
+SID,SID,CSN,1:8,EXCLUIDO,Emergente (Brasil)
+SIEGY,SIEGY,Siemens,3:1,INCLUIDO,ADR OTC
+SKHY,000660.KS,SK Hynix,25:1,INCLUIDO,"Corea (tecnologia global), precio convertido desde KRW"
+SLB,SLB,SLB,3:1,INCLUIDO,
+SLV,SLV,iShares Silver,6:1,EXCLUIDO,ETF
+SMH,SMH,VanEck Semiconductor,50:1,EXCLUIDO,ETF
+SMSN,SMSN,Samsung Electronics,14:1,EXCLUIDO,"GDR en Londres, datos poco confiables"
+SNA,SNA,Snap-on,6:1,INCLUIDO,
+SNAP,SNAP,Snap,1:1,INCLUIDO,
+SNDK,SNDK,Sandisk,170:1,INCLUIDO,Historia corta
+SNOW,SNOW,Snowflake,30:1,INCLUIDO,
+SNP,SNP,Sinopec,3:1,EXCLUIDO,Emergente (China) / deslistada
+SONY,SONY,Sony,8:1,INCLUIDO,
+SOYB,SOYB,Teucrium Soybean,5:1,EXCLUIDO,ETF
+SPCE,SPCE,Virgin Galactic,1:2,INCLUIDO,
+SPCX,SPCX,SpaceX,50:1,INCLUIDO,IPO reciente / verificar ticker
+SPGI,SPGI,S&P Global,45:1,INCLUIDO,
+SPHQ,SPHQ,Invesco S&P 500 Quality,14:1,EXCLUIDO,ETF
+SPOT,SPOT,Spotify,28:1,INCLUIDO,
+SPXL,SPXL,Direxion S&P 500 Bull 3X,25:1,EXCLUIDO,ETF
+SPY,SPY,SPDR S&P 500,60:1,EXCLUIDO,ETF
+STLA,STLA,Stellantis,5:1,INCLUIDO,
+STNE,STNE,StoneCo,3:1,EXCLUIDO,Emergente (Brasil)
+SUZ,SUZ,Suzano,1:1,EXCLUIDO,Emergente (Brasil)
+SUZB3,SUZB3,Suzano,1:1,EXCLUIDO,Cotiza en B3
+SWKS,SWKS,Skyworks,21:1,INCLUIDO,
+SYY,SYY,Sysco,8:1,INCLUIDO,
+T,T,AT&T,3:1,INCLUIDO,
+TCOM,TCOM,Trip.com,2:1,EXCLUIDO,Emergente (China)
+TEAM,TEAM,Atlassian,47:1,INCLUIDO,
+TEM,TEM,Tempus AI,12:1,INCLUIDO,Historia corta
+TEN,TS,Tenaris,1:1,INCLUIDO,Operacion en Latam
+TGT,TGT,Target,24:1,INCLUIDO,
+TIIAY,TIIAY,Telecom Italia,1:1,INCLUIDO,ADR OTC
+TIMB,TIMB,TIM Brasil,1:1,EXCLUIDO,Emergente (Brasil)
+TIMS3,TIMS3,TIM Brasil,1:1,EXCLUIDO,Cotiza en B3
+TJX,TJX,TJX,22:1,INCLUIDO,
+TLN,TLN,Talen Energy,63:1,INCLUIDO,
+TM,TM,Toyota,15:1,INCLUIDO,
+TMO,TMO,Thermo Fisher,22:1,INCLUIDO,
+TMUS,TMUS,T-Mobile,33:1,INCLUIDO,
+TQQQ,TQQQ,ProShares UltraPro QQQ,25:1,EXCLUIDO,ETF
+TRIP,TRIP,Tripadvisor,2:1,INCLUIDO,
+TRVV,TRV,Travelers,6:1,INCLUIDO,
+TSLA,TSLA,Tesla,15:1,INCLUIDO,
+TSM,TSM,TSMC,9:1,INCLUIDO,Taiwan (tecnologia global)
+TTE,TTE,TotalEnergies,3:1,INCLUIDO,
+TTM,TTM,Tata Motors,1:1,EXCLUIDO,Emergente (India) / deslistada
+TV,TV,Televisa,3:1,EXCLUIDO,Emergente (Mexico)
+TWLO,TWLO,Twilio,36:1,INCLUIDO,
+TWTR,TWTR,Twitter,2:1,EXCLUIDO,Ya no cotiza
+TXN,TXN,Texas Instruments,5:1,INCLUIDO,
+TXR,TX,Ternium,4:1,EXCLUIDO,Emergente (Latam)
+UAL,UAL,United Airlines,5:1,INCLUIDO,
+UBER,UBER,Uber,2:1,INCLUIDO,
+UGP,UGP,Ultrapar,1:1,EXCLUIDO,Emergente (Brasil)
+UL,UL,Unilever,3:1,INCLUIDO,
+UN,NU,Nu Holdings,2:1,EXCLUIDO,Emergente (Brasil/Latam)
+UNH,UNH,UnitedHealth,33:1,INCLUIDO,
+UNP,UNP,Union Pacific,20:1,INCLUIDO,
+UPST,UPST,Upstart,5:1,INCLUIDO,
+URA,URA,Global X Uranium,5:1,EXCLUIDO,ETF
+URBN,URBN,Urban Outfitters,2:1,INCLUIDO,
+USB,USB,U.S. Bancorp,5:1,INCLUIDO,
+USO,USO,United States Oil Fund,15:1,EXCLUIDO,ETF
+V,V,Visa,18:1,INCLUIDO,
+VALE,VALE,Vale,2:1,EXCLUIDO,Emergente (Brasil)
+VALE3,VALE3,Vale,1:1,EXCLUIDO,Cotiza en B3
+VEA,VEA,Vanguard FTSE Developed,10:1,EXCLUIDO,ETF
+VIG,VIG,Vanguard Dividend Appreciation,39:1,EXCLUIDO,ETF
+VIST,VIST,Vista Energy,3:1,EXCLUIDO,Emergente (Argentina)
+VIV,VIV,Telefonica Brasil,1:1,EXCLUIDO,Emergente (Brasil)
+VIVT3,VIVT3,Telefonica Brasil,1:1,EXCLUIDO,Cotiza en B3
+VOD,VOD,Vodafone,1:1,INCLUIDO,
+VRSN,VRSN,VeriSign,6:1,INCLUIDO,
+VRTX,VRTX,Vertex,101:1,INCLUIDO,
+VST,VST,Vistra,26:1,INCLUIDO,
+VXX,VXX,iPath VIX,5:1,EXCLUIDO,ETF
+VZ,VZ,Verizon,4:1,INCLUIDO,
+WBA,WBA,Walgreens,3:1,EXCLUIDO,Deslistada (privatizada)
+WBO,WB,Weibo,6:1,EXCLUIDO,Emergente (China)
+WDC,WDC,Western Digital,92:1,INCLUIDO,
+WEGE3,WEGE3,WEG,1:1,EXCLUIDO,Cotiza en B3
+WELL,WELL,Welltower,48:1,INCLUIDO,
+WFC,WFC,Wells Fargo,5:1,INCLUIDO,
+WMT,WMT,Walmart,18:1,INCLUIDO,
+XLB,XLB,Materials Select Sector SPDR,18:1,EXCLUIDO,ETF
+XLC,XLC,Communication Services SPDR,19:1,EXCLUIDO,ETF
+XLE,XLE,Energy Select Sector SPDR,2:1,EXCLUIDO,ETF
+XLF,XLF,Financial Select Sector SPDR,2:1,EXCLUIDO,ETF
+XLI,XLI,Industrial Select Sector SPDR,28:1,EXCLUIDO,ETF
+XLK,XLK,Technology Select Sector SPDR,46:1,EXCLUIDO,ETF
+XLP,XLP,Consumer Staples SPDR,16:1,EXCLUIDO,ETF
+XLRE,XLRE,Real Estate SPDR,9:1,EXCLUIDO,ETF
+XLU,XLU,Utilities SPDR,15:1,EXCLUIDO,ETF
+XLV,XLV,Health Care SPDR,29:1,EXCLUIDO,ETF
+XLY,XLY,Consumer Discretionary SPDR,43:1,EXCLUIDO,ETF
+XME,XME,SPDR Metals & Mining,30:1,EXCLUIDO,ETF
+XOM,XOM,Exxon Mobil,10:1,INCLUIDO,
+XP,XP,XP Inc,4:1,EXCLUIDO,Emergente (Brasil)
+XPEV,XPEV,XPeng,4:1,EXCLUIDO,Emergente (China)
+XROX,XRX,Xerox,1:1,INCLUIDO,
+XYZ,XYZ,Block,20:1,INCLUIDO,
+YELP,YELP,Yelp,2:1,INCLUIDO,
+YZCA,YZCAY,Yankuang Energy,2:1,EXCLUIDO,Emergente (China)
+ZM,ZM,Zoom,47:1,INCLUIDO,
