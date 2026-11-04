@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MaQ Renta Variable</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0e13;--panel:#11161e;--panel2:#161d27;--line:#232c39;--text:#d7dee8;--muted:#7d8a9b;
+  --accent:#f0b429;--pos:#3ecf8e;--neg:#f2555a;--blue:#5aa9ff;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;--sans:"IBM Plex Sans",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px}
+a{color:var(--blue)}
+#gate{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:10}
+#gate form{background:var(--panel);border:1px solid var(--line);padding:28px;width:min(340px,calc(100% - 32px))}
+#gate h1{font-family:var(--mono);font-size:15px;margin:0 0 16px;color:var(--accent);letter-spacing:.08em}
+#gate input{width:100%;padding:10px;background:var(--bg);border:1px solid var(--line);color:var(--text);font-family:var(--mono)}
+#gate button{margin-top:12px;width:100%;padding:10px;background:var(--accent);border:0;color:#111;font-weight:600;cursor:pointer}
+#gate .err{color:var(--neg);font-size:12px;min-height:16px;margin-top:8px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:10px 16px;border-bottom:1px solid var(--line);background:var(--panel)}
+.brand{font-family:var(--mono);font-weight:600;color:var(--accent);letter-spacing:.08em}
+.kpis{display:flex;flex-wrap:wrap;gap:18px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.kpis b{color:var(--text);font-weight:500}
+nav{display:flex;overflow-x:auto;border-bottom:1px solid var(--line);background:var(--panel)}
+nav button{background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:10px 16px;font-family:var(--mono);font-size:12px;letter-spacing:.05em;cursor:pointer;white-space:nowrap}
+nav button.on{color:var(--text);border-bottom-color:var(--accent)}
+nav button .pr{color:var(--line);margin-left:4px}
+main{padding:14px 16px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.bar input,.bar select{background:var(--panel);border:1px solid var(--line);color:var(--text);padding:7px 9px;font-family:var(--mono);font-size:12px}
+.bar input{min-width:180px;flex:1;max-width:280px}
+.bar .count{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted)}
+details.help{background:var(--panel);border:1px solid var(--line);padding:8px 12px;margin-bottom:10px;font-size:12.5px;color:var(--muted)}
+details.help summary{cursor:pointer;color:var(--text);font-family:var(--mono);font-size:12px}
+details.help dl{display:grid;grid-template-columns:max-content 1fr;gap:4px 14px;margin:10px 0 2px}
+details.help dt{color:var(--text);font-family:var(--mono)}
+details.help dd{margin:0}
+.wrap{overflow:auto;border:1px solid var(--line);max-height:calc(100vh - 210px)}
+table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:12px}
+th,td{padding:6px 9px;border-bottom:1px solid var(--line);white-space:nowrap;text-align:right}
+th{position:sticky;top:0;background:var(--panel2);color:var(--muted);font-weight:500;cursor:pointer;user-select:none}
+th:hover{color:var(--text)}
+th.l,td.l{text-align:left}
+tbody tr:hover{background:var(--panel)}
+td.tk{color:var(--accent);font-weight:600}
+td.tk small{color:var(--muted);font-weight:400;margin-left:4px}
+td.nm{max-width:220px;overflow:hidden;text-overflow:ellipsis;font-family:var(--sans)}
+.pos{color:var(--pos)}.neg{color:var(--neg)}.mut{color:var(--muted)}
+.tag{display:inline-block;padding:1px 6px;border:1px solid var(--line);font-size:11px}
+.tag.Alta{color:var(--pos);border-color:var(--pos)}
+.tag.Media{color:var(--blue);border-color:var(--blue)}
+.tag.Baja{color:var(--accent);border-color:var(--accent)}
+.tag.Muy{color:var(--neg);border-color:var(--neg)}
+.flag{color:var(--accent);cursor:help}
+.empty{padding:40px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line)}
+.soon{max-width:720px;padding:24px;border:1px dashed var(--line);color:var(--muted);line-height:1.6}
+.soon h2{font-family:var(--mono);font-size:14px;color:var(--text);margin:0 0 8px}
+@media (max-width:640px){main{padding:12px}.wrap{max-height:none}.bar input{max-width:none}}
+</style>
+</head>
+<body>
+<div id="gate">
+  <form id="gf">
+    <h1>MAQ · RENTA VARIABLE</h1>
+    <input id="gp" type="password" placeholder="Clave" autocomplete="current-password" autofocus>
+    <button type="submit">Entrar</button>
+    <div class="err" id="ge"></div>
+  </form>
+</div>
+
+<header>
+  <div class="brand">MAQ · RENTA VARIABLE</div>
+  <div class="kpis" id="kpis"></div>
+</header>
+<nav id="nav"></nav>
+<main id="main"></main>
+
+<script>
+const HASH = "6de9bd03a20b6576a11447a96d300f521f198df4242855bee8271710e6d86b91";
+const TABS = [
+  {id:"universo", t:"Universo", ok:true},
+  {id:"macro", t:"Macro", d:"Dónde está la economía de EE.UU.: probabilidad de cada cuadrante (crecimiento × inflación), con datos de FRED y señales de mercado."},
+  {id:"mapa", t:"Mapa", d:"Sensibilidad de cada empresa a crecimiento, inflación, tasa real, dólar y petróleo, y su encaje con el régimen actual."},
+  {id:"fund", t:"Fundamentals", d:"Score 0–100: revisiones de analistas, momentum, calidad y valuación contra su propia historia y su industria."},
+  {id:"matriz", t:"Matriz", d:"Cruce de encaje con el régimen y score fundamental. Ranking final con límite por sector."},
+  {id:"cartera", t:"Cartera", d:"Pegás los CEDEARs de un cliente y ves exposición al régimen, concentración, posiciones flojas y rotaciones que pagan los costos."},
+  {id:"track", t:"Track record", d:"Ranking congelado cada semana y su rendimiento a 3 meses contra el S&P 500."}
+];
+let D = null, tab = "universo", sortK = "monto_usd", sortDir = -1;
+const st = {q:"", sector:"", liq:"", datos:true};
+
+async function sha(s){
+  const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
+function ses(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v)}catch(e){return null}}
+
+document.getElementById("gf").addEventListener("submit", async e=>{
+  e.preventDefault();
+  if (await sha(document.getElementById("gp").value) === HASH){ ses("rv_ok","1"); abrir(); }
+  else document.getElementById("ge").textContent = "Clave incorrecta";
+});
+
+async function abrir(){
+  document.getElementById("gate").remove();
+  try{
+    const r = await fetch("data/datos.json?v=" + Date.now());
+    if (r.ok) D = await r.json();
+  }catch(e){}
+  kpis(); navegar(); render();
+}
+
+const pct = (x,d=1) => x==null ? "—" : (x>0?"+":"") + (x*100).toFixed(d) + "%";
+const cls = x => x==null ? "mut" : x>0 ? "pos" : x<0 ? "neg" : "";
+const num = (x,d=2) => x==null ? "—" : x.toLocaleString("es-AR",{minimumFractionDigits:d,maximumFractionDigits:d});
+const usd = x => x==null ? "—" : x>=1e6 ? (x/1e6).toFixed(1)+"M" : x>=1e3 ? (x/1e3).toFixed(0)+"k" : x.toFixed(0);
+const esc = s => String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function kpis(){
+  const k = document.getElementById("kpis");
+  if (!D){ k.innerHTML = "<span>Sin datos todavía</span>"; return; }
+  const f = new Date(D.actualizado).toLocaleString("es-AR",{dateStyle:"short",timeStyle:"short"});
+  k.innerHTML = `<span>Actualizado <b>${f}</b></span><span>CCL implícito <b>${num(D.ccl,0)}</b></span>
+  <span>S&P 500 3M <b class="${cls(D.spy?.r3m)}">${pct(D.spy?.r3m)}</b></span><span>Universo <b>${D.n}</b></span>`;
+}
+
+function navegar(){
+  document.getElementById("nav").innerHTML = TABS.map(x=>
+    `<button class="${x.id===tab?"on":""}" data-t="${x.id}">${x.t}${x.ok?"":'<span class="pr">·</span>'}</button>`).join("");
+  document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;navegar();render()});
+}
+
+function render(){
+  const m = document.getElementById("main");
+  const t = TABS.find(x=>x.id===tab);
+  if (!t.ok){ m.innerHTML = `<div class="soon"><h2>${t.t} · en construcción</h2>${t.d}</div>`; return; }
+  universo(m);
+}
+
+const COLS = [
+  {k:"byma", t:"Ticker", l:1, h:"Código en BYMA. Si el ticker de EE.UU. es distinto, aparece al lado."},
+  {k:"nombre", t:"Empresa", l:1},
+  {k:"sector", t:"Sector", l:1},
+  {k:"precio", t:"Precio USD", h:"Último cierre de la acción en EE.UU."},
+  {k:"r1m", t:"1M", h:"Variación del último mes (21 ruedas)."},
+  {k:"r3m", t:"3M", h:"Variación de los últimos 3 meses."},
+  {k:"r12m", t:"12M", h:"Variación del último año."},
+  {k:"mom12_1", t:"Mom 12-1", h:"Retorno de 12 meses sin el último mes. Es la medida estándar de momentum."},
+  {k:"vs_ma200", t:"vs MA200", h:"Distancia al promedio de las últimas 200 ruedas. Positivo: tendencia alcista."},
+  {k:"vol", t:"Vol", h:"Volatilidad anualizada del último año."},
+  {k:"beta", t:"Beta", h:"Cuánto se mueve frente al S&P 500 (2 años, semanal). 1,5 = se mueve 50% más que el índice."},
+  {k:"dd12m", t:"Caída máx", h:"Peor caída desde un máximo en los últimos 12 meses."},
+  {k:"monto_usd", t:"Operado/día", h:"Monto promedio operado por día en BYMA (últimas 20 ruedas), en USD al CCL implícito."},
+  {k:"liquidez", t:"Liquidez", l:1, h:"Alta ≥ USD 1M/día · Media ≥ 200k · Baja ≥ 30k · Muy baja < 30k."},
+  {k:"premio", t:"Premio CCL", h:"Cuánto más caro (+) o barato (−) cotiza el CEDEAR frente al CCL implícito de todo el mercado."}
+];
+
+function universo(m){
+  if (!D){
+    m.innerHTML = `<div class="empty">Todavía no hay datos. En GitHub: Actions → Actualizar datos → Run workflow.</div>`;
+    return;
+  }
+  const sectores = [...new Set(D.tickers.map(x=>x.sector).filter(Boolean))].sort();
+  m.innerHTML = `
+  <div class="bar">
+    <input id="q" placeholder="Buscar ticker o empresa" value="${esc(st.q)}">
+    <select id="fs"><option value="">Todos los sectores</option>${sectores.map(s=>`<option ${s===st.sector?"selected":""}>${esc(s)}</option>`).join("")}</select>
+    <select id="fl"><option value="">Toda liquidez</option>${["Alta","Media","Baja","Muy baja","Sin dato"].map(s=>`<option ${s===st.liq?"selected":""}>${s}</option>`).join("")}</select>
+    <span class="count" id="cnt"></span>
+  </div>
+  <details class="help"><summary>Cómo leer esta tabla</summary>
+    <dl>${COLS.filter(c=>c.h).map(c=>`<dt>${c.t}</dt><dd>${c.h}</dd>`).join("")}
+    <dt>⚑</dt><dd>Nota sobre la empresa: historia corta, exposición a emergentes, ADR fuera de bolsa, etc. Pasá el mouse para verla.</dd></dl>
+    ${D.sin_datos?.length?`<p>Sin datos esta semana: ${D.sin_datos.map(esc).join(", ")}</p>`:""}
+  </details>
+  <div class="wrap"><table><thead><tr>${COLS.map(c=>`<th class="${c.l?"l":""}" data-k="${c.k}" title="${esc(c.h||"")}">${c.t}${sortK===c.k?(sortDir>0?" ▲":" ▼"):""}</th>`).join("")}</tr></thead><tbody id="tb"></tbody></table></div>`;
+  document.getElementById("q").oninput = e=>{st.q=e.target.value;filas()};
+  document.getElementById("fs").onchange = e=>{st.sector=e.target.value;filas()};
+  document.getElementById("fl").onchange = e=>{st.liq=e.target.value;filas()};
+  document.querySelectorAll("th").forEach(th=>th.onclick=()=>{
+    const k=th.dataset.k; sortDir = sortK===k ? -sortDir : (COLS.find(c=>c.k===k).l?1:-1); sortK=k; universo(m);
+  });
+  filas();
+}
+
+function filas(){
+  const q = st.q.trim().toUpperCase();
+  let r = D.tickers.filter(x=>
+    (!q || x.byma.includes(q) || x.ticker.includes(q) || (x.nombre||"").toUpperCase().includes(q)) &&
+    (!st.sector || x.sector===st.sector) && (!st.liq || x.liquidez===st.liq));
+  r.sort((a,b)=>{
+    const A=a[sortK], B=b[sortK];
+    if (A==null && B==null) return 0; if (A==null) return 1; if (B==null) return -1;
+    return (typeof A==="string" ? A.localeCompare(B) : A-B) * sortDir;
+  });
+  document.getElementById("cnt").textContent = `${r.length} de ${D.n}`;
+  document.getElementById("tb").innerHTML = r.map(x=>`<tr>
+    <td class="l tk">${esc(x.byma)}${x.ticker!==x.byma?`<small>${esc(x.ticker)}</small>`:""}${x.nota?` <span class="flag" title="${esc(x.nota)}">⚑</span>`:""}</td>
+    <td class="l nm" title="${esc(x.industria||"")}">${esc(x.nombre)}</td>
+    <td class="l mut">${esc(x.sector||"—")}</td>
+    <td>${num(x.precio)}</td>
+    <td class="${cls(x.r1m)}">${pct(x.r1m)}</td>
+    <td class="${cls(x.r3m)}">${pct(x.r3m)}</td>
+    <td class="${cls(x.r12m)}">${pct(x.r12m)}</td>
+    <td class="${cls(x.mom12_1)}">${pct(x.mom12_1)}</td>
+    <td class="${cls(x.vs_ma200)}">${pct(x.vs_ma200)}</td>
+    <td>${x.vol==null?"—":(x.vol*100).toFixed(0)+"%"}</td>
+    <td>${num(x.beta)}</td>
+    <td class="neg">${pct(x.dd12m,0)}</td>
+    <td>${usd(x.monto_usd)}</td>
+    <td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td>
+    <td class="${x.premio==null?"mut":x.premio>0.02?"neg":x.premio<-0.02?"pos":""}">${pct(x.premio)}</td>
+  </tr>`).join("");
+}
+
+if (ses("rv_ok")==="1") abrir();
+</script>
+</body>
+</html>
