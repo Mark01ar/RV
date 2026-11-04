@@ -1,4 +1,4 @@
-ame: Actualizar datos
+name: Actualizar datos
 
 on:
   schedule:
