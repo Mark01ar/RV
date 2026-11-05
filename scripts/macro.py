@@ -116,16 +116,17 @@ def indicadores(f, y):
         "Cuánto más pagan las empresas (BAA) que el Tesoro a 10 años. Si se agranda, el mercado ve menos crecimiento (cuenta al revés).",
         m.diff(3), f"{m.iloc[-1]:.2f}%", s.index[-1], -1)
 
+    fy = y.dropna(how="all").index[-1]
     if {"XLY", "XLP"} <= set(y.columns):
         r = mes(y["XLY"] / y["XLP"]).dropna()
         add("XLYXLP", "crecimiento", "mercado", "Cíclicas vs defensivas",
             "Consumo discrecional contra consumo básico. Si las cíclicas ganan, el mercado descuenta más crecimiento.",
-            np.log(r).diff(3) * 100, f"{(r.iloc[-1] / r.iloc[-4] - 1) * 100:+.1f}% en 3m", r.index[-1])
+            np.log(r).diff(3) * 100, f"{(r.iloc[-1] / r.iloc[-4] - 1) * 100:+.1f}% en 3m", fy)
     if {"HG=F", "GC=F"} <= set(y.columns):
         r = mes(y["HG=F"] / y["GC=F"]).dropna()
         add("COBREORO", "crecimiento", "mercado", "Cobre vs oro",
             "El cobre depende de la actividad y el oro es refugio. Si el cobre le gana al oro, el mercado ve más crecimiento.",
-            np.log(r).diff(3) * 100, f"{(r.iloc[-1] / r.iloc[-4] - 1) * 100:+.1f}% en 3m", r.index[-1])
+            np.log(r).diff(3) * 100, f"{(r.iloc[-1] / r.iloc[-4] - 1) * 100:+.1f}% en 3m", fy)
 
     s = f["T5YIE"]
     m = mes(s)
@@ -137,12 +138,12 @@ def indicadores(f, y):
         r = r[r > 0]
         add("PETROLEO", "inflacion", "mercado", "Petróleo (WTI)",
             "Suba del petróleo en 3 meses. Empuja la inflación de corto plazo.",
-            np.log(r).diff(3) * 100, f"USD {r.iloc[-1]:.1f}", r.index[-1])
+            np.log(r).diff(3) * 100, f"USD {r.iloc[-1]:.1f}", fy)
     if {"TIP", "IEF"} <= set(y.columns):
         r = mes(y["TIP"] / y["IEF"]).dropna()
         add("TIPIEF", "inflacion", "mercado", "Bonos indexados vs nominales",
             "Si los bonos ajustados por inflación le ganan a los nominales, el mercado espera más inflación.",
-            np.log(r).diff(3) * 100, f"{(r.iloc[-1] / r.iloc[-4] - 1) * 100:+.1f}% en 3m", r.index[-1])
+            np.log(r).diff(3) * 100, f"{(r.iloc[-1] / r.iloc[-4] - 1) * 100:+.1f}% en 3m", fy)
     return out
 
 
