@@ -113,6 +113,7 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .detg dd{margin:0;font-family:var(--mono);text-align:right}
 .bar input[type=checkbox]{min-width:0;flex:none;max-width:none;padding:0}
 .chkl{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
+.sig{display:inline-block;padding:1px 7px;border:1px solid currentColor;font-size:11px;font-family:var(--mono)}
 .aviso{padding:8px 12px;border-left:3px solid var(--accent);background:var(--panel);font-size:12.5px;margin-bottom:10px}
 @media (max-width:900px){.detg{grid-template-columns:1fr 1fr}}
 @media (max-width:640px){main{padding:12px}.wrap{max-height:none}.bar input{max-width:none}}
@@ -474,7 +475,26 @@ function macro(m){
   if (sm) sm.onchange = e => { secModo = e.target.value; macro(m); };
 }
 
-const fs = {q:"", sector:"", liq:"", ma:false, av:false, sort:"total", dir:-1, abierto:null};
+const fs = {q:"", sector:"", liq:"", ma:false, av:false, sig:"", sort:"total", dir:-1, abierto:null};
+const UMB = {alto:65, bajo:40};
+const SIG = {comprar:{t:"Comprar",c:"var(--pos)",o:1}, esperar:{t:"Esperar",c:"var(--accent)",o:2}, neutral:{t:"Neutral",c:"var(--muted)",o:3}, evitar:{t:"Evitar",c:"var(--neg)",o:4}};
+function senal(x){
+  const t = x.scores.total; if (t==null) return null;
+  if (t < UMB.bajo) return "evitar";
+  if (t < UMB.alto) return "neutral";
+  const ma = x.raw.vs_ma200, av = x.raw.avwap_dist;
+  const ok = (ma??-1) > 0 && (av==null || av > 0);
+  return ok ? "comprar" : "esperar";
+}
+function porQue(x){
+  const s = senal(x), r = x.raw, t = Math.round(x.scores.total??0);
+  if (s==="evitar") return `Puntaje ${t}: por debajo de ${UMB.bajo}.`;
+  if (s==="neutral") return `Puntaje ${t}: entre ${UMB.bajo} y ${UMB.alto}.`;
+  const m = [];
+  if ((r.vs_ma200??-1) <= 0) m.push("debajo de su MA200");
+  if (r.avwap_dist!=null && r.avwap_dist <= 0) m.push("debajo del VWAP de su último balance");
+  return s==="comprar" ? `Puntaje ${t}, sobre MA200${r.avwap_dist!=null?" y sobre el VWAP del balance":""}.` : `Puntaje ${t}, pero ${m.join(" y ")}.`;
+}
 const scol = v => v==null ? "var(--muted)" : v>=70 ? "var(--pos)" : v>=40 ? "var(--accent)" : "var(--neg)";
 const sc = v => v==null ? '<span class="mut">—</span>' : `${Math.round(v)}<span class="sbar"><i style="width:${v}%;background:${scol(v)}"></i></span>`;
 const fecha = s => s ? new Date(s).toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"2-digit"}) : "—";
@@ -483,7 +503,7 @@ const dias = s => s ? Math.round((new Date(s) - new Date())/864e5) : null;
 function detalle(x){
   const r = x.raw, P = (v,d=1)=>pct(v,d), N=(v,d=1)=>v==null?"—":num(v,d);
   const g = (t, items) => `<div><h4>${t}</h4><dl>${items.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("")}</dl></div>`;
-  return `<tr class="det"><td colspan="13"><div class="detg">
+  return `<tr class="det"><td colspan="14"><div class="detg">
     ${g(`REVISIONES · ${x.scores.revisiones==null?"—":Math.round(x.scores.revisiones)}`,[["EPS este año, 90 días",P(r.rev90_0y)],["EPS año próximo, 90 días",P(r.rev90_1y)],["Analistas que suben / bajan (30d)",`${r.rev_suben??"—"} / ${r.rev_bajan??"—"}`],["Sorpresa último balance",P(r.sorpresa)]])}
     ${g(`MOMENTUM · ${x.scores.momentum==null?"—":Math.round(x.scores.momentum)}`,[["Retorno 12 meses sin el último",P(r.mom12_1)],["Distancia a MA200",P(r.vs_ma200)],["Precio vs VWAP desde balance",P(r.avwap_dist)],["Ancla del VWAP",r.avwap_ancla||"—"]])}
     ${g(`CALIDAD · ${x.scores.calidad==null?"—":Math.round(x.scores.calidad)}`,[["Rentabilidad sobre activos",P(r.roa)],["Margen operativo",P(r.margen_op)],["Margen bruto",P(r.margen_bruto)],["Deuda neta / EBITDA",r.deuda_ebitda==null?"—":N(r.deuda_ebitda)+"x"]])}
@@ -502,6 +522,7 @@ function fundamentals(m){
     <input id="fq" placeholder="Buscar ticker o empresa" value="${esc(fs.q)}">
     <select id="fsec"><option value="">Todos los sectores</option>${sectores.map(s=>`<option ${s===fs.sector?"selected":""}>${esc(s)}</option>`).join("")}</select>
     <select id="fliq"><option value="">Toda liquidez</option><option value="am" ${fs.liq==="am"?"selected":""}>Solo Alta y Media</option></select>
+    <select id="fsig"><option value="">Todas las señales</option>${Object.entries(SIG).map(([k,v])=>`<option value="${k}" ${fs.sig===k?"selected":""}>${v.t}</option>`).join("")}</select>
     <label class="chkl"><input type="checkbox" id="fma" ${fs.ma?"checked":""}> Sobre MA200</label>
     <label class="chkl"><input type="checkbox" id="fav" ${fs.av?"checked":""}> Sobre VWAP del balance</label>
     <span class="count" id="fcnt"></span>
@@ -513,37 +534,40 @@ function fundamentals(m){
       <dt>Momentum · ${Math.round(F.pesos.momentum*100)}%</dt><dd>Retorno de 12 meses sin contar el último mes, y distancia al promedio de 200 ruedas.</dd>
       <dt>Calidad · ${Math.round(F.pesos.calidad*100)}%</dt><dd>Rentabilidad sobre activos, márgenes operativo y bruto, y deuda neta sobre EBITDA (menos es mejor). En bancos y aseguradoras solo cuenta la rentabilidad, porque márgenes y EBITDA no aplican.</dd>
       <dt>Valuación · ${Math.round(F.pesos.valuacion*100)}%</dt><dd>Rendimiento de ganancias (la inversa del P/E forward) comparado <b>dentro de su sector</b>, y flujo de caja libre sobre capitalización. Las empresas extranjeras se convierten a dólares.</dd>
+      <dt>Señal</dt><dd><b style="color:var(--pos)">Comprar</b>: puntaje de ${UMB.alto} o más, precio sobre su MA200 y sobre el VWAP de su último balance. <b style="color:var(--accent)">Esperar</b>: puntaje de ${UMB.alto} o más, pero con la técnica rota (buena empresa, mal momento). <b>Neutral</b>: puntaje entre ${UMB.bajo} y ${UMB.alto}. <b style="color:var(--neg)">Evitar</b>: puntaje menor a ${UMB.bajo}. Pasá el mouse sobre la señal para ver el motivo.</dd>
       <dt>Filtros técnicos</dt><dd>No suman al puntaje: sirven para decidir <b>cuándo</b> entrar. "Sobre MA200" = precio arriba del promedio de 200 ruedas. "Sobre VWAP del balance" = precio arriba del precio promedio ponderado por volumen desde el día del último balance.</dd>
     </dl>
     <p>Si a una empresa le faltan datos en un bloque, el total se calcula con los bloques disponibles (mínimo 3 de 4).</p>
   </details>
   <div class="wrap"><table><thead><tr>
-    ${[["puesto","#"],["byma","Ticker",1],["nombre","Empresa",1],["sector","Sector",1],["total","Puntaje"],["revisiones","Revis."],["momentum","Mom."],["calidad","Calidad"],["valuacion","Valuac."],["vs_ma200","MA200"],["avwap_dist","VWAP bal."],["proximo_balance","Próx. balance"],["liquidez","Liquidez",1]]
+    ${[["puesto","#"],["byma","Ticker",1],["nombre","Empresa",1],["sector","Sector",1],["senal","Señal"],["total","Puntaje"],["revisiones","Revis."],["momentum","Mom."],["calidad","Calidad"],["valuacion","Valuac."],["vs_ma200","MA200"],["avwap_dist","VWAP bal."],["proximo_balance","Próx. balance"],["liquidez","Liquidez",1]]
       .map(([k,t,l])=>`<th class="${l?"l":""}" data-k="${k}">${t}${fs.sort===k?(fs.dir>0?" ▲":" ▼"):""}</th>`).join("")}
   </tr></thead><tbody id="ftb"></tbody></table></div>`;
   const re = ()=>fundFilas();
   document.getElementById("fq").oninput = e=>{fs.q=e.target.value;re()};
   document.getElementById("fsec").onchange = e=>{fs.sector=e.target.value;re()};
   document.getElementById("fliq").onchange = e=>{fs.liq=e.target.value;re()};
+  document.getElementById("fsig").onchange = e=>{fs.sig=e.target.value;re()};
   document.getElementById("fma").onchange = e=>{fs.ma=e.target.checked;re()};
   document.getElementById("fav").onchange = e=>{fs.av=e.target.checked;re()};
   m.querySelectorAll("th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;
-    fs.dir = fs.sort===k ? -fs.dir : (["byma","nombre","sector","liquidez","puesto","proximo_balance"].includes(k)?1:-1); fs.sort=k; fundamentals(m);});
+    fs.dir = fs.sort===k ? -fs.dir : (["byma","nombre","sector","liquidez","puesto","proximo_balance","senal"].includes(k)?1:-1); fs.sort=k; fundamentals(m);});
   re();
 }
 
 function fundFilas(){
   const q = fs.q.trim().toUpperCase();
-  const val = x => ["total","revisiones","momentum","calidad","valuacion"].includes(fs.sort) ? x.scores[fs.sort]
+  const val = x => fs.sort==="senal" ? (SIG[senal(x)]?.o ?? 9) : ["total","revisiones","momentum","calidad","valuacion"].includes(fs.sort) ? x.scores[fs.sort]
     : ["vs_ma200","avwap_dist","proximo_balance"].includes(fs.sort) ? x.raw[fs.sort] : x[fs.sort];
   let r = F.tickers.filter(x=>
     (!q || x.byma.includes(q) || x.ticker.includes(q) || (x.nombre||"").toUpperCase().includes(q)) &&
     (!fs.sector || x.sector===fs.sector) && (!fs.liq || ["Alta","Media"].includes(x.liquidez)) &&
-    (!fs.ma || (x.raw.vs_ma200??-1) > 0) && (!fs.av || (x.raw.avwap_dist??-1) > 0));
+    (!fs.ma || (x.raw.vs_ma200??-1) > 0) && (!fs.av || (x.raw.avwap_dist??-1) > 0) && (!fs.sig || senal(x)===fs.sig));
   r.sort((a,b)=>{ const A=val(a), B=val(b);
     if (A==null && B==null) return 0; if (A==null) return 1; if (B==null) return -1;
     return (typeof A==="string" ? A.localeCompare(B) : A-B) * fs.dir; });
-  document.getElementById("fcnt").textContent = `${r.length} de ${F.n}`;
+  const cnt = {}; F.tickers.forEach(x=>{const k=senal(x); if(k) cnt[k]=(cnt[k]||0)+1;});
+  document.getElementById("fcnt").innerHTML = `${Object.entries(SIG).map(([k,v])=>`<span style="color:${v.c}">${v.t} ${cnt[k]||0}</span>`).join(" · ")} &nbsp; ${r.length} de ${F.n}`;
   const tb = document.getElementById("ftb");
   tb.innerHTML = r.map(x=>{ const d = dias(x.raw.proximo_balance), pronto = d!=null && d>=0 && d<=14;
     return `<tr data-t="${esc(x.ticker)}" style="cursor:pointer">
@@ -551,6 +575,7 @@ function fundFilas(){
     <td class="l tk">${esc(x.byma)}${x.ticker!==x.byma?`<small>${esc(x.ticker)}</small>`:""}${x.nota?` <span class="flag" title="${esc(x.nota)}">⚑</span>`:""}</td>
     <td class="l nm">${esc(x.nombre)}</td>
     <td class="l mut">${esc(x.sector||"—")}</td>
+    <td class="l">${(()=>{const k=senal(x); return k?`<span class="sig" style="color:${SIG[k].c}" title="${esc(porQue(x))}">${SIG[k].t}</span>`:'<span class="mut">—</span>'})()}</td>
     <td class="sc">${sc(x.scores.total)}</td>
     <td>${sc(x.scores.revisiones)}</td><td>${sc(x.scores.momentum)}</td><td>${sc(x.scores.calidad)}</td><td>${sc(x.scores.valuacion)}</td>
     <td class="${cls(x.raw.vs_ma200)}">${pct(x.raw.vs_ma200)}</td>
