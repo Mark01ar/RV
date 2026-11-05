@@ -114,6 +114,12 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .bar input[type=checkbox]{min-width:0;flex:none;max-width:none;padding:0}
 .chkl{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:12px;color:var(--muted)}
 .sig{display:inline-block;padding:1px 7px;border:1px solid currentColor;font-size:11px;font-family:var(--mono)}
+.alr{font-family:var(--mono);font-size:10px;color:var(--accent);margin-left:5px;cursor:help}
+.cmb{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:6px}
+.cmb h4{margin:0 0 6px;font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.05em}
+.cmb div{font-size:12.5px;line-height:1.7}
+.cmb b{font-family:var(--mono);color:var(--accent);font-weight:600}
+@media (max-width:900px){.cmb{grid-template-columns:1fr 1fr}}
 .aviso{padding:8px 12px;border-left:3px solid var(--accent);background:var(--panel);font-size:12.5px;margin-bottom:10px}
 @media (max-width:900px){.detg{grid-template-columns:1fr 1fr}}
 @media (max-width:640px){main{padding:12px}.wrap{max-height:none}.bar input{max-width:none}}
@@ -477,13 +483,22 @@ function macro(m){
 }
 
 const fs = {q:"", sector:"", liq:"", ma:false, av:false, sig:"", sort:"total", dir:-1, abierto:null};
-const UMB = {alto:65, bajo:40};
+let UMB = {alto:65, bajo:40};
 const SIG = {comprar:{t:"Comprar",c:"var(--pos)",o:1}, esperar:{t:"Esperar",c:"var(--accent)",o:2}, neutral:{t:"Neutral",c:"var(--muted)",o:3}, evitar:{t:"Evitar",c:"var(--neg)",o:4}};
 function senal(x){
   const t = x.scores.total; if (t==null) return null;
   if (t < UMB.bajo) return "evitar";
   if (t < UMB.alto) return "neutral";
   return (x.raw.vs_ma200??-1) > 0 ? "comprar" : "esperar";
+}
+function alertas(x){
+  const a = [], s = senal(x);
+  if (s!=="comprar" && s!=="esperar") return a;
+  if (x.premio!=null && x.premio > 0.03) a.push({c:`CCL ${pct(x.premio,0)}`, t:`El CEDEAR cotiza ${pct(x.premio,1)} por encima del CCL implícito del mercado: está caro contra su subyacente.`});
+  if (["Muy baja","Sin dato"].includes(x.liquidez)) a.push({c:"liquidez", t:`Liquidez ${x.liquidez.toLowerCase()} en BYMA: puede costar entrar y salir al precio de pantalla.`});
+  const d = dias(x.raw.proximo_balance);
+  if (d!=null && d>=0 && d<=7) a.push({c:`balance ${d}d`, t:`Presenta balance en ${d} días: entrar ahora es apostar al resultado.`});
+  return a;
 }
 function porQue(x){
   const s = senal(x), r = x.raw, t = Math.round(x.scores.total??0);
@@ -511,12 +526,29 @@ function detalle(x){
   </div>${r.dato_previo?'<div class="sub" style="padding:0 4px 6px">Esta semana Yahoo no devolvió datos: se muestran los de la semana anterior.</div>':""}</td></tr>`;
 }
 
+function cambiosHTML(){
+  const C = F.cambios;
+  if (!C) return `<div class="card" style="margin-bottom:10px"><h3>QUÉ CAMBIÓ ESTA SEMANA</h3><div class="sub">Se completa a partir de la próxima actualización semanal: necesita una foto anterior para comparar.</div></div>`;
+  const tk = x => `<b>${esc(x.byma)}</b>`;
+  const lista = (arr, f) => arr.length ? arr.map(f).join("<br>") : '<span class="mut">Ninguna</span>';
+  const SN = {comprar:"Comprar",esperar:"Esperar",neutral:"Neutral",evitar:"Evitar"};
+  return `<details class="card" style="margin-bottom:10px" open><summary style="cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em">QUÉ CAMBIÓ DESDE EL ${esc(new Date(C.desde+"T12:00").toLocaleDateString("es-AR"))}</summary>
+    <div class="cmb">
+      <div><h4 style="color:var(--pos)">ENTRARON A COMPRAR · ${C.entran.length}</h4>${lista(C.entran, x=>`${tk(x)} <span class="mut">${Math.round(x.total)} · antes ${SN[x.antes]||"—"}</span>`)}</div>
+      <div><h4 style="color:var(--neg)">SALIERON DE COMPRAR · ${C.salen.length}</h4>${lista(C.salen, x=>`${tk(x)} <span class="mut">ahora ${SN[x.ahora]||"—"}</span>`)}</div>
+      <div><h4>MÁS SUBIERON DE PUNTAJE</h4>${lista(C.suben, x=>`${tk(x)} <span class="pos">+${x.delta.toFixed(0)}</span> <span class="mut">→ ${Math.round(x.total)}</span>`)}</div>
+      <div><h4>MÁS BAJARON DE PUNTAJE</h4>${lista(C.bajan, x=>`${tk(x)} <span class="neg">${x.delta.toFixed(0)}</span> <span class="mut">→ ${Math.round(x.total)}</span>`)}</div>
+    </div></details>`;
+}
+
 function fundamentals(m){
+  if (F && F.umbrales) UMB = F.umbrales;
   if (!F){ m.innerHTML = `<div class="empty">Todavía no hay datos de fundamentals. Corré Actions → Actualizar datos.</div>`; return; }
   const sectores = [...new Set(F.tickers.map(x=>x.sector).filter(Boolean))].sort();
   const f = new Date(F.actualizado).toLocaleDateString("es-AR");
   m.innerHTML = `
   <div class="aviso"><b>Momentum y MA200 validados</b> con 20 años de historia; revisiones, calidad y valuación todavía no (se validan con el track record semanal). Usalo para ordenar ideas y revisalo una vez por mes. Actualizado ${f}.</div>
+  ${cambiosHTML()}
   <div class="bar">
     <input id="fq" placeholder="Buscar ticker o empresa" value="${esc(fs.q)}">
     <select id="fsec"><option value="">Todos los sectores</option>${sectores.map(s=>`<option ${s===fs.sector?"selected":""}>${esc(s)}</option>`).join("")}</select>
@@ -533,6 +565,7 @@ function fundamentals(m){
       <dt>Calidad · ${Math.round(F.pesos.calidad*100)}%</dt><dd>Tres partes iguales. <b>Rentabilidad:</b> ROIC (cuánto gana por cada dólar invertido en el negocio), margen operativo y margen bruto. <b>Solidez:</b> deuda neta sobre EBITDA y F-score de Piotroski (9 pruebas año contra año: si gana plata, si genera caja, si mejora la rentabilidad, si baja la deuda, si mejora la liquidez, si no emite acciones, si mejoran el margen y la rotación de activos). <b>Calidad de las ganancias:</b> si la ganancia contable se convierte en caja, qué tan estable es el margen trimestre a trimestre, y si la empresa diluye a los accionistas emitiendo acciones. En bancos y aseguradoras solo cuentan la rentabilidad sobre activos y la dilución, porque el resto no aplica.</dd>
       <dt>Valuación · ${Math.round(F.pesos.valuacion*100)}%</dt><dd>Rendimiento de ganancias (la inversa del P/E forward) comparado <b>dentro de su sector</b>, flujo de caja libre sobre capitalización, y P/E actual contra su propia mediana de los últimos años (solo empresas de EE.UU.: en las extranjeras la moneda y el ratio del ADR lo distorsionan). Las empresas extranjeras se convierten a dólares.</dd>
       <dt>Señal</dt><dd><b style="color:var(--pos)">Comprar</b>: puntaje de ${UMB.alto} o más y precio sobre su promedio de 200 ruedas. <b style="color:var(--accent)">Esperar</b>: puntaje de ${UMB.alto} o más, pero debajo de la MA200 (buena empresa, tendencia rota). <b>Neutral</b>: puntaje entre ${UMB.bajo} y ${UMB.alto}. <b style="color:var(--neg)">Evitar</b>: puntaje menor a ${UMB.bajo}.</dd>
+      <dt>Alertas ⚠</dt><dd>En las señales Comprar y Esperar se marcan tres cosas que no cambian el puntaje pero sí cómo operar: <b>CCL</b> si el CEDEAR está más de 3% caro contra el CCL implícito, <b>liquidez</b> si se opera muy poco en BYMA, y <b>balance</b> si presenta resultados en los próximos 7 días.</dd>
       <dt>Qué está validado</dt><dd>Probado con 20 años de historia (2006–2026, 266 empresas, con costos): el momentum por acción le ganó al promedio del universo en los dos períodos, y esperar a que la acción esté sobre su MA200 bajó la peor caída de −52% a −45% sin costar rendimiento. Conviene revisar el puntaje <b>todos los meses</b>: con revisión trimestral rindió menos. También se probaron filtros de VWAP (anclado al balance y móvil de 1, 3, 6 y 12 meses) y ninguno mejoró a la MA200. Revisiones, calidad y valuación no tienen historia gratuita: se validan con la foto semanal que guarda el monitor.</dd>
     </dl>
     <p>Si a una empresa le faltan datos en un bloque, el total se calcula con los bloques disponibles (mínimo 3 de 4).</p>
@@ -572,7 +605,8 @@ function fundFilas(){
     <td class="l tk">${esc(x.byma)}${x.ticker!==x.byma?`<small>${esc(x.ticker)}</small>`:""}${x.nota?` <span class="flag" title="${esc(x.nota)}">⚑</span>`:""}</td>
     <td class="l nm">${esc(x.nombre)}</td>
     <td class="l mut">${esc(x.sector||"—")}</td>
-    <td class="l">${(()=>{const k=senal(x); return k?`<span class="sig" style="color:${SIG[k].c}" title="${esc(porQue(x))}">${SIG[k].t}</span>`:'<span class="mut">—</span>'})()}</td>
+    <td class="l">${(()=>{const k=senal(x); if(!k) return '<span class="mut">—</span>'; const al = alertas(x);
+      return `<span class="sig" style="color:${SIG[k].c}" title="${esc(porQue(x))}">${SIG[k].t}</span>${al.map(a=>`<span class="alr" title="${esc(a.t)}">⚠ ${esc(a.c)}</span>`).join("")}`})()}</td>
     <td class="sc">${sc(x.scores.total)}</td>
     <td>${sc(x.scores.revisiones)}</td><td>${sc(x.scores.momentum)}</td><td>${sc(x.scores.calidad)}</td><td>${sc(x.scores.valuacion)}</td>
     <td class="${cls(x.raw.vs_ma200)}">${pct(x.raw.vs_ma200)}</td>

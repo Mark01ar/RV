@@ -15,6 +15,7 @@ SALIDA = DATA / "fundamentales.json"
 SNAP = DATA / "snapshots"
 CACHE = DATA / "fund_cache.json"
 BAL_V = 2
+UMBRALES = {"alto": 65, "bajo": 40}
 PESOS = {"revisiones": 0.30, "momentum": 0.25, "calidad": 0.25, "valuacion": 0.20}
 FINANCIERAS = {"Financial Services"}
 CAMPOS = ["forwardPE", "trailingPE", "returnOnAssets", "returnOnEquity", "operatingMargins", "grossMargins",
@@ -245,6 +246,40 @@ def componente(df, cols, minimo):
     return sub.mean(axis=1).where(n >= minimo)
 
 
+def senal(total, vs_ma200):
+    if total is None or pd.isna(total):
+        return None
+    if total < UMBRALES["bajo"]:
+        return "evitar"
+    if total < UMBRALES["alto"]:
+        return "neutral"
+    return "comprar" if (vs_ma200 is not None and not pd.isna(vs_ma200) and vs_ma200 > 0) else "esperar"
+
+
+def cambios(hoy, actual, nombres):
+    previas = sorted(p for p in SNAP.glob("fund_*.csv") if p.stem[5:] <= (pd.Timestamp(hoy) - pd.Timedelta(days=5)).strftime("%Y-%m-%d"))
+    if not previas:
+        return None
+    ant = pd.read_csv(previas[-1], index_col=0)
+    desde = previas[-1].stem[5:]
+    s_hoy = {t: senal(r["total"], r["vs_ma200"]) for t, r in actual.iterrows()}
+    s_ant = {t: senal(r["total"], r["vs_ma200"]) for t, r in ant.iterrows()}
+    comunes = [t for t in actual.index if t in ant.index]
+    delta = (actual.loc[comunes, "total"] - ant.loc[comunes, "total"]).dropna()
+
+    def item(t, extra=None):
+        d = {"ticker": t, "byma": nombres.get(t, t), "total": None if pd.isna(actual.at[t, "total"]) else float(actual.at[t, "total"])}
+        if extra:
+            d.update(extra)
+        return d
+
+    entran = [item(t, {"antes": s_ant.get(t)}) for t in actual.index if s_hoy.get(t) == "comprar" and s_ant.get(t) != "comprar"]
+    salen = [item(t, {"ahora": s_hoy.get(t)}) for t in ant.index if s_ant.get(t) == "comprar" and s_hoy.get(t) != "comprar" and t in actual.index]
+    suben = [item(t, {"delta": float(v)}) for t, v in delta.sort_values(ascending=False).head(8).items() if v > 0]
+    bajan = [item(t, {"delta": float(v)}) for t, v in delta.sort_values().head(8).items() if v < 0]
+    return {"desde": desde, "entran": entran, "salen": salen, "suben": suben, "bajan": bajan}
+
+
 def limpiar(x):
     if isinstance(x, dict):
         return {k: limpiar(v) for k, v in x.items()}
@@ -312,6 +347,7 @@ def main():
         filas_df.append({
             "ticker": t, "byma": x["byma"], "nombre": x["nombre"], "sector": x.get("sector"),
             "liquidez": x.get("liquidez"), "monto_usd": x.get("monto_usd"), "nota": x.get("nota"),
+            "premio": x.get("premio"),
             "rev90_0y": num(r.get("rev90_0y")), "rev90_1y": num(r.get("rev90_1y")),
             "amplitud": num(r.get("amplitud")), "sorpresa": num(r.get("sorpresa")),
             "consistencia": num(r.get("consistencia")), "n_balances": r.get("n_balances"),
@@ -376,6 +412,7 @@ def main():
         salida.append({
             "ticker": t, "byma": r["byma"], "nombre": r["nombre"], "sector": r["sector"],
             "liquidez": r["liquidez"], "monto_usd": r["monto_usd"], "nota": r["nota"],
+            "premio": None if pd.isna(r["premio"]) else float(r["premio"]),
             "scores": {k: (None if pd.isna(c[k]) else float(c[k])) for k in ["total", "revisiones", "momentum", "calidad", "valuacion"]},
             "sub": {k: (None if pd.isna(sub.loc[t, k]) else float(sub.loc[t, k])) for k in ["rentabilidad", "solidez", "ganancias"]},
             "puesto": None if pd.isna(c["puesto"]) else int(c["puesto"]),
@@ -387,14 +424,15 @@ def main():
             "sin_fund": bool(r["sin_fund"]),
         })
     hoy = dt.date.today().isoformat()
-    SALIDA.write_text(json.dumps(limpiar({
-        "actualizado": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
-        "pesos": PESOS, "version": 2, "n": len(salida), "con_score": int(comp["total"].notna().sum()),
-        "fallidos": fallidos, "tickers": salida}), ensure_ascii=False, separators=(",", ":")))
     SNAP.mkdir(exist_ok=True)
     snap = comp[["total", "revisiones", "momentum", "calidad", "valuacion"]].round(2)
     snap["vs_ma200"] = df["vs_ma200"].round(4)
     snap.to_csv(SNAP / f"fund_{hoy}.csv")
+    cmb = cambios(hoy, snap, df["byma"].to_dict())
+    SALIDA.write_text(json.dumps(limpiar({
+        "actualizado": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
+        "pesos": PESOS, "umbrales": UMBRALES, "cambios": cmb, "version": 2, "n": len(salida), "con_score": int(comp["total"].notna().sum()),
+        "fallidos": fallidos, "tickers": salida}), ensure_ascii=False, separators=(",", ":")))
     print(f"fundamentals: {len(salida)} tickers, {int(comp['total'].notna().sum())} con score, {len(fallidos)} fallidos")
     print(comp.sort_values("total", ascending=False).head(10).round(1).to_string())
 
