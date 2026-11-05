@@ -310,20 +310,23 @@ function tablaEje(g){
     <tr><td colspan="3" class="tipo">SEÑALES DE MERCADO · ${Math.round((1-M.peso_dato)*100)}%</td></tr>${rows("mercado")}</table></div>`;
 }
 
+let secModo = "sig";
 function tablaSectores(){
   if (!M.sectores) return "";
+  const SEC = secModo==="mismo" && M.sectores_mismo ? M.sectores_mismo : M.sectores;
   const qs = ["CSI","REC","EST","DES"];
-  const etfs = [...new Set(qs.flatMap(q=>(M.sectores[q]||[]).map(x=>x.etf)))];
-  const get = (q,e) => (M.sectores[q]||[]).find(x=>x.etf===e);
+  const etfs = [...new Set(qs.flatMap(q=>(SEC[q]||[]).map(x=>x.etf)))];
+  const get = (q,e) => (SEC[q]||[]).find(x=>x.etf===e);
   const nom = e => qs.map(q=>get(q,e)).find(Boolean)?.nombre || e;
   etfs.sort((a,b)=>(get(M.actual,b)?.exceso??-9)-(get(M.actual,a)?.exceso??-9));
   const cel = x => { if(!x) return `<td class="mut">—</td>`;
     const a = Math.min(Math.abs(x.exceso)/0.15,1)*0.45, c = x.exceso>=0?"62,207,142":"242,85,90";
     return `<td style="background:rgba(${c},${a})" title="Le ganó al S&P en ${Math.round(x.gana*100)}% de ${x.n} meses">${pct(x.exceso)}</td>`; };
   return `<div class="card" style="margin-top:16px"><h3>QUÉ SECTORES GANARON EN CADA RÉGIMEN (DESDE 2000)</h3>
+    <div class="bar"><select id="secm"><option value="sig" ${secModo==="sig"?"selected":""}>Mes siguiente (lo que se podía aprovechar)</option><option value="mismo" ${secModo==="mismo"?"selected":""}>Mismo mes (lo que pasó durante el régimen)</option></select></div>
     <div class="wrap" style="max-height:none"><table class="hm"><tr><th class="l">Sector</th>${qs.map(q=>`<th class="${q===M.actual?"on":""}" style="color:${QC[q]}">${esc(M.cuadrantes[q].nombre)}</th>`).join("")}</tr>
     ${etfs.map(e=>`<tr><td class="l">${esc(nom(e))} <span class="mut">${e}</span></td>${qs.map(q=>cel(get(q,e))).join("")}</tr>`).join("")}</table></div>
-    <div class="sub" style="margin-top:8px">Rendimiento anual promedio del ETF del sector <b>por encima o por debajo del S&P 500</b> en el mes siguiente a cada mes clasificado en ese régimen. Pasá el mouse para ver en qué % de los meses le ganó al índice. La columna marcada es el régimen actual. Ojo: usa datos macro revisados, así que es una referencia, no una garantía.</div></div>`;
+    <div class="sub" style="margin-top:8px">Rendimiento anual promedio del ETF del sector <b>por encima o por debajo del S&P 500</b> ${secModo==="sig"?"en el mes <b>siguiente</b> a cada mes clasificado en ese régimen, o sea, lo que podías aprovechar sabiendo el régimen":"en el <b>mismo mes</b> en que la economía estaba en ese régimen"}. Pasá el mouse para ver en qué % de los meses le ganó al índice. La columna marcada es el régimen actual. Ojo: usa datos macro revisados, así que es una referencia, no una garantía.</div></div>`;
 }
 
 function macro(m){
@@ -356,6 +359,8 @@ function macro(m){
   ${tablaSectores()}
   <div class="card" style="margin-top:16px">${bandaSVG()}
     <div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div></div>`;
+  const sm = document.getElementById("secm");
+  if (sm) sm.onchange = e => { secModo = e.target.value; macro(m); };
 }
 
 if (ses("rv_ok")==="1") abrir();
