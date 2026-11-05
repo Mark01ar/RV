@@ -1,0 +1,2162 @@
+{
+ "000660.KS": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "South Korea",
+  "moneda": "KRW",
+  "mcap": 911083896307712,
+  "fecha": "2026-11-05"
+ },
+ "AAL": {
+  "sector": "Industrials",
+  "industria": "Airlines",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 9031489536,
+  "fecha": "2026-11-05"
+ },
+ "AAP": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Parts",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 3065299968,
+  "fecha": "2026-11-05"
+ },
+ "AAPL": {
+  "sector": "Technology",
+  "industria": "Consumer Electronics",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 5079143284736,
+  "fecha": "2026-11-05"
+ },
+ "ABBV": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 520999174144,
+  "fecha": "2026-11-05"
+ },
+ "ABNB": {
+  "sector": "Consumer Cyclical",
+  "industria": "Travel Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 105607823360,
+  "fecha": "2026-11-05"
+ },
+ "ABT": {
+  "sector": "Healthcare",
+  "industria": "Medical Devices",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 199876591616,
+  "fecha": "2026-11-05"
+ },
+ "ACN": {
+  "sector": "Technology",
+  "industria": "Information Technology Services",
+  "pais": "Ireland",
+  "moneda": "USD",
+  "mcap": 161717927936,
+  "fecha": "2026-11-05"
+ },
+ "ADBE": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 96708411392,
+  "fecha": "2026-11-05"
+ },
+ "ADI": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 196849876992,
+  "fecha": "2026-11-05"
+ },
+ "ADP": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 119825276928,
+  "fecha": "2026-11-05"
+ },
+ "AEG": {
+  "sector": "Financial Services",
+  "industria": "Insurance - Diversified",
+  "pais": "Netherlands",
+  "moneda": "USD",
+  "mcap": 12497678336,
+  "fecha": "2026-11-05"
+ },
+ "AEM": {
+  "sector": "Basic Materials",
+  "industria": "Gold",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 92742500352,
+  "fecha": "2026-11-05"
+ },
+ "AI": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1922927104,
+  "fecha": "2026-11-05"
+ },
+ "AIG": {
+  "sector": "Financial Services",
+  "industria": "Insurance - Diversified",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 42725601280,
+  "fecha": "2026-11-05"
+ },
+ "ALAB": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 38734020608,
+  "fecha": "2026-11-05"
+ },
+ "AMAT": {
+  "sector": "Technology",
+  "industria": "Semiconductor Equipment & Materials",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 293154881536,
+  "fecha": "2026-11-05"
+ },
+ "AMD": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 797921116160,
+  "fecha": "2026-11-05"
+ },
+ "AMGN": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 258681602048,
+  "fecha": "2026-11-05"
+ },
+ "AMZN": {
+  "sector": "Consumer Cyclical",
+  "industria": "Internet Retail",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 2876619096064,
+  "fecha": "2026-11-05"
+ },
+ "ANET": {
+  "sector": "Technology",
+  "industria": "Computer Hardware",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 225103380480,
+  "fecha": "2026-11-05"
+ },
+ "ANF": {
+  "sector": "Consumer Cyclical",
+  "industria": "Apparel Retail",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 7260097024,
+  "fecha": "2026-11-05"
+ },
+ "ARM": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 204842139648,
+  "fecha": "2026-11-05"
+ },
+ "ASML": {
+  "sector": "Technology",
+  "industria": "Semiconductor Equipment & Materials",
+  "pais": "Netherlands",
+  "moneda": "USD",
+  "mcap": 576700547072,
+  "fecha": "2026-11-05"
+ },
+ "ASTS": {
+  "sector": "Technology",
+  "industria": "Communication Equipment",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 13862145024,
+  "fecha": "2026-11-05"
+ },
+ "AVGO": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1553721065472,
+  "fecha": "2026-11-05"
+ },
+ "AVY": {
+  "sector": "Consumer Cyclical",
+  "industria": "Packaging & Containers",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 14612998144,
+  "fecha": "2026-11-05"
+ },
+ "AXP": {
+  "sector": "Financial Services",
+  "industria": "Credit Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 223018893312,
+  "fecha": "2026-11-05"
+ },
+ "AZN": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 293138923520,
+  "fecha": "2026-11-05"
+ },
+ "B": {
+  "sector": "Basic Materials",
+  "industria": "Gold",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 66049343488,
+  "fecha": "2026-11-05"
+ },
+ "BA": {
+  "sector": "Industrials",
+  "industria": "Aerospace & Defense",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 140263636992,
+  "fecha": "2026-11-05"
+ },
+ "BAC": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 356257792000,
+  "fecha": "2026-11-05"
+ },
+ "BB": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 5142402560,
+  "fecha": "2026-11-05"
+ },
+ "BBVA": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "Spain",
+  "moneda": "USD",
+  "mcap": 140084559872,
+  "fecha": "2026-11-05"
+ },
+ "BCS": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 78728601600,
+  "fecha": "2026-11-05"
+ },
+ "BG": {
+  "sector": "Consumer Defensive",
+  "industria": "Farm Products",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 18639867904,
+  "fecha": "2026-11-05"
+ },
+ "BHP": {
+  "sector": "Basic Materials",
+  "industria": "Other Industrial Metals & Mining",
+  "pais": "Australia",
+  "moneda": "USD",
+  "mcap": 203673960448,
+  "fecha": "2026-11-05"
+ },
+ "BIIB": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 37614333952,
+  "fecha": "2026-11-05"
+ },
+ "BK": {
+  "sector": null,
+  "industria": null,
+  "pais": null,
+  "moneda": null,
+  "mcap": null,
+  "fecha": "2026-11-05"
+ },
+ "BKNG": {
+  "sector": "Consumer Cyclical",
+  "industria": "Travel Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 128463519744,
+  "fecha": "2026-11-05"
+ },
+ "BKR": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Equipment & Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 49524822016,
+  "fecha": "2026-11-05"
+ },
+ "BMY": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 131209879552,
+  "fecha": "2026-11-05"
+ },
+ "BP": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Integrated",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 117475491840,
+  "fecha": "2026-11-05"
+ },
+ "BRK-B": {
+  "sector": "Financial Services",
+  "industria": "Insurance - Diversified",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1239663640576,
+  "fecha": "2026-11-05"
+ },
+ "BX": {
+  "sector": "Financial Services",
+  "industria": "Asset Management",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 150093545472,
+  "fecha": "2026-11-05"
+ },
+ "C": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 206469644288,
+  "fecha": "2026-11-05"
+ },
+ "CAH": {
+  "sector": "Healthcare",
+  "industria": "Medical Distribution",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 60652339200,
+  "fecha": "2026-11-05"
+ },
+ "CAJPY": {
+  "sector": "Technology",
+  "industria": "Computer Hardware",
+  "pais": "Japan",
+  "moneda": "USD",
+  "mcap": 24841385984,
+  "fecha": "2026-11-05"
+ },
+ "CAR": {
+  "sector": "Industrials",
+  "industria": "Rental & Leasing Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 4232378368,
+  "fecha": "2026-11-05"
+ },
+ "CAT": {
+  "sector": "Industrials",
+  "industria": "Farm & Heavy Construction Machinery",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 271805743104,
+  "fecha": "2026-11-05"
+ },
+ "CCJ": {
+  "sector": "Energy",
+  "industria": "Uranium",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 31219005440,
+  "fecha": "2026-11-05"
+ },
+ "CCL": {
+  "sector": "Consumer Cyclical",
+  "industria": "Travel Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 42113191936,
+  "fecha": "2026-11-05"
+ },
+ "CDE": {
+  "sector": "Basic Materials",
+  "industria": "Gold",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 14987291648,
+  "fecha": "2026-11-05"
+ },
+ "CEG": {
+  "sector": "Utilities",
+  "industria": "Utilities - Independent Power Producers",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 87060414464,
+  "fecha": "2026-11-05"
+ },
+ "CL": {
+  "sector": "Consumer Defensive",
+  "industria": "Household & Personal Products",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 78506352640,
+  "fecha": "2026-11-05"
+ },
+ "CLS": {
+  "sector": "Technology",
+  "industria": "Electronic Components",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 29814093824,
+  "fecha": "2026-11-05"
+ },
+ "COIN": {
+  "sector": "Financial Services",
+  "industria": "Financial Data & Stock Exchanges",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 40111656960,
+  "fecha": "2026-11-05"
+ },
+ "COP": {
+  "sector": "Energy",
+  "industria": "Oil & Gas E&P",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 164511154176,
+  "fecha": "2026-11-05"
+ },
+ "COST": {
+  "sector": "Consumer Defensive",
+  "industria": "Discount Stores",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 463721562112,
+  "fecha": "2026-11-05"
+ },
+ "CRM": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 186911522816,
+  "fecha": "2026-11-05"
+ },
+ "CRWD": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 246768304128,
+  "fecha": "2026-11-05"
+ },
+ "CRWV": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 26705399808,
+  "fecha": "2026-11-05"
+ },
+ "CSCO": {
+  "sector": "Technology",
+  "industria": "Communication Equipment",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 408491425792,
+  "fecha": "2026-11-05"
+ },
+ "CVS": {
+  "sector": "Healthcare",
+  "industria": "Healthcare Plans",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 102266470400,
+  "fecha": "2026-11-05"
+ },
+ "CVX": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Integrated",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 423288995840,
+  "fecha": "2026-11-05"
+ },
+ "DAL": {
+  "sector": "Industrials",
+  "industria": "Airlines",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 58712100864,
+  "fecha": "2026-11-05"
+ },
+ "DD": {
+  "sector": "Basic Materials",
+  "industria": "Specialty Chemicals",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 19988428800,
+  "fecha": "2026-11-05"
+ },
+ "DE": {
+  "sector": "Industrials",
+  "industria": "Farm & Heavy Construction Machinery",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 182401581056,
+  "fecha": "2026-11-05"
+ },
+ "DECK": {
+  "sector": "Consumer Cyclical",
+  "industria": "Footwear & Accessories",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 11894401024,
+  "fecha": "2026-11-05"
+ },
+ "DELL": {
+  "sector": "Technology",
+  "industria": "Computer Hardware",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 236751224832,
+  "fecha": "2026-11-05"
+ },
+ "DEO": {
+  "sector": "Consumer Defensive",
+  "industria": "Beverages - Wineries & Distilleries",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 54335647744,
+  "fecha": "2026-11-05"
+ },
+ "DHR": {
+  "sector": "Healthcare",
+  "industria": "Diagnostics & Research",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 165152505856,
+  "fecha": "2026-11-05"
+ },
+ "DIS": {
+  "sector": "Communication Services",
+  "industria": "Entertainment",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 205389398016,
+  "fecha": "2026-11-05"
+ },
+ "DOCU": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 15045647360,
+  "fecha": "2026-11-05"
+ },
+ "DOW": {
+  "sector": "Basic Materials",
+  "industria": "Chemicals",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 23670939648,
+  "fecha": "2026-11-05"
+ },
+ "DTEGY": {
+  "sector": "Communication Services",
+  "industria": "Telecom Services",
+  "pais": "Germany",
+  "moneda": "USD",
+  "mcap": 145043914752,
+  "fecha": "2026-11-05"
+ },
+ "E": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Integrated",
+  "pais": "Italy",
+  "moneda": "USD",
+  "mcap": 80629538816,
+  "fecha": "2026-11-05"
+ },
+ "EBAY": {
+  "sector": "Consumer Cyclical",
+  "industria": "Internet Retail",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 54940852224,
+  "fecha": "2026-11-05"
+ },
+ "ECL": {
+  "sector": "Basic Materials",
+  "industria": "Specialty Chemicals",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 88350154752,
+  "fecha": "2026-11-05"
+ },
+ "EFX": {
+  "sector": "Industrials",
+  "industria": "Consulting Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 22581772288,
+  "fecha": "2026-11-05"
+ },
+ "EQNR": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Integrated",
+  "pais": "Norway",
+  "moneda": "USD",
+  "mcap": 101302804480,
+  "fecha": "2026-11-05"
+ },
+ "ERIC": {
+  "sector": "Technology",
+  "industria": "Communication Equipment",
+  "pais": "Sweden",
+  "moneda": "USD",
+  "mcap": 35839221760,
+  "fecha": "2026-11-05"
+ },
+ "ETSY": {
+  "sector": "Consumer Cyclical",
+  "industria": "Internet Retail",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 8296454656,
+  "fecha": "2026-11-05"
+ },
+ "F": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Manufacturers",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 50594066432,
+  "fecha": "2026-11-05"
+ },
+ "FCX": {
+  "sector": "Basic Materials",
+  "industria": "Copper",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 89894699008,
+  "fecha": "2026-11-05"
+ },
+ "FDX": {
+  "sector": "Industrials",
+  "industria": "Integrated Freight & Logistics",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 77145268224,
+  "fecha": "2026-11-05"
+ },
+ "FISV": {
+  "sector": null,
+  "industria": null,
+  "pais": null,
+  "moneda": "USD",
+  "mcap": 32996124672,
+  "fecha": "2026-11-05"
+ },
+ "FSLR": {
+  "sector": "Technology",
+  "industria": "Solar",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 20906158080,
+  "fecha": "2026-11-05"
+ },
+ "GE": {
+  "sector": "Industrials",
+  "industria": "Aerospace & Defense",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 341824962560,
+  "fecha": "2026-11-05"
+ },
+ "GEV": {
+  "sector": "Industrials",
+  "industria": "Specialty Industrial Machinery",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 220431007744,
+  "fecha": "2026-11-05"
+ },
+ "GILD": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 216414273536,
+  "fecha": "2026-11-05"
+ },
+ "GLNG": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Midstream",
+  "pais": "Bermuda",
+  "moneda": "USD",
+  "mcap": 4582113280,
+  "fecha": "2026-11-05"
+ },
+ "GLOB": {
+  "sector": "Technology",
+  "industria": "Information Technology Services",
+  "pais": "Luxembourg",
+  "moneda": "USD",
+  "mcap": 2074345856,
+  "fecha": "2026-11-05"
+ },
+ "GLW": {
+  "sector": "Technology",
+  "industria": "Electronic Components",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 102308601856,
+  "fecha": "2026-11-05"
+ },
+ "GM": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Manufacturers",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 78473068544,
+  "fecha": "2026-11-05"
+ },
+ "GOOGL": {
+  "sector": "Communication Services",
+  "industria": "Internet Content & Information",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 3552105201664,
+  "fecha": "2026-11-05"
+ },
+ "GRMN": {
+  "sector": "Technology",
+  "industria": "Scientific & Technical Instruments",
+  "pais": "Switzerland",
+  "moneda": "USD",
+  "mcap": 55717842944,
+  "fecha": "2026-11-05"
+ },
+ "GS": {
+  "sector": "Financial Services",
+  "industria": "Capital Markets",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 267667308544,
+  "fecha": "2026-11-05"
+ },
+ "GSK": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 102528622592,
+  "fecha": "2026-11-05"
+ },
+ "GT": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Parts",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1309939328,
+  "fecha": "2026-11-05"
+ },
+ "HAL": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Equipment & Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 27295168512,
+  "fecha": "2026-11-05"
+ },
+ "HD": {
+  "sector": "Consumer Cyclical",
+  "industria": "Home Improvement Retail",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 354618802176,
+  "fecha": "2026-11-05"
+ },
+ "HIMS": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - Specialty & Generic",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 6220135424,
+  "fecha": "2026-11-05"
+ },
+ "HL": {
+  "sector": "Basic Materials",
+  "industria": "Other Precious Metals & Mining",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 10042938368,
+  "fecha": "2026-11-05"
+ },
+ "HMC": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Manufacturers",
+  "pais": "Japan",
+  "moneda": "USD",
+  "mcap": 45704015872,
+  "fecha": "2026-11-05"
+ },
+ "HOG": {
+  "sector": "Consumer Cyclical",
+  "industria": "Recreational Vehicles",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 3599867904,
+  "fecha": "2026-11-05"
+ },
+ "HON": {
+  "sector": "Industrials",
+  "industria": "Conglomerates",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 72411283456,
+  "fecha": "2026-11-05"
+ },
+ "HOOD": {
+  "sector": "Financial Services",
+  "industria": "Capital Markets",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 78711947264,
+  "fecha": "2026-11-05"
+ },
+ "HPQ": {
+  "sector": "Technology",
+  "industria": "Computer Hardware",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 26990604288,
+  "fecha": "2026-11-05"
+ },
+ "HSBC": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 305627332608,
+  "fecha": "2026-11-05"
+ },
+ "HSY": {
+  "sector": "Consumer Defensive",
+  "industria": "Confectioners",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 35071078400,
+  "fecha": "2026-11-05"
+ },
+ "HUT": {
+  "sector": "Financial Services",
+  "industria": "Capital Markets",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 6032318464,
+  "fecha": "2026-11-05"
+ },
+ "HWM": {
+  "sector": "Industrials",
+  "industria": "Aerospace & Defense",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 84924375040,
+  "fecha": "2026-11-05"
+ },
+ "IBKR": {
+  "sector": "Financial Services",
+  "industria": "Capital Markets",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 132693147648,
+  "fecha": "2026-11-05"
+ },
+ "IBM": {
+  "sector": "Technology",
+  "industria": "Information Technology Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 240363143168,
+  "fecha": "2026-11-05"
+ },
+ "IFF": {
+  "sector": "Basic Materials",
+  "industria": "Specialty Chemicals",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 22368997376,
+  "fecha": "2026-11-05"
+ },
+ "ING": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "Netherlands",
+  "moneda": "USD",
+  "mcap": 93298909184,
+  "fecha": "2026-11-05"
+ },
+ "INTC": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 309705048064,
+  "fecha": "2026-11-05"
+ },
+ "IP": {
+  "sector": "Consumer Cyclical",
+  "industria": "Packaging & Containers",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 18879166464,
+  "fecha": "2026-11-05"
+ },
+ "IREN": {
+  "sector": "Financial Services",
+  "industria": "Capital Markets",
+  "pais": "Australia",
+  "moneda": "USD",
+  "mcap": 8784159744,
+  "fecha": "2026-11-05"
+ },
+ "ISRG": {
+  "sector": "Healthcare",
+  "industria": "Medical Instruments & Supplies",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 170315350016,
+  "fecha": "2026-11-05"
+ },
+ "JCI": {
+  "sector": "Industrials",
+  "industria": "Building Products & Equipment",
+  "pais": "Ireland",
+  "moneda": "USD",
+  "mcap": 85124841472,
+  "fecha": "2026-11-05"
+ },
+ "JNJ": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 665188040704,
+  "fecha": "2026-11-05"
+ },
+ "JPM": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 935063322624,
+  "fecha": "2026-11-05"
+ },
+ "KGC": {
+  "sector": "Basic Materials",
+  "industria": "Gold",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 25233577984,
+  "fecha": "2026-11-05"
+ },
+ "KLAC": {
+  "sector": "Technology",
+  "industria": "Semiconductor Equipment & Materials",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 195170729984,
+  "fecha": "2026-11-05"
+ },
+ "KMB": {
+  "sector": "Consumer Defensive",
+  "industria": "Household & Personal Products",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 66757881856,
+  "fecha": "2026-11-05"
+ },
+ "KO": {
+  "sector": "Consumer Defensive",
+  "industria": "Beverages - Non-Alcoholic",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 412122251264,
+  "fecha": "2026-11-05"
+ },
+ "LAC": {
+  "sector": "Basic Materials",
+  "industria": "Other Industrial Metals & Mining",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 707933760,
+  "fecha": "2026-11-05"
+ },
+ "LIN": {
+  "sector": "Basic Materials",
+  "industria": "Specialty Chemicals",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 240899620864,
+  "fecha": "2026-11-05"
+ },
+ "LLY": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1263067463680,
+  "fecha": "2026-11-05"
+ },
+ "LMT": {
+  "sector": "Industrials",
+  "industria": "Aerospace & Defense",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 137456992256,
+  "fecha": "2026-11-05"
+ },
+ "LRCX": {
+  "sector": "Technology",
+  "industria": "Semiconductor Equipment & Materials",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 277102886912,
+  "fecha": "2026-11-05"
+ },
+ "LVS": {
+  "sector": "Consumer Cyclical",
+  "industria": "Resorts & Casinos",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 26387347456,
+  "fecha": "2026-11-05"
+ },
+ "LYG": {
+  "sector": "Financial Services",
+  "industria": "Banks - Regional",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 75262205952,
+  "fecha": "2026-11-05"
+ },
+ "MA": {
+  "sector": "Financial Services",
+  "industria": "Credit Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 586022780928,
+  "fecha": "2026-11-05"
+ },
+ "MCD": {
+  "sector": "Consumer Cyclical",
+  "industria": "Restaurants",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 198295306240,
+  "fecha": "2026-11-05"
+ },
+ "MDLZ": {
+  "sector": "Consumer Defensive",
+  "industria": "Confectioners",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 85292187648,
+  "fecha": "2026-11-05"
+ },
+ "MDT": {
+  "sector": "Healthcare",
+  "industria": "Medical Devices",
+  "pais": "Ireland",
+  "moneda": "USD",
+  "mcap": 134258311168,
+  "fecha": "2026-11-05"
+ },
+ "META": {
+  "sector": "Communication Services",
+  "industria": "Internet Content & Information",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1610804756480,
+  "fecha": "2026-11-05"
+ },
+ "MFG": {
+  "sector": "Financial Services",
+  "industria": "Banks - Regional",
+  "pais": "Japan",
+  "moneda": "USD",
+  "mcap": 118309511168,
+  "fecha": "2026-11-05"
+ },
+ "MMC": {
+  "sector": null,
+  "industria": null,
+  "pais": null,
+  "moneda": null,
+  "mcap": null,
+  "fecha": "2026-11-05"
+ },
+ "MMM": {
+  "sector": "Industrials",
+  "industria": "Conglomerates",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 100024360960,
+  "fecha": "2026-11-05"
+ },
+ "MO": {
+  "sector": "Consumer Defensive",
+  "industria": "Tobacco",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 129764720640,
+  "fecha": "2026-11-05"
+ },
+ "MOS": {
+  "sector": "Basic Materials",
+  "industria": "Agricultural Inputs",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 6872904192,
+  "fecha": "2026-11-05"
+ },
+ "MP": {
+  "sector": "Basic Materials",
+  "industria": "Other Industrial Metals & Mining",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 6395628032,
+  "fecha": "2026-11-05"
+ },
+ "MRK": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 370963906560,
+  "fecha": "2026-11-05"
+ },
+ "MRNA": {
+  "sector": "Healthcare",
+  "industria": "Biotechnology",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 103154573312,
+  "fecha": "2026-11-05"
+ },
+ "MRVL": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 143782592512,
+  "fecha": "2026-11-05"
+ },
+ "MS": {
+  "sector": "Financial Services",
+  "industria": "Capital Markets",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 303563046912,
+  "fecha": "2026-11-05"
+ },
+ "MSFT": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 4127478775808,
+  "fecha": "2026-11-05"
+ },
+ "MSI": {
+  "sector": "Technology",
+  "industria": "Communication Equipment",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 82248761344,
+  "fecha": "2026-11-05"
+ },
+ "MU": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 899741646848,
+  "fecha": "2026-11-05"
+ },
+ "MUFG": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "Japan",
+  "moneda": "USD",
+  "mcap": 247289151488,
+  "fecha": "2026-11-05"
+ },
+ "MUX": {
+  "sector": "Basic Materials",
+  "industria": "Other Precious Metals & Mining",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 891919552,
+  "fecha": "2026-11-05"
+ },
+ "NBIS": {
+  "sector": "Communication Services",
+  "industria": "Internet Content & Information",
+  "pais": "Netherlands",
+  "moneda": "USD",
+  "mcap": 38472953856,
+  "fecha": "2026-11-05"
+ },
+ "NEE": {
+  "sector": "Utilities",
+  "industria": "Utilities - Regulated Electric",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 185506725888,
+  "fecha": "2026-11-05"
+ },
+ "NEM": {
+  "sector": "Basic Materials",
+  "industria": "Gold",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 122739113984,
+  "fecha": "2026-11-05"
+ },
+ "NFLX": {
+  "sector": "Communication Services",
+  "industria": "Entertainment",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 276443955200,
+  "fecha": "2026-11-05"
+ },
+ "NG": {
+  "sector": "Basic Materials",
+  "industria": "Gold",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 2676777472,
+  "fecha": "2026-11-05"
+ },
+ "NGG": {
+  "sector": "Utilities",
+  "industria": "Utilities - Regulated Electric",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 85679603712,
+  "fecha": "2026-11-05"
+ },
+ "NKE": {
+  "sector": "Consumer Cyclical",
+  "industria": "Footwear & Accessories",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 60140154880,
+  "fecha": "2026-11-05"
+ },
+ "NMR": {
+  "sector": "Financial Services",
+  "industria": "Capital Markets",
+  "pais": "Japan",
+  "moneda": "USD",
+  "mcap": 28612165632,
+  "fecha": "2026-11-05"
+ },
+ "NOK": {
+  "sector": "Technology",
+  "industria": "Communication Equipment",
+  "pais": "Finland",
+  "moneda": "USD",
+  "mcap": 46244806656,
+  "fecha": "2026-11-05"
+ },
+ "NOW": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 112935747584,
+  "fecha": "2026-11-05"
+ },
+ "NSANY": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Manufacturers",
+  "pais": "Japan",
+  "moneda": "USD",
+  "mcap": 6136151040,
+  "fecha": "2026-11-05"
+ },
+ "NTRA": {
+  "sector": "Healthcare",
+  "industria": "Diagnostics & Research",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 56364695552,
+  "fecha": "2026-11-05"
+ },
+ "NUE": {
+  "sector": "Basic Materials",
+  "industria": "Steel",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 60782264320,
+  "fecha": "2026-11-05"
+ },
+ "NVDA": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 4832539181056,
+  "fecha": "2026-11-05"
+ },
+ "NVO": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "Denmark",
+  "moneda": "USD",
+  "mcap": 185981960192,
+  "fecha": "2026-11-05"
+ },
+ "NVS": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "Switzerland",
+  "moneda": "USD",
+  "mcap": 311585112064,
+  "fecha": "2026-11-05"
+ },
+ "NXE": {
+  "sector": "Energy",
+  "industria": "Uranium",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 5364048896,
+  "fecha": "2026-11-05"
+ },
+ "O": {
+  "sector": "Real Estate",
+  "industria": "REIT - Retail",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 56035033088,
+  "fecha": "2026-11-05"
+ },
+ "OKLO": {
+  "sector": "Utilities",
+  "industria": "Utilities - Independent Power Producers",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 4114710528,
+  "fecha": "2026-11-05"
+ },
+ "ONDS": {
+  "sector": "Technology",
+  "industria": "Communication Equipment",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 3068735232,
+  "fecha": "2026-11-05"
+ },
+ "ORAN": {
+  "sector": null,
+  "industria": null,
+  "pais": null,
+  "moneda": null,
+  "mcap": null,
+  "fecha": "2026-11-05"
+ },
+ "ORCL": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 375087628288,
+  "fecha": "2026-11-05"
+ },
+ "ORLY": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Parts",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 74297450496,
+  "fecha": "2026-11-05"
+ },
+ "OXY": {
+  "sector": "Energy",
+  "industria": "Oil & Gas E&P",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 57309212672,
+  "fecha": "2026-11-05"
+ },
+ "PAAS": {
+  "sector": "Basic Materials",
+  "industria": "Gold",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 17202501632,
+  "fecha": "2026-11-05"
+ },
+ "PANW": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 284850946048,
+  "fecha": "2026-11-05"
+ },
+ "PATH": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 7040809984,
+  "fecha": "2026-11-05"
+ },
+ "PBI": {
+  "sector": "Industrials",
+  "industria": "Integrated Freight & Logistics",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 2170228224,
+  "fecha": "2026-11-05"
+ },
+ "PCAR": {
+  "sector": "Industrials",
+  "industria": "Farm & Heavy Construction Machinery",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 55893811200,
+  "fecha": "2026-11-05"
+ },
+ "PCRFY": {
+  "sector": null,
+  "industria": null,
+  "pais": null,
+  "moneda": null,
+  "mcap": null,
+  "fecha": "2026-11-05"
+ },
+ "PEP": {
+  "sector": "Consumer Defensive",
+  "industria": "Beverages - Non-Alcoholic",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 194081587200,
+  "fecha": "2026-11-05"
+ },
+ "PFE": {
+  "sector": "Healthcare",
+  "industria": "Drug Manufacturers - General",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 175498510336,
+  "fecha": "2026-11-05"
+ },
+ "PG": {
+  "sector": "Consumer Defensive",
+  "industria": "Household & Personal Products",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 387811475456,
+  "fecha": "2026-11-05"
+ },
+ "PHG": {
+  "sector": "Healthcare",
+  "industria": "Medical Devices",
+  "pais": "Netherlands",
+  "moneda": "USD",
+  "mcap": 30364690432,
+  "fecha": "2026-11-05"
+ },
+ "PINS": {
+  "sector": "Communication Services",
+  "industria": "Internet Content & Information",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 12169835520,
+  "fecha": "2026-11-05"
+ },
+ "PLD": {
+  "sector": "Real Estate",
+  "industria": "REIT - Industrial",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 127693922304,
+  "fecha": "2026-11-05"
+ },
+ "PLTR": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 413710745600,
+  "fecha": "2026-11-05"
+ },
+ "PM": {
+  "sector": "Consumer Defensive",
+  "industria": "Tobacco",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 329303818240,
+  "fecha": "2026-11-05"
+ },
+ "PSO": {
+  "sector": "Communication Services",
+  "industria": "Publishing",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 10663344128,
+  "fecha": "2026-11-05"
+ },
+ "PSX": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Refining & Marketing",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 101274484736,
+  "fecha": "2026-11-05"
+ },
+ "PYPL": {
+  "sector": "Financial Services",
+  "industria": "Credit Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 50005630976,
+  "fecha": "2026-11-05"
+ },
+ "QCOM": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 184939118592,
+  "fecha": "2026-11-05"
+ },
+ "RACE": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Manufacturers",
+  "pais": "Italy",
+  "moneda": "USD",
+  "mcap": 75782627328,
+  "fecha": "2026-11-05"
+ },
+ "RBLX": {
+  "sector": "Communication Services",
+  "industria": "Electronic Gaming & Multimedia",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 35291824128,
+  "fecha": "2026-11-05"
+ },
+ "RGTI": {
+  "sector": "Technology",
+  "industria": "Computer Hardware",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 3741547520,
+  "fecha": "2026-11-05"
+ },
+ "RIO": {
+  "sector": "Basic Materials",
+  "industria": "Other Industrial Metals & Mining",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 137536602112,
+  "fecha": "2026-11-05"
+ },
+ "RIOT": {
+  "sector": "Financial Services",
+  "industria": "Capital Markets",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 5767730176,
+  "fecha": "2026-11-05"
+ },
+ "RKLB": {
+  "sector": "Industrials",
+  "industria": "Aerospace & Defense",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 33485953024,
+  "fecha": "2026-11-05"
+ },
+ "ROKU": {
+  "sector": "Communication Services",
+  "industria": "Entertainment",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 24269223936,
+  "fecha": "2026-11-05"
+ },
+ "ROST": {
+  "sector": "Consumer Cyclical",
+  "industria": "Apparel Retail",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 78828748800,
+  "fecha": "2026-11-05"
+ },
+ "RTX": {
+  "sector": "Industrials",
+  "industria": "Aerospace & Defense",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 267769462784,
+  "fecha": "2026-11-05"
+ },
+ "SAN": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "Spain",
+  "moneda": "USD",
+  "mcap": 174028996608,
+  "fecha": "2026-11-05"
+ },
+ "SAP": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "Germany",
+  "moneda": "USD",
+  "mcap": 277055176704,
+  "fecha": "2026-11-05"
+ },
+ "SATL": {
+  "sector": "Industrials",
+  "industria": "Aerospace & Defense",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 493505088,
+  "fecha": "2026-11-05"
+ },
+ "SBUX": {
+  "sector": "Consumer Cyclical",
+  "industria": "Restaurants",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 125068959744,
+  "fecha": "2026-11-05"
+ },
+ "SCCO": {
+  "sector": "Basic Materials",
+  "industria": "Copper",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 150896394240,
+  "fecha": "2026-11-05"
+ },
+ "SCHW": {
+  "sector": "Financial Services",
+  "industria": "Capital Markets",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 161468071936,
+  "fecha": "2026-11-05"
+ },
+ "SHEL": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Integrated",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 288723861504,
+  "fecha": "2026-11-05"
+ },
+ "SHOP": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "Canada",
+  "moneda": "USD",
+  "mcap": 196876451840,
+  "fecha": "2026-11-05"
+ },
+ "SHW": {
+  "sector": "Basic Materials",
+  "industria": "Specialty Chemicals",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 87817265152,
+  "fecha": "2026-11-05"
+ },
+ "SIEGY": {
+  "sector": "Industrials",
+  "industria": "Specialty Industrial Machinery",
+  "pais": "Germany",
+  "moneda": "USD",
+  "mcap": 237915357184,
+  "fecha": "2026-11-05"
+ },
+ "SLB": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Equipment & Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 76104089600,
+  "fecha": "2026-11-05"
+ },
+ "SNA": {
+  "sector": "Industrials",
+  "industria": "Tools & Accessories",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 19071791104,
+  "fecha": "2026-11-05"
+ },
+ "SNAP": {
+  "sector": "Communication Services",
+  "industria": "Internet Content & Information",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 10011890688,
+  "fecha": "2026-11-05"
+ },
+ "SNDK": {
+  "sector": "Technology",
+  "industria": "Computer Hardware",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 147610992640,
+  "fecha": "2026-11-05"
+ },
+ "SNOW": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 102523682816,
+  "fecha": "2026-11-05"
+ },
+ "SONY": {
+  "sector": "Technology",
+  "industria": "Consumer Electronics",
+  "pais": "Japan",
+  "moneda": "USD",
+  "mcap": 151544004608,
+  "fecha": "2026-11-05"
+ },
+ "SPCE": {
+  "sector": "Industrials",
+  "industria": "Aerospace & Defense",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 380505728,
+  "fecha": "2026-11-05"
+ },
+ "SPCX": {
+  "sector": "Industrials",
+  "industria": "Aerospace & Defense",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1845938225152,
+  "fecha": "2026-11-05"
+ },
+ "SPGI": {
+  "sector": "Financial Services",
+  "industria": "Financial Data & Stock Exchanges",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 139641929728,
+  "fecha": "2026-11-05"
+ },
+ "SPOT": {
+  "sector": "Communication Services",
+  "industria": "Internet Content & Information",
+  "pais": "Sweden",
+  "moneda": "USD",
+  "mcap": 129036976128,
+  "fecha": "2026-11-05"
+ },
+ "STLA": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Manufacturers",
+  "pais": "Netherlands",
+  "moneda": "USD",
+  "mcap": 13506373632,
+  "fecha": "2026-11-05"
+ },
+ "SWKS": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 19499927552,
+  "fecha": "2026-11-05"
+ },
+ "SYY": {
+  "sector": "Consumer Defensive",
+  "industria": "Food Distribution",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 37848895488,
+  "fecha": "2026-11-05"
+ },
+ "T": {
+  "sector": "Communication Services",
+  "industria": "Telecom Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 147057213440,
+  "fecha": "2026-11-05"
+ },
+ "TEAM": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "Australia",
+  "moneda": "USD",
+  "mcap": 48065998848,
+  "fecha": "2026-11-05"
+ },
+ "TEM": {
+  "sector": "Healthcare",
+  "industria": "Health Information Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 13791387648,
+  "fecha": "2026-11-05"
+ },
+ "TGT": {
+  "sector": "Consumer Defensive",
+  "industria": "Discount Stores",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 74095804416,
+  "fecha": "2026-11-05"
+ },
+ "TIIAY": {
+  "sector": "Communication Services",
+  "industria": "Telecom Services",
+  "pais": "Italy",
+  "moneda": "USD",
+  "mcap": 13887522816,
+  "fecha": "2026-11-05"
+ },
+ "TJX": {
+  "sector": "Consumer Cyclical",
+  "industria": "Apparel Retail",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 159232229376,
+  "fecha": "2026-11-05"
+ },
+ "TLN": {
+  "sector": "Utilities",
+  "industria": "Utilities - Independent Power Producers",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 14216666112,
+  "fecha": "2026-11-05"
+ },
+ "TM": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Manufacturers",
+  "pais": "Japan",
+  "moneda": "USD",
+  "mcap": 234925309952,
+  "fecha": "2026-11-05"
+ },
+ "TMO": {
+  "sector": "Healthcare",
+  "industria": "Diagnostics & Research",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 261643485184,
+  "fecha": "2026-11-05"
+ },
+ "TMUS": {
+  "sector": "Communication Services",
+  "industria": "Telecom Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 168604418048,
+  "fecha": "2026-11-05"
+ },
+ "TRIP": {
+  "sector": "Consumer Cyclical",
+  "industria": "Travel Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1186883840,
+  "fecha": "2026-11-05"
+ },
+ "TRV": {
+  "sector": "Financial Services",
+  "industria": "Insurance - Property & Casualty",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 83855327232,
+  "fecha": "2026-11-05"
+ },
+ "TS": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Equipment & Services",
+  "pais": "Luxembourg",
+  "moneda": "USD",
+  "mcap": 28229525504,
+  "fecha": "2026-11-05"
+ },
+ "TSLA": {
+  "sector": "Consumer Cyclical",
+  "industria": "Auto Manufacturers",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1522552143872,
+  "fecha": "2026-11-05"
+ },
+ "TSM": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "Taiwan",
+  "moneda": "USD",
+  "mcap": 2052547018752,
+  "fecha": "2026-11-05"
+ },
+ "TTE": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Integrated",
+  "pais": "France",
+  "moneda": "USD",
+  "mcap": 198825607168,
+  "fecha": "2026-11-05"
+ },
+ "TWLO": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 33035716608,
+  "fecha": "2026-11-05"
+ },
+ "TXN": {
+  "sector": "Technology",
+  "industria": "Semiconductors",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 284778987520,
+  "fecha": "2026-11-05"
+ },
+ "UAL": {
+  "sector": "Industrials",
+  "industria": "Airlines",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 37609771008,
+  "fecha": "2026-11-05"
+ },
+ "UBER": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 142713683968,
+  "fecha": "2026-11-05"
+ },
+ "UL": {
+  "sector": "Consumer Defensive",
+  "industria": "Household & Personal Products",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 144103325696,
+  "fecha": "2026-11-05"
+ },
+ "UNH": {
+  "sector": "Healthcare",
+  "industria": "Healthcare Plans",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 367457370112,
+  "fecha": "2026-11-05"
+ },
+ "UNP": {
+  "sector": "Industrials",
+  "industria": "Railroads",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 183290118144,
+  "fecha": "2026-11-05"
+ },
+ "UPST": {
+  "sector": "Financial Services",
+  "industria": "Credit Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 2312484352,
+  "fecha": "2026-11-05"
+ },
+ "URBN": {
+  "sector": "Consumer Cyclical",
+  "industria": "Apparel Retail",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 7861891584,
+  "fecha": "2026-11-05"
+ },
+ "USB": {
+  "sector": "Financial Services",
+  "industria": "Banks - Regional",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 95087878144,
+  "fecha": "2026-11-05"
+ },
+ "V": {
+  "sector": "Financial Services",
+  "industria": "Credit Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 815951970304,
+  "fecha": "2026-11-05"
+ },
+ "VOD": {
+  "sector": "Communication Services",
+  "industria": "Telecom Services",
+  "pais": "United Kingdom",
+  "moneda": "USD",
+  "mcap": 37718548480,
+  "fecha": "2026-11-05"
+ },
+ "VRSN": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 28527290368,
+  "fecha": "2026-11-05"
+ },
+ "VRTX": {
+  "sector": "Healthcare",
+  "industria": "Biotechnology",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 139160174592,
+  "fecha": "2026-11-05"
+ },
+ "VST": {
+  "sector": "Utilities",
+  "industria": "Utilities - Independent Power Producers",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 40373559296,
+  "fecha": "2026-11-05"
+ },
+ "VZ": {
+  "sector": "Communication Services",
+  "industria": "Telecom Services",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 191356092416,
+  "fecha": "2026-11-05"
+ },
+ "WDC": {
+  "sector": "Technology",
+  "industria": "Computer Hardware",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 121217097728,
+  "fecha": "2026-11-05"
+ },
+ "WELL": {
+  "sector": "Real Estate",
+  "industria": "REIT - Healthcare Facilities",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 181927919616,
+  "fecha": "2026-11-05"
+ },
+ "WFC": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 262451773440,
+  "fecha": "2026-11-05"
+ },
+ "WMT": {
+  "sector": "Consumer Defensive",
+  "industria": "Discount Stores",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1027945070592,
+  "fecha": "2026-11-05"
+ },
+ "XOM": {
+  "sector": "Energy",
+  "industria": "Oil & Gas Integrated",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 690489982976,
+  "fecha": "2026-11-05"
+ },
+ "XRX": {
+  "sector": "Industrials",
+  "industria": "Business Equipment & Supplies",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 156578912,
+  "fecha": "2026-11-05"
+ },
+ "XYZ": {
+  "sector": "Technology",
+  "industria": "Software - Infrastructure",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 52647665664,
+  "fecha": "2026-11-05"
+ },
+ "YELP": {
+  "sector": "Communication Services",
+  "industria": "Internet Content & Information",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 1196512768,
+  "fecha": "2026-11-05"
+ },
+ "ZM": {
+  "sector": "Technology",
+  "industria": "Software - Application",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 26797414400,
+  "fecha": "2026-11-05"
+ }
+}
