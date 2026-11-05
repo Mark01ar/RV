@@ -154,7 +154,8 @@ const COLS = [
   {k:"vol", t:"Vol", h:"Volatilidad anualizada del último año."},
   {k:"beta", t:"Beta", h:"Cuánto se mueve frente al S&P 500 (2 años, semanal). 1,5 = se mueve 50% más que el índice."},
   {k:"dd12m", t:"Caída máx", h:"Peor caída desde un máximo en los últimos 12 meses."},
-  {k:"monto_usd", t:"Operado/día", h:"Monto promedio operado por día en BYMA (últimas 20 ruedas), en USD al CCL implícito."},
+  {k:"px_ars", t:"Precio ARS", h:"Último cierre del CEDEAR en BYMA, en pesos. Sirve para chequear contra tu pantalla."},
+  {k:"monto_usd", t:"Operado/día", h:"Monto típico operado por día en BYMA (mediana de las últimas 20 ruedas), en USD al CCL implícito."},
   {k:"liquidez", t:"Liquidez", l:1, h:"Alta ≥ USD 1M/día · Media ≥ 200k · Baja ≥ 30k · Muy baja < 30k."},
   {k:"premio", t:"Premio CCL", h:"Cuánto más caro (+) o barato (−) cotiza el CEDEAR frente al CCL implícito de todo el mercado."}
 ];
@@ -211,6 +212,7 @@ function filas(){
     <td>${x.vol==null?"—":(x.vol*100).toFixed(0)+"%"}</td>
     <td>${num(x.beta)}</td>
     <td class="neg">${pct(x.dd12m,0)}</td>
+    <td title="${esc(x.px_fecha||"")}">${num(x.px_ars,0)}</td>
     <td>${usd(x.monto_usd)}</td>
     <td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td>
     <td class="${x.premio==null?"mut":x.premio>0.02?"neg":x.premio<-0.02?"pos":""}">${pct(x.premio)}</td>
