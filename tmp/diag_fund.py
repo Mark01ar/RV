@@ -7,7 +7,7 @@ for t in ["AAPL", "JPM", "TSM", "XOM", "NVO", "SNDK"]:
     d = {}
     try:
         info = k.info or {}
-        d["info_keys"] = sorted(info.keys())
+        d["n_keys"] = len(info)
         d["info"] = {x: info.get(x) for x in ["forwardPE", "trailingPE", "enterpriseToEbitda", "returnOnAssets", "returnOnEquity",
                                               "operatingMargins", "grossMargins", "freeCashflow", "marketCap", "totalDebt", "totalCash",
                                               "ebitda", "revenueGrowth", "earningsGrowth", "recommendationMean", "numberOfAnalystOpinions",
@@ -41,5 +41,5 @@ for t in ["AAPL", "JPM", "TSM", "XOM", "NVO", "SNDK"]:
         d["a_income_cols"] = [str(c) for c in a.columns]
     except Exception as e:
         d["a_income_cols"] = f"ERR {e}"
-    out[t] = d
-print("RESULTADO " + json.dumps(out, default=str))
+    for k2, v2 in d.items():
+        print(f"R|{t}|{k2}|" + json.dumps(v2, default=str)[:1500], flush=True)
