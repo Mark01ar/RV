@@ -40,11 +40,11 @@ def correr(rezago):
     return pd.DataFrame(filas).set_index("mes")
 
 
-def resumen(d, col):
-    exm = d[col] - d["spy"]
+def resumen(d, col, bench="spy"):
+    exm = d[col] - d[bench]
     anios = len(d) / 12
     tot = (1 + d[col]).prod() ** (1 / anios) - 1
-    spy = (1 + d["spy"]).prod() ** (1 / anios) - 1
+    spy = (1 + d[bench]).prod() ** (1 / anios) - 1
     top2 = exm.sort_values(ascending=False).iloc[:max(1, len(d) // 20)].sum()
     porano = exm.groupby(d.index.year).sum()
     return {"anual": round(tot * 100, 1), "spy_anual": round(spy * 100, 1), "exceso_anual": round((tot - spy) * 100, 1),
@@ -59,6 +59,9 @@ def resumen(d, col):
 out = {}
 for nombre, rez in [("teoria", 0), ("historial", 1)]:
     d = correr(rez)
-    out[nombre] = {"n": len(d), "recomendados": resumen(d, "rec"), "evitados": resumen(d, "evi")}
+    d["dif"] = d["rec"] - d["evi"]
+    d["cero"] = 0.0
+    out[nombre] = {"n": len(d), "rec_vs_igualpeso": resumen(d, "rec", "eq"), "evi_vs_igualpeso": resumen(d, "evi", "eq"),
+                   "igualpeso_vs_spy": resumen(d, "eq", "spy")}
 out["n_cambios"] = int((reg.loc["2005-01":] != reg.loc["2005-01":].shift()).sum())
 print("RESULTADO " + json.dumps(out, ensure_ascii=False))
