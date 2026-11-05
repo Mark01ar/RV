@@ -301,6 +301,9 @@ def construir(u, precios, sectores, byma):
         f["monto_usd"] = f["monto_ars"] / ccl if (f["monto_ars"] and ccl) else None
         f["liquidez"] = clase_liquidez(f["monto_usd"])
         f["premio"] = f["ccl_impl"] / ccl - 1 if (f["ccl_impl"] and ccl) else None
+        if f["premio"] is not None and abs(f["premio"]) > 0.3:
+            f["premio"] = None
+            f["nota"] = "; ".join(x for x in [f["nota"], "Verificar ratio en BYMA"] if x)
     spy = metricas(bench, None) if bench is not None else {}
     return {
         "actualizado": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
