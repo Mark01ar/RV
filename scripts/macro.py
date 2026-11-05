@@ -210,6 +210,79 @@ def sectores_por_regimen(y, hist, rezago=1):
     return out
 
 
+def semaforo(y, hist):
+    spy = y["SPY"].dropna()
+    pm = spy.resample("ME").last()
+    ma = pm.rolling(10).mean()
+    irx = y["^IRX"].dropna().resample("ME").last() if "^IRX" in y.columns else pd.Series(dtype=float)
+    df = pd.DataFrame({"p": pm, "ma": ma, "qc": hist["qc"]}).dropna(subset=["p", "ma"])
+    df["qc"] = df["qc"].ffill()
+    df = df.dropna(subset=["qc"])
+    df["frena"] = df["qc"].isin(["EST", "DES"])
+    df["bajo"] = df["p"] < df["ma"]
+    df["estado"] = np.where(df["frena"] & df["bajo"], "rojo", np.where(df["frena"] | df["bajo"], "amarillo", "verde"))
+
+    ret = pm.pct_change()
+    caja = (irx / 100 / 12).shift(1).reindex(pm.index).ffill().fillna(0)
+    fin = pd.Timestamp.today().to_period("M").to_timestamp("M")
+    meses = [d for d in df.index if pd.Timestamp("2005-01-01") <= d < fin]
+    prev_estado = df["estado"].shift(1)
+    filas, dentro_prev = [], True
+    for d in meses:
+        e = prev_estado.get(d)
+        if pd.isna(e):
+            continue
+        dentro = e != "rojo"
+        r_regla = ret[d] if dentro else caja[d]
+        if dentro != dentro_prev:
+            r_regla -= 0.005
+        dentro_prev = dentro
+        filas.append({"f": d, "spy": ret[d], "regla": r_regla, "caja": caja[d], "dentro": dentro})
+    bt = pd.DataFrame(filas).set_index("f")
+
+    def st(x):
+        c = (1 + x).cumprod()
+        eps = {"2008": ("2007-10", "2009-03"), "2020": ("2020-02", "2020-03"), "2022": ("2022-01", "2022-09")}
+        return {"anual": float(c.iloc[-1] ** (12 / len(x)) - 1),
+                "caida_max": float((c / c.cummax() - 1).min()),
+                "peor_12m": float((1 + x).rolling(12).apply(np.prod, raw=True).min() - 1),
+                "vol": float(x.std() * math.sqrt(12)),
+                "episodios": {k: float((1 + x.loc[a:b]).prod() - 1) for k, (a, b) in eps.items()}}
+
+    def tramo(a, b):
+        x = bt[(bt.index.year >= a) & (bt.index.year <= b)]
+        f = lambda v: float((1 + v).prod() ** (12 / len(v)) - 1)
+        return {"spy": f(x["spy"]), "regla": f(x["regla"])}
+
+    rojo = (df["estado"] == "rojo")
+    grupos = (rojo != rojo.shift()).cumsum()
+    alarmas = []
+    for _, g in df[rojo].groupby(grupos[rojo]):
+        ini, fin_r = g.index[0], g.index[-1]
+        if ini < pd.Timestamp("2005-01-01"):
+            continue
+        ventana = ret.loc[ini + pd.offsets.MonthEnd(1): fin_r + pd.offsets.MonthEnd(1)].dropna()
+        alarmas.append({"desde": ini.strftime("%Y-%m"), "hasta": fin_r.strftime("%Y-%m"), "meses": len(g),
+                        "spy_durante": float((1 + ventana).prod() - 1) if len(ventana) else None,
+                        "abierta": bool(fin_r == df.index[-1])})
+
+    hoy = df.iloc[-1]
+    est = df["estado"].tolist()
+    dur = 1
+    while dur < len(est) and est[-1 - dur] == est[-1]:
+        dur += 1
+    return {
+        "estado": hoy["estado"], "duracion": dur, "frena": bool(hoy["frena"]), "bajo": bool(hoy["bajo"]),
+        "regimen": hoy["qc"], "spy": float(spy.iloc[-1]), "spy_fecha": spy.index[-1].strftime("%Y-%m-%d"),
+        "ma10": float(hoy["ma"]), "dist": float(spy.iloc[-1] / hoy["ma"] - 1),
+        "historial": [{"f": d.strftime("%Y-%m"), "e": e} for d, e in df["estado"].items() if d >= pd.Timestamp("2005-01-01")],
+        "resultados": {"spy": st(bt["spy"]), "regla": st(bt["regla"]), "tiempo_fuera": float(1 - bt["dentro"].mean()),
+                       "desde": bt.index[0].strftime("%Y-%m"), "hasta": bt.index[-1].strftime("%Y-%m"),
+                       "tramos": {"2005-2018": tramo(2005, 2018), "2019-hoy": tramo(2019, 2100)}},
+        "alarmas": alarmas,
+    }
+
+
 def main():
     ids = ["CFNAIMA3", "ICSA", "INDPRO", "PAYEMS", "CPIAUCSL", "CPILFESL", "PCEPILFE", "BAA10Y", "T5YIE"]
     f, fuentes = {}, set()
@@ -218,7 +291,7 @@ def main():
         f[sid] = s
         fuentes.add(src)
         print(f"{sid}: {len(s)} obs hasta {s.index[-1].date()} ({src})")
-    y = yahoo(sorted(set(["XLY", "XLP", "HG=F", "GC=F", "CL=F", "TIP", "IEF", "SPY"]) | set(SECTORES)))
+    y = yahoo(sorted(set(["XLY", "XLP", "HG=F", "GC=F", "CL=F", "TIP", "IEF", "SPY", "^IRX"]) | set(SECTORES)))
     inds = indicadores(f, y)
 
     hoy = pd.Timestamp.today().to_period("M").to_timestamp("M")
@@ -271,7 +344,7 @@ def main():
         "fuente_fred": "/".join(sorted(fuentes)),
         "peso_dato": PESO_DATO,
         "g": g0, "i": i0, "probs": probs, "actual": actual, "crudo": crudo, "duracion": dur,
-        "umbral": UMBRAL_CAMBIO, "sectores": sectores_por_regimen(y, hist, 1),
+        "umbral": UMBRAL_CAMBIO, "semaforo": semaforo(y, hist), "sectores": sectores_por_regimen(y, hist, 1),
         "sectores_mismo": sectores_por_regimen(y, hist, 0),
         "cambios": int((hist["qc"] != hist["qc"].shift()).sum() - 1),
         "cambios_sin_regla": int((hist["q"] != hist["q"].shift()).sum() - 1),
@@ -282,6 +355,9 @@ def main():
                       for d, r in hist.iterrows()],
     }
     SALIDA.write_text(json.dumps(salida, ensure_ascii=False, separators=(",", ":")))
+    sm = salida["semaforo"]
+    print(f"semaforo: {sm['estado']} ({sm['duracion']} meses) dist={sm['dist']:.3f} alarmas={len(sm['alarmas'])} "
+          f"regla={sm['resultados']['regla']['anual']:.3f} spy={sm['resultados']['spy']['anual']:.3f}")
     print(f"cambios de regimen: {salida['cambios']} con regla, {salida['cambios_sin_regla']} sin regla")
     print(f"regimen: {CUADRANTES[actual]['nombre']} (crudo {crudo}) g={g0:.2f} i={i0:.2f} probs={ {k: round(v, 2) for k, v in probs.items()} }")
 

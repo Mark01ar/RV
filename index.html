@@ -86,6 +86,21 @@ td.nm{max-width:220px;overflow:hidden;text-overflow:ellipsis;font-family:var(--s
 .comp b{color:var(--text);font-weight:500}
 svg text{font-family:var(--mono)}
 @media (max-width:900px){.mx,.ejes{grid-template-columns:1fr}.probs{grid-template-columns:repeat(2,1fr)}}
+.sem{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center}
+.luz{display:flex;flex-direction:column;gap:6px;background:#06080b;padding:8px;border:1px solid var(--line)}
+.luz i{width:22px;height:22px;border-radius:50%;background:#1b222c;display:block}
+.luz i.on.rojo{background:var(--neg);box-shadow:0 0 12px var(--neg)}
+.luz i.on.amarillo{background:var(--accent);box-shadow:0 0 12px var(--accent)}
+.luz i.on.verde{background:var(--pos);box-shadow:0 0 12px var(--pos)}
+.chk{display:grid;gap:6px;font-size:13px}
+.chk div{display:flex;gap:8px;align-items:baseline}
+.chk b{font-family:var(--mono);font-size:11px;padding:1px 6px;border:1px solid currentColor}
+.res{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px;margin-top:10px}
+.res th,.res td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.res th{position:static;cursor:default;background:none;font-weight:500}
+.res td.l,.res th.l{text-align:left;font-family:var(--sans)}
+.semgrid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:16px}
+@media (max-width:900px){.sem{grid-template-columns:auto 1fr}.semgrid{grid-template-columns:1fr}}
 @media (max-width:640px){main{padding:12px}.wrap{max-height:none}.bar input{max-width:none}}
 </style>
 </head>
@@ -107,7 +122,7 @@ svg text{font-family:var(--mono)}
 <main id="main"></main>
 
 <script>
-const HASH = "6de9bd03a20b6576a11447a96d300f521f198df4242855bee8271710e6d86b91";
+const HASH = "3a892eea646c4e4fc44df3a264545ce2e51f4bdc752cbd996dae588e5c839602";
 const TABS = [
   {id:"universo", t:"Universo", ok:true},
   {id:"macro", t:"Macro", ok:true},
@@ -329,13 +344,72 @@ function tablaSectores(){
     <div class="sub" style="margin-top:8px">Rendimiento anual promedio del ETF del sector <b>por encima o por debajo del S&P 500</b> ${secModo==="sig"?"en el mes <b>siguiente</b> a cada mes clasificado en ese régimen, o sea, lo que podías aprovechar sabiendo el régimen":"en el <b>mismo mes</b> en que la economía estaba en ese régimen"}. Pasá el mouse para ver en qué % de los meses le ganó al índice. La columna marcada es el régimen actual. Ojo: usa datos macro revisados, así que es una referencia, no una garantía.</div></div>`;
 }
 
+const SC = {verde:"var(--pos)", amarillo:"var(--accent)", rojo:"var(--neg)"};
+const SEM_TXT = {
+  verde:{t:"Verde · sin alarmas", d:"El crecimiento no se está frenando y el S&P está por encima de su promedio de 10 meses. Exposición normal."},
+  amarillo:{t:"Amarillo · una alarma encendida", d:"Hay una sola de las dos condiciones. Históricamente no alcanza para salir: atención, pero sin cambios en la cartera."},
+  rojo:{t:"Rojo · las dos alarmas encendidas", d:"El crecimiento se frena y el S&P perdió su promedio de 10 meses. Históricamente fue el momento de reducir exposición en renta variable, sobre todo en clientes conservadores."}
+};
+
+function semBanda(h){
+  const W = 1000, H = 46, n = h.length, bw = W/n;
+  let o = `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="none" style="display:block;height:${H}px">`;
+  h.forEach((x,j)=>{ o += `<rect x="${j*bw}" y="0" width="${bw+0.5}" height="26" fill="${SC[x.e]}" fill-opacity="${x.e==="verde"?0.35:x.e==="amarillo"?0.6:1}"><title>${x.f} · ${x.e}</title></rect>`; });
+  h.forEach((x,j)=>{ if (x.f.endsWith("-01") && +x.f.slice(0,4)%2===1) o += `<text x="${j*bw}" y="42" font-size="10" fill="var(--muted)">${x.f.slice(0,4)}</text>`; });
+  return o + `</svg>`;
+}
+
+function semaforoHTML(){
+  const S = M.semaforo; if (!S) return "";
+  const T = SEM_TXT[S.estado], R = S.resultados, a = R.regla, b = R.spy;
+  const reg = M.cuadrantes[S.regimen]?.nombre || S.regimen;
+  const fila = (n, f, mejorBajo) => { const x=f(a), y=f(b); const ok = mejorBajo ? x>y : x>y;
+    return `<tr><td class="l">${n}</td><td class="${ok?"pos":""}">${pct(x)}</td><td>${pct(y)}</td></tr>`; };
+  const tr = R.tramos;
+  return `<div class="card" style="border-color:${SC[S.estado]}"><h3>SEMÁFORO DE RIESGO</h3>
+    <div class="sem">
+      <div class="luz"><i class="rojo ${S.estado==="rojo"?"on":""}"></i><i class="amarillo ${S.estado==="amarillo"?"on":""}"></i><i class="verde ${S.estado==="verde"?"on":""}"></i></div>
+      <div><div class="big" style="color:${SC[S.estado]}">${T.t}</div><div class="sub">${T.d}</div>
+        <div class="sub" style="margin-top:4px">Hace ${S.duracion} ${S.duracion===1?"mes":"meses"} en este estado.</div></div>
+      <div class="chk">
+        <div><b style="color:${S.frena?"var(--neg)":"var(--pos)"}">${S.frena?"ALARMA":"OK"}</b> Crecimiento: ${S.frena?"se frena":"no se frena"} <span class="mut">(${esc(reg)})</span></div>
+        <div><b style="color:${S.bajo?"var(--neg)":"var(--pos)"}">${S.bajo?"ALARMA":"OK"}</b> S&P ${pct(S.dist)} vs su promedio de 10 meses</div>
+      </div>
+    </div>
+    <div style="margin-top:14px">${semBanda(S.historial)}</div>
+    <div class="semgrid">
+      <div><h3 style="margin-top:4px">QUÉ HUBIERA PASADO SALIENDO A LETRAS EN ROJO (${R.desde.slice(0,4)}–HOY)</h3>
+        <table class="res"><tr><th class="l"></th><th>Con la regla</th><th>S&P 500</th></tr>
+          ${fila("Rendimiento anual", x=>x.anual)}
+          ${fila("Peor caída", x=>x.caida_max, true)}
+          ${fila("Peor año (12 meses)", x=>x.peor_12m, true)}
+          ${fila("Crisis 2008", x=>x.episodios["2008"], true)}
+          ${fila("Covid 2020", x=>x.episodios["2020"], true)}
+          ${fila("Suba de tasas 2022", x=>x.episodios["2022"], true)}
+          <tr><td class="l">Rinde 2005–2018</td><td class="${tr["2005-2018"].regla>tr["2005-2018"].spy?"pos":""}">${pct(tr["2005-2018"].regla)}</td><td>${pct(tr["2005-2018"].spy)}</td></tr>
+          <tr><td class="l">Rinde 2019–hoy</td><td class="${tr["2019-hoy"].regla>tr["2019-hoy"].spy?"pos":""}">${pct(tr["2019-hoy"].regla)}</td><td>${pct(tr["2019-hoy"].spy)}</td></tr>
+        </table>
+        <div class="sub" style="margin-top:6px">Fuera del mercado el ${Math.round(R.tiempo_fuera*100)}% del tiempo. Incluye 0,5% de costo por cada entrada o salida.</div></div>
+      <div><h3 style="margin-top:4px">VECES QUE SE PRENDIÓ EN ROJO</h3>
+        <table class="res"><tr><th class="l">Desde</th><th>Meses</th><th>S&P mientras estaba en rojo</th></tr>
+          ${S.alarmas.slice().reverse().map(x=>`<tr><td class="l">${x.desde}${x.abierta?' <span class="neg">· activa</span>':""}</td><td>${x.meses}</td><td class="${cls(x.spy_durante)}">${pct(x.spy_durante)}</td></tr>`).join("")}
+        </table>
+        <div class="sub" style="margin-top:6px">Verde en la última columna = falsa alarma (el S&P subió igual). Rojo = caída evitada.</div></div>
+    </div>
+    <details class="help" style="margin-top:12px"><summary>Cómo usarlo</summary>
+      <p>El semáforo <b>no busca ganarle al índice</b>: busca evitar las caídas grandes. Mira dos cosas a fin de cada mes: si el crecimiento de EE.UU. se está frenando (régimen de estanflación o desinflación) y si el S&P está por debajo de su promedio de 10 meses. Solo cuando pasan las dos juntas se pone en rojo.</p>
+      <p>Las dos condiciones se complementan: la tendencia sola da muchas falsas alarmas, y la macro sola llega tarde. Juntas, en la historia, esquivaron la mayor parte de 2008 a cambio de algo de rendimiento en los años buenos.</p>
+      <p><b>Uso sugerido:</b> en rojo, bajar la parte táctica de renta variable o la exposición de clientes conservadores; en amarillo, no hacer cambios pero no sumar riesgo. Ojo: el historial usa datos macro revisados, así que en tiempo real habría funcionado algo peor.</p>
+    </details></div>`;
+}
+
 function macro(m){
   if (!M){ m.innerHTML = `<div class="empty">Todavía no hay datos macro. Corré Actions → Actualizar datos.</div>`; return; }
   const q = M.cuadrantes[M.actual], p = M.probs[M.actual];
   const div = ["crecimiento","inflacion"].filter(g=>M.lectura[g].diverge);
   const f = new Date(M.actualizado).toLocaleDateString("es-AR");
-  m.innerHTML = `
-  <div class="mx">
+  m.innerHTML = `${semaforoHTML()}
+  <div class="mx" style="margin-top:16px">
     <div class="card"><h3>DÓNDE ESTÁ EE.UU.</h3>${cuadSVG()}
       <div class="sub" style="margin-top:6px">El punto blanco es hoy. Los grises son los 6 meses anteriores.</div></div>
     <div>
