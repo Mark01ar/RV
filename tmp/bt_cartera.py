@@ -110,6 +110,8 @@ out = {"meses": len(R), "desde": str(R.index[0])[:7], "hasta": str(R.index[-1])[
 for a_, b_ in [("2007", "2018"), ("2019", "2026"), ("2007", "2026")]:
     sub = R.loc[a_:b_]
     out[f"{a_}-{b_}"] = {s: st(sub[s], sub["spy"]) for s in list(EST) + ["mix_L10", "mix_L20"]}
+    out[f"{a_}-{b_}"].update({s + "_vsU": st(sub[s], sub[s + "_ew"]) for s in EST})
+    out[f"{a_}-{b_}"]["U_liq"] = st(sub["L10_ew"], sub["spy"])
 yr = R.groupby(R.index.year)
 out["anios"] = {int(y): {"L10": round(float((1 + g["L10"]).prod() - 1) * 100), "L20": round(float((1 + g["L20"]).prod() - 1) * 100),
                          "mix": round(float((1 + g["mix_L10"]).prod() - 1) * 100), "spy": round(float((1 + g["spy"]).prod() - 1) * 100)}
