@@ -129,7 +129,7 @@ def usa_vivo():
 
 
 def ultimo_habil():
-    d = pd.Timestamp.today().normalize()
+    d = pd.Timestamp.now(tz="America/Argentina/Buenos_Aires").tz_localize(None).normalize()
     while d.weekday() >= 5:
         d -= pd.Timedelta(days=1)
     return d
@@ -140,7 +140,8 @@ def completar_hoy(precios, usa):
     if precios.empty or precios.index[-1] >= hoy:
         return precios
     fila = {t: usa[t] for t in precios.columns if usa.get(t)}
-    if len(fila) < 0.5 * len(precios.columns):
+    print(f"data912 usa: {len(usa)} especies, coinciden {len(fila)}")
+    if not fila:
         return precios
     precios.loc[hoy] = pd.Series(fila, dtype=float)
     print(f"agregado cierre {hoy.date()} desde data912 para {len(fila)} tickers")
@@ -280,7 +281,7 @@ def construir(u, precios, sectores, byma):
         implicito = None
         if b.get("px_ars") and s is not None and m and not t.endswith(".KS"):
             ref = s.loc[:b["px_fecha"]] if b.get("px_fecha") else s
-            if len(ref):
+            if len(ref) and (not b.get("px_fecha") or ref.index[-1] == pd.Timestamp(b["px_fecha"])):
                 implicito = b["px_ars"] * r["cedears_por_accion"] / float(ref.iloc[-1])
         info = sectores.get(t, {})
         filas.append({
