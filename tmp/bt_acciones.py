@@ -103,7 +103,8 @@ def rk(s):
 
 
 filas = []
-cart = {"A": set(), "A3": set(), "B": set(), "C": set()}
+EST = ["A", "A3", "B", "C", "Bma", "Bav", "Cma", "Cav", "Cboth"]
+cart = {k: set() for k in EST}
 for k, f in enumerate(FE[12:-1]):
     ok = mom.loc[f].notna() & vsma.loc[f].notna() & fwd.loc[f].notna()
     if ok.sum() < 60:
@@ -113,24 +114,34 @@ for k, f in enumerate(FE[12:-1]):
     scC = pd.concat([rk(m), rk(v), rk(a)], axis=1).mean(axis=1)
     orden = sc.sort_values(ascending=False)
     q = pd.qcut(sc.rank(method="first"), 5, labels=[5, 4, 3, 2, 1])
-    nuevo = {"A": set(orden.index[:N]), "C": set(scC.sort_values(ascending=False).index[:N])}
-    nuevo["A3"] = set(orden.index[:N]) if (k % 3 == 0 or not cart["A3"]) else {t for t in cart["A3"] if t in r.index} or set(orden.index[:N])
-    pool = orden.index[:max(N, int(len(orden) * 0.2))]
-    filt = [t for t in pool if v[t] > 0 and (pd.isna(a[t]) or a[t] > 0)][:N]
-    nuevo["B"] = set(filt)
+    top = list(orden.index[:N])
+    pool = list(orden.index[:max(N, int(len(orden) * 0.2))])
+    pasa_ma = lambda t: v[t] > 0
+    pasa_av = lambda t: pd.isna(a[t]) or a[t] > 0
     fila = {"f": f, "ew": r.mean(), "spy": spyf.loc[f], "caja": cajaf.loc[f]}
     for qq in [1, 2, 3, 4, 5]:
         fila[f"Q{qq}"] = r[q == qq].mean()
-    for s_, c_ in nuevo.items():
+    plan = {
+        "A": (set(top), None),
+        "A3": ((set(top) if (k % 3 == 0 or not cart["A3"]) else ({t for t in cart["A3"] if t in r.index} or set(top))), None),
+        "B": (set([t for t in pool if pasa_ma(t) and pasa_av(t)][:N]), None),
+        "C": (set(scC.sort_values(ascending=False).index[:N]), None),
+        "Bma": (set([t for t in pool if pasa_ma(t)][:N]), None),
+        "Bav": (set([t for t in pool if pasa_av(t)][:N]), None),
+        "Cma": (set([t for t in top if pasa_ma(t)]), N),
+        "Cav": (set([t for t in top if pasa_av(t)]), N),
+        "Cboth": (set([t for t in top if pasa_ma(t) and pasa_av(t)]), N),
+    }
+    for s_, (h, slots) in plan.items():
         prev = cart[s_]
-        rot = (len(c_ - prev) / max(len(c_), 1)) if prev else 1.0
-        if prev and not c_:
-            rot = 1.0
-        bruto = r[list(c_)].mean() if c_ else fila["caja"]
+        n = slots or max(len(h), 1)
+        rot = (len(h - prev) / n) if prev else len(h) / n
+        bruto = (r[list(h)].sum() + (n - len(h)) * fila["caja"]) / n if h else fila["caja"]
+        fila[s_ + "_g"] = bruto
         fila[s_] = bruto - COSTO * 2 * rot
-        fila[s_ + "_n"] = len(c_)
+        fila[s_ + "_n"] = len(h)
         fila[s_ + "_rot"] = rot
-        cart[s_] = c_
+        cart[s_] = h
     filas.append(fila)
 print("meses validos", len(filas), flush=True)
 R = pd.DataFrame(filas).set_index("f")
@@ -149,12 +160,10 @@ def st(x, b):
 out = {"meses": len(R), "desde": str(R.index[0])[:7], "hasta": str(R.index[-1])[:7]}
 for a_, b_ in [("2006", "2018"), ("2019", "2026"), ("2006", "2026")]:
     sub = R.loc[a_:b_]
-    o = {s: st(sub[s], sub["ew"]) for s in ["A", "A3", "B", "C", "Q1", "Q2", "Q3", "Q4", "Q5", "spy", "ew"]}
-    o["rot_A"] = round(float(sub["A_rot"].mean()), 2)
-    o["rot_A3"] = round(float(sub["A3_rot"].mean()), 2)
-    o["rot_B"] = round(float(sub["B_rot"].mean()), 2)
-    o["n_B"] = round(float(sub["B_n"].mean()), 1)
-    o["meses_B_caja"] = int((sub["B_n"] == 0).sum())
+    o = {s: st(sub[s], sub["ew"]) for s in EST + ["Q1", "Q5", "spy", "ew"]}
+    o.update({s + "_g": st(sub[s + "_g"], sub["ew"]) for s in EST})
+    o.update({s + "_rot": round(float(sub[s + "_rot"].mean()), 2) for s in EST})
+    o.update({s + "_n": round(float(sub[s + "_n"].mean()), 1) for s in ["Cma", "Cav", "Cboth"]})
     out[f"{a_}-{b_}"] = o
 for kk, vv in out.items():
     print("R|" + kk + "|" + json.dumps(vv), flush=True)
