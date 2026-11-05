@@ -283,6 +283,28 @@ def semaforo(y, hist):
     }
 
 
+def informativos():
+    out = {}
+    try:
+        s, _ = fred("GDPNOW")
+        q = s.index[-1]
+        p = s.index[-2] if len(s) > 1 else None
+        out["gdpnow"] = {"valor": float(s.iloc[-1]), "trimestre": f"T{(q.month - 1) // 3 + 1} {q.year}",
+                         "anterior": float(s.iloc[-2]) if p is not None else None,
+                         "trim_anterior": f"T{(p.month - 1) // 3 + 1} {p.year}" if p is not None else None}
+    except Exception as e:
+        print(f"gdpnow: {e}", file=sys.stderr)
+    try:
+        s, _ = fred("NFCI")
+        h = s.loc["2000":]
+        out["nfci"] = {"valor": float(s.iloc[-1]), "fecha": s.index[-1].strftime("%Y-%m-%d"),
+                       "cambio_13s": float(s.iloc[-1] - s.iloc[-14]), "cambio_4s": float(s.iloc[-1] - s.iloc[-5]),
+                       "percentil": float((h < s.iloc[-1]).mean())}
+    except Exception as e:
+        print(f"nfci: {e}", file=sys.stderr)
+    return out
+
+
 def main():
     ids = ["CFNAIMA3", "ICSA", "INDPRO", "PAYEMS", "CPIAUCSL", "CPILFESL", "PCEPILFE", "BAA10Y", "T5YIE"]
     f, fuentes = {}, set()
@@ -344,7 +366,7 @@ def main():
         "fuente_fred": "/".join(sorted(fuentes)),
         "peso_dato": PESO_DATO,
         "g": g0, "i": i0, "probs": probs, "actual": actual, "crudo": crudo, "duracion": dur,
-        "umbral": UMBRAL_CAMBIO, "semaforo": semaforo(y, hist), "sectores": sectores_por_regimen(y, hist, 1),
+        "umbral": UMBRAL_CAMBIO, "informativos": informativos(), "semaforo": semaforo(y, hist), "sectores": sectores_por_regimen(y, hist, 1),
         "sectores_mismo": sectores_por_regimen(y, hist, 0),
         "cambios": int((hist["qc"] != hist["qc"].shift()).sum() - 1),
         "cambios_sin_regla": int((hist["q"] != hist["q"].shift()).sum() - 1),

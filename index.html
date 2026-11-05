@@ -404,6 +404,22 @@ function semaforoHTML(){
     </details></div>`;
 }
 
+function informativosHTML(){
+  const I = M.informativos; if (!I || (!I.gdpnow && !I.nfci)) return "";
+  const g = I.gdpnow, n = I.nfci;
+  const tile = (titulo, valor, color, linea, expl) => `<div class="card" style="background:var(--panel2)"><h3>${titulo}</h3>
+    <div class="big" style="color:${color}">${valor}</div><div class="sub">${linea}</div><div class="sub" style="margin-top:8px;font-size:12px">${expl}</div></div>`;
+  let o = "";
+  if (g) o += tile("GDPNOW · FED DE ATLANTA", `${g.valor>=0?"+":""}${g.valor.toFixed(1)}%`, g.valor>=2?"var(--pos)":g.valor>=0?"var(--accent)":"var(--neg)",
+    `Crecimiento estimado del PBI de EE.UU. para el ${esc(g.trimestre)}, anualizado.${g.anterior!=null?` ${esc(g.trim_anterior)}: ${g.anterior>=0?"+":""}${g.anterior.toFixed(1)}%.`:""}`,
+    "Estimación en tiempo real que se actualiza con cada dato nuevo. El PBI oficial sale un mes después de terminado el trimestre. Referencia: más de 2% es crecimiento sólido; menos de 0%, contracción.");
+  if (n){ const laxa = n.valor<0, endurece = n.cambio_13s>0;
+    o += tile("CONDICIONES FINANCIERAS · FED DE CHICAGO", `${n.valor>=0?"+":""}${n.valor.toFixed(2)}`, laxa?"var(--pos)":"var(--neg)",
+    `${laxa?"Más laxas":"Más ajustadas"} que el promedio histórico · en 3 meses se ${endurece?"endurecieron":"relajaron"} (${n.cambio_13s>=0?"+":""}${n.cambio_13s.toFixed(2)}) · al ${esc(n.fecha)}`,
+    "Resume tasas, spreads de crédito, volatilidad y acceso al financiamiento. Negativo = conseguir plata es más fácil que lo normal; positivo = más difícil. Si sube rápido, suele anticipar problemas para la economía y para las acciones más especulativas.");}
+  return `<div style="margin-top:16px"><div class="sub" style="margin-bottom:8px;font-family:var(--mono);font-size:11px;letter-spacing:.06em">OTROS INDICADORES · INFORMATIVOS, NO ENTRAN EN EL CÁLCULO</div><div class="ejes" style="margin-top:0">${o}</div></div>`;
+}
+
 function macro(m){
   if (!M){ m.innerHTML = `<div class="empty">Todavía no hay datos macro. Corré Actions → Actualizar datos.</div>`; return; }
   const q = M.cuadrantes[M.actual], p = M.probs[M.actual];
@@ -431,6 +447,7 @@ function macro(m){
     </div>
   </div>
   <div class="ejes">${tablaEje("crecimiento")}${tablaEje("inflacion")}</div>
+  ${informativosHTML()}
   ${tablaSectores()}
   <div class="card" style="margin-top:16px">${bandaSVG()}
     <div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div></div>`;
