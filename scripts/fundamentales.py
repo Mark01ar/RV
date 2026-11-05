@@ -14,6 +14,7 @@ DATA = ROOT / "data"
 SALIDA = DATA / "fundamentales.json"
 SNAP = DATA / "snapshots"
 CACHE = DATA / "fund_cache.json"
+BAL_V = 2
 PESOS = {"revisiones": 0.30, "momentum": 0.25, "calidad": 0.25, "valuacion": 0.20}
 FINANCIERAS = {"Financial Services"}
 CAMPOS = ["forwardPE", "trailingPE", "returnOnAssets", "returnOnEquity", "operatingMargins", "grossMargins",
@@ -66,11 +67,16 @@ def balances(k, fin, usa):
     qi, qc, qb = k.quarterly_income_stmt, k.quarterly_cashflow, k.quarterly_balance_sheet
     ai, ac, ab = k.income_stmt, k.cashflow, k.balance_sheet
     d = {}
-    ebit = ttm(qi, ["EBIT", "Operating Income"])
-    pre, imp = ttm(qi, ["Pretax Income"]), ttm(qi, ["Tax Provision"])
+
+    def flujo(q, a, n):
+        v = ttm(q, n)
+        return v if v is not None else fila(a, n, 0)
+
+    ebit = flujo(qi, ai, ["EBIT", "Operating Income"])
+    pre, imp = flujo(qi, ai, ["Pretax Income"]), flujo(qi, ai, ["Tax Provision"])
     tasa = min(max(imp / pre, 0), 0.35) if (pre and imp is not None and pre > 0) else 0.21
     deuda = fila(qb, ["Total Debt"]) or 0
-    pn = fila(qb, ["Stockholders Equity", "Common Stock Equity"])
+    pn = fila(qb, ["Stockholders Equity", "Common Stock Equity"]) or fila(ab, ["Stockholders Equity", "Common Stock Equity"])
     caja = fila(qb, ["Cash And Cash Equivalents", "Cash Cash Equivalents And Short Term Investments"]) or 0
     ic = (deuda + pn - caja) if pn is not None else None
     d["roic"] = None if (fin or ebit is None or not ic or ic <= 0) else ebit * (1 - tasa) / ic
@@ -81,8 +87,8 @@ def balances(k, fin, usa):
             if oi is not None and rv:
                 m.append(oi / rv)
     d["estab_margen"] = None if (fin or len(m) < 4) else float(np.std(m[:8]))
-    ni, cfo = ttm(qi, ["Net Income", "Net Income Common Stockholders"]), ttm(qc, ["Operating Cash Flow"])
-    ta = fila(qb, ["Total Assets"])
+    ni, cfo = flujo(qi, ai, ["Net Income", "Net Income Common Stockholders"]), flujo(qc, ac, ["Operating Cash Flow"])
+    ta = fila(qb, ["Total Assets"]) or fila(ab, ["Total Assets"])
     d["accruals"] = None if (fin or ni is None or cfo is None or not ta) else (ni - cfo) / ta
     s0 = fila(qi, ["Diluted Average Shares", "Basic Average Shares"], 0)
     s4 = fila(qi, ["Diluted Average Shares", "Basic Average Shares"], 4)
@@ -153,7 +159,7 @@ def bajar(t, fin=False, usa=False, previo=None):
     d = {c: info.get(c) for c in CAMPOS}
     mrq = info.get("mostRecentQuarter")
     claves = ["roic", "estab_margen", "accruals", "dilucion", "fscore", "fscore_n", "pe_hist", "pe_hist_n"]
-    if previo and previo.get("mrq") == mrq and previo.get("bal_ok"):
+    if previo and previo.get("mrq") == mrq and previo.get("bal_ok") and previo.get("bal_v") == BAL_V:
         d.update({c: previo.get(c) for c in claves})
     else:
         try:
@@ -161,6 +167,7 @@ def bajar(t, fin=False, usa=False, previo=None):
         except Exception as e:
             print(f"balances {t}: {e}", file=sys.stderr)
     d["mrq"] = mrq
+    d["bal_v"] = BAL_V
     d["bal_ok"] = any(d.get(c) is not None for c in claves)
     try:
         tr = filas(k.eps_trend)
