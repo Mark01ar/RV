@@ -137,15 +137,16 @@ def ultimo_habil():
 
 def completar_hoy(precios, usa):
     hoy = ultimo_habil()
-    if precios.empty or precios.index[-1] >= hoy:
-        return precios
-    fila = {t: usa[t] for t in precios.columns if usa.get(t)}
-    print(f"data912 usa: {len(usa)} especies, coinciden {len(fila)}")
-    if not fila:
-        return precios
-    precios.loc[hoy] = pd.Series(fila, dtype=float)
-    print(f"agregado cierre {hoy.date()} desde data912 para {len(fila)} tickers")
-    return precios
+    precios = precios.loc[:hoy].copy()
+    n = 0
+    for t, px in usa.items():
+        if t in precios.columns:
+            serie = precios[t].dropna()
+            if len(serie) and serie.index[-1] < hoy:
+                precios.loc[hoy, t] = float(px)
+                n += 1
+    print(f"data912 usa: {len(usa)} especies, cierre {hoy.date()} completado en {n}")
+    return precios.sort_index()
 
 
 def byma_historico(sym):
