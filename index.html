@@ -282,7 +282,7 @@ function cuadSVG(){
   for (const [q,[x,y]] of Object.entries(cel)){
     const p = M.probs[q], on = q===M.actual;
     o += `<rect x="${x}" y="${y}" width="${S}" height="${S}" fill="${QC[q]}" fill-opacity="${0.06+p*0.5}" stroke="${on?QC[q]:"var(--line)"}" stroke-width="${on?2:1}"/>`;
-    o += `<text x="${x+10}" y="${y+20}" font-size="11" fill="var(--text)">${esc(M.cuadrantes[q].nombre.split(" / ")[0])}</text>`;
+    o += `<text x="${x+10}" y="${y+20}" font-size="11" fill="var(--text)">${{CSI:"Crec. sin inflación",REC:"Recalentamiento",EST:"Estanflación",DES:"Desinflación"}[q]}</text>`;
     o += `<text x="${x+10}" y="${y+40}" font-size="18" font-weight="600" fill="${QC[q]}">${Math.round(p*100)}%</text>`;
   }
   const tr = M.historial.slice(-7);
@@ -394,7 +394,7 @@ function semaforoHTML(){
         <table class="res"><tr><th class="l">Desde</th><th>Meses</th><th>S&P mientras estaba en rojo</th></tr>
           ${S.alarmas.slice().reverse().map(x=>`<tr><td class="l">${x.desde}${x.abierta?' <span class="neg">· activa</span>':""}</td><td>${x.meses}</td><td class="${cls(x.spy_durante)}">${pct(x.spy_durante)}</td></tr>`).join("")}
         </table>
-        <div class="sub" style="margin-top:6px">Verde en la última columna = falsa alarma (el S&P subió igual). Rojo = caída evitada.</div></div>
+        <div class="sub" style="margin-top:6px">Verde en la última columna = falsa alarma (el S&P subió igual). Rojo = caída evitada. ${(()=>{const t=S.alarmas.filter(x=>!x.abierta&&x.spy_durante!=null), ev=t.filter(x=>x.spy_durante<-0.05);return `De ${t.length} alarmas, ${ev.length} evitaron caídas grandes y el resto fueron falsas alarmas cortas: funciona como un seguro, que casi siempre se paga y pocas veces se usa, pero cuando se usa vale mucho.`})()}</div></div>
     </div>
     <details class="help" style="margin-top:12px"><summary>Cómo usarlo</summary>
       <p>El semáforo <b>no busca ganarle al índice</b>: busca evitar las caídas grandes. Mira dos cosas a fin de cada mes: si el crecimiento de EE.UU. se está frenando (régimen de estanflación o desinflación) y si el S&P está por debajo de su promedio de 10 meses. Solo cuando pasan las dos juntas se pone en rojo.</p>
