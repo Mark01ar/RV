@@ -110,10 +110,10 @@ def indicadores(f, y):
             "Inflación anualizada de los últimos 3 meses contra la de 12 meses. Positivo = se acelera.",
             imp, val, s.index[-1])
 
-    s = f["BAMLH0A0HYM2"]
+    s = f["BAA10Y"]
     m = mes(s)
-    add("HYOAS", "crecimiento", "mercado", "Spread de bonos high yield",
-        "Cuánto más pagan las empresas riesgosas que el Tesoro. Si se agranda, el mercado ve menos crecimiento (cuenta al revés).",
+    add("BAA10Y", "crecimiento", "mercado", "Spread de bonos corporativos",
+        "Cuánto más pagan las empresas (BAA) que el Tesoro a 10 años. Si se agranda, el mercado ve menos crecimiento (cuenta al revés).",
         m.diff(3), f"{m.iloc[-1]:.2f}%", s.index[-1], -1)
 
     if {"XLY", "XLP"} <= set(y.columns):
@@ -163,7 +163,7 @@ def cuadrante(g, i):
 
 
 def main():
-    ids = ["CFNAIMA3", "ICSA", "INDPRO", "PAYEMS", "CPIAUCSL", "CPILFESL", "PCEPILFE", "BAMLH0A0HYM2", "T5YIE"]
+    ids = ["CFNAIMA3", "ICSA", "INDPRO", "PAYEMS", "CPIAUCSL", "CPILFESL", "PCEPILFE", "BAA10Y", "T5YIE"]
     f, fuentes = {}, set()
     for sid in ids:
         s, src = fred(sid)
