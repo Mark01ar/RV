@@ -35,7 +35,8 @@ def correr(rezago):
         prev_r, prev_e = rec, evi
         filas.append({"mes": t, "q": q, "spy": r.loc[t, "SPY"],
                       "rec": ex.loc[t, list(rec)].mean() + r.loc[t, "SPY"] - c_r,
-                      "evi": ex.loc[t, list(evi)].mean() + r.loc[t, "SPY"] - c_e,
+                      "evi": ex.loc[t, list(evi)].mean() + r.loc[t, "SPY"],
+                      "rec0": ex.loc[t, list(rec)].mean() + r.loc[t, "SPY"],
                       "eq": r.loc[t, [s for s in SECT if pd.notna(r.loc[t, s])]].mean()})
     return pd.DataFrame(filas).set_index("mes")
 
@@ -61,7 +62,7 @@ for nombre, rez in [("teoria", 0), ("historial", 1)]:
     d = correr(rez)
     d["dif"] = d["rec"] - d["evi"]
     d["cero"] = 0.0
-    out[nombre] = {"n": len(d), "rec_vs_igualpeso": resumen(d, "rec", "eq"), "evi_vs_igualpeso": resumen(d, "evi", "eq"),
+    out[nombre] = {"n": len(d), "rec_sin_costos": resumen(d, "rec0", "eq"), "rec_vs_igualpeso": resumen(d, "rec", "eq"), "evi_vs_igualpeso": resumen(d, "evi", "eq"),
                    "igualpeso_vs_spy": resumen(d, "eq", "spy")}
 out["n_cambios"] = int((reg.loc["2005-01":] != reg.loc["2005-01":].shift()).sum())
 print("RESULTADO " + json.dumps(out, ensure_ascii=False))
