@@ -60,7 +60,7 @@ def descargar_precios(tickers):
         time.sleep(2)
     if not frames:
         return pd.DataFrame()
-    p = pd.concat(frames, axis=1)
+    p = pd.concat(frames, axis=1, sort=False)
     p = p.loc[:, ~p.columns.duplicated()]
     p.index = pd.to_datetime(p.index).tz_localize(None)
     return p.sort_index()
@@ -159,11 +159,16 @@ def datos_byma(u):
             print(f"historico {sym}: {e}", file=sys.stderr)
             hist = None
         monto20 = None
+        fecha = None
         if hist is not None and len(hist):
-            monto20 = float(hist["monto"].tail(20).mean())
+            monto20 = float(hist["monto"].tail(20).median())
+            ult = pd.to_numeric(hist["c"], errors="coerce").dropna()
+            if len(ult):
+                px = float(ult.iloc[-1])
+                fecha = hist["fecha"].iloc[-1].strftime("%Y-%m-%d")
         elif v.get("v") and px:
             monto20 = float(v["v"]) * float(px)
-        filas[sym] = {"px_ars": float(px) if px else None, "monto_ars": monto20}
+        filas[sym] = {"px_ars": float(px) if px else None, "monto_ars": monto20, "px_fecha": fecha}
         time.sleep(0.15)
     print(f"historico ejemplo: {MUESTRA.get('hist')}")
     print(f"con monto: {sum(1 for f in filas.values() if f['monto_ars'])}")
@@ -208,7 +213,7 @@ def metricas(s, bench):
     if bench is not None:
         sw = s.resample("W-FRI").last().pct_change()
         bw = bench.resample("W-FRI").last().pct_change()
-        j = pd.concat([sw, bw], axis=1).dropna().tail(104)
+        j = pd.concat([sw, bw], axis=1, sort=False).dropna().tail(104)
         if len(j) > 40:
             m["beta"] = float(j.iloc[:, 0].cov(j.iloc[:, 1]) / j.iloc[:, 1].var())
     return m
@@ -248,14 +253,16 @@ def construir(u, precios, sectores, byma):
         m = metricas(s, bench)
         b = byma.get(r["byma"], {})
         implicito = None
-        if b.get("px_ars") and m.get("precio") and not t.endswith(".KS"):
-            implicito = b["px_ars"] * r["cedears_por_accion"] / m["precio"]
+        if b.get("px_ars") and s is not None and m and not t.endswith(".KS"):
+            ref = s.loc[:b["px_fecha"]] if b.get("px_fecha") else s
+            if len(ref):
+                implicito = b["px_ars"] * r["cedears_por_accion"] / float(ref.iloc[-1])
         info = sectores.get(t, {})
         filas.append({
             "byma": r["byma"], "ticker": t, "nombre": r["nombre"], "ratio": r["ratio"],
             "nota": r["motivo"], "sector": info.get("sector"), "industria": info.get("industria"),
             "pais": info.get("pais"), "mcap": info.get("mcap"),
-            "px_ars": b.get("px_ars"), "monto_ars": b.get("monto_ars"), "ccl_impl": implicito,
+            "px_ars": b.get("px_ars"), "px_fecha": b.get("px_fecha"), "monto_ars": b.get("monto_ars"), "ccl_impl": implicito,
             "sin_datos": not m, **m,
         })
     df = pd.DataFrame(filas)
