@@ -81,7 +81,7 @@ def g_i(T):
 
 fin = pd.Timestamp.today().to_period("M").to_timestamp("M") - pd.offsets.MonthEnd(1)
 filas = []
-for T in pd.date_range("2004-01-31", fin, freq="ME"):
+for T in pd.date_range("2004-12-31", fin, freq="ME"):
     g, i = g_i(T)
     filas.append({"f": T, "g": g, "i": i})
 rt = pd.DataFrame(filas).set_index("f")
@@ -91,7 +91,7 @@ rt["qc"] = M.confirmar(rt)
 mj = json.load(open("data/macro.json"))
 rev = pd.DataFrame(mj["historial"])
 rev.index = pd.to_datetime(rev["f"]) + pd.offsets.MonthEnd(0)
-rev = rev.loc["2004-01-31":fin]
+rev = rev.loc["2004-12-31":fin]
 
 comun = rt.index.intersection(rev.index)
 frena_rt = rt.loc[comun, "qc"].isin(["EST", "DES"])
