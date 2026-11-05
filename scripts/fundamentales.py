@@ -222,48 +222,6 @@ def tipos_cambio(monedas):
     return fx
 
 
-def ohlcv(tickers):
-    frames = {}
-    for i in range(0, len(tickers), 40):
-        lote = tickers[i:i + 40]
-        for _ in range(3):
-            try:
-                df = yf.download(lote, period="1y", interval="1d", auto_adjust=False, progress=False,
-                                 group_by="column", threads=True)
-                break
-            except Exception as e:
-                print(f"ohlcv lote {i}: {e}", file=sys.stderr)
-                time.sleep(10)
-        else:
-            continue
-        for c in ["High", "Low", "Close", "Volume"]:
-            if isinstance(df.columns, pd.MultiIndex) and c in df.columns.get_level_values(0):
-                frames.setdefault(c, []).append(df[c])
-        time.sleep(2)
-    out = {c: pd.concat(v, axis=1) for c, v in frames.items()}
-    for c in out:
-        out[c] = out[c].loc[:, ~out[c].columns.duplicated()]
-        out[c].index = pd.to_datetime(out[c].index).tz_localize(None)
-    return out
-
-
-def avwap(px, t, ultimo):
-    if not ultimo or "Close" not in px or t not in px["Close"].columns:
-        return None, None
-    f = pd.Timestamp(ultimo)
-    ancla = f.tz_localize(None).normalize()
-    if f.hour >= 16:
-        ancla += pd.Timedelta(days=1)
-    h, l, c, v = (px[k][t] for k in ["High", "Low", "Close", "Volume"])
-    df = pd.DataFrame({"h": h, "l": l, "c": c, "v": v}).dropna()
-    df = df[df.index >= ancla]
-    if len(df) < 2 or df["v"].sum() <= 0:
-        return None, None
-    tp = (df["h"] + df["l"] + df["c"]) / 3
-    vw = float((tp * df["v"]).sum() / df["v"].sum())
-    return float(df["c"].iloc[-1] / vw - 1), df.index[0].strftime("%Y-%m-%d")
-
-
 def pct(s, mayor_mejor=True):
     s = pd.to_numeric(s, errors="coerce")
     r = (s if mayor_mejor else -s).rank(pct=True) * 100
@@ -335,7 +293,6 @@ def main():
     CACHE.write_text(json.dumps(limpiar({t: {k: v for k, v in r.items() if k != "dato_previo"} for t, r in raw.items()}),
                                 ensure_ascii=False, separators=(",", ":")))
     fx = tipos_cambio({r.get("financialCurrency") for r in raw.values() if r.get("financialCurrency")})
-    px = ohlcv([x["ticker"] for x in univ])
 
     filas_df = []
     for x in univ:
@@ -350,7 +307,6 @@ def main():
         caja = num(r.get("totalCash"))
         fpe = num(r.get("forwardPE"))
         gm = num(r.get("grossMargins"))
-        dist_avwap, ancla = avwap(px, t, r.get("ultimo_balance"))
         precio = num(r.get("currentPrice"))
         objetivo = num(r.get("targetMeanPrice"))
         filas_df.append({
@@ -374,7 +330,7 @@ def main():
             "recom": num(r.get("recommendationMean")), "n_analistas": num(r.get("numberOfAnalystOpinions")),
             "rev_suben": r.get("rev_suben"), "rev_bajan": r.get("rev_bajan"),
             "ultimo_balance": r.get("ultimo_balance"), "proximo_balance": r.get("proximo_balance"),
-            "avwap_dist": dist_avwap, "avwap_ancla": ancla, "dato_previo": bool(r.get("dato_previo")),
+            "dato_previo": bool(r.get("dato_previo")),
             "sin_fund": t not in raw,
         })
     df = pd.DataFrame(filas_df).set_index("ticker")
@@ -427,8 +383,7 @@ def main():
                     ["rev90_0y", "rev90_1y", "amplitud", "sorpresa", "consistencia", "n_balances", "roic", "estab_margen",
                      "accruals", "dilucion", "fscore", "pe_trailing", "pe_hist", "pe_vs_hist", "mom12_1", "vs_ma200", "roa", "margen_op",
                      "margen_bruto", "deuda_ebitda", "ey", "fcf_yield", "forward_pe", "crec_ventas", "upside", "recom",
-                     "n_analistas", "rev_suben", "rev_bajan", "ultimo_balance", "proximo_balance", "avwap_dist",
-                     "avwap_ancla", "dato_previo"]},
+                     "n_analistas", "rev_suben", "rev_bajan", "ultimo_balance", "proximo_balance", "dato_previo"]},
             "sin_fund": bool(r["sin_fund"]),
         })
     hoy = dt.date.today().isoformat()
@@ -439,7 +394,6 @@ def main():
     SNAP.mkdir(exist_ok=True)
     snap = comp[["total", "revisiones", "momentum", "calidad", "valuacion"]].round(2)
     snap["vs_ma200"] = df["vs_ma200"].round(4)
-    snap["avwap_dist"] = df["avwap_dist"].round(4)
     snap.to_csv(SNAP / f"fund_{hoy}.csv")
     print(f"fundamentals: {len(salida)} tickers, {int(comp['total'].notna().sum())} con score, {len(fallidos)} fallidos")
     print(comp.sort_values("total", ascending=False).head(10).round(1).to_string())

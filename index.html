@@ -482,18 +482,13 @@ function senal(x){
   const t = x.scores.total; if (t==null) return null;
   if (t < UMB.bajo) return "evitar";
   if (t < UMB.alto) return "neutral";
-  const ma = x.raw.vs_ma200, av = x.raw.avwap_dist;
-  const ok = (ma??-1) > 0 && (av==null || av > 0);
-  return ok ? "comprar" : "esperar";
+  return (x.raw.vs_ma200??-1) > 0 ? "comprar" : "esperar";
 }
 function porQue(x){
   const s = senal(x), r = x.raw, t = Math.round(x.scores.total??0);
   if (s==="evitar") return `Puntaje ${t}: por debajo de ${UMB.bajo}.`;
   if (s==="neutral") return `Puntaje ${t}: entre ${UMB.bajo} y ${UMB.alto}.`;
-  const m = [];
-  if ((r.vs_ma200??-1) <= 0) m.push("debajo de su MA200");
-  if (r.avwap_dist!=null && r.avwap_dist <= 0) m.push("debajo del VWAP de su último balance");
-  return s==="comprar" ? `Puntaje ${t}, sobre MA200${r.avwap_dist!=null?" y sobre el VWAP del balance":""}.` : `Puntaje ${t}, pero ${m.join(" y ")}.`;
+  return s==="comprar" ? `Puntaje ${t} y sobre su MA200.` : `Puntaje ${t}, pero debajo de su MA200: buena empresa, tendencia rota.`;
 }
 const scol = v => v==null ? "var(--muted)" : v>=70 ? "var(--pos)" : v>=40 ? "var(--accent)" : "var(--neg)";
 const sc = v => v==null ? '<span class="mut">—</span>' : `${Math.round(v)}<span class="sbar"><i style="width:${v}%;background:${scol(v)}"></i></span>`;
@@ -504,9 +499,9 @@ function detalle(x){
   const r = x.raw, P = (v,d=1)=>pct(v,d), N=(v,d=1)=>v==null?"—":num(v,d), S = v => v==null?"—":Math.round(v);
   const sb = x.sub || {};
   const g = (t, items) => `<div><h4>${t}</h4><dl>${items.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("")}</dl></div>`;
-  return `<tr class="det"><td colspan="14"><div class="detg">
+  return `<tr class="det"><td colspan="13"><div class="detg">
     ${g(`REVISIONES · ${S(x.scores.revisiones)}`,[["EPS este año, 90 días",P(r.rev90_0y)],["EPS año próximo, 90 días",P(r.rev90_1y)],["Analistas que suben / bajan (30d)",`${r.rev_suben??"—"} / ${r.rev_bajan??"—"}`],["Sorpresa último balance",P(r.sorpresa)],["Balances que superaron estimaciones",r.consistencia==null?"—":`${Math.round(r.consistencia*(r.n_balances||0))} de ${r.n_balances}`]])}
-    ${g(`MOMENTUM · ${S(x.scores.momentum)}`,[["Retorno 12 meses sin el último",P(r.mom12_1)],["Distancia a MA200",P(r.vs_ma200)],["Precio vs VWAP desde balance",P(r.avwap_dist)],["Ancla del VWAP",r.avwap_ancla||"—"]])}
+    ${g(`MOMENTUM · ${S(x.scores.momentum)}`,[["Retorno 12 meses sin el último",P(r.mom12_1)],["Distancia a MA200",P(r.vs_ma200)]])}
     ${g(`CALIDAD · ${S(x.scores.calidad)}`,[[`<b>Rentabilidad · ${S(sb.rentabilidad)}</b>`,""],[r.roic!=null?"ROIC (retorno s/ capital invertido)":"Rentabilidad sobre activos",P(r.roic!=null?r.roic:r.roa)],["Margen operativo",P(r.margen_op)],["Margen bruto",P(r.margen_bruto)],
       [`<b>Solidez · ${S(sb.solidez)}</b>`,""],["Deuda neta / EBITDA",r.deuda_ebitda==null?"—":N(r.deuda_ebitda)+"x"],["F-score (0 a 9)",N(r.fscore,1)],
       [`<b>Calidad de ganancias · ${S(sb.ganancias)}</b>`,""],["Ganancia no cobrada / activos",P(r.accruals)],["Variabilidad del margen",P(r.estab_margen)],["Dilución en 12 meses",P(r.dilucion)]])}
@@ -520,14 +515,13 @@ function fundamentals(m){
   const sectores = [...new Set(F.tickers.map(x=>x.sector).filter(Boolean))].sort();
   const f = new Date(F.actualizado).toLocaleDateString("es-AR");
   m.innerHTML = `
-  <div class="aviso">Puntaje <b>todavía sin validar</b> con datos históricos: el backtest es la próxima etapa. Usalo para ordenar ideas, no como recomendación. Actualizado ${f}.</div>
+  <div class="aviso"><b>Momentum y MA200 validados</b> con 20 años de historia; revisiones, calidad y valuación todavía no (se validan con el track record semanal). Usalo para ordenar ideas y revisalo una vez por mes. Actualizado ${f}.</div>
   <div class="bar">
     <input id="fq" placeholder="Buscar ticker o empresa" value="${esc(fs.q)}">
     <select id="fsec"><option value="">Todos los sectores</option>${sectores.map(s=>`<option ${s===fs.sector?"selected":""}>${esc(s)}</option>`).join("")}</select>
     <select id="fliq"><option value="">Toda liquidez</option><option value="am" ${fs.liq==="am"?"selected":""}>Solo Alta y Media</option></select>
     <select id="fsig"><option value="">Todas las señales</option>${Object.entries(SIG).map(([k,v])=>`<option value="${k}" ${fs.sig===k?"selected":""}>${v.t}</option>`).join("")}</select>
     <label class="chkl"><input type="checkbox" id="fma" ${fs.ma?"checked":""}> Sobre MA200</label>
-    <label class="chkl"><input type="checkbox" id="fav" ${fs.av?"checked":""}> Sobre VWAP del balance</label>
     <span class="count" id="fcnt"></span>
   </div>
   <details class="help"><summary>Cómo se calcula</summary>
@@ -537,13 +531,13 @@ function fundamentals(m){
       <dt>Momentum · ${Math.round(F.pesos.momentum*100)}%</dt><dd>Retorno de 12 meses sin contar el último mes, y distancia al promedio de 200 ruedas.</dd>
       <dt>Calidad · ${Math.round(F.pesos.calidad*100)}%</dt><dd>Tres partes iguales. <b>Rentabilidad:</b> ROIC (cuánto gana por cada dólar invertido en el negocio), margen operativo y margen bruto. <b>Solidez:</b> deuda neta sobre EBITDA y F-score de Piotroski (9 pruebas año contra año: si gana plata, si genera caja, si mejora la rentabilidad, si baja la deuda, si mejora la liquidez, si no emite acciones, si mejoran el margen y la rotación de activos). <b>Calidad de las ganancias:</b> si la ganancia contable se convierte en caja, qué tan estable es el margen trimestre a trimestre, y si la empresa diluye a los accionistas emitiendo acciones. En bancos y aseguradoras solo cuentan la rentabilidad sobre activos y la dilución, porque el resto no aplica.</dd>
       <dt>Valuación · ${Math.round(F.pesos.valuacion*100)}%</dt><dd>Rendimiento de ganancias (la inversa del P/E forward) comparado <b>dentro de su sector</b>, flujo de caja libre sobre capitalización, y P/E actual contra su propia mediana de los últimos años (solo empresas de EE.UU.: en las extranjeras la moneda y el ratio del ADR lo distorsionan). Las empresas extranjeras se convierten a dólares.</dd>
-      <dt>Señal</dt><dd><b style="color:var(--pos)">Comprar</b>: puntaje de ${UMB.alto} o más, precio sobre su MA200 y sobre el VWAP de su último balance. <b style="color:var(--accent)">Esperar</b>: puntaje de ${UMB.alto} o más, pero con la técnica rota (buena empresa, mal momento). <b>Neutral</b>: puntaje entre ${UMB.bajo} y ${UMB.alto}. <b style="color:var(--neg)">Evitar</b>: puntaje menor a ${UMB.bajo}. Pasá el mouse sobre la señal para ver el motivo.</dd>
-      <dt>Filtros técnicos</dt><dd>No suman al puntaje: sirven para decidir <b>cuándo</b> entrar. "Sobre MA200" = precio arriba del promedio de 200 ruedas. "Sobre VWAP del balance" = precio arriba del precio promedio ponderado por volumen desde el día del último balance.</dd>
+      <dt>Señal</dt><dd><b style="color:var(--pos)">Comprar</b>: puntaje de ${UMB.alto} o más y precio sobre su promedio de 200 ruedas. <b style="color:var(--accent)">Esperar</b>: puntaje de ${UMB.alto} o más, pero debajo de la MA200 (buena empresa, tendencia rota). <b>Neutral</b>: puntaje entre ${UMB.bajo} y ${UMB.alto}. <b style="color:var(--neg)">Evitar</b>: puntaje menor a ${UMB.bajo}.</dd>
+      <dt>Qué está validado</dt><dd>Probado con 20 años de historia (2006–2026, 266 empresas, con costos): el momentum por acción le ganó al promedio del universo en los dos períodos, y esperar a que la acción esté sobre su MA200 bajó la peor caída de −52% a −45% sin costar rendimiento. Conviene revisar el puntaje <b>todos los meses</b>: con revisión trimestral rindió menos. También se probaron filtros de VWAP (anclado al balance y móvil de 1, 3, 6 y 12 meses) y ninguno mejoró a la MA200. Revisiones, calidad y valuación no tienen historia gratuita: se validan con la foto semanal que guarda el monitor.</dd>
     </dl>
     <p>Si a una empresa le faltan datos en un bloque, el total se calcula con los bloques disponibles (mínimo 3 de 4).</p>
   </details>
   <div class="wrap"><table><thead><tr>
-    ${[["puesto","#"],["byma","Ticker",1],["nombre","Empresa",1],["sector","Sector",1],["senal","Señal"],["total","Puntaje"],["revisiones","Revis."],["momentum","Mom."],["calidad","Calidad"],["valuacion","Valuac."],["vs_ma200","MA200"],["avwap_dist","VWAP bal."],["proximo_balance","Próx. balance"],["liquidez","Liquidez",1]]
+    ${[["puesto","#"],["byma","Ticker",1],["nombre","Empresa",1],["sector","Sector",1],["senal","Señal"],["total","Puntaje"],["revisiones","Revis."],["momentum","Mom."],["calidad","Calidad"],["valuacion","Valuac."],["vs_ma200","MA200"],["proximo_balance","Próx. balance"],["liquidez","Liquidez",1]]
       .map(([k,t,l])=>`<th class="${l?"l":""}" data-k="${k}">${t}${fs.sort===k?(fs.dir>0?" ▲":" ▼"):""}</th>`).join("")}
   </tr></thead><tbody id="ftb"></tbody></table></div>`;
   const re = ()=>fundFilas();
@@ -552,7 +546,6 @@ function fundamentals(m){
   document.getElementById("fliq").onchange = e=>{fs.liq=e.target.value;re()};
   document.getElementById("fsig").onchange = e=>{fs.sig=e.target.value;re()};
   document.getElementById("fma").onchange = e=>{fs.ma=e.target.checked;re()};
-  document.getElementById("fav").onchange = e=>{fs.av=e.target.checked;re()};
   m.querySelectorAll("th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;
     fs.dir = fs.sort===k ? -fs.dir : (["byma","nombre","sector","liquidez","puesto","proximo_balance","senal"].includes(k)?1:-1); fs.sort=k; fundamentals(m);});
   re();
@@ -561,11 +554,11 @@ function fundamentals(m){
 function fundFilas(){
   const q = fs.q.trim().toUpperCase();
   const val = x => fs.sort==="senal" ? (SIG[senal(x)]?.o ?? 9) : ["total","revisiones","momentum","calidad","valuacion"].includes(fs.sort) ? x.scores[fs.sort]
-    : ["vs_ma200","avwap_dist","proximo_balance"].includes(fs.sort) ? x.raw[fs.sort] : x[fs.sort];
+    : ["vs_ma200","proximo_balance"].includes(fs.sort) ? x.raw[fs.sort] : x[fs.sort];
   let r = F.tickers.filter(x=>
     (!q || x.byma.includes(q) || x.ticker.includes(q) || (x.nombre||"").toUpperCase().includes(q)) &&
     (!fs.sector || x.sector===fs.sector) && (!fs.liq || ["Alta","Media"].includes(x.liquidez)) &&
-    (!fs.ma || (x.raw.vs_ma200??-1) > 0) && (!fs.av || (x.raw.avwap_dist??-1) > 0) && (!fs.sig || senal(x)===fs.sig));
+    (!fs.ma || (x.raw.vs_ma200??-1) > 0) && (!fs.sig || senal(x)===fs.sig));
   r.sort((a,b)=>{ const A=val(a), B=val(b);
     if (A==null && B==null) return 0; if (A==null) return 1; if (B==null) return -1;
     return (typeof A==="string" ? A.localeCompare(B) : A-B) * fs.dir; });
@@ -582,7 +575,6 @@ function fundFilas(){
     <td class="sc">${sc(x.scores.total)}</td>
     <td>${sc(x.scores.revisiones)}</td><td>${sc(x.scores.momentum)}</td><td>${sc(x.scores.calidad)}</td><td>${sc(x.scores.valuacion)}</td>
     <td class="${cls(x.raw.vs_ma200)}">${pct(x.raw.vs_ma200)}</td>
-    <td class="${cls(x.raw.avwap_dist)}">${pct(x.raw.avwap_dist)}</td>
     <td style="${pronto?"color:var(--accent)":""}" title="${pronto?"Balance en los próximos 14 días":""}">${fecha(x.raw.proximo_balance)}${pronto?` · ${d}d`:""}</td>
     <td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez||"—")}</span></td></tr>
     ${fs.abierto===x.ticker?detalle(x):""}`; }).join("");
