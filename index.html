@@ -59,6 +59,28 @@ td.nm{max-width:220px;overflow:hidden;text-overflow:ellipsis;font-family:var(--s
 .empty{padding:40px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line)}
 .soon{max-width:720px;padding:24px;border:1px dashed var(--line);color:var(--muted);line-height:1.6}
 .soon h2{font-family:var(--mono);font-size:14px;color:var(--text);margin:0 0 8px}
+.mx{display:grid;grid-template-columns:minmax(300px,440px) 1fr;gap:16px;align-items:start}
+.card{background:var(--panel);border:1px solid var(--line);padding:14px}
+.card h3{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--muted);margin:0 0 10px;font-weight:500}
+.big{font-size:22px;font-weight:600;margin:2px 0 4px}
+.sub{color:var(--muted);font-size:13px;line-height:1.5}
+.probs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.probs div{border:1px solid var(--line);padding:8px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.probs b{display:block;font-size:17px;color:var(--text);margin-top:2px}
+.warn{margin-top:10px;padding:8px 10px;border-left:3px solid var(--accent);background:var(--panel2);font-size:12.5px;color:var(--text)}
+.ejes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.ind{width:100%;border-collapse:collapse;font-size:12px}
+.ind td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top;white-space:normal;text-align:left}
+.ind td.r{text-align:right;white-space:nowrap;font-family:var(--mono)}
+.ind .tipo{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.06em;padding-top:12px}
+.ind small{display:block;color:var(--muted);font-size:11px;margin-top:2px;line-height:1.4}
+.zb{display:inline-block;width:70px;height:8px;background:var(--panel2);position:relative;vertical-align:middle}
+.zb i{position:absolute;top:0;bottom:0}
+.zb:after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--muted)}
+.comp{display:flex;gap:14px;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:6px}
+.comp b{color:var(--text);font-weight:500}
+svg text{font-family:var(--mono)}
+@media (max-width:900px){.mx,.ejes{grid-template-columns:1fr}.probs{grid-template-columns:repeat(2,1fr)}}
 @media (max-width:640px){main{padding:12px}.wrap{max-height:none}.bar input{max-width:none}}
 </style>
 </head>
@@ -83,14 +105,14 @@ td.nm{max-width:220px;overflow:hidden;text-overflow:ellipsis;font-family:var(--s
 const HASH = "6de9bd03a20b6576a11447a96d300f521f198df4242855bee8271710e6d86b91";
 const TABS = [
   {id:"universo", t:"Universo", ok:true},
-  {id:"macro", t:"Macro", d:"Dónde está la economía de EE.UU.: probabilidad de cada cuadrante (crecimiento × inflación), con datos de FRED y señales de mercado."},
+  {id:"macro", t:"Macro", ok:true},
   {id:"mapa", t:"Mapa", d:"Sensibilidad de cada empresa a crecimiento, inflación, tasa real, dólar y petróleo, y su encaje con el régimen actual."},
   {id:"fund", t:"Fundamentals", d:"Score 0–100: revisiones de analistas, momentum, calidad y valuación contra su propia historia y su industria."},
   {id:"matriz", t:"Matriz", d:"Cruce de encaje con el régimen y score fundamental. Ranking final con límite por sector."},
   {id:"cartera", t:"Cartera", d:"Pegás los CEDEARs de un cliente y ves exposición al régimen, concentración, posiciones flojas y rotaciones que pagan los costos."},
   {id:"track", t:"Track record", d:"Ranking congelado cada semana y su rendimiento a 3 meses contra el S&P 500."}
 ];
-let D = null, tab = "universo", sortK = "monto_usd", sortDir = -1;
+let D = null, M = null, tab = "universo", sortK = "monto_usd", sortDir = -1;
 const st = {q:"", sector:"", liq:"", datos:true};
 
 async function sha(s){
@@ -110,6 +132,10 @@ async function abrir(){
   try{
     const r = await fetch("data/datos.json?v=" + Date.now());
     if (r.ok) D = await r.json();
+  }catch(e){}
+  try{
+    const r = await fetch("data/macro.json?v=" + Date.now());
+    if (r.ok) M = await r.json();
   }catch(e){}
   kpis(); navegar(); render();
 }
@@ -138,6 +164,7 @@ function render(){
   const m = document.getElementById("main");
   const t = TABS.find(x=>x.id===tab);
   if (!t.ok){ m.innerHTML = `<div class="soon"><h2>${t.t} · en construcción</h2>${t.d}</div>`; return; }
+  if (tab==="macro") return macro(m);
   universo(m);
 }
 
@@ -217,6 +244,94 @@ function filas(){
     <td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td>
     <td class="${x.premio==null?"mut":x.premio>0.02?"neg":x.premio<-0.02?"pos":""}">${pct(x.premio)}</td>
   </tr>`).join("");
+}
+
+const QC = {CSI:"#3ecf8e", REC:"#f0b429", EST:"#f2555a", DES:"#5aa9ff"};
+
+function zbar(z){
+  if (z==null) return '<span class="mut">—</span>';
+  const w = Math.min(Math.abs(z),3)/3*50, c = z>=0 ? "var(--pos)" : "var(--neg)";
+  return `<span class="zb" title="z = ${z.toFixed(2)}"><i style="${z>=0?`left:50%`:`right:50%`};width:${w}%;background:${c}"></i></span>`;
+}
+
+function cuadSVG(){
+  const W=380, P=34, S=(W-2*P)/2, cx=P+S, cy=P+S, k=S/2.5;
+  const pos = (g,i) => [cx + Math.max(-2.5,Math.min(2.5,i))*k, cy - Math.max(-2.5,Math.min(2.5,g))*k];
+  const cel = {CSI:[P,P], REC:[cx,P], DES:[P,cy], EST:[cx,cy]};
+  let o = `<svg viewBox="0 0 ${W} ${W}" width="100%" style="max-width:${W}px;display:block">`;
+  for (const [q,[x,y]] of Object.entries(cel)){
+    const p = M.probs[q], on = q===M.actual;
+    o += `<rect x="${x}" y="${y}" width="${S}" height="${S}" fill="${QC[q]}" fill-opacity="${0.06+p*0.5}" stroke="${on?QC[q]:"var(--line)"}" stroke-width="${on?2:1}"/>`;
+    o += `<text x="${x+10}" y="${y+20}" font-size="11" fill="var(--text)">${esc(M.cuadrantes[q].nombre.split(" / ")[0])}</text>`;
+    o += `<text x="${x+10}" y="${y+40}" font-size="18" font-weight="600" fill="${QC[q]}">${Math.round(p*100)}%</text>`;
+  }
+  const tr = M.historial.slice(-7);
+  const pts = tr.map(h=>pos(h.g,h.i));
+  o += `<polyline points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="var(--text)" stroke-opacity=".5" stroke-dasharray="3 3"/>`;
+  pts.forEach((p,j)=>{ const last=j===pts.length-1;
+    o += `<circle cx="${p[0]}" cy="${p[1]}" r="${last?6:2.5}" fill="${last?"var(--text)":"var(--muted)"}"><title>${tr[j].f}</title></circle>`; });
+  o += `<text x="${W/2}" y="${P-10}" font-size="10" fill="var(--muted)" text-anchor="middle">CRECIMIENTO ACELERA ↑</text>`;
+  o += `<text x="${W/2}" y="${W-P+18}" font-size="10" fill="var(--muted)" text-anchor="middle">CRECIMIENTO FRENA ↓</text>`;
+  o += `<text x="${P-10}" y="${W/2}" font-size="10" fill="var(--muted)" text-anchor="middle" transform="rotate(-90 ${P-10} ${W/2})">← INFLACIÓN BAJA</text>`;
+  o += `<text x="${W-P+14}" y="${W/2}" font-size="10" fill="var(--muted)" text-anchor="middle" transform="rotate(90 ${W-P+14} ${W/2})">INFLACIÓN SUBE →</text>`;
+  return o + `</svg>`;
+}
+
+function bandaSVG(){
+  const h = M.historial, W = 1000, H = 150, top = 24, bh = 18, n = h.length, bw = W/n;
+  let o = `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="none" style="display:block;height:${H}px">`;
+  h.forEach((x,j)=>{ o += `<rect x="${j*bw}" y="${top}" width="${bw+0.5}" height="${bh}" fill="${QC[x.q]}"><title>${x.f} · ${esc(M.cuadrantes[x.q].nombre)}</title></rect>`; });
+  const y0 = top+bh+12, ch = H-y0-18, mid = y0+ch/2, sc = ch/2/2.5;
+  const line = key => h.map((x,j)=>`${(j*bw+bw/2).toFixed(1)},${(mid - Math.max(-2.5,Math.min(2.5,x[key]))*sc).toFixed(1)}`).join(" ");
+  o += `<line x1="0" x2="${W}" y1="${mid}" y2="${mid}" stroke="var(--line)"/>`;
+  o += `<polyline points="${line("g")}" fill="none" stroke="var(--pos)" stroke-width="1.2"/>`;
+  o += `<polyline points="${line("i")}" fill="none" stroke="var(--neg)" stroke-width="1.2"/>`;
+  h.forEach((x,j)=>{ if (x.f.endsWith("-01") && +x.f.slice(0,4)%2===0)
+    o += `<text x="${j*bw}" y="${H-4}" font-size="10" fill="var(--muted)">${x.f.slice(0,4)}</text>`; });
+  o += `<text x="0" y="14" font-size="10" fill="var(--muted)">RÉGIMEN MES A MES</text>`;
+  o += `<text x="${W}" y="14" font-size="10" fill="var(--muted)" text-anchor="end"><tspan fill="var(--pos)">— crecimiento</tspan>  <tspan fill="var(--neg)">— inflación</tspan></text>`;
+  return o + `</svg>`;
+}
+
+function tablaEje(g){
+  const L = M.lectura[g], rows = t => M.indicadores.filter(x=>x.grupo===g && x.tipo===t).map(x=>`<tr>
+    <td>${esc(x.nombre)}<small>${esc(x.expl)}</small></td>
+    <td class="r">${esc(x.valor)}<small>${esc(x.fecha)}</small></td>
+    <td class="r"><span class="${x.z>=0?"pos":"neg"}">${x.z==null?"":x.z>=0?"Acelera":"Frena"}</span><br>${zbar(x.z)}</td></tr>`).join("");
+  const sg = v => v==null?"—":`<b class="${v>=0?"pos":"neg"}">${v>=0?"+":""}${v.toFixed(2)}</b>`;
+  return `<div class="card"><h3>${g==="crecimiento"?"CRECIMIENTO":"INFLACIÓN"}</h3>
+    <div class="comp"><span>Total ${sg(L.total)}</span><span>Datos ${sg(L.dato)}</span><span>Mercado ${sg(L.mercado)}</span></div>
+    <table class="ind"><tr><td colspan="3" class="tipo">DATOS OFICIALES · ${Math.round(M.peso_dato*100)}%</td></tr>${rows("dato")}
+    <tr><td colspan="3" class="tipo">SEÑALES DE MERCADO · ${Math.round((1-M.peso_dato)*100)}%</td></tr>${rows("mercado")}</table></div>`;
+}
+
+function macro(m){
+  if (!M){ m.innerHTML = `<div class="empty">Todavía no hay datos macro. Corré Actions → Actualizar datos.</div>`; return; }
+  const q = M.cuadrantes[M.actual], p = M.probs[M.actual];
+  const div = ["crecimiento","inflacion"].filter(g=>M.lectura[g].diverge);
+  const f = new Date(M.actualizado).toLocaleDateString("es-AR");
+  m.innerHTML = `
+  <div class="mx">
+    <div class="card"><h3>DÓNDE ESTÁ EE.UU.</h3>${cuadSVG()}
+      <div class="sub" style="margin-top:6px">El punto blanco es hoy. Los grises son los 6 meses anteriores.</div></div>
+    <div>
+      <div class="card"><h3>RÉGIMEN MÁS PROBABLE</h3>
+        <div class="big" style="color:${QC[M.actual]}">${esc(q.nombre)}</div>
+        <div class="sub">${Math.round(p*100)}% de probabilidad · ${M.duracion} ${M.duracion===1?"mes":"meses"} seguidos en este cuadrante · actualizado ${f}</div>
+        <div class="sub" style="margin-top:8px">${esc(q.guia)}</div>
+        <div class="probs">${["CSI","REC","EST","DES"].map(k=>`<div style="border-color:${k===M.actual?QC[k]:"var(--line)"}">${esc(M.cuadrantes[k].nombre)}<b style="color:${QC[k]}">${Math.round(M.probs[k]*100)}%</b></div>`).join("")}</div>
+        ${div.length?`<div class="warn">Datos y mercado no coinciden en ${div.map(g=>g==="inflacion"?"inflación":g).join(" e ")}: el mercado puede estar anticipando un cambio que los datos todavía no muestran.</div>`:""}
+      </div>
+      <details class="help" style="margin-top:16px"><summary>Cómo se calcula</summary>
+        <p>Cada indicador se mide como <b>dirección</b>: si se acelera o se frena en los últimos 3 meses. Ese cambio se compara con su propia historia (desvíos respecto de su promedio), así un número alto quiere decir "se acelera más de lo normal".</p>
+        <p>Se promedian los indicadores de cada eje: ${Math.round(M.peso_dato*100)}% datos oficiales (FRED) y ${Math.round((1-M.peso_dato)*100)}% señales de mercado, que reaccionan antes. Con el puntaje de cada eje sale la probabilidad de que el crecimiento y la inflación se estén acelerando, y de ahí la probabilidad de cada cuadrante.</p>
+        <p>Los datos oficiales salen con 1–2 meses de rezago: el mercado suele anticiparse, y por eso se marca cuando no coinciden.</p>
+      </details>
+    </div>
+  </div>
+  <div class="ejes">${tablaEje("crecimiento")}${tablaEje("inflacion")}</div>
+  <div class="card" style="margin-top:16px">${bandaSVG()}
+    <div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div></div>`;
 }
 
 if (ses("rv_ok")==="1") abrir();
