@@ -28,7 +28,14 @@ for c in P:
 close = P["Close"]
 spy = yf.download("SPY", start="2003-06-01", auto_adjust=True, progress=False)["Close"].squeeze()
 irx = yf.download("^IRX", start="2003-06-01", auto_adjust=True, progress=False)["Close"].squeeze()
-print("precios", close.shape, flush=True)
+spy.index = pd.to_datetime(spy.index).tz_localize(None)
+irx.index = pd.to_datetime(irx.index).tz_localize(None)
+cal = spy.dropna().index
+for c in P:
+    P[c] = P[c].reindex(cal)
+P["Close"] = P["Close"].ffill(limit=3)
+close = P["Close"]
+print("precios", close.shape, float(close.iloc[-1].notna().mean()), flush=True)
 
 ER = {}
 for k, t in enumerate(tickers):
@@ -50,7 +57,7 @@ fechas = dias.to_series().groupby(dias.to_period("M")).max()
 fechas = fechas[(fechas >= "2005-12-01")]
 fechas = fechas.iloc[:-1] if fechas.index[-1] == pd.Period(pd.Timestamp.today(), "M") else fechas
 cm = close.reindex(dias).ffill(limit=5)
-ma200 = close.rolling(200, min_periods=200).mean()
+ma200 = close.rolling(200, min_periods=150).mean()
 tp = (P["High"] + P["Low"] + P["Close"]) / 3
 cv = P["Volume"].fillna(0).cumsum()
 ctpv = (tp * P["Volume"]).fillna(0).cumsum()
@@ -125,6 +132,7 @@ for k, f in enumerate(FE[12:-1]):
         fila[s_ + "_rot"] = rot
         cart[s_] = c_
     filas.append(fila)
+print("meses validos", len(filas), flush=True)
 R = pd.DataFrame(filas).set_index("f")
 
 
