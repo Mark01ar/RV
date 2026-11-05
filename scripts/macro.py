@@ -187,13 +187,13 @@ def confirmar(hist):
     return conf
 
 
-def sectores_por_regimen(y, hist):
+def sectores_por_regimen(y, hist, rezago=1):
     cols = [t for t in list(SECTORES) + ["SPY"] if t in y.columns]
     m = y[cols].resample("ME").last().pct_change()
     reg = hist["qc"].copy()
     reg.index = reg.index.to_period("M")
     m.index = m.index.to_period("M")
-    sig = reg.shift(1).reindex(m.index)
+    sig = reg.shift(rezago).reindex(m.index)
     out = {}
     for q in CUADRANTES:
         meses = sig[sig == q].index
@@ -271,7 +271,8 @@ def main():
         "fuente_fred": "/".join(sorted(fuentes)),
         "peso_dato": PESO_DATO,
         "g": g0, "i": i0, "probs": probs, "actual": actual, "crudo": crudo, "duracion": dur,
-        "umbral": UMBRAL_CAMBIO, "sectores": sectores_por_regimen(y, hist),
+        "umbral": UMBRAL_CAMBIO, "sectores": sectores_por_regimen(y, hist, 1),
+        "sectores_mismo": sectores_por_regimen(y, hist, 0),
         "cambios": int((hist["qc"] != hist["qc"].shift()).sum() - 1),
         "cambios_sin_regla": int((hist["q"] != hist["q"].shift()).sum() - 1),
         "cuadrantes": CUADRANTES, "lectura": lectura,
