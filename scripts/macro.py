@@ -16,6 +16,10 @@ KEY = os.environ.get("FRED_API_KEY", "").strip()
 INICIO = "1995-01-01"
 PESO_DATO = 0.6
 MIN_HIST = 36
+UMBRAL_CAMBIO = 0.45
+SECTORES = {"XLK": "Tecnología", "XLC": "Comunicaciones", "XLY": "Consumo discrecional", "XLF": "Financieras",
+            "XLI": "Industriales", "XLB": "Materiales", "XLE": "Energía", "XLV": "Salud",
+            "XLP": "Consumo básico", "XLU": "Utilities", "XLRE": "Real estate"}
 
 CUADRANTES = {
     "CSI": {"nombre": "Crecimiento sin inflación", "g": 1, "i": -1,
@@ -163,6 +167,49 @@ def cuadrante(g, i):
             return k
 
 
+def probs_de(g, i):
+    pg, pi = phi(g), phi(i)
+    return {"CSI": pg * (1 - pi), "REC": pg * pi, "EST": (1 - pg) * pi, "DES": (1 - pg) * (1 - pi)}
+
+
+def confirmar(hist):
+    conf, prev = [], None
+    for k, (_, r) in enumerate(hist.iterrows()):
+        cand = r.q
+        if prev is None:
+            prev = cand
+        elif cand != prev:
+            dos_meses = k > 0 and hist["q"].iloc[k - 1] == cand
+            fuerte = probs_de(r.g, r.i)[cand] > UMBRAL_CAMBIO
+            if dos_meses or fuerte:
+                prev = cand
+        conf.append(prev)
+    return conf
+
+
+def sectores_por_regimen(y, hist):
+    cols = [t for t in list(SECTORES) + ["SPY"] if t in y.columns]
+    m = y[cols].resample("ME").last().pct_change()
+    reg = hist["qc"].copy()
+    reg.index = reg.index.to_period("M")
+    m.index = m.index.to_period("M")
+    sig = reg.shift(1).reindex(m.index)
+    out = {}
+    for q in CUADRANTES:
+        meses = sig[sig == q].index
+        filas = []
+        for t, nombre in SECTORES.items():
+            if t not in m.columns:
+                continue
+            ex = (m.loc[meses, t] - m.loc[meses, "SPY"]).dropna()
+            if len(ex) < 6:
+                continue
+            filas.append({"etf": t, "nombre": nombre, "exceso": float(ex.mean() * 12),
+                          "gana": float((ex > 0).mean()), "n": int(len(ex))})
+        out[q] = sorted(filas, key=lambda x: -x["exceso"])
+    return out
+
+
 def main():
     ids = ["CFNAIMA3", "ICSA", "INDPRO", "PAYEMS", "CPIAUCSL", "CPILFESL", "PCEPILFE", "BAA10Y", "T5YIE"]
     f, fuentes = {}, set()
@@ -171,7 +218,7 @@ def main():
         f[sid] = s
         fuentes.add(src)
         print(f"{sid}: {len(s)} obs hasta {s.index[-1].date()} ({src})")
-    y = yahoo(["XLY", "XLP", "HG=F", "GC=F", "CL=F", "TIP", "IEF"])
+    y = yahoo(sorted(set(["XLY", "XLP", "HG=F", "GC=F", "CL=F", "TIP", "IEF", "SPY"]) | set(SECTORES)))
     inds = indicadores(f, y)
 
     hoy = pd.Timestamp.today().to_period("M").to_timestamp("M")
@@ -198,12 +245,13 @@ def main():
     hist = pd.DataFrame({"g": G, "i": I}).dropna()
     hist = hist[hist.index >= "2000-01-01"]
     hist["q"] = [cuadrante(a, b) for a, b in zip(hist["g"], hist["i"])]
+    hist["qc"] = confirmar(hist)
 
     g0, i0 = float(hist["g"].iloc[-1]), float(hist["i"].iloc[-1])
-    pg, pi = phi(g0), phi(i0)
-    probs = {"CSI": pg * (1 - pi), "REC": pg * pi, "EST": (1 - pg) * pi, "DES": (1 - pg) * (1 - pi)}
-    actual = max(probs, key=probs.get)
-    q = hist["q"].tolist()
+    probs = probs_de(g0, i0)
+    crudo = max(probs, key=probs.get)
+    actual = hist["qc"].iloc[-1]
+    q = hist["qc"].tolist()
     dur = 1
     while dur < len(q) and q[-1 - dur] == q[-1]:
         dur += 1
@@ -222,15 +270,19 @@ def main():
         "actualizado": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
         "fuente_fred": "/".join(sorted(fuentes)),
         "peso_dato": PESO_DATO,
-        "g": g0, "i": i0, "probs": probs, "actual": actual, "duracion": dur,
+        "g": g0, "i": i0, "probs": probs, "actual": actual, "crudo": crudo, "duracion": dur,
+        "umbral": UMBRAL_CAMBIO, "sectores": sectores_por_regimen(y, hist),
+        "cambios": int((hist["qc"] != hist["qc"].shift()).sum() - 1),
+        "cambios_sin_regla": int((hist["q"] != hist["q"].shift()).sum() - 1),
         "cuadrantes": CUADRANTES, "lectura": lectura,
         "indicadores": [{k: (v.strftime("%Y-%m-%d") if isinstance(v, pd.Timestamp) else v)
                          for k, v in x.items() if k != "imp"} for x in inds],
-        "historial": [{"f": d.strftime("%Y-%m"), "g": round(float(r.g), 3), "i": round(float(r.i), 3), "q": r.q}
+        "historial": [{"f": d.strftime("%Y-%m"), "g": round(float(r.g), 3), "i": round(float(r.i), 3), "q": r.q, "qc": r.qc}
                       for d, r in hist.iterrows()],
     }
     SALIDA.write_text(json.dumps(salida, ensure_ascii=False, separators=(",", ":")))
-    print(f"regimen: {CUADRANTES[actual]['nombre']} g={g0:.2f} i={i0:.2f} probs={ {k: round(v, 2) for k, v in probs.items()} }")
+    print(f"cambios de regimen: {salida['cambios']} con regla, {salida['cambios_sin_regla']} sin regla")
+    print(f"regimen: {CUADRANTES[actual]['nombre']} (crudo {crudo}) g={g0:.2f} i={i0:.2f} probs={ {k: round(v, 2) for k, v in probs.items()} }")
 
 
 if __name__ == "__main__":

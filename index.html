@@ -77,6 +77,11 @@ td.nm{max-width:220px;overflow:hidden;text-overflow:ellipsis;font-family:var(--s
 .zb{display:inline-block;width:70px;height:8px;background:var(--panel2);position:relative;vertical-align:middle}
 .zb i{position:absolute;top:0;bottom:0}
 .zb:after{content:"";position:absolute;left:50%;top:-2px;bottom:-2px;width:1px;background:var(--muted)}
+.hm{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12px}
+.hm th,.hm td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.hm th{position:static;cursor:default;background:none}
+.hm td.l,.hm th.l{text-align:left;font-family:var(--sans)}
+.hm .on{outline:2px solid var(--accent);outline-offset:-2px}
 .comp{display:flex;gap:14px;font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:6px}
 .comp b{color:var(--text);font-weight:500}
 svg text{font-family:var(--mono)}
@@ -280,7 +285,7 @@ function cuadSVG(){
 function bandaSVG(){
   const h = M.historial, W = 1000, H = 150, top = 24, bh = 18, n = h.length, bw = W/n;
   let o = `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="none" style="display:block;height:${H}px">`;
-  h.forEach((x,j)=>{ o += `<rect x="${j*bw}" y="${top}" width="${bw+0.5}" height="${bh}" fill="${QC[x.q]}"><title>${x.f} · ${esc(M.cuadrantes[x.q].nombre)}</title></rect>`; });
+  h.forEach((x,j)=>{ const q=x.qc||x.q; o += `<rect x="${j*bw}" y="${top}" width="${bw+0.5}" height="${bh}" fill="${QC[q]}"><title>${x.f} · ${esc(M.cuadrantes[q].nombre)}</title></rect>`; });
   const y0 = top+bh+12, ch = H-y0-18, mid = y0+ch/2, sc = ch/2/2.5;
   const line = key => h.map((x,j)=>`${(j*bw+bw/2).toFixed(1)},${(mid - Math.max(-2.5,Math.min(2.5,x[key]))*sc).toFixed(1)}`).join(" ");
   o += `<line x1="0" x2="${W}" y1="${mid}" y2="${mid}" stroke="var(--line)"/>`;
@@ -305,6 +310,22 @@ function tablaEje(g){
     <tr><td colspan="3" class="tipo">SEÑALES DE MERCADO · ${Math.round((1-M.peso_dato)*100)}%</td></tr>${rows("mercado")}</table></div>`;
 }
 
+function tablaSectores(){
+  if (!M.sectores) return "";
+  const qs = ["CSI","REC","EST","DES"];
+  const etfs = [...new Set(qs.flatMap(q=>(M.sectores[q]||[]).map(x=>x.etf)))];
+  const get = (q,e) => (M.sectores[q]||[]).find(x=>x.etf===e);
+  const nom = e => qs.map(q=>get(q,e)).find(Boolean)?.nombre || e;
+  etfs.sort((a,b)=>(get(M.actual,b)?.exceso??-9)-(get(M.actual,a)?.exceso??-9));
+  const cel = x => { if(!x) return `<td class="mut">—</td>`;
+    const a = Math.min(Math.abs(x.exceso)/0.15,1)*0.45, c = x.exceso>=0?"62,207,142":"242,85,90";
+    return `<td style="background:rgba(${c},${a})" title="Le ganó al S&P en ${Math.round(x.gana*100)}% de ${x.n} meses">${pct(x.exceso)}</td>`; };
+  return `<div class="card" style="margin-top:16px"><h3>QUÉ SECTORES GANARON EN CADA RÉGIMEN (DESDE 2000)</h3>
+    <div class="wrap" style="max-height:none"><table class="hm"><tr><th class="l">Sector</th>${qs.map(q=>`<th class="${q===M.actual?"on":""}" style="color:${QC[q]}">${esc(M.cuadrantes[q].nombre)}</th>`).join("")}</tr>
+    ${etfs.map(e=>`<tr><td class="l">${esc(nom(e))} <span class="mut">${e}</span></td>${qs.map(q=>cel(get(q,e))).join("")}</tr>`).join("")}</table></div>
+    <div class="sub" style="margin-top:8px">Rendimiento anual promedio del ETF del sector <b>por encima o por debajo del S&P 500</b> en el mes siguiente a cada mes clasificado en ese régimen. Pasá el mouse para ver en qué % de los meses le ganó al índice. La columna marcada es el régimen actual. Ojo: usa datos macro revisados, así que es una referencia, no una garantía.</div></div>`;
+}
+
 function macro(m){
   if (!M){ m.innerHTML = `<div class="empty">Todavía no hay datos macro. Corré Actions → Actualizar datos.</div>`; return; }
   const q = M.cuadrantes[M.actual], p = M.probs[M.actual];
@@ -317,7 +338,8 @@ function macro(m){
     <div>
       <div class="card"><h3>RÉGIMEN MÁS PROBABLE</h3>
         <div class="big" style="color:${QC[M.actual]}">${esc(q.nombre)}</div>
-        <div class="sub">${Math.round(p*100)}% de probabilidad · ${M.duracion} ${M.duracion===1?"mes":"meses"} seguidos en este cuadrante · actualizado ${f}</div>
+        <div class="sub">Régimen confirmado · ${M.duracion} ${M.duracion===1?"mes":"meses"} seguidos · probabilidad hoy ${Math.round(p*100)}% · actualizado ${f}</div>
+        ${M.crudo && M.crudo!==M.actual?`<div class="warn">Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b> (${Math.round(M.probs[M.crudo]*100)}%). Se confirma si se repite el mes que viene o si supera el ${Math.round(M.umbral*100)}%.</div>`:""}
         <div class="sub" style="margin-top:8px">${esc(q.guia)}</div>
         <div class="probs">${["CSI","REC","EST","DES"].map(k=>`<div style="border-color:${k===M.actual?QC[k]:"var(--line)"}">${esc(M.cuadrantes[k].nombre)}<b style="color:${QC[k]}">${Math.round(M.probs[k]*100)}%</b></div>`).join("")}</div>
         ${div.length?`<div class="warn">Datos y mercado no coinciden en ${div.map(g=>g==="inflacion"?"inflación":g).join(" e ")}: el mercado puede estar anticipando un cambio que los datos todavía no muestran.</div>`:""}
@@ -326,10 +348,12 @@ function macro(m){
         <p>Cada indicador se mide como <b>dirección</b>: si se acelera o se frena en los últimos 3 meses. Ese cambio se compara con su propia historia (desvíos respecto de su promedio), así un número alto quiere decir "se acelera más de lo normal".</p>
         <p>Se promedian los indicadores de cada eje: ${Math.round(M.peso_dato*100)}% datos oficiales (FRED) y ${Math.round((1-M.peso_dato)*100)}% señales de mercado, que reaccionan antes. Con el puntaje de cada eje sale la probabilidad de que el crecimiento y la inflación se estén acelerando, y de ahí la probabilidad de cada cuadrante.</p>
         <p>Los datos oficiales salen con 1–2 meses de rezago: el mercado suele anticiparse, y por eso se marca cuando no coinciden.</p>
+        <p><b>Regla de confirmación:</b> el régimen solo cambia si el nuevo cuadrante se repite dos meses seguidos o si su probabilidad supera el ${Math.round((M.umbral||0.45)*100)}%. Así se evita rotar la cartera por un dato aislado.${M.cambios!=null?` Desde 2000 hubo ${M.cambios} cambios con la regla, contra ${M.cambios_sin_regla} sin ella.`:""}</p>
       </details>
     </div>
   </div>
   <div class="ejes">${tablaEje("crecimiento")}${tablaEje("inflacion")}</div>
+  ${tablaSectores()}
   <div class="card" style="margin-top:16px">${bandaSVG()}
     <div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div></div>`;
 }
