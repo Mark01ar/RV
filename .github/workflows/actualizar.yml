@@ -23,6 +23,8 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       - run: python scripts/fundamentales.py
         continue-on-error: true
+      - run: python scripts/cartera.py
+        continue-on-error: true
       - run: python scripts/macro.py
         continue-on-error: true
         env:

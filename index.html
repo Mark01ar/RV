@@ -145,15 +145,16 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 <script>
 const HASH = "3a892eea646c4e4fc44df3a264545ce2e51f4bdc752cbd996dae588e5c839602";
 const TABS = [
+  {id:"cartera", t:"Cartera del mes", ok:true},
   {id:"universo", t:"Universo", ok:true},
   {id:"macro", t:"Macro", ok:true},
   {id:"mapa", t:"Mapa", d:"Sensibilidad de cada empresa a crecimiento, inflación, tasa real, dólar y petróleo, y su encaje con el régimen actual."},
   {id:"fund", t:"Fundamentals", ok:true},
   {id:"matriz", t:"Matriz", d:"Cruce de encaje con el régimen y score fundamental. Ranking final con límite por sector."},
-  {id:"cartera", t:"Cartera", d:"Pegás los CEDEARs de un cliente y ves exposición al régimen, concentración, posiciones flojas y rotaciones que pagan los costos."},
+  {id:"revisor", t:"Revisor", d:"Pegás los CEDEARs de un cliente y ves qué posiciones están flojas, la concentración y por cuál conviene rotar cada una."},
   {id:"track", t:"Track record", d:"Ranking congelado cada semana y su rendimiento a 3 meses contra el S&P 500."}
 ];
-let D = null, M = null, F = null, tab = "universo", sortK = "monto_usd", sortDir = -1;
+let D = null, M = null, F = null, C = null, tab = "cartera", sortK = "monto_usd", sortDir = -1;
 const st = {q:"", sector:"", liq:"", datos:true};
 
 async function sha(s){
@@ -181,6 +182,10 @@ async function abrir(){
   try{
     const r = await fetch("data/fundamentales.json?v=" + Date.now());
     if (r.ok) F = await r.json();
+  }catch(e){}
+  try{
+    const r = await fetch("data/cartera.json?v=" + Date.now());
+    if (r.ok) C = await r.json();
   }catch(e){}
   kpis(); navegar(); render();
 }
@@ -211,6 +216,7 @@ function render(){
   if (!t.ok){ m.innerHTML = `<div class="soon"><h2>${t.t} · en construcción</h2>${t.d}</div>`; return; }
   if (tab==="macro") return macro(m);
   if (tab==="fund") return fundamentals(m);
+  if (tab==="cartera") return cartera(m);
   universo(m);
 }
 
@@ -614,6 +620,73 @@ function fundFilas(){
     <td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez||"—")}</span></td></tr>
     ${fs.abierto===x.ticker?detalle(x):""}`; }).join("");
   tb.querySelectorAll("tr[data-t]").forEach(tr=>tr.onclick=()=>{ fs.abierto = fs.abierto===tr.dataset.t ? null : tr.dataset.t; fundFilas(); });
+}
+
+const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const nomMes = ym => { const [y,mm] = ym.split("-"); return `${MESES[+mm-1]} ${y}`; };
+
+function alertasCartera(p){
+  const a = [];
+  if (p.premio!=null && p.premio > 0.03) a.push({c:`CCL ${pct(p.premio,0)}`, t:`El CEDEAR está ${pct(p.premio,1)} caro contra el CCL implícito: conviene orden límite o esperar.`});
+  const d = dias(p.proximo_balance);
+  if (d!=null && d>=0 && d<=7) a.push({c:`balance ${d}d`, t:`Presenta balance en ${d} días. Entrar antes es apostar al resultado; podés esperar al día siguiente del balance.`});
+  if (p.vs_ma200_hoy!=null && p.vs_ma200_hoy < 0 && p.en_cartera) a.push({c:"perdió MA200", t:"Desde que se armó la cartera, el precio quedó debajo de su MA200. No se vende hasta el rebalanceo, pero no conviene sumar."});
+  return a;
+}
+
+function cartera(m){
+  if (!C){ m.innerHTML = `<div class="empty">Todavía no hay cartera armada.</div>`; return; }
+  const P = C.posiciones, act = P.filter(p=>p.en_cartera), liq = P.filter(p=>!p.en_cartera);
+  const sect = {}; act.forEach(p=>{ sect[p.sector||"Otro"] = (sect[p.sector||"Otro"]||0) + 1; });
+  const tr = C.track || [], ult = tr[tr.length-1];
+  const fila = (p, sup) => { const al = alertasCartera(p);
+    return `<tr${sup?' style="opacity:.75"':""}>
+      <td class="mut">${p.puesto}</td>
+      <td class="l tk">${esc(p.byma)}${p.ticker!==p.byma?`<small>${esc(p.ticker)}</small>`:""}</td>
+      <td class="l nm">${esc(p.nombre)}</td>
+      <td class="l mut">${esc(p.sector||"—")}</td>
+      <td>${sup?'<span class="mut">suplente</span>':p.en_cartera?`${Math.round(100/C.parametros.n)}%`:'<span class="mut">a letras</span>'}</td>
+      <td class="${cls(p.mom12_1)}">${pct(p.mom12_1,0)}</td>
+      <td class="${cls(p.vs_ma200_hoy)}">${pct(p.vs_ma200_hoy)}</td>
+      <td class="${cls(p.desde_armado)}">${sup?"—":pct(p.desde_armado)}</td>
+      <td>${num(p.px_ars_hoy,0)}</td>
+      <td>${p.total==null?'<span class="mut">—</span>':Math.round(p.total)}</td>
+      <td class="l"><span class="tag ${(p.liquidez_hoy||p.liquidez||"").split(" ")[0]}">${esc(p.liquidez_hoy||p.liquidez)}</span></td>
+      <td class="l">${al.map(a=>`<span class="alr" title="${esc(a.t)}">⚠ ${esc(a.c)}</span>`).join("")}</td></tr>`; };
+  const cmb = C.cambios;
+  m.innerHTML = `
+  <div class="card" style="border-color:var(--accent)">
+    <h3>RECOMENDACIONES DE ${nomMes(C.mes).toUpperCase()}</h3>
+    <div class="sub">Armada el ${new Date(C.fecha+"T12:00").toLocaleDateString("es-AR")} con la estrategia validada (momentum + MA200), entre los ${C.n_elegibles} CEDEARs con liquidez suficiente para retail. ${C.parametros.n} acciones con igual peso. Queda fija todo el mes; el primer sábado del mes que viene se rearma y acá vas a ver qué vender y qué comprar.</div>
+    ${cmb?`<div class="cmb" style="grid-template-columns:repeat(3,1fr);margin-top:12px">
+      <div><h4 style="color:var(--neg)">VENDER · ${cmb.vender.length}</h4>${cmb.vender.length?cmb.vender.map(t=>`<b>${esc(t)}</b>`).join(" · "):'<span class="mut">Ninguna</span>'}</div>
+      <div><h4 style="color:var(--pos)">COMPRAR · ${cmb.comprar.length}</h4>${cmb.comprar.length?cmb.comprar.map(t=>`<b>${esc(t)}</b>`).join(" · "):'<span class="mut">Ninguna</span>'}</div>
+      <div><h4>MANTENER · ${cmb.mantener.length}</h4>${cmb.mantener.map(t=>`<b>${esc(t)}</b>`).join(" · ")||'<span class="mut">Ninguna</span>'}</div></div>`
+      :`<div class="sub" style="margin-top:10px"><b style="color:var(--text)">Primera cartera:</b> comprar las ${act.length} en partes iguales${liq.length?` y dejar ${liq.length*Math.round(100/C.parametros.n)}% en letras o caución`:""}.</div>`}
+  </div>
+  <div class="semgrid" style="grid-template-columns:2fr 1fr">
+    <div class="card"><h3>DESDE QUE SE ARMÓ</h3>
+      <div style="display:flex;gap:28px;font-family:var(--mono)">
+        <div><div class="sub">Cartera</div><div class="big ${cls(ult?.cartera)}">${ult?pct(ult.cartera):"—"}</div></div>
+        <div><div class="sub">S&P 500 (SPY)</div><div class="big ${cls(C.spy_desde)}">${pct(C.spy_desde)}</div></div>
+        <div><div class="sub">Diferencia</div><div class="big ${cls(ult?.dif)}">${ult?pct(ult.dif):"—"}</div></div>
+      </div><div class="sub" style="margin-top:6px">Incluye el costo de compra (0,6% por operación). En dólares, sobre el precio de las acciones en EE.UU.</div></div>
+    <div class="card"><h3>SECTORES</h3>${Object.entries(sect).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="sub" style="display:flex;justify-content:space-between"><span>${esc(k)}</span><b style="color:var(--text);font-family:var(--mono)">${v*Math.round(100/C.parametros.n)}%</b></div>`).join("")}</div>
+  </div>
+  <div class="wrap" style="margin-top:16px;max-height:none"><table><thead><tr>
+    <th>#</th><th class="l">Ticker</th><th class="l">Empresa</th><th class="l">Sector</th><th>Peso</th><th>Mom 12-1</th><th>vs MA200</th><th>Desde armado</th><th>Precio ARS</th><th>Puntaje fund.</th><th class="l">Liquidez</th><th class="l">Alertas</th>
+  </tr></thead><tbody>${P.map(p=>fila(p,false)).join("")}
+    <tr><td colspan="12" class="l mut" style="font-family:var(--mono);font-size:11px;padding-top:12px">SUPLENTES · si alguna no se puede comprar, se reemplaza por la primera de esta lista</td></tr>
+    ${(C.suplentes||[]).map(p=>fila(p,true)).join("")}</tbody></table></div>
+  ${tr.length>1?`<div class="card" style="margin-top:16px"><h3>TRACK RECORD MES A MES</h3><table class="res"><tr><th class="l">Mes</th><th>Cartera</th><th>SPY</th><th>Diferencia</th><th>Acum. cartera</th><th>Acum. SPY</th></tr>
+    ${tr.slice().reverse().map(t=>`<tr><td class="l">${nomMes(t.mes)}${t.parcial?' <span class="mut">(en curso)</span>':""}</td><td class="${cls(t.cartera)}">${pct(t.cartera)}</td><td class="${cls(t.spy)}">${pct(t.spy)}</td><td class="${cls(t.dif)}">${pct(t.dif)}</td><td class="${cls(t.acum_cartera)}">${pct(t.acum_cartera)}</td><td class="${cls(t.acum_spy)}">${pct(t.acum_spy)}</td></tr>`).join("")}</table></div>`:""}
+  <details class="help" style="margin-top:16px"><summary>Cómo usarla</summary>
+    <p><b>Para qué es:</b> la parte táctica (satélite) de la cartera de acciones de un cliente, por ejemplo un 20–30%. El resto, en el índice (SPY o QQQ). Si la estrategia funciona, el satélite empuja la cartera por encima del índice; si un año falla, el daño queda acotado.</p>
+    <p><b>Cómo se elige:</b> entre los CEDEARs con liquidez alta, media o baja en BYMA (desde USD 30.000 por día), se ordenan por momentum (retorno de 12 meses sin el último y distancia a la MA200) y se toman las ${C.parametros.n} primeras. Si alguna está debajo de su MA200, ese lugar va a letras o caución. Con 20 años de historia esta regla le ganó al promedio del universo, aunque con caídas fuertes y años enteros por debajo del índice.</p>
+    <p><b>Una vez por mes:</b> vendés las que salen y comprás las que entran, en partes iguales. No conviene tocarla en el medio: rebalancear más seguido no mejoró los resultados y suma costos.</p>
+    <p><b>Alertas:</b> CCL caro → orden límite o esperar unos días; balance en menos de 7 días → podés esperar al día siguiente; perdió MA200 → no sumar, pero no se vende hasta el rebalanceo.</p>
+    <p><b>Honestidad:</b> el backtest usó las 20 mejores de todo el universo; esta versión (10 acciones, solo líquidas) es más concentrada y todavía no está probada con historia. El track record de esta pestaña es la prueba real.</p>
+  </details>`;
 }
 
 if (ses("rv_ok")==="1") abrir();
