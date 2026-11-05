@@ -378,7 +378,7 @@ function semaforoHTML(){
     </div>
     <div style="margin-top:14px">${semBanda(S.historial)}</div>
     <div class="semgrid">
-      <div><h3 style="margin-top:4px">QUÉ HUBIERA PASADO SALIENDO A LETRAS EN ROJO (${R.desde.slice(0,4)}–HOY)</h3>
+      <div><h3 style="margin-top:4px">QUÉ HUBIERA PASADO SALIENDO A LETRAS EN ROJO (${R.desde.slice(0,4)}–HOY)${S.base==="tiempo_real"?" · CON DATOS DE CADA MOMENTO":""}</h3>
         <table class="res"><tr><th class="l"></th><th>Con la regla</th><th>S&P 500</th></tr>
           ${fila("Rendimiento anual", x=>x.anual)}
           ${fila("Peor caída", x=>x.caida_max, true)}
@@ -399,7 +399,8 @@ function semaforoHTML(){
     <details class="help" style="margin-top:12px"><summary>Cómo usarlo</summary>
       <p>El semáforo <b>no busca ganarle al índice</b>: busca evitar las caídas grandes. Mira dos cosas a fin de cada mes: si el crecimiento de EE.UU. se está frenando (régimen de estanflación o desinflación) y si el S&P está por debajo de su promedio de 10 meses. Solo cuando pasan las dos juntas se pone en rojo.</p>
       <p>Las dos condiciones se complementan: la tendencia sola da muchas falsas alarmas, y la macro sola llega tarde. Juntas, en la historia, esquivaron la mayor parte de 2008 a cambio de algo de rendimiento en los años buenos.</p>
-      <p><b>Uso sugerido:</b> en rojo, bajar la parte táctica de renta variable o la exposición de clientes conservadores; en amarillo, no hacer cambios pero no sumar riesgo. Ojo: el historial usa datos macro revisados, así que en tiempo real habría funcionado algo peor.</p>
+      <p><b>Uso sugerido:</b> en rojo, bajar la parte táctica de renta variable o la exposición de clientes conservadores; en amarillo, no hacer cambios pero no sumar riesgo.</p>
+      <p>${S.base==="tiempo_real"?`<b>Datos honestos:</b> el historial se reconstruyó con los datos macro <b>tal como se conocían cada mes</b> (archivo ALFRED de la Fed de St. Louis), sin las revisiones posteriores. O sea, muestra lo que el semáforo hubiera dicho en su momento. Actividad (CFNAI) tiene versiones desde ${S.cobertura?.CFNAIMA3||"2011"} y subsidios por desempleo desde ${S.cobertura?.ICSA||"2009"}; antes de esas fechas se usa su primera versión disponible.`:`Ojo: el historial usa datos macro revisados, así que en tiempo real podría haber funcionado algo distinto.`}</p>
     </details></div>`;
 }
 

@@ -25,6 +25,10 @@ jobs:
         continue-on-error: true
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      - run: python scripts/tiempo_real.py
+        continue-on-error: true
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
