@@ -123,6 +123,30 @@ def byma_vivo():
 MUESTRA = {}
 
 
+def usa_vivo():
+    data = pedir_json(f"{D912}/live/usa_stocks") or []
+    return {x.get("symbol"): x.get("c") for x in data if isinstance(x, dict) and x.get("c")}
+
+
+def ultimo_habil():
+    d = pd.Timestamp.today().normalize()
+    while d.weekday() >= 5:
+        d -= pd.Timedelta(days=1)
+    return d
+
+
+def completar_hoy(precios, usa):
+    hoy = ultimo_habil()
+    if precios.empty or precios.index[-1] >= hoy:
+        return precios
+    fila = {t: usa[t] for t in precios.columns if usa.get(t)}
+    if len(fila) < 0.5 * len(precios.columns):
+        return precios
+    precios.loc[hoy] = pd.Series(fila, dtype=float)
+    print(f"agregado cierre {hoy.date()} desde data912 para {len(fila)} tickers")
+    return precios
+
+
 def byma_historico(sym):
     data = pedir_json(f"{D912}/historical/cedears/{sym}")
     if "hist" not in MUESTRA:
@@ -159,13 +183,14 @@ def datos_byma(u):
             print(f"historico {sym}: {e}", file=sys.stderr)
             hist = None
         monto20 = None
-        fecha = None
+        fecha = ultimo_habil().strftime("%Y-%m-%d") if px else None
         if hist is not None and len(hist):
             monto20 = float(hist["monto"].tail(20).median())
-            ult = pd.to_numeric(hist["c"], errors="coerce").dropna()
-            if len(ult):
-                px = float(ult.iloc[-1])
-                fecha = hist["fecha"].iloc[-1].strftime("%Y-%m-%d")
+            if not px:
+                ult = pd.to_numeric(hist["c"], errors="coerce").dropna()
+                if len(ult):
+                    px = float(ult.iloc[-1])
+                    fecha = hist["fecha"].iloc[-1].strftime("%Y-%m-%d")
         elif v.get("v") and px:
             monto20 = float(v["v"]) * float(px)
         filas[sym] = {"px_ars": float(px) if px else None, "monto_ars": monto20, "px_fecha": fecha}
@@ -297,6 +322,7 @@ def main():
     print(f"precios: {precios.shape}")
     if precios.empty:
         sys.exit("no se pudieron bajar precios")
+    precios = completar_hoy(precios, usa_vivo())
     sectores = actualizar_sectores(sorted(set(u["ticker_us"])))
     byma = datos_byma(u)
     print(f"byma con precio: {sum(1 for v in byma.values() if v['px_ars'])}")
