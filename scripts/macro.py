@@ -212,23 +212,30 @@ def sectores_por_regimen(y, hist, rezago=1):
 
 def semaforo(y, hist):
     spy = y["SPY"].dropna()
-    pm = spy.resample("ME").last()
-    ma = pm.rolling(10).mean()
-    irx = y["^IRX"].dropna().resample("ME").last() if "^IRX" in y.columns else pd.Series(dtype=float)
-    df = pd.DataFrame({"p": pm, "ma": ma, "qc": hist["qc"]}).dropna(subset=["p", "ma"])
-    df["qc"] = df["qc"].ffill()
-    df = df.dropna(subset=["qc"])
+    ma200 = spy.rolling(200).mean()
+    irx = y["^IRX"].dropna() if "^IRX" in y.columns else pd.Series(dtype=float)
+    qc = hist["qc"].copy()
+    qc.index = pd.to_datetime(qc.index) + pd.offsets.MonthEnd(0)
+    viernes = pd.date_range("2005-01-07", spy.index[-1], freq="14D")
+    cortes = [spy.index[spy.index <= v][-1] for v in viernes if (spy.index <= v).any()]
+    cortes = sorted(set(cortes))
+    filas = []
+    for d in cortes:
+        q = qc[qc.index <= d]
+        if not len(q) or pd.isna(ma200.loc[d]):
+            continue
+        filas.append({"d": d, "p": float(spy.loc[d]), "ma": float(ma200.loc[d]), "qc": q.iloc[-1]})
+    df = pd.DataFrame(filas).set_index("d")
     df["frena"] = df["qc"].isin(["EST", "DES"])
     df["bajo"] = df["p"] < df["ma"]
     df["estado"] = np.where(df["frena"] & df["bajo"], "rojo", np.where(df["frena"] | df["bajo"], "amarillo", "verde"))
 
-    ret = pm.pct_change()
-    caja = (irx / 100 / 12).shift(1).reindex(pm.index).ffill().fillna(0)
-    fin = pd.Timestamp.today().to_period("M").to_timestamp("M")
-    meses = [d for d in df.index if pd.Timestamp("2005-01-01") <= d < fin]
+    ret = df["p"].pct_change()
+    dias = df.index.to_series().diff().dt.days
+    caja = (irx.reindex(spy.index).ffill().reindex(df.index).shift(1) / 100 * dias / 365).fillna(0)
     prev_estado = df["estado"].shift(1)
     filas, dentro_prev = [], True
-    for d in meses:
+    for d in df.index[1:]:
         e = prev_estado.get(d)
         if pd.isna(e):
             continue
@@ -239,19 +246,21 @@ def semaforo(y, hist):
         dentro_prev = dentro
         filas.append({"f": d, "spy": ret[d], "regla": r_regla, "caja": caja[d], "dentro": dentro})
     bt = pd.DataFrame(filas).set_index("f")
+    anios = (bt.index[-1] - bt.index[0]).days / 365.25
 
     def st(x):
         c = (1 + x).cumprod()
         eps = {"2008": ("2007-10", "2009-03"), "2020": ("2020-02", "2020-03"), "2022": ("2022-01", "2022-09")}
-        return {"anual": float(c.iloc[-1] ** (12 / len(x)) - 1),
+        return {"anual": float(c.iloc[-1] ** (1 / anios) - 1),
                 "caida_max": float((c / c.cummax() - 1).min()),
-                "peor_12m": float((1 + x).rolling(12).apply(np.prod, raw=True).min() - 1),
-                "vol": float(x.std() * math.sqrt(12)),
+                "peor_12m": float((1 + x).rolling(26).apply(np.prod, raw=True).min() - 1),
+                "vol": float(x.std() * math.sqrt(26)),
                 "episodios": {k: float((1 + x.loc[a:b]).prod() - 1) for k, (a, b) in eps.items()}}
 
     def tramo(a, b):
         x = bt[(bt.index.year >= a) & (bt.index.year <= b)]
-        f = lambda v: float((1 + v).prod() ** (12 / len(v)) - 1)
+        n = (x.index[-1] - x.index[0]).days / 365.25 + 14 / 365.25
+        f = lambda v: float((1 + v).prod() ** (1 / n) - 1)
         return {"spy": f(x["spy"]), "regla": f(x["regla"])}
 
     rojo = (df["estado"] == "rojo")
@@ -259,23 +268,27 @@ def semaforo(y, hist):
     alarmas = []
     for _, g in df[rojo].groupby(grupos[rojo]):
         ini, fin_r = g.index[0], g.index[-1]
-        if ini < pd.Timestamp("2005-01-01"):
-            continue
-        ventana = ret.loc[ini + pd.offsets.MonthEnd(1): fin_r + pd.offsets.MonthEnd(1)].dropna()
-        alarmas.append({"desde": ini.strftime("%Y-%m"), "hasta": fin_r.strftime("%Y-%m"), "meses": len(g),
-                        "spy_durante": float((1 + ventana).prod() - 1) if len(ventana) else None,
+        pos = df.index.get_loc(fin_r)
+        fin_v = df.index[pos + 1] if pos + 1 < len(df) else df.index[-1]
+        alarmas.append({"desde": ini.strftime("%Y-%m-%d"), "hasta": fin_r.strftime("%Y-%m-%d"), "semanas": 2 * len(g),
+                        "spy_durante": float(df["p"].loc[fin_v] / df["p"].loc[ini] - 1) if fin_v > ini else None,
                         "abierta": bool(fin_r == df.index[-1])})
 
     hoy = df.iloc[-1]
     est = df["estado"].tolist()
-    dur = 1
-    while dur < len(est) and est[-1 - dur] == est[-1]:
-        dur += 1
+    k = 1
+    while k < len(est) and est[-1 - k] == est[-1]:
+        k += 1
+    desde = df.index[-k]
+    prox = df.index[-1] + pd.Timedelta(days=14)
     return {
-        "estado": hoy["estado"], "duracion": dur, "frena": bool(hoy["frena"]), "bajo": bool(hoy["bajo"]),
-        "regimen": hoy["qc"], "spy": float(spy.iloc[-1]), "spy_fecha": spy.index[-1].strftime("%Y-%m-%d"),
-        "ma10": float(hoy["ma"]), "dist": float(spy.iloc[-1] / hoy["ma"] - 1),
-        "historial": [{"f": d.strftime("%Y-%m"), "e": e} for d, e in df["estado"].items() if d >= pd.Timestamp("2005-01-01")],
+        "estado": hoy["estado"], "frecuencia": "quincenal", "corte": df.index[-1].strftime("%Y-%m-%d"),
+        "desde_estado": desde.strftime("%Y-%m-%d"), "proxima": prox.strftime("%Y-%m-%d"),
+        "frena": bool(hoy["frena"]), "bajo": bool(hoy["bajo"]),
+        "regimen": hoy["qc"], "spy": float(hoy["p"]), "spy_fecha": df.index[-1].strftime("%Y-%m-%d"),
+        "ma200": float(hoy["ma"]), "dist": float(hoy["p"] / hoy["ma"] - 1),
+        "hoy": {"fecha": spy.index[-1].strftime("%Y-%m-%d"), "dist": float(spy.iloc[-1] / ma200.iloc[-1] - 1)},
+        "historial": [{"f": d.strftime("%Y-%m-%d"), "e": e} for d, e in df["estado"].items()],
         "resultados": {"spy": st(bt["spy"]), "regla": st(bt["regla"]), "tiempo_fuera": float(1 - bt["dentro"].mean()),
                        "desde": bt.index[0].strftime("%Y-%m"), "hasta": bt.index[-1].strftime("%Y-%m"),
                        "tramos": {"2005-2018": tramo(2005, 2018), "2019-hoy": tramo(2019, 2100)}},
