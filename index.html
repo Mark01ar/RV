@@ -657,7 +657,7 @@ function cartera(m){
   m.innerHTML = `
   <div class="card" style="border-color:var(--accent)">
     <h3>RECOMENDACIONES DE ${nomMes(C.mes).toUpperCase()}</h3>
-    <div class="sub">Armada el ${new Date(C.fecha+"T12:00").toLocaleDateString("es-AR")} con la estrategia validada (momentum + MA200), entre los ${C.n_elegibles} CEDEARs con liquidez suficiente para retail. ${C.parametros.n} acciones con igual peso. Queda fija todo el mes; el primer sábado del mes que viene se rearma y acá vas a ver qué vender y qué comprar.</div>
+    <div class="sub">Armada el ${new Date(C.fecha+"T12:00").toLocaleDateString("es-AR")} con la estrategia validada (momentum + MA200), entre los ${C.n_elegibles} CEDEARs con liquidez suficiente para retail. ${C.parametros.n} acciones con igual peso. <b style="color:var(--text)">Sugerencia: 75% en SPY y 25% repartido en estas ${C.parametros.n}.</b> Queda fija todo el mes; el primer sábado del mes que viene se rearma y acá vas a ver qué vender y qué comprar.</div>
     ${cmb?`<div class="cmb" style="grid-template-columns:repeat(3,1fr);margin-top:12px">
       <div><h4 style="color:var(--neg)">VENDER · ${cmb.vender.length}</h4>${cmb.vender.length?cmb.vender.map(t=>`<b>${esc(t)}</b>`).join(" · "):'<span class="mut">Ninguna</span>'}</div>
       <div><h4 style="color:var(--pos)">COMPRAR · ${cmb.comprar.length}</h4>${cmb.comprar.length?cmb.comprar.map(t=>`<b>${esc(t)}</b>`).join(" · "):'<span class="mut">Ninguna</span>'}</div>
@@ -670,7 +670,7 @@ function cartera(m){
         <div><div class="sub">Cartera</div><div class="big ${cls(ult?.cartera)}">${ult?pct(ult.cartera):"—"}</div></div>
         <div><div class="sub">S&P 500 (SPY)</div><div class="big ${cls(C.spy_desde)}">${pct(C.spy_desde)}</div></div>
         <div><div class="sub">Diferencia</div><div class="big ${cls(ult?.dif)}">${ult?pct(ult.dif):"—"}</div></div>
-      </div><div class="sub" style="margin-top:6px">Incluye el costo de compra (0,6% por operación). En dólares, sobre el precio de las acciones en EE.UU.</div></div>
+      </div><div class="sub" style="margin-top:6px">Incluye el costo de compra y venta (${String(C.parametros.costo*100).replace(".",",")}% por operación). En dólares, sobre el precio de las acciones en EE.UU.</div></div>
     <div class="card"><h3>SECTORES</h3>${Object.entries(sect).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="sub" style="display:flex;justify-content:space-between"><span>${esc(k)}</span><b style="color:var(--text);font-family:var(--mono)">${v*Math.round(100/C.parametros.n)}%</b></div>`).join("")}</div>
   </div>
   <div class="wrap" style="margin-top:16px;max-height:none"><table><thead><tr>
@@ -681,11 +681,11 @@ function cartera(m){
   ${tr.length>1?`<div class="card" style="margin-top:16px"><h3>TRACK RECORD MES A MES</h3><table class="res"><tr><th class="l">Mes</th><th>Cartera</th><th>SPY</th><th>Diferencia</th><th>Acum. cartera</th><th>Acum. SPY</th></tr>
     ${tr.slice().reverse().map(t=>`<tr><td class="l">${nomMes(t.mes)}${t.parcial?' <span class="mut">(en curso)</span>':""}</td><td class="${cls(t.cartera)}">${pct(t.cartera)}</td><td class="${cls(t.spy)}">${pct(t.spy)}</td><td class="${cls(t.dif)}">${pct(t.dif)}</td><td class="${cls(t.acum_cartera)}">${pct(t.acum_cartera)}</td><td class="${cls(t.acum_spy)}">${pct(t.acum_spy)}</td></tr>`).join("")}</table></div>`:""}
   <details class="help" style="margin-top:16px"><summary>Cómo usarla</summary>
-    <p><b>Para qué es:</b> la parte táctica (satélite) de la cartera de acciones de un cliente, por ejemplo un 20–30%. El resto, en el índice (SPY o QQQ). Si la estrategia funciona, el satélite empuja la cartera por encima del índice; si un año falla, el daño queda acotado.</p>
+    <p><b>Para qué es:</b> complementar al SPY. La sugerencia es 75% en SPY y 25% en estas acciones, en partes iguales. En el backtest, esa mezcla tuvo una caída máxima parecida a la del SPY solo y le ganó en 15 de 20 años. Si la estrategia funciona, el satélite empuja la cartera por encima del índice; si un año falla, el daño queda acotado.</p>
     <p><b>Cómo se elige:</b> entre los CEDEARs con liquidez alta, media o baja en BYMA (desde USD 30.000 por día), se ordenan por momentum (retorno de 12 meses sin el último y distancia a la MA200) y se toman las ${C.parametros.n} primeras. Si alguna está debajo de su MA200, ese lugar va a letras o caución. Con 20 años de historia esta regla le ganó al promedio del universo, aunque con caídas fuertes y años enteros por debajo del índice.</p>
     <p><b>Una vez por mes:</b> vendés las que salen y comprás las que entran, en partes iguales. No conviene tocarla en el medio: rebalancear más seguido no mejoró los resultados y suma costos.</p>
     <p><b>Alertas:</b> CCL caro → orden límite o esperar unos días; balance en menos de 7 días → esperar movimientos fuertes, pero no hace falta postergar la compra (en promedio la semana del balance rindió algo más); perdió MA200 → no sumar, pero no se vende hasta el rebalanceo.</p>
-    <p><b>Honestidad:</b> el backtest usó las 20 mejores de todo el universo; esta versión (10 acciones, solo líquidas) es más concentrada y todavía no está probada con historia. El track record de esta pestaña es la prueba real.</p>
+    <p><b>Qué esperar:</b> probado con 2007–2026 y costo de 0,5% por lado, las 5 acciones le ganaron al SPY en los dos períodos (2007–2018 y 2019–2026), pero con caídas de hasta −46% y años malos. El backtest usa empresas que hoy existen y son líquidas, lo que infla el resultado varios puntos por año: para la mezcla 75/25 es más razonable esperar unos 2 a 4 puntos anuales sobre el SPY, no lo que muestra el backtest. Con 5 acciones cada una pesa 20%: va a ser irregular. Desde diciembre 2026 son 5; noviembre se armó con 10. El track record de esta pestaña es la prueba real.</p>
   </details>`;
 }
 

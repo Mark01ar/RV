@@ -9,9 +9,9 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 CARTERAS = DATA / "carteras"
 SALIDA = DATA / "cartera.json"
-N = 10
+N = 5
 LIQ_OK = {"Alta", "Media", "Baja"}
-COSTO = 0.006
+COSTO = 0.005
 LETRAS_MES = 0.0035
 
 
@@ -38,7 +38,7 @@ def armar(datos):
     return ranking, len(df)
 
 
-def ret_cartera(pos, precios_fin):
+def ret_cartera(pos, precios_fin, n):
     rets = []
     for p in pos:
         if p["en_cartera"]:
@@ -46,7 +46,7 @@ def ret_cartera(pos, precios_fin):
             rets.append(fin / p["precio"] - 1 if fin else 0.0)
         else:
             rets.append(LETRAS_MES)
-    return sum(rets) / N if rets else 0.0
+    return sum(rets) / n if rets else 0.0
 
 
 def main():
@@ -63,7 +63,7 @@ def main():
     if not archivo.exists():
         ranking, n_elig = armar(datos)
         archivo.write_text(json.dumps({
-            "mes": mes, "fecha": hoy.isoformat(), "spy": datos["spy"]["precio"], "ccl": datos.get("ccl"),
+            "mes": mes, "fecha": hoy.isoformat(), "n": N, "spy": datos["spy"]["precio"], "ccl": datos.get("ccl"),
             "n_elegibles": n_elig, "posiciones": [r for r in ranking if r["puesto"] <= N],
             "suplentes": [r for r in ranking if r["puesto"] > N]}, ensure_ascii=False, indent=1))
     actual = json.loads(archivo.read_text())
@@ -81,13 +81,15 @@ def main():
             spy_fin, parcial = sig["spy"], False
         else:
             pf, spy_fin, parcial = precios, datos["spy"]["precio"], True
-        r = ret_cartera(c["posiciones"], pf)
+        nc = c.get("n", len(c["posiciones"]))
+        r = ret_cartera(c["posiciones"], pf, nc)
         if i > 0:
             prev = {p["ticker"] for p in hist[i - 1]["posiciones"] if p["en_cartera"]}
             nuevo = {p["ticker"] for p in c["posiciones"] if p["en_cartera"]}
-            r -= COSTO * 2 * len(nuevo - prev) / N
+            np_ = hist[i - 1].get("n", len(hist[i - 1]["posiciones"]))
+            r -= COSTO * (len(nuevo - prev) / nc + len(prev - nuevo) / np_)
         else:
-            r -= COSTO * sum(1 for p in c["posiciones"] if p["en_cartera"]) / N
+            r -= COSTO * sum(1 for p in c["posiciones"] if p["en_cartera"]) / nc
         rs = spy_fin / c["spy"] - 1
         acum_c *= 1 + r
         acum_s *= 1 + rs
@@ -102,6 +104,7 @@ def main():
                    "comprar": [nuevo[t]["byma"] for t in nuevo if t not in prev],
                    "mantener": [nuevo[t]["byma"] for t in nuevo if t in prev]}
 
+    na = actual.get("n", len(actual["posiciones"]))
     pos = []
     for p in actual["posiciones"] + actual.get("suplentes", []):
         t = p["ticker"]
@@ -115,9 +118,9 @@ def main():
     SALIDA.write_text(json.dumps({
         "actualizado": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
         "mes": actual["mes"], "fecha": actual["fecha"], "n_elegibles": actual.get("n_elegibles"),
-        "parametros": {"n": N, "liquidez": sorted(LIQ_OK), "costo": COSTO},
+        "parametros": {"n": na, "liquidez": sorted(LIQ_OK), "costo": COSTO},
         "spy_desde": datos["spy"]["precio"] / actual["spy"] - 1,
-        "posiciones": [p for p in pos if p["puesto"] <= N], "suplentes": [p for p in pos if p["puesto"] > N],
+        "posiciones": [p for p in pos if p["puesto"] <= na], "suplentes": [p for p in pos if p["puesto"] > na],
         "cambios": cambios, "track": track}, ensure_ascii=False, separators=(",", ":")))
     print(f"cartera {actual['mes']}: {[p['byma'] for p in actual['posiciones'] if p['en_cartera']]}")
 
