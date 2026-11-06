@@ -60,41 +60,40 @@ cajaf = (irx.reindex(dias).ffill().loc[FE] / 100 / 12)
 def rk(s):
     return s.rank(pct=True)
 
-sec = json.load(open("data/sectores.json"))
+I = pd.read_csv("tmp/insiders.csv", parse_dates=["fecha"]).dropna(subset=["fecha"])
+I = I.drop_duplicates(["t", "fecha", "TRANS_CODE", "usd", "ACCESSION_NUMBER"])
 liq = [t for t in close.columns if t in LIQ]
-ind = {t: (sec.get(t) or {}).get("industria") for t in liq}
-cnt = pd.Series(ind).value_counts()
-grupo = {t: (ind[t] if ind[t] and cnt.get(ind[t], 0) >= 3 else (sec.get(t) or {}).get("sector") or "?") for t in liq}
-print("grupos", len(set(grupo.values())), flush=True)
-h52 = pm / close.rolling(252, min_periods=200).max().loc[FE]
-def rk(s):
-    return s.rank(pct=True)
-
-EST = ["Base", "H52", "H52solo", "B+H52", "B+Grupo", "GrupoTop", "Univ"]
+EST = ["Base", "Base+Ins", "InsMA", "Ins", "Univ"]
 filas, prev = [], {k: set() for k in EST}
+n_ins = []
 for f in FE[12:-1]:
-    ok = mom.loc[f].notna() & vsma.loc[f].notna() & fwd.loc[f].notna() & h52.loc[f].notna() & mom.columns.isin(liq)
+    ok = mom.loc[f].notna() & vsma.loc[f].notna() & fwd.loc[f].notna() & mom.columns.isin(liq)
     if ok.sum() < 60:
         continue
-    m, v, r, h = mom.loc[f][ok], vsma.loc[f][ok], fwd.loc[f][ok], h52.loc[f][ok]
-    g = pd.Series({t: grupo[t] for t in m.index})
-    gm = m.groupby(g).mean()
-    gmom = g.map(gm)
-    gtop = set(gm[gm >= gm.median()].index)
-    sc = {"Base": (rk(m) + rk(v)) / 2, "H52": (rk(m) + rk(h)) / 2, "H52solo": rk(h),
-          "B+H52": (rk(m) + rk(v) + rk(h)) / 3, "B+Grupo": (rk(m) + rk(v) + rk(gmom)) / 3,
-          "GrupoTop": ((rk(m) + rk(v)) / 2)[g.isin(gtop)]}
-    fila = {"f": f, "spy": spyf.loc[f], "caja": cajaf.loc[f], "Univ": float(r.mean())}
-    for s_, s in sc.items():
-        top = list(s.sort_values(ascending=False).index[:10])
+    m, v, r = mom.loc[f][ok], vsma.loc[f][ok], fwd.loc[f][ok]
+    pf = pd.Timestamp(f)
+    ven = I[(I["fecha"] <= pf) & (I["fecha"] > pf - pd.Timedelta(days=91))]
+    compra = ven[ven["TRANS_CODE"] == "P"].groupby("t")["usd"].sum()
+    compra = set(compra[compra >= 100000].index) & set(m.index)
+    n_ins.append(len(compra))
+    base = (rk(m) + rk(v)) / 2
+    bono = base + pd.Series({t: 0.25 if t in compra else 0 for t in m.index})
+    fila = {"f": f, "spy": spyf.loc[f], "caja": cajaf.loc[f], "Univ": float(r.mean()), "Univ_exp": 1}
+    planes = {"Base": list(base.sort_values(ascending=False).index[:10]), "Base+Ins": list(bono.sort_values(ascending=False).index[:10])}
+    for s_, top in planes.items():
         hold = {t for t in top if v[t] > 0}
-        bruto = (sum(r[t] for t in hold) + (10 - len(hold)) * fila["caja"]) / 10
-        giro = len(hold ^ prev[s_]) / 10
-        fila[s_] = bruto - COSTO * giro
+        fila[s_] = (sum(r[t] for t in hold) + (10 - len(hold)) * fila["caja"]) / 10 - COSTO * len(hold ^ prev[s_]) / 10
         fila[s_ + "_exp"] = len(hold) / 10
         prev[s_] = hold
-    fila["Univ_exp"] = 1
+    for s_, hold in {"Ins": compra, "InsMA": {t for t in compra if v[t] > 0}}.items():
+        if hold:
+            fila[s_] = float(np.mean([r[t] for t in hold])) - COSTO * len(hold ^ prev[s_]) / max(len(hold), 1)
+        else:
+            fila[s_] = fila["caja"]
+        fila[s_ + "_exp"] = 1 if hold else 0
+        prev[s_] = set(hold)
     filas.append(fila)
+print("acciones con compras por mes", np.percentile(n_ins, [10, 50, 90]), flush=True)
 R = pd.DataFrame(filas).set_index("f")
 R.index = pd.to_datetime(R.index)
 an = lambda s: (1 + s).prod() ** (12 / len(s)) - 1
@@ -103,6 +102,7 @@ for a_, b_ in [("2007", "2018"), ("2019", "2026"), ("2007", "2026")]:
     sub = R.loc[a_:b_]
     o = {}
     yb = (1 + sub["Base"]).groupby(sub.index.year).prod() - 1
+    yu = (1 + sub["Univ"]).groupby(sub.index.year).prod() - 1
     for s_ in EST:
         x = sub[s_]
         c = (1 + x).cumprod()
@@ -110,7 +110,7 @@ for a_, b_ in [("2007", "2018"), ("2019", "2026"), ("2007", "2026")]:
         o[s_] = {"anual": round(an(x) * 100, 1), "vs_base": round((an(x) - an(sub["Base"])) * 100, 1),
                  "vs_univ": round((an(x) - an(sub["Univ"])) * 100, 1), "vol": round(x.std() * np.sqrt(12) * 100, 1),
                  "dd": round(float((c / c.cummax() - 1).min()) * 100), "anios_vs_base": f"{int((y > yb).sum())}/{len(y)}",
-                 "meses_vs_base": round(float((x > sub["Base"]).mean()) * 100), "expo": round(float(sub[s_ + "_exp"].mean()) * 100)}
+                 "anios_vs_univ": f"{int((y > yu).sum())}/{len(y)}", "expo": round(float(sub[s_ + "_exp"].mean()) * 100)}
     o["SPY"] = round(an(sub["spy"]) * 100, 1)
     out[f"{a_}-{b_}"] = o
 for kk, vv in out.items():

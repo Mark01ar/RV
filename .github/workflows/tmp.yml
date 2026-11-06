@@ -13,4 +13,5 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python tmp/bt_h52.py
+      - run: python tmp/insiders.py
+      - run: python tmp/bt_ins.py
