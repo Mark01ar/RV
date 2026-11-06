@@ -14,4 +14,4 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements.txt
       - run: python tmp/insiders.py
-      - run: python tmp/bt_ins.py
+      - run: python tmp/bt_ins2.py
