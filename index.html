@@ -25,6 +25,9 @@ header{display:flex;flex-wrap:wrap;align-items:center;gap:12px 24px;padding:10px
 .brand{font-family:var(--mono);font-weight:600;color:var(--accent);letter-spacing:.08em}
 .kpis{display:flex;flex-wrap:wrap;gap:18px;font-family:var(--mono);font-size:12px;color:var(--muted)}
 .kpis b{color:var(--text);font-weight:500}
+.vivo{margin-left:auto;display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.vivo button{background:none;border:1px solid var(--accent);color:var(--accent);padding:6px 12px;font-family:var(--mono);font-size:11px;letter-spacing:.05em;cursor:pointer}
+.vivo button:disabled{opacity:.5;cursor:wait}
 nav{display:flex;overflow-x:auto;border-bottom:1px solid var(--line);background:var(--panel)}
 nav button{background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:10px 16px;font-family:var(--mono);font-size:12px;letter-spacing:.05em;cursor:pointer;white-space:nowrap}
 nav button.on{color:var(--text);border-bottom-color:var(--accent)}
@@ -138,6 +141,7 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 <header>
   <div class="brand">MAQ · RENTA VARIABLE</div>
   <div class="kpis" id="kpis"></div>
+  <div class="vivo"><span id="vivoMsg"></span><button id="vivoBtn" type="button" title="Trae los precios del momento de BYMA y EE.UU. (data912). No cambia la cartera ni los puntajes: solo precios, CCL, premio, distancia a la MA200 y rendimiento desde que se armó.">ACTUALIZAR PRECIOS</button></div>
 </header>
 <nav id="nav"></nav>
 <main id="main"></main>
@@ -189,6 +193,66 @@ async function abrir(){
   }catch(e){}
   kpis(); navegar(); render();
 }
+
+const ratioNum = r => { const [a,b] = String(r||"").split(":").map(Number); return a&&b ? a/b : null; };
+const mediana = a => { const v = a.filter(x=>x!=null&&isFinite(x)).sort((x,y)=>x-y); return v.length ? (v.length%2 ? v[(v.length-1)/2] : (v[v.length/2-1]+v[v.length/2])/2) : null; };
+
+async function vivo(){
+  const btn = document.getElementById("vivoBtn"), msg = document.getElementById("vivoMsg");
+  if (!D) return;
+  btn.disabled = true; msg.textContent = "Trayendo precios…";
+  try{
+    const [ru, ra] = await Promise.all([fetch("https://data912.com/live/usa_stocks"), fetch("https://data912.com/live/arg_cedears")]);
+    if (!ru.ok || !ra.ok) throw new Error("http");
+    const us = {}, ar = {};
+    (await ru.json()).forEach(x=>{ if (x && x.symbol && x.c) us[x.symbol] = +x.c; });
+    (await ra.json()).forEach(x=>{ if (x && x.symbol){ const p = x.c || x.px_ask || x.px_bid; if (p) ar[x.symbol] = +p; } });
+    const pxUS = t => us[t] ?? us[t.replace("-",".")] ?? us[t.replace("-","")];
+    const spyArm = C && D.spy?.precio && C.spy_desde!=null ? D.spy.precio/(1+C.spy_desde) : null;
+    let nu = 0, na = 0;
+    D.tickers.forEach(x=>{
+      const pu = x.ticker.endsWith(".KS") ? null : pxUS(x.ticker);
+      if (pu && x.precio){
+        if (x.vs_ma200!=null){ const ma = x.precio/(1+x.vs_ma200); x.vs_ma200 = pu/ma - 1; }
+        x.precio = pu; nu++;
+      }
+      if (ar[x.byma]){ x.px_ars = ar[x.byma]; na++; }
+      const k = ratioNum(x.ratio);
+      x.ccl_impl = x.px_ars && x.precio && k && !x.ticker.endsWith(".KS") ? x.px_ars*k/x.precio : null;
+    });
+    const ccl = mediana(D.tickers.filter(x=>x.liquidez==="Alta").map(x=>x.ccl_impl));
+    if (ccl){
+      D.ccl = ccl;
+      D.tickers.forEach(x=>{ const p = x.ccl_impl ? x.ccl_impl/ccl - 1 : null; x.premio = p!=null && Math.abs(p) <= 0.3 ? p : null; });
+    }
+    if (us.SPY && D.spy) D.spy.precio = us.SPY;
+    if (C){
+      const by = {}; D.tickers.forEach(x=>by[x.ticker]=x);
+      const n = C.parametros.n, trk = C.track||[], ult = trk[trk.length-1];
+      let delta = 0;
+      [...C.posiciones, ...(C.suplentes||[])].forEach(p=>{
+        const x = by[p.ticker]; if (!x) return;
+        const antes = p.desde_armado;
+        p.precio_hoy = x.precio; p.desde_armado = x.precio && p.precio ? x.precio/p.precio - 1 : null;
+        p.px_ars_hoy = x.px_ars; p.premio = x.premio; p.vs_ma200_hoy = x.vs_ma200;
+        if (p.en_cartera && p.puesto <= n && antes!=null && p.desde_armado!=null) delta += (p.desde_armado - antes)/n;
+      });
+      if (spyArm && us.SPY) C.spy_desde = us.SPY/spyArm - 1;
+      if (ult && ult.parcial){
+        const baseC = (1+ult.acum_cartera)/(1+ult.cartera), baseS = (1+ult.acum_spy)/(1+ult.spy);
+        ult.cartera += delta; ult.spy = C.spy_desde; ult.dif = ult.cartera - ult.spy;
+        ult.acum_cartera = baseC*(1+ult.cartera) - 1; ult.acum_spy = baseS*(1+ult.spy) - 1;
+      }
+    }
+    const h = new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
+    msg.innerHTML = `Precios en vivo <b style="color:var(--text)">${h}</b> · ${nu} en EE.UU., ${na} en BYMA`;
+    kpis(); render();
+  }catch(e){
+    msg.textContent = "No se pudo conectar con data912. Probá de nuevo en unos minutos.";
+  }
+  btn.disabled = false;
+}
+document.getElementById("vivoBtn").addEventListener("click", vivo);
 
 const pct = (x,d=1) => x==null ? "—" : (x>0?"+":"") + (x*100).toFixed(d) + "%";
 const cls = x => x==null ? "mut" : x>0 ? "pos" : x<0 ? "neg" : "";
