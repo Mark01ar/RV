@@ -468,6 +468,14 @@ def main():
             p = px_ars * ratio[0] / ratio[1] / precio / ccl - 1
             premio = p if abs(p) <= 0.3 else None
         mcap = num(info.get("marketCap"))
+        fxc = None
+        if info.get("currency") and info.get("currency") != "USD":
+            fxc = fx_anual(info["currency"])(dt.date.today().year)
+            if fxc:
+                mcap = mcap / fxc if mcap else None
+                for c_ in ["precio", "max52"]:
+                    if pb.get(c_):
+                        pb[c_] = pb[c_] / fxc
         usd = info.get("financialCurrency") in (None, "USD")
         tipo = "cripto" if b in CRIPTO else "banco" if es_banco(info) else "inmobiliaria" if info.get("sector") == "Real Estate" else "general"
         val = {"pe": num(info.get("trailingPE")), "pe_fwd": num(info.get("forwardPE")), "ev_ebitda": num(info.get("enterpriseToEbitda")) if usd else None,
@@ -477,7 +485,7 @@ def main():
         e = {"puesto": int(r["puesto"]), "byma": b, "ticker": t, "nombre": r["nombre"], "ratio": r["ratio"],
              "sector": SECTOR_ES.get(info.get("sector"), info.get("sector")), "sector_en": info.get("sector"), "industria": info.get("industry"),
              "pais": info.get("country"), "moneda_reporte": info.get("financialCurrency"), "mcap": mcap, "tipo": tipo,
-             "precio": precio, "px_ars": px_ars, "premio": premio, "monto_usd": num(r["monto_usd_dia"]), "liquidez": liquidez(num(r["monto_usd_dia"])),
+             "precio": pb.get("precio"), "px_ars": px_ars, "premio": premio, "monto_usd": num(r["monto_usd_dia"]), "liquidez": liquidez(num(r["monto_usd_dia"])),
              "r1m": pb.get("r1m"), "r3m": pb.get("r3m"), "r12m": pb.get("r12m"), "vs_ma200": pb.get("vs_ma200"), "mom12_1": pb.get("mom12_1"),
              "rel6m": (pb["r6m"] - float(spy.iloc[-1] / spy.iloc[-127] - 1)) if pb.get("r6m") is not None else None, "val": val}
         if not solo or t in solo or b in solo:
@@ -492,6 +500,10 @@ def main():
                     if y is not None:
                         an = [x for x in an if x["anio"] < min(z["anio"] for z in anual_tabla(y))] + anual_tabla(y)
                 ana = analistas(k, info, precio, s)
+                if fxc:
+                    for c_ in ["objetivo", "objetivo_alto", "objetivo_bajo"]:
+                        if ana.get(c_):
+                            ana[c_] = ana[c_] / fxc
                 hist_pe = []
                 for x_ in an:
                     if not (x_.get("neto") and x_["neto"] > 0):
