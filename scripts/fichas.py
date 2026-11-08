@@ -134,6 +134,22 @@ def sec_anual(ticker, cik):
     return df
 
 
+def moneda_real(k, info, conv):
+    try:
+        inc = k.income_stmt
+        raw = num(fila(inc, "Total Revenue").dropna().iloc[0])
+        ttm = num(info.get("totalRevenue"))
+        f = conv(dt.date.today().year)
+        if raw and ttm and f and f != 1:
+            if 0.4 < raw / ttm < 2.5:
+                return conv
+            if 0.4 < raw * f / ttm < 2.5:
+                return lambda y: 1.0
+    except Exception:
+        pass
+    return conv
+
+
 def yahoo_anual(k, conv):
     inc, bal, cf = k.income_stmt, k.balance_sheet, k.cashflow
     if inc is None or inc.empty:
@@ -149,6 +165,7 @@ def yahoo_anual(k, conv):
                                   "eq": g(bal, "Stockholders Equity", "Common Stock Equity"), "cash": g(bal, "Cash And Cash Equivalents", "Cash Cash Equivalents And Short Term Investments"),
                                   "ltd": g(bal, "Long Term Debt"), "std": g(bal, "Current Debt"), "sh": g(bal, "Ordinary Shares Number", "Share Issued")}
     df = pd.DataFrame(rows).T.sort_index().astype(float)
+    df = df[df["rev"].notna() | df["ni"].notna()]
     for y in df.index:
         f = conv(y.year)
         if f is None:
@@ -304,7 +321,7 @@ def notas_absolutas(ficha):
         det["calidad"] = {"ROE": roe, "ROA": roa}
         cal = media([lin(roe, [(0, 1), (0.05, 3), (0.10, 6), (0.15, 8), (0.20, 10)]), lin(roa, [(0, 1), (0.005, 4), (0.01, 6), (0.015, 8), (0.02, 10)])])
         det["solidez"] = {"Patrimonio/activo": eqa}
-        sol = lin(eqa, [(0.04, 2), (0.07, 5), (0.10, 7), (0.13, 9), (0.16, 10)])
+        sol = media([lin(eqa, [(0.04, 2), (0.07, 5), (0.10, 7), (0.13, 9), (0.16, 10)])])
     else:
         capital = (u.get("patrimonio") or 0) + (u.get("deuda") or 0) - (u.get("caja") or 0)
         roic = u["ebit"] * 0.79 / capital if u.get("ebit") is not None and capital > 0 else None
@@ -378,10 +395,11 @@ def main():
             p = px_ars * ratio[0] / ratio[1] / precio / ccl - 1
             premio = p if abs(p) <= 0.3 else None
         mcap = num(info.get("marketCap"))
+        usd = info.get("financialCurrency") in (None, "USD")
         tipo = "cripto" if b in CRIPTO else "banco" if es_banco(info) else "inmobiliaria" if info.get("sector") == "Real Estate" else "general"
-        val = {"pe": num(info.get("trailingPE")), "pe_fwd": num(info.get("forwardPE")), "ev_ebitda": num(info.get("enterpriseToEbitda")),
-               "ps": num(info.get("priceToSalesTrailing12Months")), "pb": num(info.get("priceToBook")),
-               "fcf_yield": num(info.get("freeCashflow")) / mcap if num(info.get("freeCashflow")) and mcap else None,
+        val = {"pe": num(info.get("trailingPE")), "pe_fwd": num(info.get("forwardPE")), "ev_ebitda": num(info.get("enterpriseToEbitda")) if usd else None,
+               "ps": num(info.get("priceToSalesTrailing12Months")) if usd else None, "pb": num(info.get("priceToBook")) if usd else None,
+               "fcf_yield": num(info.get("freeCashflow")) / mcap if num(info.get("freeCashflow")) and mcap and usd else None,
                "div_yield": (num(info.get("dividendYield")) or 0) / 100 if num(info.get("dividendYield")) is not None else None}
         e = {"puesto": int(r["puesto"]), "byma": b, "ticker": t, "nombre": r["nombre"], "ratio": r["ratio"],
              "sector": SECTOR_ES.get(info.get("sector"), info.get("sector")), "sector_en": info.get("sector"), "industria": info.get("industry"),
@@ -391,7 +409,7 @@ def main():
              "rel6m": (pb["r6m"] - float(spy.iloc[-1] / spy.iloc[-127] - 1)) if pb.get("r6m") is not None else None, "val": val}
         if not solo or t in solo or b in solo:
             try:
-                conv = fx_anual(info.get("financialCurrency"))
+                conv = moneda_real(k, info, fx_anual(info.get("financialCurrency")))
                 df = sec_anual(t, cik) if info.get("financialCurrency") in (None, "USD") and info.get("country") == "United States" else None
                 if df is None:
                     df = yahoo_anual(k, conv)
@@ -412,6 +430,24 @@ def main():
                          "empleados": num(info.get("fullTimeEmployees")), "precio_bloque": pb, "anual": an, "trimestral": trimestral(k, conv),
                          "analistas": ana, "pe_historia": hist_pe, "posicion": {"short_float": num(info.get("shortPercentOfFloat")),
                          "institucionales": num(info.get("heldPercentInstitutions")), "insiders": num(info.get("heldPercentInsiders"))}}
+                tq = ficha["trimestral"][-4:]
+                u_ = an[-1] if an else {}
+                ventas_ttm = sum(q["ventas"] for q in tq) if len(tq) == 4 and all(q.get("ventas") for q in tq) else u_.get("ventas")
+                neto_ttm = sum(q["neto"] for q in tq) if len(tq) == 4 and all(q.get("neto") is not None for q in tq) else u_.get("neto")
+                if mcap:
+                    if ventas_ttm:
+                        val["ps"] = mcap / ventas_ttm
+                    if u_.get("fcf") is not None:
+                        val["fcf_yield"] = u_["fcf"] / mcap
+                    if u_.get("ebitda") and u_["ebitda"] > 0 and tipo != "banco":
+                        val["ev_ebitda"] = (mcap + (u_.get("deuda") or 0) - (u_.get("caja") or 0)) / u_["ebitda"]
+                    if not usd and neto_ttm and neto_ttm > 0:
+                        val["pe"] = mcap / neto_ttm
+                if tipo == "banco":
+                    val["ev_ebitda"] = None
+                    val["fcf_yield"] = None
+                e["val"] = val
+                ficha["val"] = val
                 ficha["notas_abs"] = notas_absolutas(ficha)
                 e["proximo_balance"] = ana.get("proximo_balance")
                 e["rev90"] = ana.get("rev_0y_90")
