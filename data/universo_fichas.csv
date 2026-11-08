@@ -1,0 +1,126 @@
+puesto,byma,ticker_us,nombre,ratio,monto_usd_dia,fuente_volumen
+1,MU,MU,Micron,5:1,14632365,6 meses
+2,SKHY,000660.KS,SK Hynix,25:1,6006454,20 dias
+3,NVDA,NVDA,Nvidia,24:1,4325511,6 meses
+4,TSM,TSM,TSMC,9:1,3903613,20 dias
+5,MELI,MELI,MercadoLibre,120:1,3715288,6 meses
+6,MSFT,MSFT,Microsoft,30:1,3464259,6 meses
+7,GOOGL,GOOGL,Alphabet,58:1,3345499,6 meses
+8,META,META,Meta,24:1,3111962,6 meses
+9,MRNA,MRNA,Moderna,19:1,3069735,20 dias
+10,SNDK,SNDK,Sandisk,170:1,3038434,20 dias
+11,MSTR,MSTR,Strategy,20:1,2024526,6 meses
+12,AMD,AMD,AMD,10:1,1670521,6 meses
+13,ORCL,ORCL,Oracle,3:1,1661747,20 dias
+14,TSLA,TSLA,Tesla,15:1,1482760,6 meses
+15,AMZN,AMZN,Amazon,144:1,1455693,6 meses
+16,INTC,INTC,Intel,5:1,1430137,6 meses
+17,SPCX,SPCX,SpaceX,50:1,1269896,20 dias
+18,HUT,HUT,Hut 8,5:1,1125626,6 meses
+19,AAPL,AAPL,Apple,20:1,1112771,6 meses
+20,IREN,IREN,IREN,12:1,911957,20 dias
+21,CRWV,CRWV,CoreWeave,27:1,855585,20 dias
+22,KO,KO,Coca-Cola,5:1,853565,6 meses
+23,BRKB,BRK-B,Berkshire Hathaway,22:1,845700,6 meses
+24,MCD,MCD,McDonald's,24:1,806698,6 meses
+25,PBR,PBR,Petrobras,1:1,758067,6 meses
+26,AVGO,AVGO,Broadcom,39:1,746971,6 meses
+27,IBM,IBM,IBM,15:1,722490,6 meses
+28,SATL,SATL,Satellogic,1:1,664026,20 dias
+29,GLOB,GLOB,Globant,18:1,590029,6 meses
+30,UBER,UBER,Uber,2:1,569095,20 dias
+31,COIN,COIN,Coinbase,27:1,474113,6 meses
+32,V,V,Visa,18:1,466842,6 meses
+33,JPM,JPM,JPMorgan,15:1,456465,6 meses
+34,QCOM,QCOM,Qualcomm,11:1,456166,6 meses
+35,NFLX,NFLX,Netflix,48:1,450482,6 meses
+36,NBIS,NBIS,Nebius,27:1,339745,20 dias
+37,BABA,BABA,Alibaba,9:1,338065,6 meses
+38,VALE,VALE,Vale,2:1,332365,6 meses
+39,VST,VST,Vistra,26:1,305561,20 dias
+40,WMT,WMT,Walmart,18:1,304538,6 meses
+41,YELP,YELP,Yelp,2:1,297393,20 dias
+42,CAT,CAT,Caterpillar,20:1,295449,6 meses
+43,MRVL,MRVL,Marvell,14:1,282492,20 dias
+44,RIOT,RIOT,Riot Platforms,3:1,278346,20 dias
+45,ADBE,ADBE,Adobe,44:1,277189,6 meses
+46,ASML,ASML,ASML,146:1,271698,20 dias
+47,NKE,NKE,Nike,12:1,253190,6 meses
+48,LLY,LLY,Eli Lilly,56:1,248820,6 meses
+49,ASTS,ASTS,AST SpaceMobile,15:1,238113,20 dias
+50,AMAT,AMAT,Applied Materials,5:1,237555,6 meses
+51,NIO,NIO,NIO,4:1,226498,6 meses
+52,CRM,CRM,Salesforce,18:1,204164,6 meses
+53,PLTR,PLTR,Palantir,3:1,194988,20 dias
+54,PEP,PEP,PepsiCo,18:1,192478,20 dias
+55,BBD,BBD,Bradesco,1:1,185673,6 meses
+56,ADGO,AGRO,Adecoagro,1:1,184070,6 meses
+57,GPRK,GPRK,GeoPark,1:1,173298,6 meses
+58,MA,MA,Mastercard,33:1,164027,6 meses
+59,NMR,NMR,Nomura,1:1,163947,20 dias
+60,ANF,ANF,Abercrombie & Fitch,1:1,150277,6 meses
+61,JNJ,JNJ,Johnson & Johnson,15:1,147572,6 meses
+62,CVX,CVX,Chevron,16:1,146772,6 meses
+63,HMY,HMY,Harmony Gold,1:1,142467,6 meses
+64,JMIA,JMIA,Jumia,1:1,139882,6 meses
+65,RGTI,RGTI,Rigetti,2:1,134403,20 dias
+66,XOM,XOM,Exxon Mobil,10:1,129780,6 meses
+67,C,C,Citigroup,3:1,123740,6 meses
+68,SPCE,SPCE,Virgin Galactic,1:2,123718,20 dias
+69,PFE,PFE,Pfizer,4:1,122772,6 meses
+70,SPOT,SPOT,Spotify,28:1,122676,20 dias
+71,AXP,AXP,American Express,15:1,120606,6 meses
+72,MP,MP,MP Materials,10:1,120537,20 dias
+73,LRCX,LRCX,Lam Research,56:1,117771,6 meses
+74,SHEL,SHEL,Shell,2:1,117726,20 dias
+75,JD,JD,JD.com,4:1,111735,6 meses
+76,GT,GT,Goodyear,2:1,110137,20 dias
+77,OKLO,OKLO,Oklo,28:1,109913,20 dias
+78,DISN,DIS,Disney,12:1,107727,6 meses
+79,PG,PG,Procter & Gamble,15:1,106720,20 dias
+80,HOOD,HOOD,Robinhood,29:1,103920,20 dias
+81,PYPL,PYPL,PayPal,8:1,99329,6 meses
+82,HIMS,HIMS,Hims & Hers,4:1,98206,20 dias
+83,PANW,PANW,Palo Alto Networks,50:1,96157,20 dias
+84,PLD,PLD,Prologis,29:1,90007,20 dias
+85,GE,GE,GE Aerospace,8:1,88986,6 meses
+86,MO,MO,Altria,4:1,88649,6 meses
+87,EBAY,EBAY,eBay,2:1,87514,6 meses
+88,FSLR,FSLR,First Solar,18:1,86419,6 meses
+89,CRWD,CRWD,CrowdStrike,79:1,80976,20 dias
+90,CSCO,CSCO,Cisco,5:1,77879,6 meses
+91,NTRA,NTRA,Natera,51:1,77682,20 dias
+92,GEV,GEV,GE Vernova,180:1,74894,20 dias
+93,TEM,TEM,Tempus AI,12:1,71668,20 dias
+94,LMT,LMT,Lockheed Martin,20:1,71373,6 meses
+95,B,B,Barrick Mining,2:1,65575,20 dias
+96,BA.C,BAC,Bank of America,4:1,64511,6 meses
+97,TMUS,TMUS,T-Mobile,33:1,64375,20 dias
+98,SAP,SAP,SAP,6:1,63626,20 dias
+99,VRTX,VRTX,Vertex,101:1,62771,20 dias
+100,FCX,FCX,Freeport-McMoRan,3:1,62103,6 meses
+101,RKLB,RKLB,Rocket Lab,12:1,61811,20 dias
+102,HL,HL,Hecla Mining,1:1,58278,6 meses
+103,BIDU,BIDU,Baidu,11:1,57705,6 meses
+104,TEN,TS,Tenaris,1:1,54847,6 meses
+105,ALAB,ALAB,Astera Labs,44:1,54307,20 dias
+106,BB,BB,BlackBerry,3:1,53344,6 meses
+107,WDC,WDC,Western Digital,92:1,53324,20 dias
+108,UNH,UNH,UnitedHealth,33:1,52239,20 dias
+109,DELL,DELL,Dell,74:1,51384,20 dias
+110,ITUB,ITUB,Itau Unibanco,1:1,50594,6 meses
+111,ABT,ABT,Abbott,4:1,50518,6 meses
+112,UAL,UAL,United Airlines,5:1,50479,20 dias
+113,AAL,AAL,American Airlines,2:1,50312,20 dias
+114,XROX,XRX,Xerox,1:1,49704,20 dias
+115,NOW,NOW,ServiceNow,172:1,47888,20 dias
+116,CEG,CEG,Constellation Energy,45:1,47292,20 dias
+117,GS,GS,Goldman Sachs,13:1,44826,6 meses
+118,HPQ,HPQ,HP,1:1,44531,6 meses
+119,DAL,DAL,Delta Air Lines,8:1,44200,20 dias
+120,TXR,TX,Ternium,4:1,43967,6 meses
+121,PCAR,PCAR,Paccar,3:1,42508,20 dias
+122,TEAM,TEAM,Atlassian,47:1,40871,20 dias
+123,BIOX,BIOX,Bioceres,1:1,40064,6 meses
+124,NVO,NVO,Novo Nordisk,7:1,39149,20 dias
+125,BA,BA,Boeing,24:1,38915,6 meses
