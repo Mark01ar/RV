@@ -15,17 +15,22 @@ print("ccl", ccl, "vivo", len(vivo), "no_en_csv", len(nuevos), flush=True)
 print("NUEVOS|" + ",".join(nuevos), flush=True)
 filas = []
 for s in list(u["byma"]) + nuevos:
-    try:
-        h = A.byma_historico(s)
-    except Exception:
-        h = None
+    h = None
+    for intento in range(4):
+        try:
+            h = A.byma_historico(s)
+        except Exception:
+            h = None
+        if h is not None and len(h):
+            break
+        time.sleep(3 * (intento + 1))
     if h is None or not len(h):
         filas.append({"byma": s, "m120": None, "m20": None, "dias": 0})
         continue
     h = h[h["fecha"] >= h["fecha"].max() - pd.Timedelta(days=185)]
     filas.append({"byma": s, "m120": float(h["monto"].median()) / ccl, "m20": float(h["monto"].tail(20).median()) / ccl,
                   "dias_con_operacion": int((h["v"].astype(float) > 0).sum()), "ultimo": str(h["fecha"].max())[:10]})
-    time.sleep(0.15)
+    time.sleep(0.8)
 df = pd.DataFrame(filas).merge(u, on="byma", how="left")
 df.to_csv("tmp/top100.csv", index=False)
 for _, r in df.sort_values("m120", ascending=False).iterrows():
