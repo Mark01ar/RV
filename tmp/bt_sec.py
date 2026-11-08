@@ -133,6 +133,43 @@ def rk(s):
     return s.rank(pct=True)
 
 
+def metricas(t, f):
+    S = SEC[t]["series"]
+    g = lambda k, a=0: pit(S[k], f, a)
+    rev, gp, op, ni, cfo, capex, da, ta, cl, ca, ltd, std = (g(k) for k in ["rev", "gp", "op", "ni", "cfo", "capex", "da", "ta", "cl", "ca", "ltd", "std"])
+    if np.isnan(ta) or np.isnan(ni):
+        return None
+    rev1, gp1, ni1, ta1, ltd1, ca1, cl1 = (g(k, 1) for k in ["rev", "gp", "ni", "ta", "ltd", "ca", "cl"])
+    sh = SEC[t]["sh"]
+    sh = sh[sh.index <= f]
+    nsh = float(sh.iloc[-1]) if len(sh) and sh.index[-1] >= f - pd.Timedelta(days=200) else np.nan
+    sh1 = sh[sh.index <= f - pd.Timedelta(days=330)]
+    nsh1 = float(sh1.iloc[-1]) if len(sh1) and sh1.iloc[-1] > 0 else np.nan
+    nsh = nsh if nsh and nsh > 0 else np.nan
+    mcap = precio_sin_ajuste(t, f) * nsh if not np.isnan(nsh) else np.nan
+    deuda = np.nansum([ltd, std]) if not (np.isnan(ltd) and np.isnan(std)) else np.nan
+    ebitda = op + (0 if np.isnan(da) else da) if not np.isnan(op) else np.nan
+    roa, roa1 = ni / ta, (ni1 / ta1 if not np.isnan(ni1) and not np.isnan(ta1) else np.nan)
+    fs = [roa > 0, (cfo > 0) if not np.isnan(cfo) else np.nan, (roa > roa1) if not np.isnan(roa1) else np.nan,
+          (cfo > ni) if not np.isnan(cfo) else np.nan,
+          (ltd / ta < ltd1 / ta1) if not (np.isnan(ltd) or np.isnan(ltd1) or np.isnan(ta1)) else np.nan,
+          (ca / cl > ca1 / cl1) if not any(np.isnan(v) for v in [ca, cl, ca1, cl1]) else np.nan,
+          (nsh <= nsh1 * 1.01) if not (np.isnan(nsh) or np.isnan(nsh1)) else np.nan,
+          (gp / rev > gp1 / rev1) if not any(np.isnan(v) for v in [gp, rev, gp1, rev1]) else np.nan,
+          (rev / ta > rev1 / ta1) if not any(np.isnan(v) for v in [rev, rev1, ta1]) else np.nan]
+    fsv = [v for v in fs if v is not np.nan and not (isinstance(v, float) and np.isnan(v))]
+    return {"roic": op / (ta - cl) if not (np.isnan(op) or np.isnan(cl)) and ta - cl > 0 else np.nan,
+               "mop": op / rev if rev and not np.isnan(op) else np.nan,
+               "mb": gp / rev if rev and not np.isnan(gp) else np.nan,
+               "deb": -(deuda / ebitda) if ebitda and ebitda > 0 and not np.isnan(deuda) else (-99 if ebitda and ebitda <= 0 else np.nan),
+               "acc": -(ni - cfo) / ta if not np.isnan(cfo) else np.nan,
+               "dil": -(nsh / nsh1 - 1) if not (np.isnan(nsh) or np.isnan(nsh1)) else np.nan,
+               "fs": (sum(fsv) / len(fsv)) if len(fsv) >= 6 else np.nan,
+               "ey": ni / mcap if mcap and mcap > 0 else np.nan,
+               "fcfy": (cfo - (0 if np.isnan(capex) else capex)) / mcap if mcap and mcap > 0 and not np.isnan(cfo) else np.nan,
+               "sy": rev / mcap if mcap and mcap > 0 and rev else np.nan}
+
+
 EST = ["Base", "Fund", "Calidad", "Valor", "Combo", "BaseSinPeor", "Univ"]
 filas, prev = [], {k: set() for k in EST}
 for f in FE[12:-1]:
@@ -140,39 +177,12 @@ for f in FE[12:-1]:
     ok = [t for t in SEC if pd.notna(mom.loc[f, t]) and pd.notna(vsma.loc[f, t]) and pd.notna(fwd.loc[f, t])]
     rows = {}
     for t in ok:
-        S = SEC[t]["series"]
-        g = lambda k, a=0: pit(S[k], f, a)
-        rev, gp, op, ni, cfo, capex, da, ta, cl, ca, ltd, std = (g(k) for k in ["rev", "gp", "op", "ni", "cfo", "capex", "da", "ta", "cl", "ca", "ltd", "std"])
-        if np.isnan(ta) or np.isnan(ni):
-            continue
-        rev1, gp1, ni1, ta1, ltd1, ca1, cl1 = (g(k, 1) for k in ["rev", "gp", "ni", "ta", "ltd", "ca", "cl"])
-        sh = SEC[t]["sh"]
-        sh = sh[sh.index <= f]
-        nsh = float(sh.iloc[-1]) if len(sh) and sh.index[-1] >= f - pd.Timedelta(days=200) else np.nan
-        sh1 = sh[sh.index <= f - pd.Timedelta(days=330)]
-        nsh1 = float(sh1.iloc[-1]) if len(sh1) else np.nan
-        mcap = precio_sin_ajuste(t, f) * nsh if not np.isnan(nsh) else np.nan
-        deuda = np.nansum([ltd, std]) if not (np.isnan(ltd) and np.isnan(std)) else np.nan
-        ebitda = op + (0 if np.isnan(da) else da) if not np.isnan(op) else np.nan
-        roa, roa1 = ni / ta, (ni1 / ta1 if not np.isnan(ni1) and not np.isnan(ta1) else np.nan)
-        fs = [roa > 0, (cfo > 0) if not np.isnan(cfo) else np.nan, (roa > roa1) if not np.isnan(roa1) else np.nan,
-              (cfo > ni) if not np.isnan(cfo) else np.nan,
-              (ltd / ta < ltd1 / ta1) if not (np.isnan(ltd) or np.isnan(ltd1) or np.isnan(ta1)) else np.nan,
-              (ca / cl > ca1 / cl1) if not any(np.isnan(v) for v in [ca, cl, ca1, cl1]) else np.nan,
-              (nsh <= nsh1 * 1.01) if not (np.isnan(nsh) or np.isnan(nsh1)) else np.nan,
-              (gp / rev > gp1 / rev1) if not any(np.isnan(v) for v in [gp, rev, gp1, rev1]) else np.nan,
-              (rev / ta > rev1 / ta1) if not any(np.isnan(v) for v in [rev, rev1, ta1]) else np.nan]
-        fsv = [v for v in fs if v is not np.nan and not (isinstance(v, float) and np.isnan(v))]
-        rows[t] = {"roic": op / (ta - cl) if not (np.isnan(op) or np.isnan(cl)) and ta - cl > 0 else np.nan,
-                   "mop": op / rev if rev and not np.isnan(op) else np.nan,
-                   "mb": gp / rev if rev and not np.isnan(gp) else np.nan,
-                   "deb": -(deuda / ebitda) if ebitda and ebitda > 0 and not np.isnan(deuda) else (-99 if ebitda and ebitda <= 0 else np.nan),
-                   "acc": -(ni - cfo) / ta if not np.isnan(cfo) else np.nan,
-                   "dil": -(nsh / nsh1 - 1) if not (np.isnan(nsh) or np.isnan(nsh1)) else np.nan,
-                   "fs": (sum(fsv) / len(fsv)) if len(fsv) >= 6 else np.nan,
-                   "ey": ni / mcap if mcap and mcap > 0 else np.nan,
-                   "fcfy": (cfo - (0 if np.isnan(capex) else capex)) / mcap if mcap and mcap > 0 and not np.isnan(cfo) else np.nan,
-                   "sy": rev / mcap if mcap and mcap > 0 and rev else np.nan}
+        try:
+            x = metricas(t, f)
+        except (ZeroDivisionError, ValueError, KeyError, IndexError, TypeError):
+            x = None
+        if x:
+            rows[t] = x
     if len(rows) < 60:
         continue
     X = pd.DataFrame(rows).T
