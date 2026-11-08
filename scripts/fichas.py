@@ -264,14 +264,15 @@ def analistas(k, info, precio, px):
             for _, r in ed.iterrows():
                 f = r[col].tz_convert("America/New_York")
                 d0 = f.tz_localize(None).normalize()
-                reac = None
+                reac = reac5 = None
                 if px is not None and len(px):
                     antes = px[px.index < d0] if f.hour < 12 else px[px.index <= d0]
                     despues = px[px.index > antes.index[-1]] if len(antes) else px.iloc[0:0]
                     if len(antes) and len(despues):
                         reac = float(despues.iloc[0] / antes.iloc[-1] - 1)
+                        reac5 = float(despues.iloc[min(4, len(despues) - 1)] / antes.iloc[-1] - 1)
                 sorp.append({"fecha": f.strftime("%Y-%m-%d"), "eps": num(r.get("Reported EPS")), "estimado": num(r.get("EPS Estimate")),
-                             "sorpresa": (num(r.get("Surprise(%)")) or 0) / 100 if num(r.get("Surprise(%)")) is not None else None, "reaccion": reac})
+                             "sorpresa": (num(r.get("Surprise(%)")) or 0) / 100 if num(r.get("Surprise(%)")) is not None else None, "reaccion": reac, "reaccion_5d": reac5})
     except Exception as e:
         print(f"balances {k.ticker}: {e}", file=sys.stderr)
     a["sorpresas"] = sorp
@@ -303,6 +304,71 @@ def precio_bloque(px, spy, etf):
             "vs_ma200": u / ma200 - 1 if ma200 else None, "max52": float(s.tail(252).max()), "vs_max52": u / float(s.tail(252).max()) - 1,
             "vol1y": float(s.pct_change().tail(252).std() * math.sqrt(252)), "beta": beta,
             "caida_max_5y": float((s5 / s5.cummax() - 1).min()), "serie": serie}
+
+
+def posicion(k, info):
+    p = {"short_float": num(info.get("shortPercentOfFloat")), "short_ratio": num(info.get("shortRatio")),
+         "short_cambio": (num(info.get("sharesShort")) / num(info.get("sharesShortPriorMonth")) - 1) if num(info.get("sharesShort")) and num(info.get("sharesShortPriorMonth")) else None,
+         "institucionales": num(info.get("heldPercentInstitutions")), "insiders": num(info.get("heldPercentInsiders"))}
+    try:
+        ip = k.insider_purchases
+        if ip is not None and len(ip):
+            ip = ip.set_index(ip.columns[0])
+            g = lambda fila_, col: num(ip.loc[fila_, col]) if fila_ in ip.index and col in ip.columns else None
+            p["dir_compras"] = g("Purchases", "Trans")
+            p["dir_ventas"] = g("Sales", "Trans")
+            p["dir_neto_acciones"] = g("Net Shares Purchased (Sold)", "Shares")
+            p["dir_neto_pct"] = g("% Net Shares Purchased (Sold)", "Shares")
+    except Exception:
+        pass
+    return p
+
+
+def ultimo_balance(a, tr):
+    s = (a.get("sorpresas") or [None])[0]
+    if not s:
+        return None
+    q = tr[-1] if tr else {}
+    q4 = tr[-5] if len(tr) >= 5 else None
+    yoy = q["ventas"] / q4["ventas"] - 1 if q4 and q4.get("ventas") and q.get("ventas") else None
+    sp = s.get("sorpresa")
+    veredicto = None if sp is None else "Superó lo esperado" if sp > 0.02 else "No alcanzó lo esperado" if sp < -0.02 else "En línea con lo esperado"
+    f = lambda x, d=2: f"{x:,.{d}f}".replace(",", "X").replace(".", ",").replace("X", ".")
+    pc = lambda x, d=1: ("+" if x > 0 else "") + f(x * 100, d) + "%"
+    partes = []
+    if s.get("eps") is not None and s.get("estimado") is not None:
+        partes.append(f"Ganó {f(s['eps'])} por acción contra {f(s['estimado'])} esperado" + (f": {veredicto.lower()} por {f(abs(sp) * 100, 1)}%." if sp is not None and veredicto != "En línea con lo esperado" else ", en línea con lo esperado."))
+    if yoy is not None:
+        t = f"Ventas del trimestre {pc(yoy, 0)} contra el mismo trimestre del año anterior"
+        if q.get("m_ebit") is not None and q4 and q4.get("m_ebit") is not None:
+            t += f"; margen EBIT {f(q['m_ebit'] * 100, 0)}% ({f(q4['m_ebit'] * 100, 0)}% un año antes)"
+        partes.append(t + ".")
+    if s.get("reaccion") is not None:
+        r = s["reaccion"]
+        partes.append(f"Al día siguiente la acción {'subió' if r > 0 else 'cayó'} {f(abs(r) * 100, 1)}%" + (", a pesar del resultado." if (sp or 0) > 0.02 and r < -0.02 or (sp or 0) < -0.02 and r > 0.02 else "."))
+    return {"fecha": s["fecha"], "eps": s.get("eps"), "estimado": s.get("estimado"), "sorpresa": sp, "veredicto": veredicto,
+            "reaccion": s.get("reaccion"), "reaccion_5d": s.get("reaccion_5d"), "trimestre": q.get("trimestre"), "ventas": q.get("ventas"), "ventas_yoy": yoy,
+            "m_ebit": q.get("m_ebit"), "m_ebit_prev": q4.get("m_ebit") if q4 else None, "comentario": " ".join(partes)}
+
+
+def logo(t, b, info):
+    d = DATA / "logos"
+    d.mkdir(exist_ok=True)
+    arch = d / f"{b}.png"
+    if arch.exists() and arch.stat().st_size > 200:
+        return
+    fuentes = [f"https://financialmodelingprep.com/image-stock/{t.split('.')[0]}.png"]
+    web = (info.get("website") or "").replace("https://", "").replace("http://", "").strip("/").split("/")[0]
+    if web:
+        fuentes.append(f"https://www.google.com/s2/favicons?domain={web}&sz=128")
+    for url in fuentes:
+        try:
+            r = requests.get(url, timeout=20, headers={"User-Agent": "Mozilla/5.0"})
+            if r.ok and r.headers.get("content-type", "").startswith("image") and len(r.content) > 500:
+                arch.write_bytes(r.content)
+                return
+        except Exception:
+            pass
 
 
 def es_banco(info):
@@ -386,6 +452,10 @@ def main():
             info = k.info or {}
         except Exception:
             info = {}
+        try:
+            logo(t, b, info)
+        except Exception:
+            pass
         s = px[t].dropna() if t in px.columns else pd.Series(dtype=float)
         etf_t = ETF_SECTOR.get(info.get("sector"))
         pb = precio_bloque(s, spy, px[etf_t].dropna() if etf_t in px.columns else None)
@@ -424,15 +494,20 @@ def main():
                 ana = analistas(k, info, precio, s)
                 hist_pe = []
                 for x_ in an:
-                    if x_.get("acciones") and x_.get("neto") and x_["neto"] > 0 and info.get("country") == "United States":
-                        d = pd.Timestamp(x_["cierre"]) + pd.offsets.MonthEnd(0)
-                        p_ = s[s.index <= d]
-                        if len(p_) and (d - p_.index[-1]).days < 10:
-                            hist_pe.append({"anio": x_["anio"], "pe": float(p_.iloc[-1]) * x_["acciones"] / x_["neto"]})
+                    if not (x_.get("neto") and x_["neto"] > 0):
+                        continue
+                    d = pd.Timestamp(x_["cierre"]) + pd.offsets.MonthEnd(0)
+                    p_ = s[s.index <= d]
+                    if not len(p_) or (d - p_.index[-1]).days >= 10:
+                        continue
+                    if x_.get("acciones") and info.get("country") == "United States":
+                        hist_pe.append({"anio": x_["anio"], "pe": float(p_.iloc[-1]) * x_["acciones"] / x_["neto"]})
+                    elif mcap and precio:
+                        hist_pe.append({"anio": x_["anio"], "pe": float(p_.iloc[-1]) / precio * mcap / x_["neto"]})
                 ficha = {**{k_: v for k_, v in e.items()}, "descripcion": info.get("longBusinessSummary"), "web": info.get("website"),
                          "empleados": num(info.get("fullTimeEmployees")), "precio_bloque": pb, "anual": an, "trimestral": trimestral(k, conv),
-                         "analistas": ana, "pe_historia": hist_pe, "posicion": {"short_float": num(info.get("shortPercentOfFloat")),
-                         "institucionales": num(info.get("heldPercentInstitutions")), "insiders": num(info.get("heldPercentInsiders"))}}
+                         "analistas": ana, "pe_historia": hist_pe, "posicion": posicion(k, info)}
+                ficha["ultimo_balance"] = ultimo_balance(ana, ficha["trimestral"])
                 tq = ficha["trimestral"][-4:]
                 u_ = an[-1] if an else {}
                 ventas_ttm = sum(q["ventas"] for q in tq) if len(tq) == 4 and all(q.get("ventas") for q in tq) else u_.get("ventas")

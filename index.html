@@ -153,6 +153,17 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .vbar{display:flex;height:10px;margin:10px 0 4px;gap:2px}.vbar i{display:block}
 .peh{display:flex;flex-wrap:wrap;gap:6px}.peh span{font-family:var(--mono);font-size:11px;color:var(--muted);border:1px solid var(--line);padding:3px 6px}.peh b{color:var(--text);margin-left:6px;font-weight:500}
 @media (max-width:760px){.fhead{grid-template-columns:1fr}}
+.ftabs{display:flex;flex-wrap:wrap;gap:0;border-bottom:1px solid var(--line);margin:-4px 0 12px}
+.ftabs button{background:none;border:0;border-bottom:2px solid transparent;color:var(--muted);padding:9px 16px;font-family:var(--mono);font-size:12px;cursor:pointer}
+.ftabs button.on{color:var(--text);border-bottom-color:var(--accent)}
+.fid{display:flex;gap:14px;align-items:flex-start}
+.logo{width:52px;height:52px;object-fit:contain;background:#fff;border-radius:8px;padding:5px;flex:none}
+.logo.sinlogo,.logo-s.sinlogo{display:flex;align-items:center;justify-content:center;background:var(--panel2);color:var(--accent);font-family:var(--mono);font-weight:600}
+.logo-s{width:22px;height:22px;object-fit:contain;background:#fff;border-radius:4px;padding:2px;vertical-align:middle;margin-right:8px}
+.logo-s.sinlogo{display:inline-flex;font-size:9px}
+.ver{display:inline-block;border:1px solid;padding:3px 10px;font-family:var(--mono);font-size:12px;margin-bottom:4px}
+.coment{font-size:13px;line-height:1.5;margin:12px 0 0;border-left:2px solid var(--line);padding-left:10px}
+.desc{font-size:13px;line-height:1.55;margin:0 0 8px;max-height:150px;overflow:auto}
 </style>
 </head>
 <body>
@@ -336,7 +347,7 @@ const COLS = [
   {k:"premio", t:"Premio CCL", h:"Cuánto más caro (+) o barato (−) cotiza el CEDEAR frente al CCL implícito de todo el mercado."}
 ];
 
-const EST = {q:"", sector:"", pais:"", liq:"", fichas:false, sort:"negocio", dir:-1, sel:null, per:"5y"};
+const EST = {q:"", sector:"", pais:"", liq:"", fichas:false, sort:"negocio", dir:-1, sel:null, per:"5y", ftab:"resumen"};
 const FCACHE = {};
 const NOTAS = [["calidad","Calidad"],["solidez","Solidez"],["crecimiento","Crecimiento"],["valuacion","Valuación"],["tendencia","Tendencia"],["analistas","Analistas"]];
 const NOTA_TXT = {calidad:"Rentabilidad, márgenes y flujo de caja. Escala absoluta: un 8 es un 8 en cualquier sector.",
@@ -380,7 +391,7 @@ function empresas(m){
   </div>
   <div class="wrap"><table><thead><tr>${th("puesto","#")}${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("sector","Sector","l")}${th("pais","País","l")}
   ${th("negocio","Negocio")}${NOTAS.map(([k,t])=>th(k,t)).join("")}${th("r1m","1M")}${th("r12m","12M")}${th("premio","Premio")}${th("liquidez","Liquidez","l")}${th("proximo_balance","Balance")}</tr></thead>
-  <tbody>${rows.map(x=>`<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td class="mut">${x.puesto}</td><td class="tk l">${esc(x.byma)}${x.byma!==x.ticker?`<small>${esc(x.ticker)}</small>`:""}</td>
+  <tbody>${rows.map(x=>`<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td class="mut">${x.puesto}</td><td class="tk l">${logoImg(x.byma,"logo-s")}${esc(x.byma)}${x.byma!==x.ticker?`<small>${esc(x.ticker)}</small>`:""}</td>
   <td class="nm l">${esc(x.nombre)}${x.ficha?"":' <span class="mut" title="Ficha completa pendiente">·</span>'}</td><td class="l">${esc(x.sector||"—")}</td><td class="l">${esc(PAIS[x.pais]||x.pais||"—")}</td>
   <td>${chip(x.notas?.negocio)}</td>${NOTAS.map(([k])=>`<td>${chip(x.notas?.[k])}</td>`).join("")}
   <td class="${cls(x.r1m)}">${pct(x.r1m)}</td><td class="${cls(x.r12m)}">${pct(x.r12m,0)}</td><td class="${x.premio>0.03?"neg":x.premio<-0.03?"pos":""}">${pct(x.premio)}</td>
@@ -427,6 +438,9 @@ function barras(an){
 
 function kv(pares){ return `<div class="kv">${pares.map(([k,v,c])=>`<div><span>${k}</span><b class="${c||""}">${v}</b></div>`).join("")}</div>`; }
 
+const FTABS = [["resumen","Resumen"],["numeros","Números"],["valuacion","Valuación"],["analistas","Analistas"],["posicion","Posicionamiento"]];
+const logoImg = (b, cls="logo") => `<img class="${cls}" src="data/logos/${encodeURIComponent(b)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} sinlogo',textContent:'${esc(b).slice(0,2)}'}))">`;
+
 async function ficha(m, t){
   if (!FCACHE[t]){
     m.innerHTML = `<p class="mut">Cargando ficha…</p>`;
@@ -441,78 +455,116 @@ async function ficha(m, t){
   }
   const pb = f.precio_bloque || {}, a = f.analistas || {}, nt = f.notas || {}, nd = f.notas_detalle || {};
   const an = (f.anual||[]).slice(-10);
-  const ult = an[an.length-1] || {};
-  const dn = ult.deuda!=null || ult.caja!=null ? (ult.deuda||0)-(ult.caja||0) : null;
   const tipoTxt = {banco:"Banco / financiera: calidad y solidez se miden con ROE, ROA y patrimonio sobre activos.", cripto:"Su valor depende sobre todo del bitcoin: la valuación por múltiplos es poco representativa.", inmobiliaria:"Inmobiliaria: lo habitual es medirla por FFO; las ganancias contables subestiman su flujo."}[f.tipo];
   const fmtDet = (k,v) => v==null ? "—" : /Cobertura|Deuda neta|Liquidez corr|P\/E|EV\/EBITDA/.test(k) ? nx(v)+"x" : typeof v==="number" ? pct(v) : esc(v);
-  const perfil = NOTAS.map(([k,tt])=>{ const v = nt[k]; const det = nd[k]||{};
-    return `<div class="nrow"><div class="nlab">${tt}</div><div class="nbar"><i style="width:${v==null?0:v*10}%;background:${ncol(v)}"></i></div><div class="nval" style="color:${ncol(v)}">${v==null?"—":nx(v)}</div>
-    <div class="ndet">${Object.entries(det).map(([a_,b_])=>`<span>${esc(a_)}: <b>${fmtDet(a_,b_)}</b></span>`).join("")}</div></div>`; }).join("");
-  const filasA = [["Ventas","ventas",big],["Crecimiento de ventas","_g",null],["Margen bruto","m_bruto",v=>pct(v,0)],["EBIT","ebit",big],["Margen EBIT","m_ebit",v=>pct(v,0)],
-    ["Ganancia neta","neto",big],["Margen neto","m_neto",v=>pct(v,0)],["Flujo libre","fcf",big],["Margen flujo libre","m_fcf",v=>pct(v,0)],
-    ["Deuda neta","_dn",big],["Deuda neta / EBITDA","_lev",v=>v==null?"—":nx(v)+"x"],["Acciones (M)","acciones",v=>v==null?"—":(v/1e6).toFixed(0)]];
-  const cel = (r,i,k,fmt) => { if (k==="_g"){ const p = an[i-1]; return p&&p.ventas&&r.ventas ? `<span class="${cls(r.ventas/p.ventas-1)}">${pct(r.ventas/p.ventas-1,0)}</span>` : "—"; }
-    if (k==="_dn") return r.deuda==null&&r.caja==null ? "—" : big((r.deuda||0)-(r.caja||0));
-    if (k==="_lev") return r.ebitda>0 && (r.deuda!=null||r.caja!=null) ? fmt(((r.deuda||0)-(r.caja||0))/r.ebitda) : "—";
-    return fmt(r[k]); };
-  const tablaA = an.length ? `<div class="wrap" style="max-height:none"><table><thead><tr><th class="l">USD</th>${an.map(r=>`<th>${r.anio}</th>`).join("")}</tr></thead><tbody>
-    ${filasA.filter(([_,k])=>!(f.tipo==="banco" && ["m_bruto","_lev","m_fcf","fcf"].includes(k))).map(([t_,k,fmt])=>`<tr><td class="l">${t_}</td>${an.map((r,i)=>`<td>${cel(r,i,k,fmt)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
-    <p class="mut small">Fuente: ${esc(an[an.length-1].fuente==="SEC"?"balances presentados a la SEC":"Yahoo Finance")}${f.moneda_reporte&&f.moneda_reporte!=="USD"?`; reporta en ${esc(f.moneda_reporte)}, convertido a dólares al tipo de cambio promedio de cada año`:""}.</p>` : `<p class="mut">Sin balances disponibles.</p>`;
-  const tr = f.trimestral||[];
-  const tablaT = tr.length ? `<div class="wrap" style="max-height:none"><table><thead><tr><th class="l">Trimestre</th>${tr.map(q=>`<th>${q.trimestre}</th>`).join("")}</tr></thead><tbody>
-    <tr><td class="l">Ventas</td>${tr.map(q=>`<td>${big(q.ventas)}</td>`).join("")}</tr><tr><td class="l">Ventas vs. año anterior</td>${tr.map((q,i)=>{const p=tr[i-4]; return `<td>${p&&p.ventas&&q.ventas?`<span class="${cls(q.ventas/p.ventas-1)}">${pct(q.ventas/p.ventas-1,0)}</span>`:"—"}</td>`;}).join("")}</tr>
-    <tr><td class="l">EBIT</td>${tr.map(q=>`<td>${big(q.ebit)}</td>`).join("")}</tr><tr><td class="l">Margen EBIT</td>${tr.map(q=>`<td>${pct(q.m_ebit,0)}</td>`).join("")}</tr>
-    <tr><td class="l">Ganancia neta</td>${tr.map(q=>`<td>${big(q.neto)}</td>`).join("")}</tr></tbody></table></div>` : "";
-  const v = f.val || {}, pr = f.pares || {};
-  const peh = (f.pe_historia||[]).filter(z=>z.pe>0 && z.pe<300);
-  const peMed = peh.length ? peh.map(z=>z.pe).sort((a,b)=>a-b)[Math.floor(peh.length/2)] : null;
-  const filaV = (t_,k,fmt) => `<tr><td class="l">${t_}</td><td>${fmt(v[k])}</td><td class="mut">${fmt(pr[k])}</td></tr>`;
   const xx = z => z==null ? "—" : nx(z)+"x";
-  const votos = a.votos ? Object.values(a.votos).reduce((p,c)=>p+c,0) : 0;
-  const vbar = a.votos && votos ? `<div class="vbar">${[["strongBuy","var(--pos)","Compra fuerte"],["buy","#7fdcb0","Compra"],["hold","var(--muted)","Mantener"],["sell","#f39a9d","Venta"],["strongSell","var(--neg)","Venta fuerte"]].map(([k,c,t_])=>a.votos[k]?`<i title="${t_}: ${a.votos[k]}" style="flex:${a.votos[k]};background:${c}"></i>`:"").join("")}</div>
-    <div class="leg mut">${[["strongBuy","Compra fuerte"],["buy","Compra"],["hold","Mantener"],["sell","Venta"],["strongSell","Venta fuerte"]].map(([k,t_])=>`${t_} ${a.votos[k]||0}`).join(" · ")}</div>` : "";
-  const sorp = (a.sorpresas||[]).length ? `<table><thead><tr><th class="l">Balance</th><th>Ganancia por acción</th><th>Esperada</th><th>Sorpresa</th><th>Reacción del precio</th></tr></thead><tbody>
-    ${a.sorpresas.map(s=>`<tr><td class="l">${fch2(s.fecha)}</td><td>${s.eps==null?"—":nx(s.eps,2)}</td><td>${s.estimado==null?"—":nx(s.estimado,2)}</td><td class="${cls(s.sorpresa)}">${pct(s.sorpresa)}</td><td class="${cls(s.reaccion)}">${pct(s.reaccion)}</td></tr>`).join("")}</tbody></table>` : `<p class="mut">Sin datos de balances anteriores.</p>`;
-  m.innerHTML = `${volver}
-  <section class="fhead">
-    <div><div class="tk2">${esc(f.byma)}${f.byma!==f.ticker?` <small>${esc(f.ticker)}</small>`:""}</div><h2>${esc(f.nombre)}</h2>
+  const sub = EST.ftab || "resumen";
+  const head = `<section class="fhead">
+    <div class="fid">${logoImg(f.byma)}<div><div class="tk2">${esc(f.byma)}${f.byma!==f.ticker?` <small>${esc(f.ticker)}</small>`:""}</div><h2>${esc(f.nombre)}</h2>
     <div class="mut">${esc(f.sector||"")} · ${esc(f.industria||"")} · ${esc(PAIS[f.pais]||f.pais||"")} · ratio ${esc(f.ratio)}</div>
-    ${tipoTxt?`<div class="aviso">${tipoTxt}</div>`:""}</div>
+    ${tipoTxt?`<div class="aviso">${tipoTxt}</div>`:""}</div></div>
     ${kv([["Precio USD", pb.precio?num(pb.precio,2):"—"],["Precio CEDEAR $", f.px_ars?num(f.px_ars,0):"—"],["Premio CCL", pct(f.premio), f.premio>0.03?"neg":""],
       ["Liquidez", `${esc(f.liquidez)} · ${usd(f.monto_usd)}/día`],["Capitalización", big(f.mcap)],["Próximo balance", fch2(a.proximo_balance)]])}
   </section>
-  <section class="fgrid">
-    <div class="card"><h3>Perfil <span class="mut">· 1 a 10, para ubicarse; no es recomendación</span></h3>${perfil}
-      <div class="nneg">Negocio (calidad + solidez): <b style="color:${ncol(nt.negocio)}">${nt.negocio==null?"—":nx(nt.negocio)}</b></div></div>
-    <div class="card"><h3>Precio y tendencia</h3>
-      <div class="seg">${["1y","3y","5y"].map(p=>`<button data-per="${p}" class="${EST.per===p?"on":""}">${p.replace("y"," año").replace("1 año","1 año").replace(/^([35]) año/,"$1 años")}</button>`).join("")}</div>
+  <div class="ftabs">${FTABS.map(([k,tt])=>`<button data-ft="${k}" class="${k===sub?"on":""}">${tt}</button>`).join("")}</div>`;
+
+  const perfil = `<div class="card"><h3>Perfil <span class="mut">· 1 a 10, para ubicarse; no es recomendación</span></h3>${NOTAS.map(([k,tt])=>{ const v = nt[k]; const det = nd[k]||{};
+    return `<div class="nrow"><div class="nlab">${tt}</div><div class="nbar"><i style="width:${v==null?0:v*10}%;background:${ncol(v)}"></i></div><div class="nval" style="color:${ncol(v)}">${v==null?"—":nx(v)}</div>
+    <div class="ndet">${Object.entries(det).map(([a_,b_])=>`<span>${esc(a_)}: <b>${fmtDet(a_,b_)}</b></span>`).join("")}</div></div>`; }).join("")}
+    <div class="nneg">Negocio (calidad + solidez): <b style="color:${ncol(nt.negocio)}">${nt.negocio==null?"—":nx(nt.negocio)}</b></div></div>`;
+
+  const precio = `<div class="card"><h3>Precio y tendencia</h3>
+      <div class="seg">${[["1y","1 año"],["3y","3 años"],["5y","5 años"]].map(([p,tt])=>`<button data-per="${p}" class="${EST.per===p?"on":""}">${tt}</button>`).join("")}</div>
       ${pb.serie?lineas(pb.serie, EST.per):""}
       ${kv([["1 mes",pct(pb.r1m),cls(pb.r1m)],["3 meses",pct(pb.r3m),cls(pb.r3m)],["6 meses",pct(pb.r6m),cls(pb.r6m)],["12 meses",pct(pb.r12m),cls(pb.r12m)],["En el año",pct(pb.ytd),cls(pb.ytd)],
-        ["vs. MA200",pct(pb.vs_ma200),cls(pb.vs_ma200)],["vs. máximo 52 sem.",pct(pb.vs_max52),cls(pb.vs_max52)],["Volatilidad anual",pct(pb.vol1y,0)],["Beta (2 años)",pb.beta==null?"—":nx(pb.beta,2)],["Peor caída (5 años)",pct(pb.caida_max_5y,0),"neg"]])}</div>
-  </section>
-  <section class="card"><h3>Números <span class="mut">· anuales, en dólares</span></h3>${barras(an)}${tablaA}
-    ${tablaT?`<h4>Últimos trimestres</h4>${tablaT}`:""}</section>
-  <section class="fgrid">
-    <div class="card"><h3>Valuación</h3>
+        ["vs. MA200",pct(pb.vs_ma200),cls(pb.vs_ma200)],["vs. máximo 52 sem.",pct(pb.vs_max52),cls(pb.vs_max52)],["Volatilidad anual",pct(pb.vol1y,0)],["Beta (2 años)",pb.beta==null?"—":nx(pb.beta,2)],["Peor caída (5 años)",pct(pb.caida_max_5y,0),"neg"]])}</div>`;
+
+  const ub = f.ultimo_balance;
+  const vcol = !ub||ub.sorpresa==null ? "var(--muted)" : ub.sorpresa>0.02 ? "var(--pos)" : ub.sorpresa<-0.02 ? "var(--neg)" : "var(--accent)";
+  const balance = ub ? `<div class="card"><h3>Último balance <span class="mut">· ${fch2(ub.fecha)}${ub.trimestre?` · trimestre ${esc(ub.trimestre)}`:""}</span></h3>
+      <div class="ver" style="color:${vcol};border-color:${vcol}">${esc(ub.veredicto||"Sin estimación")}</div>
+      ${kv([["Ganancia por acción", ub.eps==null?"—":nx(ub.eps,2)],["Esperada", ub.estimado==null?"—":nx(ub.estimado,2)],["Sorpresa", pct(ub.sorpresa), cls(ub.sorpresa)],
+        ["Ventas vs. año anterior", pct(ub.ventas_yoy,0), cls(ub.ventas_yoy)],["Margen EBIT", ub.m_ebit==null?"—":`${pct(ub.m_ebit,0).replace("+","")}${ub.m_ebit_prev!=null?` <span class="mut">(${pct(ub.m_ebit_prev,0).replace("+","")})</span>`:""}`],
+        ["Día siguiente", pct(ub.reaccion), cls(ub.reaccion)],["5 ruedas después", pct(ub.reaccion_5d), cls(ub.reaccion_5d)],["Próximo balance", fch2(a.proximo_balance)]])}
+      <p class="coment">${esc(ub.comentario||"")}</p></div>` : `<div class="card"><h3>Último balance</h3><p class="mut">Sin datos del último balance.</p></div>`;
+
+  const negocio = `<div class="card"><h3>A qué se dedica</h3>${f.descripcion?`<p class="desc">${esc(f.descripcion)}</p><p class="mut small">Texto de Yahoo Finance, en inglés. El resumen en castellano se suma más adelante.</p>`:`<p class="mut">Sin descripción disponible.</p>`}
+    ${kv([["Empleados", f.empleados?num(f.empleados,0):"—"],["Sitio web", f.web?`<a href="${esc(f.web)}" target="_blank" rel="noopener">${esc(f.web.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))}</a>`:"—"],["Reporta en", esc(f.moneda_reporte||"USD")]])}</div>`;
+
+  let cuerpo = "";
+  if (sub==="resumen"){
+    cuerpo = `<section class="fgrid">${negocio}${balance}</section><section class="fgrid">${perfil}${precio}</section>`;
+  } else if (sub==="numeros"){
+    const banco = f.tipo==="banco";
+    const roic = r => { const cap=(r.patrimonio||0)+(r.deuda||0)-(r.caja||0); return r.ebit!=null && cap>0 ? r.ebit*0.79/cap : null; };
+    const filasA = banco ? [["Ingresos","ventas",big],["Crecimiento","_g",null],["Ganancia neta","neto",big],["ROE","_roe",v=>pct(v,1)],["ROA","_roa",v=>pct(v,2)],["Patrimonio / activo","_eqa",v=>pct(v,1)],["Patrimonio","patrimonio",big],["Acciones (M)","acciones",v=>v==null?"—":(v/1e6).toFixed(0)]]
+      : [["Ventas","ventas",big],["Crecimiento de ventas","_g",null],["Margen bruto","m_bruto",v=>pct(v,0)],["EBIT","ebit",big],["Margen EBIT","m_ebit",v=>pct(v,0)],
+      ["Ganancia neta","neto",big],["Margen neto","m_neto",v=>pct(v,0)],["Flujo libre","fcf",big],["Margen flujo libre","m_fcf",v=>pct(v,0)],["ROIC","_roic",v=>pct(v,0)],
+      ["Deuda neta","_dn",big],["Deuda neta / EBITDA","_lev",v=>v==null?"—":nx(v)+"x"],["Acciones (M)","acciones",v=>v==null?"—":(v/1e6).toFixed(0)]];
+    const cel = (r,i,k,fmt) => { if (k==="_g"){ const p = an[i-1]; return p&&p.ventas&&r.ventas ? `<span class="${cls(r.ventas/p.ventas-1)}">${pct(r.ventas/p.ventas-1,0)}</span>` : "—"; }
+      if (k==="_dn") return r.deuda==null&&r.caja==null ? "—" : big((r.deuda||0)-(r.caja||0));
+      if (k==="_lev") return r.ebitda>0 && (r.deuda!=null||r.caja!=null) ? fmt(((r.deuda||0)-(r.caja||0))/r.ebitda) : "—";
+      if (k==="_roic") return fmt(roic(r));
+      if (k==="_roe") return fmt(r.neto!=null&&r.patrimonio ? r.neto/r.patrimonio : null);
+      if (k==="_roa") return fmt(r.neto!=null&&r.activo ? r.neto/r.activo : null);
+      if (k==="_eqa") return fmt(r.patrimonio&&r.activo ? r.patrimonio/r.activo : null);
+      return fmt(r[k]); };
+    const tablaA = an.length ? `<div class="wrap" style="max-height:none"><table><thead><tr><th class="l">USD</th>${an.map(r=>`<th>${r.anio}</th>`).join("")}</tr></thead><tbody>
+      ${filasA.map(([t_,k,fmt])=>`<tr><td class="l">${t_}</td>${an.map((r,i)=>`<td>${cel(r,i,k,fmt)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+      <p class="mut small">Fuente: ${an[an.length-1].fuente==="SEC"?"balances presentados a la SEC":"Yahoo Finance"}${f.moneda_reporte&&f.moneda_reporte!=="USD"?`; reporta en ${esc(f.moneda_reporte)}, convertido a dólares al tipo de cambio promedio de cada año`:""}.${banco?"":" ROIC: EBIT después de impuestos (21%) sobre patrimonio más deuda neta."}</p>` : `<p class="mut">Sin balances disponibles.</p>`;
+    const tr = f.trimestral||[];
+    const tablaT = tr.length ? `<h4>Últimos trimestres</h4><div class="wrap" style="max-height:none"><table><thead><tr><th class="l">Trimestre</th>${tr.map(q=>`<th>${q.trimestre}</th>`).join("")}</tr></thead><tbody>
+      <tr><td class="l">Ventas</td>${tr.map(q=>`<td>${big(q.ventas)}</td>`).join("")}</tr><tr><td class="l">Ventas vs. año anterior</td>${tr.map((q,i)=>{const p=tr[i-4]; return `<td>${p&&p.ventas&&q.ventas?`<span class="${cls(q.ventas/p.ventas-1)}">${pct(q.ventas/p.ventas-1,0)}</span>`:"—"}</td>`;}).join("")}</tr>
+      ${banco?"":`<tr><td class="l">EBIT</td>${tr.map(q=>`<td>${big(q.ebit)}</td>`).join("")}</tr><tr><td class="l">Margen EBIT</td>${tr.map(q=>`<td>${pct(q.m_ebit,0)}</td>`).join("")}</tr>`}
+      <tr><td class="l">Ganancia neta</td>${tr.map(q=>`<td>${big(q.neto)}</td>`).join("")}</tr></tbody></table></div>` : "";
+    cuerpo = `<section class="card"><h3>Números <span class="mut">· anuales, en dólares</span></h3>${banco?"":barras(an)}${tablaA}${tablaT}</section>`;
+  } else if (sub==="valuacion"){
+    const v = f.val || {}, pr = f.pares || {};
+    const peh = (f.pe_historia||[]).filter(z=>z.pe>0 && z.pe<300);
+    const peMed = peh.length ? peh.map(z=>z.pe).sort((a,b)=>a-b)[Math.floor(peh.length/2)] : null;
+    const filaV = (t_,k,fmt) => `<tr><td class="l">${t_}</td><td>${fmt(v[k])}</td><td class="mut">${fmt(pr[k])}</td></tr>`;
+    const pares = E.empresas.filter(z=>z.sector===f.sector).sort((p,q)=>(q.mcap||0)-(p.mcap||0)).slice(0,12);
+    cuerpo = `<section class="fgrid"><div class="card"><h3>Múltiplos</h3>
       <table><thead><tr><th class="l">Múltiplo</th><th>${esc(f.byma)}</th><th>Mediana del sector</th></tr></thead><tbody>
       ${filaV("P/E (últimos 12 meses)","pe",xx)}${filaV("P/E esperado","pe_fwd",xx)}${filaV("EV/EBITDA","ev_ebitda",xx)}${filaV("Precio / ventas","ps",xx)}${filaV("Flujo libre / precio","fcf_yield",z=>pct(z))}
       </tbody></table><p class="mut small">Sector dentro de las 125: ${pr.n||0} empresas.${v.div_yield?` Dividendo: ${pct(v.div_yield)} anual.`:""}</p>
-      ${peh.length>=3?`<h4>P/E al cierre de cada año</h4><div class="peh">${peh.map(z=>`<span>${z.anio}<b>${nx(z.pe,0)}x</b></span>`).join("")}</div><p class="mut small">Mediana de ${peh.length} años: <b>${nx(peMed,0)}x</b> · hoy: <b>${xx(v.pe)}</b>${v.pe&&peMed?` (${pct(v.pe/peMed-1,0)} contra su historia)`:""}.</p>`:""}
+      ${peh.length>=3?`<h4>P/E al cierre de cada año</h4><div class="peh">${peh.map(z=>`<span>${z.anio}<b>${nx(z.pe,0)}x</b></span>`).join("")}</div><p class="mut small">Mediana de ${peh.length} años: <b>${nx(peMed,0)}x</b> · hoy: <b>${xx(v.pe)}</b>${v.pe&&peMed?` (${pct(v.pe/peMed-1,0)} contra su historia)`:""}.${f.pais!=="United States"?" Para empresas extranjeras es aproximado: supone la misma cantidad de acciones que hoy.":""}</p>`:""}
       ${f.tipo==="cripto"?`<p class="aviso">Valuación poco representativa: depende del bitcoin.</p>`:""}</div>
-    <div class="card"><h3>Analistas</h3>
+      <div class="card"><h3>Comparables <span class="mut">· mismo sector, por capitalización</span></h3>
+      <div class="wrap" style="max-height:none"><table><thead><tr><th class="l">CEDEAR</th><th>Capitalización</th><th>P/E</th><th>P/E esp.</th><th>EV/EBITDA</th><th>FCF/precio</th><th>Valuación</th><th>12M</th></tr></thead><tbody>
+      ${pares.map(z=>`<tr data-e="${esc(z.ticker)}" style="cursor:pointer${z.ticker===f.ticker?";background:var(--panel2)":""}"><td class="tk l">${esc(z.byma)}</td><td>${big(z.mcap)}</td><td>${xx(z.val?.pe)}</td><td>${xx(z.val?.pe_fwd)}</td><td>${xx(z.val?.ev_ebitda)}</td><td>${pct(z.val?.fcf_yield)}</td><td>${chip(z.notas?.valuacion)}</td><td class="${cls(z.r12m)}">${pct(z.r12m,0)}</td></tr>`).join("")}
+      </tbody></table></div><p class="mut small">Hacé clic en una para abrir su ficha.</p></div></section>`;
+  } else if (sub==="analistas"){
+    const votos = a.votos ? Object.values(a.votos).reduce((p,c)=>p+c,0) : 0;
+    const VT = [["strongBuy","var(--pos)","Compra fuerte"],["buy","#7fdcb0","Compra"],["hold","var(--muted)","Mantener"],["sell","#f39a9d","Venta"],["strongSell","var(--neg)","Venta fuerte"]];
+    const vbar = a.votos && votos ? `<div class="vbar">${VT.map(([k,c,t_])=>a.votos[k]?`<i title="${t_}: ${a.votos[k]}" style="flex:${a.votos[k]};background:${c}"></i>`:"").join("")}</div>
+      <div class="leg mut">${VT.map(([k,,t_])=>`${t_} ${a.votos[k]||0}`).join(" · ")}</div>` : "";
+    const sorp = (a.sorpresas||[]).length ? `<table><thead><tr><th class="l">Balance</th><th>Ganancia por acción</th><th>Esperada</th><th>Sorpresa</th><th>Día siguiente</th><th>5 ruedas</th></tr></thead><tbody>
+      ${a.sorpresas.map(s=>`<tr><td class="l">${fch2(s.fecha)}</td><td>${s.eps==null?"—":nx(s.eps,2)}</td><td>${s.estimado==null?"—":nx(s.estimado,2)}</td><td class="${cls(s.sorpresa)}">${pct(s.sorpresa)}</td><td class="${cls(s.reaccion)}">${pct(s.reaccion)}</td><td class="${cls(s.reaccion_5d)}">${pct(s.reaccion_5d)}</td></tr>`).join("")}</tbody></table>` : `<p class="mut">Sin datos de balances anteriores.</p>`;
+    cuerpo = `<section class="fgrid"><div class="card"><h3>Consenso</h3>
       ${kv([["Recomendación", esc({strong_buy:"Compra fuerte",buy:"Compra",hold:"Mantener",sell:"Venta",strong_sell:"Venta fuerte"}[a.recomendacion]||a.recomendacion||"—")],["Analistas",a.n_analistas??"—"],
         ["Precio objetivo",a.objetivo?num(a.objetivo,2):"—"],["Potencial",pct(a.potencial),cls(a.potencial)],["Rango",a.objetivo_bajo?`${num(a.objetivo_bajo,0)} – ${num(a.objetivo_alto,0)}`:"—"]])}
       ${vbar}
       <h4>Revisión de ganancias esperadas</h4>
       <table><thead><tr><th class="l">Estimación</th><th>Valor</th><th>7 días</th><th>30 días</th><th>90 días</th></tr></thead><tbody>
       ${[["Este año","0y"],["Próximo año","+1y"]].map(([t_,p])=>`<tr><td class="l">${t_}</td><td>${a["eps_"+p]==null?"—":nx(a["eps_"+p],2)}</td>${["7","30","90"].map(d=>`<td class="${cls(a[`rev_${p}_${d}`])}">${pct(a[`rev_${p}_${d}`])}</td>`).join("")}</tr>`).join("")}
-      </tbody></table><p class="mut small">Revisiones en los últimos 30 días: ${a.suben_30d??0} suben, ${a.bajan_30d??0} bajan.</p>
-      <h4>Últimos balances</h4>${sorp}</div>
-  </section>
-  ${f.descripcion?`<details class="help"><summary>Qué hace la empresa</summary><p>${esc(f.descripcion)}</p><p class="mut small">Texto original de Yahoo Finance, en inglés. El resumen en castellano se suma más adelante.</p></details>`:""}
-  <p class="mut small">Ficha actualizada ${f.actualizado?new Date(f.actualizado).toLocaleDateString("es-AR"):"—"}. Datos de Yahoo Finance, SEC y data912.</p>`;
-  m.querySelector("#fv").onclick = ()=>{EST.sel=null; render();};
+      </tbody></table><p class="mut small">Revisiones en los últimos 30 días: ${a.suben_30d??0} suben, ${a.bajan_30d??0} bajan. Crecimiento esperado próximo año: ventas ${pct(a.crec_ventas_1y,0)}, ganancias ${pct(a.crec_eps_1y,0)}.</p></div>
+      <div class="card"><h3>Últimos balances</h3>${sorp}</div></section>`;
+  } else {
+    const p = f.posicion || {};
+    cuerpo = `<section class="fgrid"><div class="card"><h3>Venta en corto</h3>
+      ${kv([["Interés corto (% del flotante)", pct(p.short_float,1).replace("+","")],["Días para cubrir", p.short_ratio==null?"—":nx(p.short_ratio,1)],["Cambio en el último mes", pct(p.short_cambio,0), p.short_cambio>0?"neg":"pos"]])}
+      <p class="mut small">El interés corto es la parte de las acciones apostadas a la baja. Por encima de 10% es alto: suele indicar dudas sobre la empresa, pero también puede generar subas bruscas si los que venden en corto tienen que recomprar. "Días para cubrir" es cuántos días de volumen normal harían falta para recomprarlas todas.</p></div>
+      <div class="card"><h3>Quiénes tienen la acción</h3>
+      ${kv([["Institucionales", pct(p.institucionales,0).replace("+","")],["Directivos", pct(p.insiders,1).replace("+","")],
+        ["Directivos, últimos 6 meses", p.dir_compras==null&&p.dir_ventas==null?"—":`${p.dir_compras??0} compras · ${p.dir_ventas??0} ventas`],["Neto de directivos", pct(p.dir_neto_pct,1), cls(p.dir_neto_pct)]])}
+      <p class="mut small">Las ventas de directivos son habituales (pagos en acciones, impuestos) y dicen poco. Las compras con su propio dinero son más informativas, aunque en nuestro backtest no alcanzaron para usarlas como señal.</p></div></section>`;
+  }
+  m.innerHTML = `${volver}${head}${cuerpo}<p class="mut small">Ficha actualizada ${f.actualizado?new Date(f.actualizado).toLocaleDateString("es-AR"):"—"}. Datos de Yahoo Finance, SEC y data912.</p>`;
+  m.querySelector("#fv").onclick = ()=>{EST.sel=null; EST.ftab="resumen"; render();};
+  m.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{EST.ftab=b.dataset.ft; ficha(m,t);});
   m.querySelectorAll("[data-per]").forEach(b=>b.onclick=()=>{EST.per=b.dataset.per; ficha(m,t);});
+  m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); ficha(m, r.dataset.e);});
 }
 
 function universo(m){
