@@ -390,44 +390,54 @@ def main():
              "r1m": pb.get("r1m"), "r3m": pb.get("r3m"), "r12m": pb.get("r12m"), "vs_ma200": pb.get("vs_ma200"), "mom12_1": pb.get("mom12_1"),
              "rel6m": (pb["r6m"] - float(spy.iloc[-1] / spy.iloc[-127] - 1)) if pb.get("r6m") is not None else None, "val": val}
         if not solo or t in solo or b in solo:
-            conv = fx_anual(info.get("financialCurrency"))
-            df = sec_anual(t, cik) if info.get("financialCurrency") in (None, "USD") and info.get("country") == "United States" else None
-            if df is None:
-                df = yahoo_anual(k, conv)
-            an = anual_tabla(df) if df is not None else []
-            if df is not None and df["fuente"].iloc[0] == "SEC" and an and an[-1]["anio"] < dt.date.today().year - 1:
-                y = yahoo_anual(k, conv)
-                if y is not None:
-                    an = [x for x in an if x["anio"] < min(z["anio"] for z in anual_tabla(y))] + anual_tabla(y)
-            ana = analistas(k, info, precio, s)
-            hist_pe = []
-            for x_ in an:
-                if x_.get("acciones") and x_.get("neto") and x_["neto"] > 0 and info.get("country") == "United States":
-                    d = pd.Timestamp(x_["cierre"]) + pd.offsets.MonthEnd(0)
-                    p_ = s[s.index <= d]
-                    if len(p_) and (d - p_.index[-1]).days < 10:
-                        hist_pe.append({"anio": x_["anio"], "pe": float(p_.iloc[-1]) * x_["acciones"] / x_["neto"]})
-            ficha = {**{k_: v for k_, v in e.items()}, "descripcion": info.get("longBusinessSummary"), "web": info.get("website"),
-                     "empleados": num(info.get("fullTimeEmployees")), "precio_bloque": pb, "anual": an, "trimestral": trimestral(k, conv),
-                     "analistas": ana, "pe_historia": hist_pe, "posicion": {"short_float": num(info.get("shortPercentOfFloat")),
-                     "institucionales": num(info.get("heldPercentInstitutions")), "insiders": num(info.get("heldPercentInsiders"))}}
-            ficha["notas_abs"] = notas_absolutas(ficha)
-            e["proximo_balance"] = ana.get("proximo_balance")
-            e["rev90"] = ana.get("rev_0y_90")
-            e["sorpresa_media"] = media([z["sorpresa"] for z in ana.get("sorpresas", [])])
-            e["arriba_abajo"] = ((ana.get("suben_30d") or 0) - (ana.get("bajan_30d") or 0)) / max((ana.get("suben_30d") or 0) + (ana.get("bajan_30d") or 0), 1)
-            e["notas_abs"] = {k_: v for k_, v in ficha["notas_abs"].items() if k_ != "detalle"}
-            e["ficha"] = True
-            fichas[t] = ficha
+            try:
+                conv = fx_anual(info.get("financialCurrency"))
+                df = sec_anual(t, cik) if info.get("financialCurrency") in (None, "USD") and info.get("country") == "United States" else None
+                if df is None:
+                    df = yahoo_anual(k, conv)
+                an = anual_tabla(df) if df is not None else []
+                if df is not None and df["fuente"].iloc[0] == "SEC" and an and an[-1]["anio"] < dt.date.today().year - 1:
+                    y = yahoo_anual(k, conv)
+                    if y is not None:
+                        an = [x for x in an if x["anio"] < min(z["anio"] for z in anual_tabla(y))] + anual_tabla(y)
+                ana = analistas(k, info, precio, s)
+                hist_pe = []
+                for x_ in an:
+                    if x_.get("acciones") and x_.get("neto") and x_["neto"] > 0 and info.get("country") == "United States":
+                        d = pd.Timestamp(x_["cierre"]) + pd.offsets.MonthEnd(0)
+                        p_ = s[s.index <= d]
+                        if len(p_) and (d - p_.index[-1]).days < 10:
+                            hist_pe.append({"anio": x_["anio"], "pe": float(p_.iloc[-1]) * x_["acciones"] / x_["neto"]})
+                ficha = {**{k_: v for k_, v in e.items()}, "descripcion": info.get("longBusinessSummary"), "web": info.get("website"),
+                         "empleados": num(info.get("fullTimeEmployees")), "precio_bloque": pb, "anual": an, "trimestral": trimestral(k, conv),
+                         "analistas": ana, "pe_historia": hist_pe, "posicion": {"short_float": num(info.get("shortPercentOfFloat")),
+                         "institucionales": num(info.get("heldPercentInstitutions")), "insiders": num(info.get("heldPercentInsiders"))}}
+                ficha["notas_abs"] = notas_absolutas(ficha)
+                e["proximo_balance"] = ana.get("proximo_balance")
+                e["rev90"] = ana.get("rev_0y_90")
+                e["sorpresa_media"] = media([z["sorpresa"] for z in ana.get("sorpresas", [])])
+                e["arriba_abajo"] = ((ana.get("suben_30d") or 0) - (ana.get("bajan_30d") or 0)) / max((ana.get("suben_30d") or 0) + (ana.get("bajan_30d") or 0), 1)
+                e["notas_abs"] = {k_: v for k_, v in ficha["notas_abs"].items() if k_ != "detalle"}
+                e["ficha"] = True
+                fichas[t] = ficha
+            except Exception as ex:
+                print(f"ficha {t}: {type(ex).__name__}: {ex}", file=sys.stderr)
         elif t in previo and previo[t].get("ficha"):
             for c in ["proximo_balance", "rev90", "sorpresa_media", "arriba_abajo", "notas_abs", "ficha"]:
                 e[c] = previo[t].get(c)
         lista.append(e)
         time.sleep(0.4)
+    salida(lista, fichas, ccl)
+
+
+def salida(lista, fichas, ccl):
     L = pd.DataFrame(lista).set_index("ticker")
+    for c in ["rev90", "arriba_abajo", "sorpresa_media", "ficha", "notas_abs", "proximo_balance"]:
+        if c not in L.columns:
+            L[c] = None
     rk = lambda s_: s_.rank(pct=True)
     tend = (rk(L["mom12_1"]) + rk(L["vs_ma200"]) + rk(L["rel6m"])) / 3
-    V = pd.DataFrame({t: x["val"] for t, x in L["val"].items()}).T
+    V = pd.DataFrame({t: x for t, x in L["val"].items()}).T.apply(pd.to_numeric, errors="coerce")
     V["ey"] = 1 / V["pe"].where(V["pe"] > 0)
     V["ee"] = 1 / V["ev_ebitda"].where(V["ev_ebitda"] > 0)
     V["sector"] = L["sector"]
@@ -438,8 +448,8 @@ def main():
         por_sec = V.groupby("sector")[c].rank(pct=True)
         vr.append(por_sec.where(tam >= 5, V[c].rank(pct=True)))
     valn = pd.concat(vr, axis=1).mean(axis=1)
-    an_n = pd.concat([rk(pd.to_numeric(L.get("rev90"), errors="coerce")), rk(pd.to_numeric(L.get("arriba_abajo"), errors="coerce")),
-                      rk(pd.to_numeric(L.get("sorpresa_media"), errors="coerce"))], axis=1).mean(axis=1)
+    an_n = pd.concat([rk(pd.to_numeric(L["rev90"], errors="coerce")), rk(pd.to_numeric(L["arriba_abajo"], errors="coerce")),
+                      rk(pd.to_numeric(L["sorpresa_media"], errors="coerce"))], axis=1).mean(axis=1)
     sal = []
     for t, x in L.iterrows():
         d = x.to_dict()
