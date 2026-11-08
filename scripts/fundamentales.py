@@ -152,6 +152,74 @@ def balances(k, fin, usa):
     return d
 
 
+EXTRA = ["shortPercentOfFloat", "shortRatio", "sharesShort", "sharesShortPriorMonth", "heldPercentInstitutions",
+         "heldPercentInsiders", "targetHighPrice", "targetLowPrice", "targetMedianPrice", "recommendationKey", "beta",
+         "priceToBook", "enterpriseToEbitda", "enterpriseToRevenue", "enterpriseValue", "trailingPegRatio", "dividendYield",
+         "payoutRatio", "earningsQuarterlyGrowth", "currentRatio", "quickRatio", "debtToEquity", "sharesOutstanding",
+         "floatShares", "fiftyTwoWeekHigh", "fiftyTwoWeekLow", "averageVolume", "averageVolume10days", "epsForward",
+         "epsTrailingTwelveMonths", "totalRevenue", "operatingCashflow", "profitMargins", "ebitdaMargins", "bookValue",
+         "priceToSalesTrailing12Months", "fullTimeEmployees", "overallRisk", "auditRisk", "boardRisk"]
+
+
+def aplanar(df, pref):
+    out = {}
+    if df is None or not hasattr(df, "iterrows") or df.empty:
+        return out
+    for i, r in df.iterrows():
+        for c, v in r.items():
+            x = num(v)
+            if x is not None:
+                out[f"{pref}{i}_{c}".replace(" ", "")] = x
+    return out
+
+
+def foto_extra(k, info):
+    f = {c: (info.get(c) if isinstance(info.get(c), str) else num(info.get(c))) for c in EXTRA}
+    for nombre, pref in [("eps_trend", "eps_"), ("eps_revisions", "rv_"), ("earnings_estimate", "est_"),
+                         ("revenue_estimate", "vtas_"), ("growth_estimates", "crec_")]:
+        try:
+            f.update(aplanar(getattr(k, nombre), pref))
+        except Exception:
+            pass
+    try:
+        rc = k.recommendations
+        if rc is not None and len(rc):
+            rc = rc.set_index("period") if "period" in rc.columns else rc
+            f.update(aplanar(rc.loc[[x for x in ["0m", "-1m", "-3m"] if x in rc.index]], "rec_"))
+    except Exception:
+        pass
+    try:
+        ud = k.upgrades_downgrades
+        if ud is not None and len(ud):
+            ud = ud.reset_index()
+            col = ud.columns[0]
+            ud[col] = pd.to_datetime(ud[col], utc=True)
+            ud = ud[ud[col] >= pd.Timestamp.now(tz="UTC") - pd.Timedelta(days=90)]
+            acc = ud["Action"].astype(str).str.lower() if "Action" in ud.columns else pd.Series(dtype=str)
+            f["ud90_n"] = len(ud)
+            for a in ["up", "down", "init", "main", "reit"]:
+                f[f"ud90_{a}"] = int((acc == a).sum())
+            if {"currentPriceTarget", "priorPriceTarget"} <= set(ud.columns):
+                cp, pp = pd.to_numeric(ud["currentPriceTarget"], errors="coerce"), pd.to_numeric(ud["priorPriceTarget"], errors="coerce")
+                ok = cp.notna() & pp.notna() & (pp > 0)
+                f["ud90_tp_suben"] = int((cp[ok] > pp[ok]).sum())
+                f["ud90_tp_bajan"] = int((cp[ok] < pp[ok]).sum())
+                f["ud90_tp_cambio_med"] = num((cp[ok] / pp[ok] - 1).median()) if ok.any() else None
+    except Exception:
+        pass
+    try:
+        ip = k.insider_purchases
+        if ip is not None and len(ip):
+            ip = ip.set_index(ip.columns[0])
+            for i, r in ip.iterrows():
+                for c in ["Shares", "Trans"]:
+                    if c in ip.columns and num(r.get(c)) is not None:
+                        f[("ins_" + str(i) + "_" + c).replace(" ", "")] = num(r.get(c))
+    except Exception:
+        pass
+    return f
+
+
 def bajar(t, fin=False, usa=False, previo=None):
     k = yf.Ticker(t)
     info = k.info or {}
@@ -205,6 +273,10 @@ def bajar(t, fin=False, usa=False, previo=None):
             d["sorpresa"] = s / 100 if s is not None else None
         if len(fut):
             d["proximo_balance"] = fut.iloc[0][col].tz_convert("America/New_York").isoformat()
+    try:
+        d["foto"] = foto_extra(k, info)
+    except Exception as ex:
+        print(f"foto {t}: {ex}", file=sys.stderr)
     return d
 
 
@@ -325,7 +397,7 @@ def main():
         if k % 50 == 0:
             print(f"{k}/{len(univ)}", flush=True)
 
-    CACHE.write_text(json.dumps(limpiar({t: {k: v for k, v in r.items() if k != "dato_previo"} for t, r in raw.items()}),
+    CACHE.write_text(json.dumps(limpiar({t: {k: v for k, v in r.items() if k not in ("dato_previo", "foto")} for t, r in raw.items()}),
                                 ensure_ascii=False, separators=(",", ":")))
     fx = tipos_cambio({r.get("financialCurrency") for r in raw.values() if r.get("financialCurrency")})
 
@@ -428,6 +500,26 @@ def main():
     snap = comp[["total", "revisiones", "momentum", "calidad", "valuacion"]].round(2)
     snap["vs_ma200"] = df["vs_ma200"].round(4)
     snap.to_csv(SNAP / f"fund_{hoy}.csv")
+    fotos = []
+    for x in univ:
+        t = x["ticker"]
+        r = raw.get(t, {})
+        if r.get("dato_previo") or t not in raw:
+            continue
+        base = {"ticker": t, "fecha": hoy, "precio_usd": x.get("precio"), "px_ars": x.get("px_ars"), "premio": x.get("premio"),
+                "liquidez": x.get("liquidez"), "monto_usd": x.get("monto_usd"), "mom12_1": x.get("mom12_1"), "vs_ma200": x.get("vs_ma200"),
+                "sector": x.get("sector")}
+        base.update({c: (r.get(c) if isinstance(r.get(c), str) else num(r.get(c))) for c in CAMPOS})
+        base.update({c: (r.get(c) if isinstance(r.get(c), str) else num(r.get(c))) for c in
+                     ["roic", "estab_margen", "accruals", "dilucion", "fscore", "pe_hist", "rev90_0y", "rev90_1y", "amplitud",
+                      "rev_suben", "rev_bajan", "consistencia", "sorpresa", "ultimo_balance", "proximo_balance"]})
+        base.update({f"s_{k}": (None if pd.isna(comp.loc[t, k]) else round(float(comp.loc[t, k]), 2)) for k in ["total", "revisiones", "momentum", "calidad", "valuacion"]})
+        base.update(r.get("foto") or {})
+        fotos.append(base)
+    if fotos:
+        fd = pd.DataFrame(fotos).set_index("ticker")
+        fd.to_csv(SNAP / f"foto_{hoy}.csv.gz", compression="gzip")
+        print(f"foto completa: {fd.shape[0]} empresas x {fd.shape[1]} datos")
     cmb = cambios(hoy, snap, df["byma"].to_dict())
     SALIDA.write_text(json.dumps(limpiar({
         "actualizado": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"),
