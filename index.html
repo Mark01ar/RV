@@ -401,7 +401,7 @@ function lineas(sr, per){
   const ser = [["p","var(--accent)","Empresa"],["spy","var(--blue)","SPY"],["etf","var(--muted)","ETF del sector"]].filter(([k])=>sr[k]);
   const norm = ser.map(([k,c,t])=>{ const b = sr[k][i0]; return {c,t,v:sr[k].slice(i0).map(x=>x/b*100)}; });
   const all = norm.flatMap(s=>s.v).filter(isFinite);
-  const lo = Math.min(...all), hi = Math.max(...all), W=760, H=230, pl=44, pb=22;
+  const lo = Math.min(...all), hi = Math.max(...all), W=620, H=250, pl=40, pb=22;
   const X = i => pl + i/(norm[0].v.length-1)*(W-pl-8), Y = v => 8 + (hi-v)/(hi-lo||1)*(H-pb-8);
   const fs = sr.f.slice(i0);
   const ticks = [lo, (lo+hi)/2, hi].map(v=>`<line x1="${pl}" x2="${W-8}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${pl-6}" y="${Y(v)+4}" text-anchor="end">${v.toFixed(0)}</text>`).join("");
@@ -415,7 +415,7 @@ function lineas(sr, per){
 function barras(an){
   const xs = an.filter(x=>x.ventas!=null).slice(-10);
   if (!xs.length) return "";
-  const W=760, H=170, pl=10, bw=(W-pl*2)/xs.length, mx=Math.max(...xs.map(x=>x.ventas));
+  const W=1240, H=190, pl=10, bw=(W-pl*2)/xs.length, mx=Math.max(...xs.map(x=>x.ventas));
   const mg = xs.map(x=>x.m_ebit).filter(v=>v!=null), mlo=Math.min(0,...mg), mhi=Math.max(...mg,0.01);
   const Ym = v => 14 + (mhi-v)/(mhi-mlo||1)*(H-50);
   const b = xs.map((x,i)=>{ const h=(x.ventas/mx)*(H-50); return `<rect x="${pl+i*bw+bw*0.18}" y="${H-24-h}" width="${bw*0.64}" height="${h}" fill="var(--panel2)" stroke="var(--line)"/><text x="${pl+i*bw+bw/2}" y="${H-8}" text-anchor="middle">${x.anio}</text><text x="${pl+i*bw+bw/2}" y="${H-28-h}" text-anchor="middle" class="mut">${big(x.ventas)}</text>`; }).join("");
