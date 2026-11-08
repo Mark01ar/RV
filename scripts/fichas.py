@@ -548,9 +548,16 @@ def main():
                 fichas[t] = ficha
             except Exception as ex:
                 print(f"ficha {t}: {type(ex).__name__}: {ex}", file=sys.stderr)
-        elif t in previo and previo[t].get("ficha"):
-            for c in ["proximo_balance", "rev90", "sorpresa_media", "arriba_abajo", "notas_abs", "ficha"]:
-                e[c] = previo[t].get(c)
+        elif (OUT / f"{t}.json").exists():
+            try:
+                fv = json.loads((OUT / f"{t}.json").read_text())
+                e["notas_abs"] = {c: (fv.get("notas") or {}).get(c) for c in ["calidad", "solidez", "crecimiento"]}
+                for c in ["proximo_balance", "rev90", "sorpresa_media", "arriba_abajo"]:
+                    e[c] = (previo.get(t) or {}).get(c)
+                e["proximo_balance"] = e["proximo_balance"] or (fv.get("analistas") or {}).get("proximo_balance")
+                e["ficha"] = True
+            except Exception:
+                pass
         lista.append(e)
         time.sleep(0.4)
     salida(lista, fichas, ccl)
