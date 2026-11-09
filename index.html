@@ -194,7 +194,11 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .rsm-l>em{font-style:normal;font-size:12px;font-weight:700;width:150px}
 .rbl{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--fc);border-radius:8px;padding:3px 9px 3px 4px;font-size:12.5px;cursor:pointer}
 .rbl:hover{border-color:var(--fc)}
-.pil-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+.pil-grid{display:grid;gap:12px}
+.pg5{grid-template-columns:repeat(5,1fr)}.pg3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:1300px){.pg5{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:900px){.pg5,.pg3{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.pg5,.pg3{grid-template-columns:1fr}}
 .pil{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
 .pil-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.pil-h span{font-size:13px;color:#c8d0ea}.pil-h b{font-size:20px;font-weight:700;white-space:nowrap}
 .pil-g{display:flex;align-items:center;gap:12px;margin:8px 0}.spk{flex:0 0 auto}
@@ -1705,7 +1709,7 @@ function pilarCard(x){
     <div class="pil-g">${spark(x.serie)}<div class="pil-c"><span>1 mes <b>${chgTxt(x,x.m1)}</b></span><span>3 meses <b>${chgTxt(x,x.m3)}</b></span><span>1 año <b>${chgTxt(x,x.a1)}</b></span></div></div>
     <div class="pil-r"><span>${fmt(x.min10)}</span><div class="pil-bar"><i style="left:${Math.max(0,Math.min(100,pos))}%"></i></div><span>${fmt(x.max10)}</span></div>
     <div class="pil-rl">Rango de ${x.anios||10} años${x.pctl10!=null?` · más alto que el ${Math.round(x.pctl10*100)}% de ese período`:""}</div>
-    <p class="pil-l">${esc(x.lectura)}</p><p class="pil-e">${esc(x.expl)}</p></div>`;
+    <p class="pil-l">${esc(x.lectura).replace(/(\d)\.(\d)/g,"$1,$2")}</p><p class="pil-e">${esc(x.expl)}</p></div>`;
 }
 function pilaresHTML(){
   if (!PIL) return "";
@@ -1717,8 +1721,9 @@ function pilaresHTML(){
     <div class="pil-c"><span>Rendimiento por ganancias <b>${nx(V.rend_ganancias,2)}%</b></span><span>Tasa a 10 años <b>${nx(V.t10,2)}%</b></span></div>
     <p class="pil-l">${V.prima!=null?(V.prima<0?`Las acciones rinden ${nx(-V.prima,2)} puntos menos por ganancias que el bono a 10 años: el mercado paga caro el crecimiento futuro y deja poco margen si las ganancias decepcionan.`:`Las acciones rinden ${nx(V.prima,2)} puntos más por ganancias que el bono a 10 años.`):""}</p>
     <p class="pil-e">El rendimiento por ganancias es la inversa del P/E: lo que gana el S&P por cada dólar invertido. Se compara con la tasa del bono, su alternativa sin riesgo. Históricamente, cuando la diferencia fue muy baja o negativa, los retornos de los años siguientes fueron más bajos que el promedio.</p></div>` : "";
-  return G.map(([g,t])=>{ const xs = PIL.indicadores.filter(x=>x.pilar===g); const extra = g==="amplitud" ? valc : "";
-    if (!xs.length && !extra) return ""; return sec(t==="Amplitud del mercado"?"Amplitud y valuación del mercado":t, "", `<div class="pil-grid">${xs.map(pilarCard).join("")}${extra}</div>`); }).join("");
+  const ord = ["credito","amplitud","dolar"], resto = ord.flatMap(g=>PIL.indicadores.filter(x=>x.pilar===g).map(pilarCard).concat(g==="amplitud"&&valc?[valc]:[]));
+  const ta = PIL.indicadores.filter(x=>x.pilar==="tasas");
+  return (ta.length?sec("Tasas y Fed","",`<div class="pil-grid pg3">${ta.map(pilarCard).join("")}</div>`):"") + (resto.length?sec("Crédito, amplitud, valuación y dólar","",`<div class="pil-grid pg3">${resto.join("")}</div>`):"");
 }
 function resumenMacro(){
   const S = M.semaforo, T = S ? SEM_TXT[S.estado] : null, q = M.cuadrantes[M.actual], fz = FZ[M.actual];
@@ -1729,7 +1734,7 @@ function resumenMacro(){
     <div class="rsm-a">
       ${S?`<div class="rsm-k"><span>Semáforo de riesgo</span><b style="color:${SC[S.estado]}">${T.t}</b></div>`:""}
       <div class="rsm-k"><span>Régimen</span><b style="color:${QC[M.actual]}">${esc(q.nombre)}</b><em>${Math.round(M.probs[M.actual]*100)}% de probabilidad · ${M.duracion} ${M.duracion===1?"mes":"meses"}</em>${M.crudo&&M.crudo!==M.actual?`<em>Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b></em>`:""}</div>
-      ${cambios.length?`<div class="rsm-c"><span>Lo que más se movió en el último mes</span>${cambios.map(({x})=>`<div><em>${esc(x.nombre)}</em><b>${valTxt(x)}</b><i class="${cls(x.valor-x.m1)}">${chgTxt(x,x.m1)}</i></div>`).join("")}</div>`:""}
+      ${cambios.length?`<div class="rsm-c"><span>Lo que más se movió en el último mes</span>${cambios.map(({x})=>`<div><em>${esc(x.nombre)}</em><b>${valTxt(x)}</b><i>${chgTxt(x,x.m1)}</i></div>`).join("")}</div>`:""}
     </div>
     <div class="rsm-b"><span class="rsm-t">Qué significa para los bloques · ${esc(q.nombre.toLowerCase())}</span>
       <div class="rsm-l"><em class="pos">Históricamente mejor</em>${bl(mej)}</div>
