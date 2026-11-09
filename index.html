@@ -401,7 +401,7 @@ const COLS = [
   {k:"premio", t:"Premio CCL", h:"Cuánto más caro (+) o barato (−) cotiza el CEDEAR frente al CCL implícito de todo el mercado."}
 ];
 
-const EST = {q:"", sector:"", pais:"", liq:"", fichas:false, sort:"negocio", dir:-1, sel:null, per:"5y", ftab:"resumen"};
+const EST = {q:"", sector:"", pais:"", liq:"", fichas:false, sort:"general", dir:-1, sel:null, per:"5y", ftab:"resumen"};
 const FCACHE = {};
 const NOTAS = [["calidad","Calidad"],["solidez","Solidez"],["crecimiento","Crecimiento"],["valuacion","Valuación"],["tendencia","Tendencia"],["analistas","Analistas"]];
 const NOTA_TXT = {calidad:"Rentabilidad, márgenes y flujo de caja. Escala absoluta: un 8 es un 8 en cualquier sector.",
@@ -417,7 +417,10 @@ const chip = v => `<span class="nchip" style="background:${v==null?"var(--panel2
 const fch2 = f => f ? new Date(f+"T12:00").toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"2-digit"}) : "—";
 const PAIS = {"United States":"EE.UU.","Taiwan":"Taiwán","Brazil":"Brasil","China":"China","South Korea":"Corea","Netherlands":"Países Bajos","Japan":"Japón","United Kingdom":"Reino Unido","Germany":"Alemania","Switzerland":"Suiza","Argentina":"Argentina","Uruguay":"Uruguay","Luxembourg":"Luxemburgo","Canada":"Canadá","Israel":"Israel","Colombia":"Colombia","South Africa":"Sudáfrica","Denmark":"Dinamarca","Ireland":"Irlanda","Australia":"Australia","Nigeria":"Nigeria","Bermuda":"Bermudas","Singapore":"Singapur"};
 
+const PESOS = {calidad:25, crecimiento:20, solidez:15, valuacion:15, analistas:15, tendencia:10};
+function general(n){ if (!n) return null; if (n.general!=null) return n.general; const k = Object.keys(PESOS).filter(k=>n[k]!=null); if (k.length<3) return null; return Math.round(k.reduce((s,x)=>s+n[x]*PESOS[x],0)/k.reduce((s,x)=>s+PESOS[x],0)*10)/10; }
 function empresas(m){
+  (E.empresas||[]).forEach(x=>{ if (x.notas) x.notas.general = general(x.notas); });
   if (!E){ m.innerHTML = `<div class="soon"><h2>Empresas</h2>Todavía no hay datos. Se generan con la próxima actualización.</div>`; return; }
   if (EST.sel) return ficha(m, EST.sel);
   const L = E.empresas;
@@ -432,7 +435,7 @@ function empresas(m){
   m.innerHTML = `
   <details class="help"><summary>Cómo leer esta lista</summary>
     <p>Las 125 empresas con CEDEAR que más se operan en BYMA. Hacé clic en una fila para abrir su ficha. Las notas van de 1 a 10 y sirven para ordenar y ubicarse rápido; no son una recomendación de compra.</p>
-    <dl>${NOTAS.map(([k,t])=>`<dt>${t}</dt><dd>${NOTA_TXT[k]}</dd>`).join("")}<dt>Negocio</dt><dd>Promedio de calidad y solidez: qué tan bueno y sólido es el negocio, sin mirar precio ni momento.</dd></dl>
+    <dl>${NOTAS.map(([k,t])=>`<dt>${t}</dt><dd>${NOTA_TXT[k]}</dd>`).join("")}<dt>General</dt><dd>Resumen para arrancar el análisis: calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15% y tendencia 10%. No es una señal de compra.</dd><dt>Negocio</dt><dd>Promedio de calidad y solidez: qué tan bueno y sólido es el negocio, sin mirar precio ni momento.</dd></dl>
     <p>Fichas completas: ${nf} de ${L.length}. Las demás muestran por ahora solo precio, valuación y tendencia.</p>
   </details>
   <div class="bar">
@@ -444,10 +447,10 @@ function empresas(m){
     <span class="count">${rows.length} empresas</span>
   </div>
   <div class="wrap"><table><thead><tr>${th("puesto","#")}${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("sector","Sector","l")}${th("pais","País","l")}
-  ${th("negocio","Negocio")}${NOTAS.map(([k,t])=>th(k,t)).join("")}${th("r1m","1M")}${th("r12m","12M")}${th("premio","Premio")}${th("liquidez","Liquidez","l")}${th("proximo_balance","Balance")}</tr></thead>
+  ${th("general","General")}${th("negocio","Negocio")}${NOTAS.map(([k,t])=>th(k,t)).join("")}${th("r1m","1M")}${th("r12m","12M")}${th("premio","Premio")}${th("liquidez","Liquidez","l")}${th("proximo_balance","Balance")}</tr></thead>
   <tbody>${rows.map(x=>`<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td class="mut">${x.puesto}</td><td class="tk l">${logoImg(x.byma,"logo-s")}${esc(x.byma)}${x.byma!==x.ticker?`<small>${esc(x.ticker)}</small>`:""}</td>
   <td class="nm l">${esc(x.nombre)}${x.ficha?"":' <span class="mut" title="Ficha completa pendiente">·</span>'}</td><td class="l">${esc(x.sector||"—")}</td><td class="l">${esc(PAIS[x.pais]||x.pais||"—")}</td>
-  <td>${chip(x.notas?.negocio)}</td>${NOTAS.map(([k])=>`<td>${chip(x.notas?.[k])}</td>`).join("")}
+  <td>${chip(x.notas?.general)}</td><td>${chip(x.notas?.negocio)}</td>${NOTAS.map(([k])=>`<td>${chip(x.notas?.[k])}</td>`).join("")}
   <td class="${cls(x.r1m)}">${pct(x.r1m)}</td><td class="${cls(x.r12m)}">${pct(x.r12m,0)}</td><td class="${x.premio>0.03?"neg":x.premio<-0.03?"pos":""}">${pct(x.premio)}</td>
   <td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td><td>${fch2(x.proximo_balance)}</td></tr>`).join("")}</tbody></table></div>`;
   const re = ()=>empresas(m);
@@ -633,8 +636,8 @@ async function ficha(m, t){
         <div class="fh-tend" style="color:${acol}">${AN.tend==="Mejora"?"▲ Mejora":AN.tend==="Empeora"?"▼ Empeora":"= Estable"}</div>
         ${frase?`<p class="frase">${esc(frase)}</p>`:""}
         ${tipoTxt?`<div class="aviso">${tipoTxt}</div>`:""}</div>
-      <div class="fh-score"><div class="big" style="color:${ncol(nt.negocio)}">${nt.negocio==null?"—":nx(nt.negocio)}</div><div class="lbl">NOTA NEGOCIO</div>
-        <div class="pill" style="color:${ncol(nt.tendencia)}">Tendencia ${nt.tendencia==null?"—":nx(nt.tendencia)}</div></div>
+      <div class="fh-score"><div class="big" style="color:${ncol(general(nt))}">${general(nt)==null?"—":nx(general(nt))}</div><div class="lbl">NOTA GENERAL</div>
+        <div class="pill" style="color:${ncol(nt.negocio)}">Negocio ${nt.negocio==null?"—":nx(nt.negocio)}</div> <div class="pill" style="color:${ncol(nt.tendencia)}">Tendencia ${nt.tendencia==null?"—":nx(nt.tendencia)}</div></div>
     </div>
     <div class="fh-kpis">
       <div><span>Precio USD</span><b>${pb.precio?num(pb.precio,2):"—"}</b><small>CEDEAR $ ${f.px_ars?num(f.px_ars,0):"—"} · premio ${pct(f.premio)}</small></div>
@@ -650,7 +653,7 @@ async function ficha(m, t){
   const perfil = `<div class="card"><h3>Perfil <span class="mut">· 1 a 10, para ubicarse; no es recomendación</span></h3>${NOTAS.map(([k,tt])=>{ const v = nt[k]; const det = nd[k]||{};
     return `<div class="nrow"><div class="nlab">${tt}</div><div class="nbar"><i style="width:${v==null?0:v*10}%;background:${ncol(v)}"></i></div><div class="nval" style="color:${ncol(v)}">${v==null?"—":nx(v)}</div>
     <div class="ndet">${Object.entries(det).map(([a_,b_])=>`<span>${esc(a_)}: <b>${fmtDet(a_,b_)}</b></span>`).join("")}</div></div>`; }).join("")}
-    <div class="nneg">Negocio (calidad + solidez): <b style="color:${ncol(nt.negocio)}">${nt.negocio==null?"—":nx(nt.negocio)}</b></div></div>`;
+    <div class="nneg">Nota general: <b style="color:${ncol(general(nt))}">${general(nt)==null?"—":nx(general(nt))}</b> <span class="mut">(calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15%, tendencia 10%)</span> · Negocio (calidad + solidez): <b style="color:${ncol(nt.negocio)}">${nt.negocio==null?"—":nx(nt.negocio)}</b></div></div>`;
 
   const precio = `<div class="card"><h3>Precio y tendencia</h3>
       <div class="seg">${[["1y","1 año"],["3y","3 años"],["5y","5 años"]].map(([p,tt])=>`<button data-per="${p}" class="${EST.per===p?"on":""}">${tt}</button>`).join("")}</div>

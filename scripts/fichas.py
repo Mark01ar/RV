@@ -591,6 +591,9 @@ def salida(lista, fichas, ccl):
               "tendencia": None if pd.isna(tend.get(t)) else round(1 + 9 * float(tend[t]), 1),
               "analistas": None if not d.get("ficha") or pd.isna(an_n.get(t)) else round(1 + 9 * float(an_n[t]), 1)}
         nt["negocio"] = media([nt["calidad"], nt["solidez"]])
+        pes = {"calidad": 25, "crecimiento": 20, "solidez": 15, "valuacion": 15, "analistas": 15, "tendencia": 10}
+        disp = {k_: nt[k_] for k_ in pes if nt.get(k_) is not None}
+        nt["general"] = round(sum(nt[k_] * pes[k_] for k_ in disp) / sum(pes[k_] for k_ in disp), 1) if len(disp) >= 3 else None
         d["notas"] = nt
         d.pop("notas_abs", None)
         d = {k_: (None if isinstance(v, float) and not math.isfinite(v) else v) for k_, v in d.items()}
