@@ -411,7 +411,7 @@ async function vivo(){
 }
 document.getElementById("vivoBtn").addEventListener("click", vivo);
 
-const pct = (x,d=1) => x==null ? "—" : (x>0?"+":"") + (x*100).toFixed(d) + "%";
+const pct = (x,d=1) => x==null ? "—" : (x>0?"+":"") + (x*100).toFixed(d).replace(".",",") + "%";
 const cls = x => x==null ? "mut" : x>0 ? "pos" : x<0 ? "neg" : "";
 const num = (x,d=2) => x==null ? "—" : x.toLocaleString("es-AR",{minimumFractionDigits:d,maximumFractionDigits:d});
 const usd = x => x==null ? "—" : x>=1e6 ? (x/1e6).toFixed(1)+"M" : x>=1e3 ? (x/1e3).toFixed(0)+"k" : x.toFixed(0);
@@ -470,7 +470,7 @@ const NOTA_TXT = {calidad:"Rentabilidad, márgenes y flujo de caja. Escala absol
   valuacion:"Qué tan barata está contra su sector (10 = de las más baratas). Relativa.",
   tendencia:"Momentum, distancia a la MA200 y rendimiento contra el SPY, contra las 125. Relativa.",
   analistas:"Revisiones de estimaciones y sorpresas en los últimos balances, contra las 125. Relativa."};
-const big = x => x==null ? "—" : Math.abs(x)>=1e12 ? (x/1e12).toFixed(2)+" T" : Math.abs(x)>=1e9 ? (x/1e9).toFixed(1)+" B" : Math.abs(x)>=1e6 ? (x/1e6).toFixed(0)+" M" : x.toFixed(0);
+const big = x => x==null ? "—" : Math.abs(x)>=1e12 ? (x/1e12).toFixed(2).replace(".",",")+" T" : Math.abs(x)>=1e9 ? (x/1e9).toFixed(1).replace(".",",")+" B" : Math.abs(x)>=1e6 ? (x/1e6).toFixed(0)+" M" : x.toFixed(0);
 const nx = (x,d=1) => x==null ? "—" : x.toFixed(d).replace(".",",");
 const ncol = v => v==null ? "var(--line)" : v>=7 ? "var(--pos)" : v>=4.5 ? "var(--accent)" : "var(--neg)";
 const chip = v => `<span class="nchip" style="background:${v==null?"var(--panel2)":ncol(v)};${v==null?"color:var(--muted)!important":""}">${v==null?"—":nx(v)}</span>`;
@@ -512,7 +512,7 @@ function metr(f){
   const fcfm = u.fcf!=null && u.ventas>0 ? u.fcf/u.ventas : null, sbcv = u.sbc!=null && u.ventas>0 ? u.sbc/u.ventas : null;
   const sn_ = f.sensibilidades || {};
   const roe = u.neto!=null && u.patrimonio>0 ? u.neto/u.patrimonio : null, roa = u.neto!=null && u.activo>0 ? u.neto/u.activo : null, eqa = u.patrimonio!=null && u.activo>0 ? u.patrimonio/u.activo : null;
-  const ex_ = {roe, roa, eqa, pvl: f.val?.pvl, btc: sn_.bitcoin?.impacto, btct: sn_.bitcoin?.t, oil: sn_.petroleo?.impacto, oilt: sn_.petroleo?.t, beta: sn_.beta, fcfm, sbcv, pfcf: f.val?.pfcf, cx, cx3, cxc, fcfy, vg1, dn, dne, fcf: u.fcf, deuda: u.deuda, caja: u.caja, dev: f.val?.rend_accionista};
+  const ex_ = {roe, roa, eqa, pvl: f.val?.pvl, btc: sn_.bitcoin?.impacto, btct: sn_.bitcoin?.t, oil: sn_.petroleo?.impacto, oilt: sn_.petroleo?.t, beta: sn_.beta, fcfm, sbcv, pfcf: f.val?.pfcf, cx, cx3, cxc, fcfy, vg1, dn, dne, fcf: u.fcf, deuda: u.deuda, caja: u.caja, dev: f.val?.rend_accionista!=null && f.val?.div_yield!=null && f.val.rend_accionista>=0 ? Math.max(f.val.rend_accionista, f.val.div_yield) : (f.val?.rend_accionista ?? f.val?.div_yield)};
   return {...ex_, mu, pctl, mmin: ms.length?Math.min(...ms):null, mmax: ms.length?Math.max(...ms):null, nanos: me.length, nprom, nn: nets.length, peC, peMed, pe, desc, picos, v3, mb: u.m_bruto, mid: u.m_id, pefwd: f.val?.pe_fwd, peg: f.val?.peg, div: f.val?.div_yield, r12m: f.precio_bloque?.r12m};
 }
 function notaBloque(x, f, bl){
@@ -763,7 +763,7 @@ async function bloquePag(m, id){
     hoy.push(`Dividendo mediano: <b>${pc0(medi(KS.map(k=>k.div)),1)}</b>; con recompras, <b>${pc0(medi(KS.map(k=>k.dev)),1)}</b> por año.`); }
   else if (T==="cripto"){ hoy.push(`Si el bitcoin sube 10%, la acción mediana del bloque se movió <b>${pct(medi(KS.map(k=>k.btc)),1)}</b> más allá del S&P. Beta mediano: <b>${nx(medi(KS.map(k=>k.beta)),2)}</b>.`); }
   else if (T==="utility"){ hoy.push(`Ventas: <b>${pct(medi(KS.map(k=>k.vg1)),0)}</b> el último año (mediana). Inversión mediana: <b>${pc0(medi(KS.map(k=>k.cx)))}</b> de las ventas.`);
-    hoy.push(`Deuda neta / EBITDA mediana: <b>${nx(medi(KS.map(k=>k.dne)),1)}x</b>. P/E esperado mediano: <b>${nx(medi(KS.map(k=>k.pefwd>0?k.pefwd:null)))}x</b>.`); }
+    const dm_ = medi(KS.map(k=>k.dne)); hoy.push(`${dm_!=null&&dm_<0?"La empresa mediana del bloque tiene <b>más caja que deuda</b>.":`Deuda neta / EBITDA mediana: <b>${nx(dm_,1)}x</b>.`} P/E esperado mediano: <b>${nx(medi(KS.map(k=>k.pefwd>0?k.pefwd:null)))}x</b>.`); }
   else if (T==="commodity"){ if (zcn) hoy.push(`<b>${zal} de ${zcn}</b> tienen el margen en la zona alta de su propia historia.`);
     const pc_ = KS.filter(k=>k.peC>0&&k.pe); if (pc_.length) hoy.push(`P/E mediano: <b>${nx(medi(pc_.map(k=>k.pe)))}x</b> con la ganancia de hoy, <b>${nx(medi(pc_.map(k=>k.peC)))}x</b> con la ganancia promedio del ciclo. Dividendo mediano: <b>${pc0(medi(KS.map(k=>k.div)),1)}</b>.`); }
   else if (T==="salud"){ const pr = KS.filter(k=>k.mu!=null&&k.mu>0).length; hoy.push(`<b>${pr} de ${KS.length}</b> ganan plata en la operación. Ventas: <b>${pct(medi(KS.map(k=>k.vg1)),0)}</b> el último año (mediana).`); }
@@ -788,7 +788,7 @@ async function bloquePag(m, id){
     const pcs = fil.map(r=>r.k).filter(k=>k.peC!=null&&k.peC>0&&k.pe); if (pcs.length) hoy.push(`P/E mediano del bloque: <b>${nx(medi(pcs.map(k=>k.pe)))}x</b> con la ganancia de hoy, <b>${nx(medi(pcs.map(k=>k.peC)))}x</b> con la ganancia promedio del ciclo.`); }
   else if (L){ const ks = fil.map(r=>r.k); hoy.push(`Crecimiento mediano de ventas: <b>${pct(medi(ks.map(k=>k.v3)),0)}</b> por año en 3 años. P/E esperado mediano: <b>${nx(medi(ks.map(k=>k.pefwd)))}x</b>.`);
     const sob = ks.filter(k=>k.desc!=null&&k.desc>0).length; hoy.push(`<b>${sob} de ${ks.filter(k=>k.desc!=null).length}</b> cotizan por encima de su propio P/E mediano.`); }
-  const sb = sensBloque(fil), r3 = medi(xs.map(x=>x.r3m)), r12 = medi(xs.map(x=>x.r12m)), nm = medi(fil.map(r=>r.n));
+  const sb = bl.id==="aparte" ? {reg:"", sens:""} : sensBloque(fil), r3 = medi(xs.map(x=>x.r3m)), r12 = medi(xs.map(x=>x.r12m)), nm = medi(fil.map(r=>r.n));
   m.innerHTML = `<button class="btn" id="bv">← Bloques</button> <button class="btn" id="bcmp">Comparar precios del bloque</button>
   <section class="fhead2 bhead"><div class="bh-top"><div><h2>${esc(bl.nombre)}</h2><div class="fh-sub">${esc(bl.clave)}</div>${L?`<div class="fh-sub mut">Lectura revisada: ${esc(L.revisado)}</div>`:""}</div>
     <div class="bkpi"><div><span>Empresas</span><b>${xs.length}</b></div><div><span>3 meses</span><b class="${cls(r3)}">${pct(r3,0)}</b></div><div><span>12 meses</span><b class="${cls(r12)}">${pct(r12,0)}</b></div><div><span>${L?"Nota del bloque":"Nota general"}</span><b style="color:${ncol(nm)}">${nx(nm)}</b></div></div></div>

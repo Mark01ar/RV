@@ -43,6 +43,22 @@
      "Inventario en días: si crece, la demanda se está enfriando.",
      "Participación en HBM y contratos firmados para el año siguiente."
     ],
+    "catalizadores": [
+     {
+      "fase": "Crecimiento sin inflación",
+      "efecto": "mejor que el mercado",
+      "dato": "Las 3 con historia suficiente rindieron mejor que en el resto de sus meses, contra el SPY (mediana +77 puntos por año): SK Hynix +84, Micron +77, Western Digital +43. SanDisk no entra por tener poca historia.",
+      "hipotesis": "Con la economía creciendo sin presión de tasas, sube la demanda de computadoras, celulares y centros de datos, y los precios de la memoria acompañan.",
+      "confianza": "Consistente, pero son solo 3 empresas."
+     },
+     {
+      "fase": "Desinflación",
+      "efecto": "peor que el mercado",
+      "dato": "Las 3 rindieron peor que en el resto de sus meses (mediana −80 puntos por año): Micron −91, SK Hynix −80, Western Digital −32.",
+      "hipotesis": "La desinflación suele coincidir con la economía frenando: baja la demanda de equipos y los precios de la memoria caen fuerte, porque la oferta tarda en ajustar.",
+      "confianza": "Consistente, pero son solo 3 empresas."
+     }
+    ],
     "empresas": {
      "MU": "El único fabricante grande de memoria de EE.UU.: DRAM (la mayor parte de sus ventas), HBM y NAND. Su año fiscal cierra entre agosto y septiembre, así que el último año de la tabla ya refleja buena parte del ciclo actual.",
      "SKHY": "Líder en HBM y principal proveedor de memoria para Nvidia. Cotiza en Corea: los números están convertidos a dólares. Tiene fábricas en China, lo que la expone a las restricciones de exportación.",
@@ -103,9 +119,9 @@
      {
       "fase": "Recalentamiento",
       "efecto": "peor que el mercado",
-      "dato": "En los meses de recalentamiento (inflación y crecimiento en alza), las 7 rindieron peor que en el resto de los meses, contra el SPY: Nvidia −8 puntos por año, Intel −13, Broadcom −21, AMD −38, Qualcomm −39, Marvell −40. Astera Labs da −145, pero con pocos años de historia.",
+      "dato": "En los meses de recalentamiento (inflación y crecimiento en alza), las 6 con historia suficiente rindieron peor que en el resto de sus meses, contra el SPY (mediana −30 puntos por año): Nvidia −7, Intel −13, Broadcom −21, AMD −38, Qualcomm −39, Marvell −40. Astera Labs no entra por tener poca historia.",
       "hipotesis": "Con inflación y tasas subiendo, el mercado castiga a las acciones que valen por ganancias futuras, y este bloque es el más expuesto a eso.",
-      "confianza": "Patrón consistente en todo el bloque (7 de 7)."
+      "confianza": "Patrón consistente en todo el bloque (6 de 6)."
      }
     ],
     "empresas": {
@@ -167,14 +183,14 @@
      {
       "fase": "Crecimiento sin inflación",
       "efecto": "mejor que el mercado",
-      "dato": "Las 4 rindieron mejor que en el resto de los meses, contra el SPY: TSMC +30 puntos por año, Applied +31, ASML +35, Lam +51.",
+      "dato": "Las 4 rindieron mejor que en el resto de los meses, contra el SPY: TSMC +30 puntos por año, Applied +30, ASML +35, Lam +51 (mediana +33).",
       "hipotesis": "Con crecimiento firme y sin presión de tasas, los fabricantes se animan a construir plantas nuevas, y eso es la venta de este bloque.",
       "confianza": "Patrón consistente en las 4 empresas; el bloque es chico."
      },
      {
       "fase": "Estanflación",
       "efecto": "peor que el mercado",
-      "dato": "Las 4 rindieron peor que en el resto de los meses: TSMC −36 puntos por año, Applied −34, ASML −28, Lam −20.",
+      "dato": "Las 4 rindieron peor que en el resto de los meses: TSMC −36 puntos por año, Applied −35, ASML −28, Lam −20 (mediana −32).",
       "hipotesis": "Con la economía frenando e inflación alta, los fabricantes recortan inversión y el mercado anticipa menos pedidos de equipos.",
       "confianza": "Consistente en las 4, pero buena parte de esos meses son de 2022, así que pesa mucho un solo año."
      }
@@ -357,7 +373,7 @@
      {
       "fase": "Estanflación",
       "efecto": "peor que el mercado",
-      "dato": "8 de las 10 rindieron peor que en el resto de sus meses, contra el SPY (mediana del bloque −15 puntos por año): Palantir −132, CrowdStrike −46, Globant −43, Salesforce −32. Las excepciones son Palo Alto (+35) e IBM (+18).",
+      "dato": "8 de las 10 rindieron peor que en el resto de sus meses, contra el SPY (mediana del bloque −15 puntos por año): Palantir −132, CrowdStrike −46, Globant −42, Salesforce −32. Las excepciones son Palo Alto (+34) e IBM (+18).",
       "hipotesis": "Con crecimiento frenando e inflación alta, las empresas recortan gasto en software y suben las tasas, que castigan a las acciones valuadas por crecimiento futuro.",
       "confianza": "Consistente en el bloque, pero buena parte de esos meses son de 2022."
      }
@@ -1032,7 +1048,7 @@
       "efecto": "mejor que el mercado",
       "dato": "5 de las 7 rindieron mejor que en el resto de sus meses (mediana +61 puntos por año): Harmony +104, Hecla +73, MP +73, Barrick +61, Freeport +28. Vale y Ternium, más ligadas al acero, van al revés (−7).",
       "hipotesis": "Con inflación y tasas bajando, suben el oro y la plata, que no pagan interés y ganan atractivo.",
-      "confianza": "Mayoría clara, explicada sobre todo por las mineras de oro y plata."
+      "confianza": "El cuadro lo marca como mixto (5 de 7): vale para las mineras de oro, plata y tierras raras, no para Vale ni Ternium."
      }
     ],
     "empresas": {
