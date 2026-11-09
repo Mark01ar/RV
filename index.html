@@ -532,9 +532,30 @@ function lecturaFarma(f, k){
   if (k.mu!=null && k.pctl!=null) s.push(`Margen EBIT ${pc0(k.mu)}, ${rangoTxt(k)}.`);
   return s;
 }
+const TIPO = L => L ? (L.tipo || (L.ciclico?"ciclo":"farma")) : null;
+function lecturaCrec(f, k){
+  const s = [];
+  if (k.v3!=null) s.push(`Ventas: <b>${pct(k.v3,0)}</b> por año en los últimos 3 años.`);
+  if (k.mb!=null) s.push(`Margen bruto <b>${pc0(k.mb)}</b>${k.mb>0.65?": alto, señal de poder de precio.":k.mb<0.45?": bajo para un diseñador de chips; compite más por precio o fabrica.":"."}`);
+  if (k.mu!=null) s.push(`Margen EBIT <b>${pc0(k.mu)}</b>${k.pctl!=null?`, ${rangoTxt(k)}`:""}.`);
+  if (k.mid!=null) s.push(`Invierte <b>${pc0(k.mid)}</b> de sus ventas en investigación.`);
+  if (k.pefwd!=null) s.push(`P/E esperado <b>${nx(k.pefwd)}x</b>${k.pe?` contra ${nx(k.pe)}x de los últimos 12 meses`:""}.${k.pe&&k.pe/k.pefwd>1.8?" La diferencia es grande: los analistas esperan que la ganancia crezca mucho (o la ganancia reciente tiene cargos únicos). Si esa ganancia no llega, el P/E esperado engaña.":""}`);
+  if (k.peg!=null) s.push(`PEG ${nx(k.peg,2)}${k.peg<0.5?": muy bajo porque se espera mucho crecimiento; es tan confiable como esas estimaciones.":"."}`);
+  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos años (${nx(k.peMed)}x).`);
+  return s;
+}
+function lecturaEquipos(f, k){
+  const s = [];
+  if (k.v3!=null) s.push(`Ventas: <b>${pct(k.v3,0)}</b> por año en los últimos 3 años.`);
+  if (k.mb!=null) s.push(`Margen bruto <b>${pc0(k.mb)}</b>.`);
+  if (k.pefwd!=null) s.push(`P/E esperado <b>${nx(k.pefwd)}x</b>${k.pe?` contra ${nx(k.pe)}x de los últimos 12 meses`:""}.`);
+  return s.concat(lecturaCiclo(f, k));
+}
 function columnasBloque(bl){
-  const L = bl.lente;
-  if (L && L.ciclico) return [["Margen EBIT",k=>pc0(k.mu)],["Margen en su historia",k=>rangoTxt(k)],["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E del ciclo",k=>k.peC==null?"—":k.peC<0?"pérdida":nx(k.peC)+"x"],["Ganancia puede caer",k=>k.desc==null?"—":k.desc<0?pc0(-k.desc):"—"],["12M",k=>`<span class="${cls(k.r12m)}">${pct(k.r12m,0)}</span>`]];
+  const L = bl.lente, T = TIPO(L), r12 = ["12M",k=>`<span class="${cls(k.r12m)}">${pct(k.r12m,0)}</span>`];
+  if (T==="crecimiento") return [["Ventas 3 años",k=>pct(k.v3,0)],["Margen bruto",k=>pc0(k.mb)],["Margen EBIT",k=>pc0(k.mu)],["Investigación / ventas",k=>pc0(k.mid)],["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E esperado",k=>k.pefwd==null?"—":nx(k.pefwd)+"x"],["PEG",k=>k.peg==null?"—":nx(k.peg,2)],r12];
+  if (T==="equipos") return [["Ventas 3 años",k=>pct(k.v3,0)],["Margen bruto",k=>pc0(k.mb)],["Margen EBIT",k=>pc0(k.mu)],["Margen en su historia",k=>rangoTxt(k)],["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E esperado",k=>k.pefwd==null?"—":nx(k.pefwd)+"x"],["P/E vs su mediana",k=>pct(k.desc,0)],r12];
+  if (T==="ciclo") return [["Margen EBIT",k=>pc0(k.mu)],["Margen en su historia",k=>rangoTxt(k)],["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E del ciclo",k=>k.peC==null?"—":k.peC<0?"pérdida":nx(k.peC)+"x"],["Ganancia puede caer",k=>k.desc==null?"—":k.desc<0?pc0(-k.desc):"—"],["12M",k=>`<span class="${cls(k.r12m)}">${pct(k.r12m,0)}</span>`]];
   if (L) return [["Ventas 3 años",k=>pct(k.v3,0)],["Margen bruto",k=>pc0(k.mb)],["Investigación / ventas",k=>pc0(k.mid)],["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E esperado",k=>k.pefwd==null?"—":nx(k.pefwd)+"x"],["PEG",k=>k.peg==null?"—":nx(k.peg,2)],["P/E vs su mediana",k=>pct(k.desc,0)],["Dividendo",k=>pc0(k.div,1)],["12M",k=>`<span class="${cls(k.r12m)}">${pct(k.r12m,0)}</span>`]];
   return [["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E esperado",k=>k.pefwd==null?"—":nx(k.pefwd)+"x"],["Ventas 3 años",k=>pct(k.v3,0)],["Margen EBIT",k=>pc0(k.mu)],["12M",k=>`<span class="${cls(k.r12m)}">${pct(k.r12m,0)}</span>`]];
 }
@@ -623,7 +644,12 @@ async function bloquePag(m, id){
   const L = bl.lente, cols = columnasBloque(bl);
   const fil = xs.map(x=>{ const f = FCACHE[x.ticker]; const ok = f && !f.sin; return {x, f: ok?f:null, k: ok?metr(f):{}, n: notaBloque(x, ok?f:null, bl)}; }).sort((a,b)=>(b.n??-1)-(a.n??-1));
   let hoy = [];
-  if (L && L.ciclico){ const al = fil.filter(r=>r.k.pctl!=null&&r.k.pctl>=0.75).length, cn = fil.filter(r=>r.k.pctl!=null).length;
+  const T = TIPO(L);
+  if (T==="crecimiento" || T==="equipos"){ const ks = fil.map(r=>r.k);
+    hoy.push(`Crecimiento mediano de ventas: <b>${pct(medi(ks.map(k=>k.v3)),0)}</b> por año en 3 años. Margen bruto mediano: <b>${pc0(medi(ks.map(k=>k.mb)))}</b>.`);
+    hoy.push(`P/E esperado mediano: <b>${nx(medi(ks.map(k=>k.pefwd)))}x</b>, contra <b>${nx(medi(ks.map(k=>k.pe)))}x</b> de los últimos 12 meses.`);
+    if (T==="equipos"){ const al = ks.filter(k=>k.pctl!=null&&k.pctl>=0.75).length, cn = ks.filter(k=>k.pctl!=null).length; hoy.push(`<b>${al} de ${cn}</b> tienen el margen en la zona alta de su propia historia.`); } }
+  else if (T==="ciclo"){ const al = fil.filter(r=>r.k.pctl!=null&&r.k.pctl>=0.75).length, cn = fil.filter(r=>r.k.pctl!=null).length;
     hoy.push(`<b>${al} de ${cn}</b> empresas tienen el margen en la zona alta de su propia historia.`);
     const pcs = fil.map(r=>r.k).filter(k=>k.peC!=null&&k.peC>0&&k.pe); if (pcs.length) hoy.push(`P/E mediano del bloque: <b>${nx(medi(pcs.map(k=>k.pe)))}x</b> con la ganancia de hoy, <b>${nx(medi(pcs.map(k=>k.peC)))}x</b> con la ganancia promedio del ciclo.`); }
   else if (L){ const ks = fil.map(r=>r.k); hoy.push(`Crecimiento mediano de ventas: <b>${pct(medi(ks.map(k=>k.v3)),0)}</b> por año en 3 años. P/E esperado mediano: <b>${nx(medi(ks.map(k=>k.pefwd)))}x</b>.`);
@@ -649,7 +675,7 @@ async function bloquePag(m, id){
 function panelNicho(f){
   const bl = BQDE(f.byma); if (!bl || !bl.lente) return "";
   const L = bl.lente, k = metr(f), x = E.empresas.find(z=>z.ticker===f.ticker)||{};
-  const s = L.ciclico ? lecturaCiclo(f,k) : lecturaFarma(f,k);
+  const T = TIPO(L), s = T==="ciclo" ? lecturaCiclo(f,k) : T==="crecimiento" ? lecturaCrec(f,k) : T==="equipos" ? lecturaEquipos(f,k) : lecturaFarma(f,k);
   return `<section class="fgrid"><div class="card"><h3>Lectura como ${esc(bl.nombre)}</h3><p class="lect">${esc(L.empresas[f.byma]||"")}</p>
     <h4>Lo que dicen los números</h4><ul class="lst">${s.map(t=>`<li>${t}</li>`).join("")}</ul>
     <p class="mut small">Nota dentro del bloque: <b style="color:${ncol(notaBloque(x,f,bl))}">${nx(notaBloque(x,f,bl))}</b> · ${esc(L.pesos_txt)}</p>

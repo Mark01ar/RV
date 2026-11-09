@@ -12,6 +12,7 @@
    "clave": "Negocio cíclico: el P/E bajo suele aparecer en el pico de ganancias.",
    "lente": {
     "revisado": "nov 2026 (borrador)",
+    "tipo": "ciclo",
     "ciclico": true,
     "pesos": {
      "calidad": 15,
@@ -62,7 +63,61 @@
     "ALAB",
     "INTC"
    ],
-   "clave": "Crecimiento y dependencia de pocos clientes grandes."
+   "clave": "Crecimiento y dependencia de pocos clientes grandes.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "crecimiento",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 20,
+     "crecimiento": 25,
+     "valuacion": 15,
+     "solidez": 10,
+     "analistas": 20,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 20%, crecimiento 25%, valuación 15%, solidez 10%, analistas 20%, tendencia 10%. Crecimiento y analistas pesan más porque el precio de este bloque se mueve con las estimaciones de ventas de IA.",
+    "negocio": "Diseñan chips pero, salvo Intel, no los fabrican: se los encargan a TSMC (modelo \"fabless\"). Ganan por la propiedad intelectual y el software alrededor del chip, por eso los márgenes brutos son altos (50% a 75%). Hoy el bloque lo domina la IA: Nvidia vende la mayoría de los aceleradores para centros de datos y AMD es la segunda. Broadcom y Marvell diseñan chips a medida para Google, Amazon, Meta y otros que buscan depender menos de Nvidia, y Astera Labs hace la conectividad entre chips dentro de los servidores. Qualcomm depende sobre todo de celulares. Intel es un caso aparte: diseña y fabrica, y está en medio de un plan de recuperación.",
+    "mirar": [
+     "Crecimiento de ventas de centros de datos: es lo que hoy mueve al bloque.",
+     "Margen bruto: muestra poder de precio. Si baja, está entrando competencia o cambia la mezcla de productos.",
+     "P/E esperado contra crecimiento (PEG), con cuidado: en IA las estimaciones de ganancia suben y bajan muy rápido.",
+     "Concentración de clientes: pocos grandes de la nube explican buena parte de las ventas.",
+     "Inversión anunciada por Microsoft, Google, Amazon y Meta: es la demanda de este bloque."
+    ],
+    "riesgos": [
+     "Que los grandes de la nube recorten su inversión en IA.",
+     "Chips propios de los clientes (los TPU de Google, Trainium de Amazon) que reemplacen compras.",
+     "Restricciones de exportación a China.",
+     "Dependencia total de TSMC y, por lo tanto, de Taiwán.",
+     "Ciclos de inventario: en 2022 y 2023 las ventas de chips para PC y celulares cayeron fuerte."
+    ],
+    "balance": [
+     "Ventas de centros de datos y la guía del trimestre siguiente.",
+     "Margen bruto y su guía.",
+     "Ritmo de entregas de las nuevas generaciones de producto.",
+     "Ventas a China.",
+     "Inventarios de los clientes (en Qualcomm, los de celulares)."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Recalentamiento",
+      "efecto": "peor que el mercado",
+      "dato": "En los meses de recalentamiento (inflación y crecimiento en alza), las 7 rindieron peor que en el resto de los meses, contra el SPY: Nvidia −8 puntos por año, Intel −13, Broadcom −21, AMD −38, Qualcomm −39, Marvell −40. Astera Labs da −145, pero con pocos años de historia.",
+      "hipotesis": "Con inflación y tasas subiendo, el mercado castiga a las acciones que valen por ganancias futuras, y este bloque es el más expuesto a eso.",
+      "confianza": "Patrón consistente en todo el bloque (7 de 7)."
+     }
+    ],
+    "empresas": {
+     "NVDA": "Líder en aceleradores para IA, con la mayor parte del mercado y un ecosistema de software (CUDA) que hace difícil cambiarse a otro proveedor. Los centros de datos son la gran mayoría de sus ventas. El riesgo es la concentración: pocos clientes muy grandes y la duda de cuánto dura el ritmo actual de inversión en IA. Su año fiscal cierra en enero.",
+     "AMD": "Segunda en aceleradores para IA y fuerte en procesadores para servidores y PC, donde le viene ganando terreno a Intel. Su crecimiento en IA depende de cerrar contratos grandes con la nube y los laboratorios de IA. El P/E de los últimos 12 meses está inflado por la amortización de compras pasadas (Xilinx); el esperado es más representativo.",
+     "AVGO": "Dos negocios: chips a medida para IA (diseña los TPU de Google y chips para otros grandes) y redes, más software de infraestructura que sumó con la compra de VMware. Crece por IA con márgenes muy altos. Tiene deuda por esas compras.",
+     "QCOM": "Chips para celulares (sobre todo Android de gama alta, y hasta ahora módems para Apple, que los está reemplazando con diseño propio) y cobro de licencias de patentes. Busca diversificarse en autos y PC. Es la más barata del bloque porque crece poco.",
+     "MRVL": "Chips a medida para la nube (Amazon, entre otros) y chips de conectividad óptica para centros de datos. Muy sensible a lo que decidan pocos clientes: cuando un contrato cambia, la acción se mueve fuerte.",
+     "ALAB": "Empresa chica que hace los chips de conectividad dentro de los servidores de IA, para que procesadores y memoria se comuniquen. Salió a la bolsa en 2024: tiene pocos años de historia y su precio descuenta mucho crecimiento.",
+     "INTC": "Diseña y fabrica. Perdió terreno frente a AMD en servidores y PC y frente a Nvidia en IA, y está invirtiendo fuerte para volver a competir en fabricación. En 2025 el gobierno de EE.UU. tomó cerca del 10% de la empresa y Nvidia invirtió US$ 5.000 millones. Pierde plata: no tiene P/E de los últimos 12 meses, y el esperado depende de que el plan funcione."
+    }
+   }
   },
   {
    "id": "fabricacion",
@@ -73,7 +128,64 @@
     "AMAT",
     "LRCX"
    ],
-   "clave": "Dependen de cuánto invierten los fabricantes y de las restricciones de exportación."
+   "clave": "Dependen de cuánto invierten los fabricantes y de las restricciones de exportación.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "equipos",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 25,
+     "crecimiento": 15,
+     "valuacion": 20,
+     "solidez": 15,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 25%, crecimiento 15%, valuación 20%, solidez 15%, analistas 15%, tendencia 10%. Calidad pesa más porque son negocios casi sin competencia; el crecimiento pesa menos porque depende del ciclo de inversión de sus clientes.",
+    "negocio": "TSMC fabrica los chips que diseñan otros (Nvidia, Apple, AMD, Broadcom) y tiene la mayor parte del mercado de chips avanzados. ASML, Applied Materials y Lam Research venden las máquinas con que se fabrican; ASML tiene el monopolio de la litografía EUV, imprescindible para los chips más avanzados. Es un negocio cíclico pero de ciclo largo: depende de cuánto invierten los fabricantes (TSMC, Samsung, Intel, SK Hynix, Micron) en plantas nuevas, y esa inversión se decide con años de anticipación. La IA llevó la inversión a máximos, y China fue un comprador enorme de equipos en 2023–2025 que las restricciones de exportación pueden recortar.",
+    "mirar": [
+     "Inversión (capex) anunciada por TSMC, Samsung, Intel y los fabricantes de memoria: es la demanda de las empresas de equipos.",
+     "Pedidos nuevos (en ASML se publican): anticipan las ventas de uno o dos años.",
+     "Peso de China en las ventas.",
+     "Margen contra su propio rango histórico.",
+     "Uso de las fábricas de TSMC y precio por oblea."
+    ],
+    "riesgos": [
+     "Restricciones de exportación entre EE.UU. y China, tanto de equipos como de chips.",
+     "Taiwán: la concentración geopolítica de TSMC.",
+     "Caída de la inversión si la demanda de IA se frena.",
+     "Aranceles y subsidios por la relocalización de fábricas en EE.UU."
+    ],
+    "balance": [
+     "Guía de inversión de TSMC para el año.",
+     "Pedidos de ASML.",
+     "Ventas a China como porcentaje del total.",
+     "Margen bruto y su guía.",
+     "Comentarios de los clientes sobre la inversión del año siguiente."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Crecimiento sin inflación",
+      "efecto": "mejor que el mercado",
+      "dato": "Las 4 rindieron mejor que en el resto de los meses, contra el SPY: TSMC +30 puntos por año, Applied +31, ASML +35, Lam +51.",
+      "hipotesis": "Con crecimiento firme y sin presión de tasas, los fabricantes se animan a construir plantas nuevas, y eso es la venta de este bloque.",
+      "confianza": "Patrón consistente en las 4 empresas; el bloque es chico."
+     },
+     {
+      "fase": "Estanflación",
+      "efecto": "peor que el mercado",
+      "dato": "Las 4 rindieron peor que en el resto de los meses: TSMC −36 puntos por año, Applied −34, ASML −28, Lam −20.",
+      "hipotesis": "Con la economía frenando e inflación alta, los fabricantes recortan inversión y el mercado anticipa menos pedidos de equipos.",
+      "confianza": "Consistente en las 4, pero buena parte de esos meses son de 2022, así que pesa mucho un solo año."
+     }
+    ],
+    "empresas": {
+     "TSM": "La fundición dominante: fabrica casi todos los chips avanzados de IA, con margen y crecimiento muy altos para un fabricante. Reporta en dólares taiwaneses, convertidos a dólares, y la base tiene pocos años de historia. El riesgo principal es geopolítico (Taiwán y China).",
+     "ASML": "Monopolio en litografía EUV, la máquina que imprime los circuitos más finos. Es holandesa: reporta en euros, convertidos a dólares. Sus pedidos anticipan el ciclo de inversión de toda la industria.",
+     "AMAT": "La mayor empresa de equipos por ventas: deposición, grabado e inspección. Estuvo muy expuesta a China en los últimos años, lo que la hace sensible a las restricciones de exportación.",
+     "LRCX": "Especialista en grabado y deposición, con mucho peso en memoria (clientes como Samsung, SK Hynix y Micron). Por eso sigue de cerca el ciclo de las memorias."
+    }
+   }
   },
   {
    "id": "bigtech",
@@ -251,6 +363,7 @@
    "clave": "Patentes que vencen, lo que tienen en desarrollo y cuánto pesa su producto principal.",
    "lente": {
     "revisado": "nov 2026 (borrador)",
+    "tipo": "farma",
     "ciclico": false,
     "pesos": {
      "calidad": 20,
