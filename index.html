@@ -509,7 +509,8 @@ function metr(f){
   const vg1 = ap && ap.ventas>0 && u.ventas ? u.ventas/ap.ventas-1 : null;
   const dn = u.deuda!=null ? (u.deuda-(u.caja||0)) : null;
   const dne = dn!=null && u.ebitda>0 ? dn/u.ebitda : null;
-  const ex_ = {cx, cx3, cxc, fcfy, vg1, dn, dne, fcf: u.fcf, deuda: u.deuda, caja: u.caja, dev: f.val?.rend_accionista};
+  const fcfm = u.fcf!=null && u.ventas>0 ? u.fcf/u.ventas : null, sbcv = u.sbc!=null && u.ventas>0 ? u.sbc/u.ventas : null;
+  const ex_ = {fcfm, sbcv, pfcf: f.val?.pfcf, cx, cx3, cxc, fcfy, vg1, dn, dne, fcf: u.fcf, deuda: u.deuda, caja: u.caja, dev: f.val?.rend_accionista};
   return {...ex_, mu, pctl, mmin: ms.length?Math.min(...ms):null, mmax: ms.length?Math.max(...ms):null, nanos: me.length, nprom, nn: nets.length, peC, peMed, pe, desc, picos, v3, mb: u.m_bruto, mid: u.m_id, pefwd: f.val?.pe_fwd, peg: f.val?.peg, div: f.val?.div_yield, r12m: f.precio_bloque?.r12m};
 }
 function notaBloque(x, f, bl){
@@ -578,8 +579,29 @@ function lecturaInfra(f, k){
   if (k.deuda!=null) s.push(`Deuda US$ ${big(k.deuda)} contra caja US$ ${big(k.caja||0)}${k.dne!=null?`; deuda neta / EBITDA <b>${nx(k.dne,1)}x</b>`:""}.`);
   return s;
 }
+function lecturaSoft(f, k){
+  const s = [];
+  if (k.vg1!=null) s.push(`Ventas: <b>${pct(k.vg1,0)}</b> el último año${k.v3!=null?`, contra ${pct(k.v3,0)} por año en los últimos 3`:""}.${k.v3!=null&&k.vg1<k.v3-0.04?" Se está desacelerando.":k.v3!=null&&k.vg1>k.v3+0.04?" Se está acelerando.":""}`);
+  if (k.mb!=null) s.push(`Margen bruto <b>${pc0(k.mb)}</b>; margen operativo <b>${pc0(k.mu)}</b>.`);
+  if (k.fcfm!=null) s.push(`Flujo libre: <b>${pc0(k.fcfm)}</b> de las ventas.`);
+  if (k.sbcv!=null) s.push(`Compensación en acciones: <b>${pc0(k.sbcv)}</b> de las ventas.${k.sbcv>0.15?" Es alta: el flujo libre exagera lo que realmente gana el accionista, porque ese costo se paga diluyendo.":""}`);
+  if (k.pfcf!=null) s.push(`Precio / flujo libre <b>${nx(k.pfcf)}x</b>${k.pefwd!=null?`; P/E esperado ${nx(k.pefwd)}x`:""}.`);
+  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos años (${nx(k.peMed)}x).`);
+  return s;
+}
+function lecturaHard(f, k){
+  const s = [];
+  if (k.vg1!=null) s.push(`Ventas: <b>${pct(k.vg1,0)}</b> el último año${k.v3!=null?`, ${pct(k.v3,0)} por año en los últimos 3`:""}.`);
+  if (k.mb!=null) s.push(`Margen bruto <b>${pc0(k.mb)}</b>; margen operativo <b>${pc0(k.mu)}</b>${k.pctl!=null?`, ${rangoTxt(k)}`:""}.`);
+  if (k.pe!=null||k.pefwd!=null) s.push(`P/E <b>${k.pe?nx(k.pe)+"x":"—"}</b>; esperado <b>${k.pefwd?nx(k.pefwd)+"x":"—"}</b>.`);
+  if (k.fcfy!=null) s.push(`Flujo libre: <b>${pc0(k.fcfy,1)}</b> de lo que vale la empresa por año.`);
+  if (k.dev!=null) s.push(`Devuelve al accionista <b>${pc0(k.dev,1)}</b> por año entre dividendos y recompras.`);
+  return s;
+}
 function columnasBloque(bl){
   const L = bl.lente, T = TIPO(L), r12 = ["12M",k=>`<span class="${cls(k.r12m)}">${pct(k.r12m,0)}</span>`];
+  if (T==="software") return [["Ventas último año (3 años)",k=>`${pct(k.vg1,0)} <span class="mut">(${pct(k.v3,0)})</span>`],["Margen bruto",k=>pc0(k.mb)],["Margen EBIT",k=>pc0(k.mu)],["Flujo libre / ventas",k=>pc0(k.fcfm)],["Comp. en acciones",k=>pc0(k.sbcv)],["Precio / flujo libre",k=>k.pfcf==null?"—":nx(k.pfcf)+"x"],["P/E esperado",k=>k.pefwd==null||k.pefwd<0?"—":nx(k.pefwd)+"x"],r12];
+  if (T==="hardware") return [["Ventas último año",k=>pct(k.vg1,0)],["Ventas 3 años",k=>pct(k.v3,0)],["Margen bruto",k=>pc0(k.mb)],["Margen EBIT",k=>pc0(k.mu)],["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E esperado",k=>k.pefwd==null||k.pefwd<0?"—":nx(k.pefwd)+"x"],["Flujo libre / precio",k=>pc0(k.fcfy,1)],["Devolución",k=>pc0(k.dev,1)],r12];
   if (T==="plataforma") return [["Ventas 3 años",k=>pct(k.v3,0)],["Margen EBIT",k=>pc0(k.mu)],["Inversión / ventas (hace 3 años)",k=>k.cx==null?"—":`${pc0(k.cx)} <span class="mut">(${pc0(k.cx3)})</span>`],["Inversión / flujo operativo",k=>pc0(k.cxc)],["Flujo libre / precio",k=>pc0(k.fcfy,1)],["Devolución",k=>pc0(k.dev,1)],["P/E esperado",k=>k.pefwd==null?"—":nx(k.pefwd)+"x"],r12];
   if (T==="infra") return [["Ventas último año",k=>pct(k.vg1,0)],["Margen bruto",k=>pc0(k.mb)],["Margen EBIT",k=>pc0(k.mu)],["Inversión / ventas",k=>k.cx==null?"—":nx(k.cx,1)+"x"],["Flujo libre",k=>k.fcf==null?"—":"US$ "+big(k.fcf)],["Deuda",k=>k.deuda==null?"—":"US$ "+big(k.deuda)],["Caja",k=>k.caja==null?"—":"US$ "+big(k.caja)],r12];
   if (T==="crecimiento") return [["Ventas 3 años",k=>pct(k.v3,0)],["Margen bruto",k=>pc0(k.mb)],["Margen EBIT",k=>pc0(k.mu)],["Investigación / ventas",k=>pc0(k.mid)],["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E esperado",k=>k.pefwd==null?"—":nx(k.pefwd)+"x"],["PEG",k=>k.peg==null?"—":nx(k.peg,2)],r12];
@@ -651,7 +673,7 @@ function sensBloque(fil){
   if (ss.length<2) return {reg:"", sens:""};
   const filas = R.map(fz=>{ const xs = ss.map(z=>{ const rg = z.regimen, d = rg[fz]; if (!d || d.meses<12) return null; const o = Object.entries(rg).filter(([k])=>k!==fz); const om = o.reduce((a,[,v])=>a+v.exceso_anual*v.meses,0)/o.reduce((a,[,v])=>a+v.meses,0); return {ex:d.exceso_anual, dif:d.exceso_anual-om}; }).filter(Boolean);
     if (xs.length<3) return {fz, mx:null, md:null, mismo:0, n:xs.length, lect:"Pocos datos", ok:false};
-    const md = xs.reduce((a,x)=>a+x.dif,0)/xs.length, mx = xs.reduce((a,x)=>a+x.ex,0)/xs.length;
+    const md = medi(xs.map(x=>x.dif)), mx = medi(xs.map(x=>x.ex));
     const mismo = xs.filter(x=>Math.sign(x.dif)===Math.sign(md)).length;
     const lect = Math.abs(md)<0.05 ? "Sin diferencia" : mismo/xs.length>=0.75 ? (md<0?"Peor · consistente":"Mejor · consistente") : "Mixto";
     return {fz, mx, md, mismo, n:xs.length, lect, ok: Math.abs(md)>=0.05 && mismo/xs.length>=0.75}; }).filter(Boolean);
@@ -660,7 +682,7 @@ function sensBloque(fil){
   const beta = ss.map(z=>z.beta).filter(v=>v!=null);
   return {reg: sec("Según el régimen macro","promedio del bloque · historia, no predicción",`<div class="wrap" style="max-height:none"><table class="tb2"><thead><tr><th class="l">Régimen</th><th>vs su promedio</th><th>Misma dirección</th><th class="l">Lectura</th><th>vs SPY</th></tr></thead><tbody>
     ${filas.map(r=>`<tr><td class="l">${esc(r.fz)}</td><td class="${cls(r.md)} big">${r.md==null?"—":`${r.md>=0?"+":""}${Math.round(r.md*100)} pts`}</td><td>${r.md==null?`${r.n} con historia`:`${r.mismo} de ${r.n}`}</td><td class="l" style="${r.ok?"color:var(--accent);font-weight:600":"color:var(--muted)"}">${r.lect}</td><td class="mut">${pct(r.mx,0)}</td></tr>`).join("")}</tbody></table></div>
-    <p class="mut small">"vs su promedio" compara cada fase con el resto de los meses de la misma empresa, así una acción que le ganó al SPY siempre no parece buena en todo. Consistente: al menos 3 de cada 4 empresas en la misma dirección y diferencia mayor a 5 puntos. Solo cuentan las empresas con al menos 12 meses en esa fase.</p>`),
+    <p class="mut small">Mediana de las empresas del bloque. "vs su promedio" compara cada fase con el resto de los meses de la misma empresa, así una acción que le ganó al SPY siempre no parece buena en todo. Consistente: al menos 3 de cada 4 empresas en la misma dirección y diferencia mayor a 5 puntos. Solo cuentan las empresas con al menos 12 meses en esa fase.</p>`),
     sens: sec("Sensibilidades","promedio del bloque · últimos 3 años",`${beta.length?`<div class="bkpi"><div><span>Beta contra el S&P 500</span><b>${nx(beta.reduce((a,b)=>a+b,0)/beta.length,2)}</b></div></div>`:""}
     <div class="wrap" style="max-height:none"><table class="tb2"><thead><tr><th class="l">Escenario</th><th>Movimiento extra</th><th>Relación clara</th></tr></thead><tbody>
     ${ff.map(r=>`<tr><td class="l">${r.t} <span class="mut">${r.e}</span></td><td class="${cls(r.m)} big">${pct(r.m,1)}</td><td>${r.cl} de ${r.n}</td></tr>`).join("")}</tbody></table></div>
@@ -674,7 +696,13 @@ async function bloquePag(m, id){
   const fil = xs.map(x=>{ const f = FCACHE[x.ticker]; const ok = f && !f.sin; return {x, f: ok?f:null, k: ok?metr(f):{}, n: notaBloque(x, ok?f:null, bl)}; }).sort((a,b)=>(b.n??-1)-(a.n??-1));
   let hoy = [];
   const T = TIPO(L);
-  if (T==="plataforma"){ const ks = fil.map(r=>r.k).filter(k=>k.cx!=null&&k.cx>0.05);
+  if (T==="software"){ const ks = fil.map(r=>r.k);
+    hoy.push(`Ventas: <b>${pct(medi(ks.map(k=>k.vg1)),0)}</b> el último año (mediana), contra <b>${pct(medi(ks.map(k=>k.v3)),0)}</b> por año en 3 años.`);
+    hoy.push(`Flujo libre mediano: <b>${pc0(medi(ks.map(k=>k.fcfm)))}</b> de las ventas; compensación en acciones: <b>${pc0(medi(ks.map(k=>k.sbcv)))}</b>. Precio / flujo libre mediano: <b>${nx(medi(ks.map(k=>k.pfcf)))}x</b>.`); }
+  else if (T==="hardware"){ const ks = fil.map(r=>r.k);
+    hoy.push(`Ventas: <b>${pct(medi(ks.map(k=>k.vg1)),0)}</b> el último año (mediana). P/E esperado mediano: <b>${nx(medi(ks.map(k=>k.pefwd>0?k.pefwd:null)))}x</b>.`);
+    hoy.push(`Flujo libre mediano: <b>${pc0(medi(ks.map(k=>k.fcfy)),1)}</b> de lo que valen; devolución al accionista: <b>${pc0(medi(ks.map(k=>k.dev)),1)}</b> por año.`); }
+  else if (T==="plataforma"){ const ks = fil.map(r=>r.k).filter(k=>k.cx!=null&&k.cx>0.05);
     if (ks.length) hoy.push(`Las ${ks.length} que invierten en centros de datos destinan una mediana de <b>${pc0(medi(ks.map(k=>k.cx)))}</b> de sus ventas, contra <b>${pc0(medi(ks.map(k=>k.cx3)))}</b> hace 3 años.`);
     const k2 = fil.map(r=>r.k); hoy.push(`Flujo libre mediano: <b>${pc0(medi(k2.map(k=>k.fcfy)),1)}</b> de lo que valen por año. P/E esperado mediano: <b>${nx(medi(k2.map(k=>k.pefwd)))}x</b>.`); }
   else if (T==="infra"){ const ks = fil.map(r=>r.k);
@@ -710,7 +738,7 @@ async function bloquePag(m, id){
 function panelNicho(f){
   const bl = BQDE(f.byma); if (!bl || !bl.lente) return "";
   const L = bl.lente, k = metr(f), x = E.empresas.find(z=>z.ticker===f.ticker)||{};
-  const T = TIPO(L), s = T==="ciclo" ? lecturaCiclo(f,k) : T==="crecimiento" ? lecturaCrec(f,k) : T==="equipos" ? lecturaEquipos(f,k) : T==="plataforma" ? lecturaPlat(f,k) : T==="infra" ? lecturaInfra(f,k) : lecturaFarma(f,k);
+  const T = TIPO(L), s = T==="ciclo" ? lecturaCiclo(f,k) : T==="crecimiento" ? lecturaCrec(f,k) : T==="equipos" ? lecturaEquipos(f,k) : T==="plataforma" ? lecturaPlat(f,k) : T==="software" ? lecturaSoft(f,k) : T==="hardware" ? lecturaHard(f,k) : T==="infra" ? lecturaInfra(f,k) : lecturaFarma(f,k);
   return `<section class="fgrid"><div class="card"><h3>Lectura como ${esc(bl.nombre)}</h3><p class="lect">${esc(L.empresas[f.byma]||"")}</p>
     <h4>Lo que dicen los números</h4><ul class="lst">${s.map(t=>`<li>${t}</li>`).join("")}</ul>
     <p class="mut small">Nota dentro del bloque: <b style="color:${ncol(notaBloque(x,f,bl))}">${nx(notaBloque(x,f,bl))}</b> · ${esc(L.pesos_txt)}</p>

@@ -308,7 +308,64 @@
     "IBM",
     "GLOB"
    ],
-   "clave": "Crecimiento más margen, y el riesgo de que la IA reemplace el producto."
+   "clave": "Crecimiento más margen, y el riesgo de que la IA reemplace el producto.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "software",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 20,
+     "crecimiento": 25,
+     "valuacion": 20,
+     "solidez": 10,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 20%, crecimiento 25%, valuación 20%, solidez 10%, analistas 15%, tendencia 10%. El crecimiento pesa más porque es lo que el mercado castiga primero cuando se frena.",
+    "negocio": "Venden software por suscripción: el cliente paga todos los años, así que las ventas son muy previsibles y el margen bruto altísimo (70% a 90%), porque una copia más no cuesta casi nada. Hay tres grupos: aplicaciones para empresas (Salesforce, Adobe, ServiceNow, Atlassian, SAP), análisis de datos e IA (Palantir) y ciberseguridad (Palo Alto, CrowdStrike). IBM mezcla software, consultoría e infraestructura, y Globant vende servicios de desarrollo, un negocio de personas con mucho menos margen. Desde 2025 el gran debate es la IA: puede hacer más útil al software, o puede reemplazar parte de lo que hoy se cobra por usuario (si una empresa necesita menos empleados, compra menos licencias). Ese miedo explica por qué varias de estas acciones cayeron aunque sus números siguen bien.",
+    "mirar": [
+     "Crecimiento de ventas y su tendencia: una desaceleración se castiga fuerte.",
+     "Flujo libre sobre ventas: en software es mejor medida que la ganancia contable.",
+     "Compensación en acciones sobre ventas: es un costo real que el flujo libre no muestra.",
+     "Precio / flujo libre y P/E esperado.",
+     "Ventas futuras ya contratadas (RPO) y retención de clientes."
+    ],
+    "riesgos": [
+     "Que la IA reduzca la cantidad de licencias que compran las empresas.",
+     "Competencia de las propias herramientas de IA (OpenAI, Microsoft, Google).",
+     "Desaceleración del gasto de las empresas en tecnología.",
+     "Valuaciones muy altas en las que más crecen (Palantir, CrowdStrike): cualquier tropiezo pega fuerte.",
+     "En servicios (Globant), que la IA automatice parte del trabajo que venden."
+    ],
+    "balance": [
+     "Crecimiento de ventas y guía.",
+     "Ventas futuras contratadas (RPO).",
+     "Margen de flujo libre.",
+     "Si los productos de IA ya generan ingresos.",
+     "En ciberseguridad: clientes nuevos y ventas anuales recurrentes (ARR)."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Estanflación",
+      "efecto": "peor que el mercado",
+      "dato": "8 de las 10 rindieron peor que en el resto de sus meses, contra el SPY (mediana del bloque −15 puntos por año): Palantir −132, CrowdStrike −46, Globant −43, Salesforce −32. Las excepciones son Palo Alto (+35) e IBM (+18).",
+      "hipotesis": "Con crecimiento frenando e inflación alta, las empresas recortan gasto en software y suben las tasas, que castigan a las acciones valuadas por crecimiento futuro.",
+      "confianza": "Consistente en el bloque, pero buena parte de esos meses son de 2022."
+     }
+    ],
+    "empresas": {
+     "CRM": "Líder en software de gestión de clientes. Crece cerca del 10% anual, mucho menos que antes, y lo compensa con márgenes y recompras grandes. Apuesta a los agentes de IA (Agentforce) y en 2025 compró Informatica. Cotiza barata para el sector porque el mercado duda de su crecimiento.",
+     "ADBE": "Photoshop, Illustrator y Acrobat: dominante en herramientas creativas y documentos. El mercado teme que la IA generativa de imágenes y video le quite clientes; por eso cotiza a un P/E muy bajo para su historia, pese a márgenes altísimos y recompras fuertes.",
+     "NOW": "Plataforma para automatizar procesos internos de las empresas (sistemas, recursos humanos, atención al cliente). Crece más de 20% anual con mucha consistencia. El P/E de los últimos 12 meses es alto; el esperado es más razonable.",
+     "TEAM": "Jira y Confluence, herramientas para equipos de desarrollo. Crece rápido pero con margen operativo casi nulo por la compensación en acciones, que equivale a cerca de un cuarto de sus ventas. Es de las más expuestas al argumento de que la IA reduce programadores y, con eso, usuarios.",
+     "SAP": "Alemana, software de gestión (ERP) para grandes empresas. Está pasando a sus clientes a la nube, lo que mejora su crecimiento. Reporta en euros, convertidos a dólares.",
+     "PLTR": "Análisis de datos e IA para gobiernos (sobre todo defensa de EE.UU.) y empresas. Es la que más crece del bloque y con muy buen flujo libre, pero cotiza a más de 50 veces sus ventas: el precio descuenta años de crecimiento muy alto.",
+     "PANW": "La mayor empresa de ciberseguridad por ventas: firewalls, seguridad en la nube y operaciones de seguridad. Crece también comprando empresas; en 2025 anunció la compra de CyberArk (identidades). La ganancia contable es baja y el P/E no es representativo; el flujo libre es alto.",
+     "CRWD": "Ciberseguridad para computadoras y servidores desde la nube. Crece rápido, pero su ganancia contable es casi cero por la compensación en acciones: el P/E no significa nada. En 2024 una actualización suya causó una caída mundial de sistemas, y la superó sin perder muchos clientes.",
+     "IBM": "Mezcla de software (Red Hat, automatización), consultoría y mainframes. Crece poco, paga un dividendo alto y tiene más deuda que el resto. Apuesta a IA para empresas y a computación cuántica.",
+     "GLOB": "Argentina, servicios de desarrollo de software para empresas grandes. Es un negocio de personas, con margen bruto bajo comparado con el resto del bloque. Sus ventas se frenaron en 2025 y la acción cayó mucho: el mercado teme que la IA automatice parte del trabajo que vende."
+    }
+   }
   },
   {
    "id": "hardware",
@@ -321,7 +378,58 @@
     "BB",
     "RGTI"
    ],
-   "clave": "Grupo heterogéneo: ciclo de renovación de equipos y servidores."
+   "clave": "Grupo heterogéneo: ciclo de renovación de equipos y servidores.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "hardware",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 20,
+     "crecimiento": 15,
+     "valuacion": 25,
+     "solidez": 15,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 20%, crecimiento 15%, valuación 25%, solidez 15%, analistas 15%, tendencia 10%. La valuación pesa más porque en negocios maduros el precio que pagás define buena parte del resultado.",
+    "negocio": "Venden equipos físicos: redes (Cisco), servidores y PC (Dell), PC e impresoras (HP), impresoras y servicios de oficina (Xerox). Tienen menos margen que el software y dependen de ciclos de renovación: las empresas cambian equipos cada 3 a 5 años. La IA reactivó una parte: Dell vende servidores con chips de Nvidia y Cisco, equipos de red para centros de datos. BlackBerry ya no hace teléfonos: es software de seguridad y para autos. Rigetti es computación cuántica, sin ventas relevantes todavía, y está en este bloque por descarte.",
+    "mirar": [
+     "Crecimiento de ventas y qué parte viene de IA (servidores, redes para centros de datos).",
+     "Margen bruto: en servidores de IA es bajo, porque buena parte del valor se lo lleva Nvidia.",
+     "Flujo libre y devolución al accionista: en los maduros (HP, Cisco) es la razón principal para tenerlos.",
+     "Ciclo de renovación de PC.",
+     "Deuda en los más chicos (Xerox)."
+    ],
+    "riesgos": [
+     "Suba del costo de memoria y chips: el ciclo de las memorias encarece los equipos y aprieta márgenes.",
+     "Aranceles: buena parte se fabrica en Asia.",
+     "Competencia de fabricantes asiáticos de servidores.",
+     "En Rigetti, que la tecnología tarde años en ser comercial y la empresa tenga que seguir emitiendo acciones."
+    ],
+    "balance": [
+     "Pedidos y ventas de servidores de IA (Dell) y de redes para centros de datos (Cisco).",
+     "Margen bruto y su guía.",
+     "Ventas de PC.",
+     "Recompras y dividendos."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Desinflación",
+      "efecto": "peor que el mercado",
+      "dato": "5 de las 6 rindieron peor que en el resto de sus meses, contra el SPY (mediana del bloque −14 puntos por año): Dell −42, Xerox −36, HP −20, Cisco −7, BlackBerry −7. Rigetti es la excepción, con pocos datos útiles.",
+      "hipotesis": "Con crecimiento e inflación bajando, las empresas posponen la renovación de equipos, y el mercado prefiere crecimiento puro a fabricantes de hardware.",
+      "confianza": "Mayoría clara, pero bloque heterogéneo y con pocas empresas."
+     }
+    ],
+    "empresas": {
+     "CSCO": "Equipos de red, seguridad (compró Splunk en 2024) y software. Crece poco, pero los pedidos de redes para centros de datos de IA lo reactivaron. Paga dividendo y recompra acciones.",
+     "DELL": "Servidores, almacenamiento y PC. Es de los principales vendedores de servidores con chips de Nvidia, lo que explica la suba fuerte de la acción. El margen es bajo y el negocio de PC depende del ciclo de renovación.",
+     "HPQ": "PC e impresoras. Crece poco y vive de los cartuchos y del recambio de PC. Cotiza muy barata (P/E cercano a 10) y devuelve mucho al accionista con dividendo y recompras.",
+     "XROX": "Impresoras y servicios de oficina, un negocio en declive. Compró Lexmark en 2025 con deuda y la acción cayó fuerte. Vale muy poco en bolsa comparado con su deuda: es una apuesta de recuperación muy riesgosa.",
+     "BB": "Ya no hace teléfonos: vende software de seguridad y QNX, el sistema operativo que usan muchos autos. Empresa chica que crece poco.",
+     "RGTI": "Computación cuántica. Casi no tiene ventas y pierde mucha plata; vive de la caja que levanta emitiendo acciones. El precio refleja expectativas sobre una tecnología que todavía no es comercial."
+    }
+   }
   },
   {
    "id": "medios",
