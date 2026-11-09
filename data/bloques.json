@@ -450,7 +450,58 @@
     "YELP",
     "TMUS"
    ],
-   "clave": "Suscriptores, precio por usuario y costo del contenido."
+   "clave": "Suscriptores, precio por usuario y costo del contenido.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "general",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 20,
+     "crecimiento": 20,
+     "valuacion": 25,
+     "solidez": 10,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 20%, crecimiento 20%, valuación 25%, solidez 10%, analistas 15%, tendencia 10%.",
+    "negocio": "Ganan plata cobrando suscripciones (Netflix, Spotify, Disney+), vendiendo publicidad (Yelp, parte de Disney y Netflix) o cobrando el servicio de celular (T-Mobile). En streaming, el negocio cambió en los últimos años: después de una etapa de crecer a cualquier costo, ahora suben precios, cobran planes con publicidad y cuidan el margen. El costo principal es el contenido (series, películas, derechos deportivos, regalías a artistas), y la ventaja la tiene el que más suscriptores reparte ese costo. Disney suma parques y cruceros, que dependen del consumo y los viajes. T-Mobile es un negocio de infraestructura: mucha inversión, mucha deuda y clientes estables.",
+    "mirar": [
+     "Suscriptores e ingreso por usuario: si suben precios sin perder clientes, el negocio tiene poder de precio.",
+     "Margen operativo contra su propia historia.",
+     "Flujo libre: en streaming tarda en llegar porque el contenido se paga antes de cobrar.",
+     "Deuda neta / EBITDA en Disney y T-Mobile.",
+     "Devolución al accionista: recompras en Netflix, Yelp y T-Mobile."
+    ],
+    "riesgos": [
+     "Competencia por el tiempo de la gente: YouTube, TikTok, videojuegos.",
+     "Costo creciente de los derechos deportivos.",
+     "Consumo flojo: afecta publicidad y parques.",
+     "En T-Mobile, guerra de precios entre las tres grandes operadoras.",
+     "Compras grandes que suman deuda y riesgo de integración."
+    ],
+    "balance": [
+     "Suscriptores nuevos e ingreso por usuario.",
+     "Margen operativo y su guía.",
+     "Ventas de publicidad.",
+     "En Disney, resultados de parques; en T-Mobile, clientes nuevos de telefonía."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Estanflación",
+      "efecto": "peor que el mercado",
+      "dato": "4 de las 5 rindieron peor que en el resto de sus meses, contra el SPY (mediana −35 puntos por año): Spotify −60, Disney −42, Yelp −35, Netflix −18. T-Mobile es la excepción (+10), por ser un servicio que la gente no corta.",
+      "hipotesis": "Con inflación alta y la economía frenando, la gente recorta suscripciones y salidas, y las empresas recortan publicidad.",
+      "confianza": "Mayoría clara, pero buena parte de esos meses son de 2022."
+     }
+    ],
+    "empresas": {
+     "NFLX": "El mayor servicio de streaming del mundo. Ya es rentable y genera flujo libre; crece subiendo precios, con el plan con publicidad y cobrando por cuentas compartidas. En diciembre de 2025 anunció un acuerdo para comprar los estudios y el streaming de Warner Bros. Discovery, con una oferta competidora de Paramount. Conviene revisar en qué quedó, porque cambia la deuda y el riesgo. Hizo un desdoblamiento de acciones de 10 a 1 en 2025.",
+     "SPOT": "Streaming de música y podcasts. Después de años perdiendo plata, desde 2024 gana dinero gracias a subas de precio y control de costos. Le paga a las discográficas la mayor parte de lo que cobra, por eso su margen bruto es bajo. Tiene mucha caja y casi nada de deuda.",
+     "DISN": "Estudios (Disney, Pixar, Marvel, Lucasfilm), streaming (Disney+, Hulu), ESPN, y parques y cruceros. Los parques son la parte más rentable. Su streaming ya gana plata. Tiene más deuda que el resto, por compras pasadas.",
+     "YELP": "Reseñas y publicidad para negocios locales en EE.UU. Empresa chica, sin deuda, que crece poco y usa casi todo su flujo para recomprar acciones. Cotiza muy barata (P/E cerca de 8).",
+     "TMUS": "La operadora de celulares que más creció en EE.UU. en la última década. Negocio estable, con mucha inversión en red y mucha deuda; devuelve plata con dividendo y recompras. Se mueve poco con el mercado (beta muy bajo)."
+    }
+   }
   },
   {
    "id": "ecommerce",
@@ -461,7 +512,64 @@
     "JMIA",
     "UBER"
    ],
-   "clave": "Volumen vendido, comisión que cobran y negocio financiero asociado."
+   "clave": "Volumen vendido, comisión que cobran y negocio financiero asociado.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "general",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 15,
+     "crecimiento": 30,
+     "valuacion": 20,
+     "solidez": 10,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 15%, crecimiento 30%, valuación 20%, solidez 10%, analistas 15%, tendencia 10%. El crecimiento pesa más porque el valor de estas plataformas depende de sumar volumen.",
+    "negocio": "Plataformas que conectan compradores y vendedores, o pasajeros y conductores, y cobran una comisión por cada operación. Cuanto más volumen, más barato es cada envío o viaje, y más difícil competirles. Varias suman negocios financieros (Mercado Pago, crédito) y publicidad dentro de la plataforma, que tienen mucho más margen que la venta en sí. Son negocios muy ligados al consumo de cada país: MercadoLibre a Brasil, México y Argentina; Jumia a África; eBay y Uber a EE.UU. y Europa.",
+    "mirar": [
+     "Volumen operado y crecimiento de ventas.",
+     "Margen operativo: en estas plataformas suele bajar cuando invierten en envíos o subsidian para ganar mercado.",
+     "Negocio financiero: cartera de créditos y morosidad (MercadoLibre).",
+     "Publicidad: crece rápido y con mucho margen.",
+     "Flujo libre sobre precio."
+    ],
+    "riesgos": [
+     "Consumo débil en sus mercados.",
+     "Morosidad de los créditos que otorgan.",
+     "Tipo de cambio: MercadoLibre gana en reales, pesos mexicanos y pesos argentinos.",
+     "Competencia de Amazon, Shein, Temu y, en viajes, de los robotaxis.",
+     "Regulación sobre conductores y repartidores."
+    ],
+    "balance": [
+     "Volumen operado y cantidad de compradores o usuarios activos.",
+     "Margen operativo y su guía.",
+     "Cartera de crédito y morosidad.",
+     "Ingresos por publicidad."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Estanflación",
+      "efecto": "peor que el mercado",
+      "dato": "Las 4 rindieron peor que en el resto de sus meses, contra el SPY (mediana −60 puntos por año): MercadoLibre −75, Jumia −63, Uber −56, eBay −46.",
+      "hipotesis": "Con inflación alta y la economía frenando, el consumo cae y las tasas altas castigan a las plataformas valuadas por crecimiento.",
+      "confianza": "Consistente en las 4, pero buena parte de esos meses son de 2022."
+     },
+     {
+      "fase": "Recalentamiento",
+      "efecto": "mejor que el mercado",
+      "dato": "Las 4 rindieron mejor que en el resto de sus meses (mediana +35 puntos por año): Jumia +60, MercadoLibre +41, eBay +28, Uber +11.",
+      "hipotesis": "Con la economía creciendo fuerte, el consumo acompaña y el volumen de las plataformas sube.",
+      "confianza": "Consistente en las 4; bloque chico."
+     }
+    ],
+    "empresas": {
+     "MELI": "El mayor comercio electrónico y la mayor billetera digital de América Latina (Mercado Pago). Crece cerca de 40% por año, pero en 2025 bajó el margen por envíos gratis en Brasil y por la expansión del crédito. Depende del consumo y las monedas de Brasil, México y Argentina.",
+     "EBAY": "Plataforma madura que crece poco; se enfoca en coleccionables, autopartes y artículos usados. Usa casi todo su flujo en recompras y dividendo.",
+     "JMIA": "Comercio electrónico en África. Empresa chica que todavía pierde plata; recortó países y costos para llegar a ganar dinero.",
+     "UBER": "Viajes y reparto de comida en todo el mundo. Desde 2023 gana plata y genera mucho flujo libre. El gran debate son los robotaxis: pueden ser una amenaza o un socio, y Uber hizo acuerdos con varias empresas de manejo autónomo. El P/E de los últimos 12 meses es mucho más alto que el esperado; conviene mirar el esperado."
+    }
+   }
   },
   {
    "id": "china",
@@ -472,7 +580,64 @@
     "BIDU",
     "NIO"
    ],
-   "clave": "El riesgo principal es el país: regulación, estímulos y tensión con EE.UU."
+   "clave": "El riesgo principal es el país: regulación, estímulos y tensión con EE.UU.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "general",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 15,
+     "crecimiento": 15,
+     "valuacion": 30,
+     "solidez": 15,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 15%, crecimiento 15%, valuación 30%, solidez 15%, analistas 15%, tendencia 10%. La valuación pesa más porque el riesgo país hace que coticen con descuento, y la pregunta es si ese descuento alcanza.",
+    "negocio": "Las grandes tecnológicas chinas que cotizan en EE.UU.: comercio electrónico y nube (Alibaba), comercio electrónico y logística (JD), búsqueda e IA (Baidu) y autos eléctricos (NIO). Sus números dependen de la economía china, que viene con consumo débil y crisis inmobiliaria. Pero lo que más mueve a sus acciones es la política: regulación del gobierno chino, estímulos económicos y la tensión con EE.UU. (aranceles, restricciones a chips, la amenaza de sacarlas de la bolsa estadounidense). Por eso cotizan con un P/E más bajo que sus pares de EE.UU.",
+    "mirar": [
+     "Anuncios de estímulo del gobierno chino.",
+     "Relación comercial EE.UU.–China: aranceles y restricciones a chips.",
+     "Crecimiento de ventas y margen: en 2025 hubo una guerra de subsidios en reparto rápido que bajó márgenes.",
+     "Caja neta: varias tienen más caja que deuda.",
+     "Recompras: algunas las usan fuerte."
+    ],
+    "riesgos": [
+     "Regulación del gobierno chino, que puede cambiar de un día para otro.",
+     "Que EE.UU. las obligue a dejar de cotizar en su bolsa.",
+     "Consumo chino débil y crisis inmobiliaria.",
+     "Restricciones a chips de IA que frenen sus negocios de nube.",
+     "Guerras de precios entre ellas."
+    ],
+    "balance": [
+     "Crecimiento de ventas y margen.",
+     "Ventas de la nube y de IA.",
+     "Recompras y dividendos.",
+     "En NIO, entregas mensuales de autos y caja."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Crecimiento sin inflación",
+      "efecto": "peor que el mercado",
+      "dato": "Las 4 rindieron peor que en el resto de sus meses, contra el SPY (mediana −55 puntos por año): NIO −175, JD −78, Alibaba −31, Baidu −29.",
+      "hipotesis": "Cuando a EE.UU. le va bien sin inflación, la plata se queda en las acciones estadounidenses y el dólar se mantiene firme, lo que perjudica a los emergentes.",
+      "confianza": "Consistente en las 4. Las fases son de la economía de EE.UU., no de la china: es un efecto indirecto."
+     },
+     {
+      "fase": "Desinflación",
+      "efecto": "mejor que el mercado",
+      "dato": "Las 4 rindieron mejor que en el resto de sus meses (mediana +43 puntos por año): NIO +195, JD +53, Alibaba +32, Baidu +13.",
+      "hipotesis": "Con inflación y crecimiento bajando en EE.UU., la Reserva Federal tiende a bajar tasas, el dólar se debilita y la plata busca emergentes.",
+      "confianza": "Consistente en las 4, efecto indirecto."
+     }
+    ],
+    "empresas": {
+     "BABA": "El mayor comercio electrónico de China (Taobao, Tmall) y la mayor nube del país, con su propio modelo de IA (Qwen). En 2025 entró en una guerra de subsidios en reparto rápido que le bajó el margen y el flujo libre. Su año fiscal cierra en marzo.",
+     "JD": "Comercio electrónico con logística propia, fuerte en electrónica. En 2025 entró al reparto de comida para competir con Meituan, lo que le llevó el margen casi a cero. Cotiza muy barata y tiene más caja que deuda.",
+     "BIDU": "El buscador de China. La publicidad de búsqueda cae y apuesta a IA (modelo Ernie), nube y robotaxis (Apollo Go). Cotiza por debajo de su patrimonio.",
+     "NIO": "Autos eléctricos premium. Crece en ventas pero pierde mucha plata y vive de ampliaciones de capital; su patrimonio es casi nulo. Es la más volátil del bloque."
+    }
+   }
   },
   {
    "id": "bancos",
@@ -486,7 +651,67 @@
     "ITUB",
     "NMR"
    ],
-   "clave": "Precio / valor libro contra ROE, y sensibilidad a la tasa."
+   "clave": "Precio / valor libro contra ROE, y sensibilidad a la tasa.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "banco",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 30,
+     "solidez": 20,
+     "valuacion": 25,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad (ROE y ROA) 30%, solidez 20%, valuación 25%, analistas 15%, tendencia 10%. No usa crecimiento de ventas, que en bancos dice poco.",
+    "negocio": "Un banco gana la diferencia entre lo que cobra por prestar y lo que paga por los depósitos, más comisiones (tarjetas, gestión de patrimonio, banca de inversión). No se analiza como una empresa común: la deuda es la materia prima, así que no sirve mirar deuda / EBITDA ni flujo libre. Se mira cuánto gana sobre su patrimonio (ROE) y cuánto paga el mercado por ese patrimonio (precio / valor libro). Un banco que gana más de lo que le cuesta su capital (alrededor de 10% a 12%) merece cotizar por encima de su valor libro. JPMorgan, Citi y Bank of America son bancos universales de EE.UU.; Goldman es banca de inversión y trading; Bradesco e Itaú son brasileños; Nomura es un broker japonés.",
+    "mirar": [
+     "ROE: es la medida principal de calidad de un banco.",
+     "Precio / valor libro contra ROE: si paga mucho por un ROE bajo, está caro.",
+     "Morosidad y previsiones para préstamos incobrables.",
+     "Capital: patrimonio sobre activos y los ratios regulatorios.",
+     "Dividendos y recompras: los bancos con capital de sobra devuelven mucho."
+    ],
+    "riesgos": [
+     "Recesión: sube la morosidad y bajan los préstamos.",
+     "Bajas fuertes de tasa que achican el margen de intermediación.",
+     "Crisis de confianza y salida de depósitos (como en 2023 con los bancos regionales).",
+     "Regulación de capital.",
+     "En Brasil, tasas muy altas, inflación y riesgo político."
+    ],
+    "balance": [
+     "Margen de intereses y su guía.",
+     "Morosidad y previsiones.",
+     "Ingresos de banca de inversión y trading.",
+     "ROE del trimestre.",
+     "Capital y recompras anunciadas."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Crecimiento en alza (recalentamiento y crecimiento sin inflación)",
+      "efecto": "mejor que el mercado",
+      "dato": "Los 7 rindieron mejor que en el resto de sus meses en ambas fases, contra el SPY. Recalentamiento: mediana +18 puntos por año (Bradesco +38, Itaú +37, Bank of America +24, Citi +18, JPMorgan +13). Crecimiento sin inflación: mediana +13.",
+      "hipotesis": "Con la economía creciendo, los bancos prestan más, la morosidad baja y, si hay inflación, las tasas suben y mejora el margen.",
+      "confianza": "El patrón más consistente de todo el sitio: 7 de 7 en las cuatro fases."
+     },
+     {
+      "fase": "Crecimiento en baja (estanflación y desinflación)",
+      "efecto": "peor que el mercado",
+      "dato": "Los 7 rindieron peor que en el resto de sus meses en ambas fases. Estanflación: mediana −13 puntos por año (Bradesco −62, Citi −41, Itaú −36). Desinflación: mediana −14.",
+      "hipotesis": "Con la economía frenando, sube la morosidad y caen los préstamos; en desinflación, además, bajan las tasas y se achica el margen.",
+      "confianza": "7 de 7 en ambas fases."
+     }
+    ],
+    "empresas": {
+     "JPM": "El mayor banco de EE.UU. y el de mejor ROE entre los grandes. Fuerte en todo: banca minorista, tarjetas, banca de inversión y gestión de patrimonio. Por eso cotiza a 2,5 veces su valor libro, mucho más que el resto.",
+     "C": "Banco global en reestructuración: está vendiendo sus negocios minoristas fuera de EE.UU. (incluido Banamex en México) y recortando costos. Su ROE es bajo y cotiza por debajo de su valor libro; la tesis es que el ROE mejore y el precio se acerque al libro.",
+     "BA.C": "Bank of America, el segundo banco de EE.UU., con una base enorme de depósitos. Es el más sensible a las tasas entre los grandes: gana más cuando suben.",
+     "GS": "Banca de inversión, trading y gestión de patrimonio. Sus ganancias dependen mucho de la actividad de los mercados (fusiones, salidas a bolsa, volatilidad). Salió del negocio de tarjetas para consumidores.",
+     "BBD": "Bradesco, uno de los mayores bancos privados de Brasil. Viene de años malos por morosidad y está en recuperación. Cotiza por debajo de su valor libro y paga dividendo alto, en reales.",
+     "ITUB": "Itaú, el mayor banco privado de Brasil y uno de los más rentables de la región (ROE cercano a 20%). Paga dividendos altos. Depende de la economía brasileña y del real.",
+     "NMR": "Nomura, el mayor broker y banco de inversión de Japón. Sus ganancias dependen de la actividad del mercado japonés y global. Reporta en yenes, convertidos a dólares; su año fiscal cierra en marzo."
+    }
+   }
   },
   {
    "id": "pagos",
@@ -498,7 +723,64 @@
     "PYPL",
     "HOOD"
    ],
-   "clave": "Volumen procesado y margen."
+   "clave": "Volumen procesado y margen.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "general",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 25,
+     "crecimiento": 25,
+     "valuacion": 20,
+     "solidez": 5,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 25%, crecimiento 25%, valuación 20%, solidez 5%, analistas 15%, tendencia 10%.",
+    "negocio": "Visa y Mastercard son redes: cobran una comisión chica por cada pago con tarjeta, pero no prestan plata, así que no tienen riesgo de crédito y sus márgenes son altísimos (más de 50%). American Express es red y emisor a la vez: presta a sus clientes, con más margen por operación pero con riesgo de morosidad. PayPal es una billetera y procesador de pagos online (PayPal, Venmo). Robinhood es un broker para inversores minoristas que suma cripto, tarjeta de crédito y banca; su negocio depende mucho de cuánto operan sus clientes.",
+    "mirar": [
+     "Volumen de pagos procesado y su crecimiento.",
+     "Pagos internacionales: tienen más margen.",
+     "En American Express, morosidad.",
+     "En PayPal, crecimiento del volumen con margen (no a cualquier precio).",
+     "En Robinhood, volumen operado y precio de las cripto."
+    ],
+    "riesgos": [
+     "Regulación de comisiones (en EE.UU. y Europa hay presión para bajarlas).",
+     "Nuevos medios de pago que salteen a las tarjetas (pagos instantáneos, stablecoins).",
+     "Recesión: baja el consumo y, en American Express, sube la morosidad.",
+     "En Robinhood, que caiga la actividad de los inversores minoristas."
+    ],
+    "balance": [
+     "Volumen de pagos y transacciones.",
+     "Margen operativo.",
+     "Morosidad (American Express).",
+     "Cuentas activas y activos en custodia (Robinhood)."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Estanflación",
+      "efecto": "peor que el mercado",
+      "dato": "Las 5 rindieron peor que en el resto de sus meses, contra el SPY (mediana −40 puntos por año): PayPal −84, Robinhood −55, Mastercard −40, American Express −40, Visa −28.",
+      "hipotesis": "Con inflación alta y la economía frenando, el consumo real cae y las tasas altas castigan a las valuaciones de crecimiento.",
+      "confianza": "Consistente en las 5, pero buena parte de esos meses son de 2022."
+     },
+     {
+      "fase": "Desinflación",
+      "efecto": "mejor que el mercado",
+      "dato": "Las 5 rindieron mejor que en el resto de sus meses (mediana +22 puntos por año): PayPal +55, Robinhood +50, Mastercard +22, Visa +11, American Express +6.",
+      "hipotesis": "Con inflación y tasas bajando, el mercado vuelve a pagar por crecimiento estable.",
+      "confianza": "Consistente en las 5."
+     }
+    ],
+    "empresas": {
+     "V": "La mayor red de pagos con tarjeta del mundo. No presta plata: cobra por cada operación. Márgenes altísimos y crecimiento constante; devuelve plata con recompras. Su año fiscal cierra en septiembre.",
+     "MA": "La segunda red de pagos del mundo, mismo modelo que Visa, con algo más de peso internacional. Su ROE parece enorme porque las recompras achicaron mucho su patrimonio contable.",
+     "AXP": "Red de pagos y emisor de sus propias tarjetas, con clientes de alto poder adquisitivo que gastan mucho por tarjeta. Gana también con los intereses de lo que prestan, pero asume el riesgo de morosidad.",
+     "PYPL": "PayPal y Venmo. Después de años perdiendo terreno, priorizó ganancias sobre volumen y recompra muchas acciones. Cotiza barata (P/E cercano a 10) porque crece poco.",
+     "HOOD": "Broker online para inversores minoristas, con cripto, tarjeta de crédito y planes de suscripción. Crece muy rápido pero se mueve mucho con el bitcoin y con el ánimo del mercado (beta cercano a 3)."
+    }
+   }
   },
   {
    "id": "cripto",
@@ -509,7 +791,61 @@
     "RIOT",
     "HUT"
    ],
-   "clave": "Dependen del bitcoin; el balance dice poco."
+   "clave": "Dependen del bitcoin; el balance dice poco.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "cripto",
+    "ciclico": false,
+    "pesos": {
+     "crecimiento": 20,
+     "solidez": 25,
+     "analistas": 25,
+     "tendencia": 30
+    },
+    "pesos_txt": "Crecimiento 20%, solidez 25%, analistas 25%, tendencia 30%. No usa calidad ni valuación por ganancias: lo que las mueve es el precio del bitcoin.",
+    "negocio": "Empresas cuyo valor depende del bitcoin. Strategy (ex MicroStrategy) compra bitcoins con deuda y emisión de acciones: tiene la mayor tesorería de bitcoin de una empresa. Coinbase es el mayor exchange de cripto de EE.UU.: gana por comisiones de compraventa y por los intereses de la stablecoin USDC. Riot y Hut 8 minan bitcoin: usan electricidad y equipos para validar transacciones y cobran en bitcoins nuevos; desde 2024, cada vez más usan su capacidad eléctrica para centros de datos de IA. En todas, el balance contable dice poco: lo que importa es cuánto se mueven con el bitcoin.",
+    "mirar": [
+     "Cuánto se mueve la acción con el bitcoin.",
+     "En Strategy, el precio de la acción contra el valor de los bitcoins que tiene: si cotiza muy por encima, el mercado paga una prima.",
+     "En Coinbase, volumen operado e ingresos por USDC.",
+     "En las mineras, costo de producir un bitcoin y contratos de centros de datos de IA.",
+     "Emisión de acciones: varias se financian diluyendo al accionista."
+    ],
+    "riesgos": [
+     "Caída fuerte del bitcoin.",
+     "Regulación de cripto.",
+     "En las mineras, el halving (cada 4 años se reduce a la mitad la recompensa por minar) y el costo de la energía.",
+     "En Strategy, la deuda y las acciones preferidas que emitió para comprar bitcoins."
+    ],
+    "balance": [
+     "Bitcoins en tesorería (Strategy).",
+     "Volumen operado e ingresos por suscripciones y servicios (Coinbase).",
+     "Bitcoins minados, costo por bitcoin y contratos de IA (mineras).",
+     "Acciones nuevas emitidas en el trimestre."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Estanflación",
+      "efecto": "peor que el mercado",
+      "dato": "Las 4 rindieron peor que en el resto de sus meses, contra el SPY (mediana −47 puntos por año): Coinbase −81, Riot −52, Hut 8 −42, Strategy −34.",
+      "hipotesis": "Con inflación alta y tasas subiendo, se retira la liquidez y los activos más especulativos son los primeros en caer.",
+      "confianza": "Consistente en las 4, pero buena parte de esos meses son de 2022."
+     },
+     {
+      "fase": "Desinflación",
+      "efecto": "mejor que el mercado",
+      "dato": "Las 4 rindieron mejor que en el resto de sus meses (mediana +52 puntos por año): Coinbase +90, Riot +68, Hut 8 +35, Strategy +21.",
+      "hipotesis": "Con inflación y tasas bajando, vuelve la liquidez y sube el apetito por riesgo.",
+      "confianza": "Consistente en las 4."
+     }
+    ],
+    "empresas": {
+     "MSTR": "Strategy: su negocio de software es chico; la empresa es básicamente una tenencia de bitcoins financiada con deuda, acciones preferidas y emisión de acciones comunes. La ganancia contable sube y baja con el precio del bitcoin, así que no sirve para valuarla.",
+     "COIN": "El mayor exchange de cripto de EE.UU. y socio de la stablecoin USDC, de la que cobra parte de los intereses. Sus ingresos suben y bajan con el volumen de operaciones y con el precio del bitcoin.",
+     "RIOT": "Minera de bitcoin en Texas. Pierde plata con el bitcoin actual y está reconvirtiendo parte de su capacidad eléctrica a centros de datos de IA.",
+     "HUT": "Minera de bitcoin que también desarrolla centros de datos. Tiene participación en American Bitcoin, otra minera. Invierte mucho más de lo que vende."
+    }
+   }
   },
   {
    "id": "electrica",
@@ -521,7 +857,48 @@
     "OKLO",
     "FSLR"
    ],
-   "clave": "Demanda de los centros de datos y precio de la electricidad."
+   "clave": "Demanda de los centros de datos y precio de la electricidad.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "utility",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 15,
+     "crecimiento": 20,
+     "valuacion": 20,
+     "solidez": 20,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 15%, crecimiento 20%, valuación 20%, solidez 20%, analistas 15%, tendencia 10%. La solidez pesa más porque son negocios con mucha deuda.",
+    "negocio": "Generan electricidad o fabrican los equipos para generarla. Durante años el sector creció poco, pero los centros de datos para IA cambiaron eso: necesitan muchísima energía y estable, y la red de EE.UU. no alcanza. Vistra y Constellation tienen centrales nucleares y de gas y firman contratos de largo plazo con las grandes tecnológicas. GE Vernova fabrica turbinas de gas, equipos de red y turbinas eólicas, con pedidos para varios años. Oklo desarrolla reactores nucleares chicos y todavía no vende. First Solar fabrica paneles solares en EE.UU.",
+    "mirar": [
+     "Contratos con centros de datos: precio y plazo.",
+     "Pedidos acumulados (GE Vernova).",
+     "Precio de la electricidad en el mercado mayorista.",
+     "Inversión sobre ventas y deuda neta / EBITDA.",
+     "Políticas de energía de EE.UU.: créditos fiscales para solar, nuclear y redes."
+    ],
+    "riesgos": [
+     "Que la demanda de los centros de datos sea menor a la esperada.",
+     "Cambios regulatorios y de subsidios (por ejemplo, el recorte de créditos a la energía solar y eólica de 2025).",
+     "Suba de tasas: son negocios con mucha deuda.",
+     "En Oklo, demoras en permisos y en la construcción del primer reactor."
+    ],
+    "balance": [
+     "Contratos nuevos con centros de datos.",
+     "Pedidos acumulados y margen (GE Vernova).",
+     "Guía de ganancia del año.",
+     "Plan de inversión y financiamiento."
+    ],
+    "empresas": {
+     "VST": "Generadora con centrales nucleares, de gas y de carbón en Texas y otros estados. Firma contratos con centros de datos. Tiene bastante deuda (deuda neta cercana a 5 veces el EBITDA).",
+     "CEG": "La mayor operadora de centrales nucleares de EE.UU. Firmó contratos de largo plazo con Microsoft (reactivación de Three Mile Island) y Meta. Compró Calpine, una gran generadora a gas.",
+     "GEV": "Se separó de General Electric en 2024: turbinas de gas, equipos de red eléctrica y eólica. Tiene pedidos de turbinas para varios años por la demanda de energía para IA. Tiene más caja que deuda.",
+     "OKLO": "Desarrolla reactores nucleares chicos (modulares). No tiene ventas todavía; su valor depende de obtener los permisos y construir el primero. Es la más especulativa del bloque.",
+     "FSLR": "El mayor fabricante de paneles solares de EE.UU. Se beneficia de los aranceles a los paneles chinos y de los créditos fiscales a la fabricación local, pero depende de la política energética."
+    }
+   }
   },
   {
    "id": "petroleo",
@@ -534,7 +911,67 @@
     "GPRK",
     "TEN"
    ],
-   "clave": "Precio del crudo con el que empatan y dividendo."
+   "clave": "Precio del crudo con el que empatan y dividendo.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "commodity",
+    "factor": "petroleo",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 20,
+     "solidez": 25,
+     "valuacion_ciclo": 20,
+     "valuacion": 10,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 20%, solidez 25%, valuación sobre la ganancia del ciclo 20%, valuación actual 10%, analistas 15%, tendencia 10%. Como sus ganancias siguen al crudo, la valuación se mide también sobre el promedio del ciclo.",
+    "negocio": "Producen petróleo y gas (Exxon, Chevron, Shell, Petrobras, GeoPark) o venden caños y servicios para perforar (Tenaris). Sus ganancias siguen al precio del crudo, que no controlan. Las grandes (Exxon, Chevron, Shell) también refinan y venden combustibles, lo que suaviza el ciclo. Desde 2022 priorizan devolver plata al accionista (dividendos y recompras) en lugar de crecer a cualquier costo. Petrobras paga dividendos muy altos, pero está controlada por el Estado brasileño.",
+    "mirar": [
+     "Cuánto se mueve la acción con el petróleo.",
+     "Precio del crudo con el que empatan (cubren inversión y dividendo).",
+     "Flujo libre y dividendo: es la razón principal para tenerlas.",
+     "Margen contra su propia historia y P/E sobre la ganancia del ciclo.",
+     "Deuda neta / EBITDA."
+    ],
+    "riesgos": [
+     "Caída del precio del crudo por exceso de oferta (OPEP+, EE.UU.) o recesión.",
+     "Transición energética a largo plazo.",
+     "En Petrobras, intervención del gobierno en precios y dividendos.",
+     "En GeoPark, producción en baja y concentración en Colombia.",
+     "En Tenaris, menos perforación si el crudo cae."
+    ],
+    "balance": [
+     "Producción y su guía.",
+     "Precio realizado del crudo y del gas.",
+     "Flujo libre, dividendos y recompras.",
+     "Plan de inversión del año."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Recalentamiento",
+      "efecto": "mejor que el mercado",
+      "dato": "5 de las 6 rindieron mejor que en el resto de sus meses, contra el SPY (mediana +19 puntos por año): GeoPark +60, Shell +25, Tenaris +23, Exxon +15, Chevron +2. Petrobras es la excepción (−9).",
+      "hipotesis": "Con la economía creciendo e inflación en alza, sube la demanda de energía y el precio del crudo, que además es parte de la inflación.",
+      "confianza": "Mayoría clara y lógica económica directa."
+     },
+     {
+      "fase": "Desinflación",
+      "efecto": "peor que el mercado",
+      "dato": "5 de las 6 rindieron peor que en el resto de sus meses (mediana −13 puntos por año): GeoPark −30, Shell −25, Exxon −13, Tenaris −12, Chevron −1. Petrobras es la excepción (+11).",
+      "hipotesis": "Con inflación y crecimiento bajando, cae la demanda de energía y el precio del crudo.",
+      "confianza": "Mayoría clara, aunque Chevron casi no se mueve."
+     }
+    ],
+    "empresas": {
+     "XOM": "La mayor petrolera de EE.UU. Compró Pioneer en 2024 y es la mayor productora de la cuenca Permian. Integrada (producción, refinación y química), con poca deuda y recompras grandes.",
+     "CVX": "Segunda petrolera de EE.UU., integrada. Compró Hess en 2025, lo que le dio participación en el gran yacimiento de Guyana. Dividendo alto y recompras.",
+     "SHEL": "Británica, integrada, líder mundial en gas natural licuado (GNL). Cotiza a P/E más bajo que las estadounidenses y recompra muchas acciones.",
+     "PBR": "Petrobras, controlada por el Estado brasileño. Producción de bajo costo en aguas profundas (presal). P/E muy bajo y dividendo muy alto, con el riesgo de que el gobierno decida sobre precios, inversiones y dividendos.",
+     "GPRK": "Petrolera chica con producción en Colombia, en baja (ventas −25% el último año). Muy sensible al precio del crudo.",
+     "TEN": "Tenaris (grupo Techint): caños de acero sin costura para pozos de petróleo y gas. Depende de cuánto se perfora en el mundo. Tiene más caja que deuda y devuelve plata con dividendos y recompras."
+    }
+   }
   },
   {
    "id": "mineria",
@@ -548,7 +985,66 @@
     "MP",
     "TXR"
    ],
-   "clave": "Precio del metal y costo por onza o tonelada."
+   "clave": "Precio del metal y costo por onza o tonelada.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "commodity",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 20,
+     "solidez": 25,
+     "valuacion_ciclo": 20,
+     "valuacion": 10,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 20%, solidez 25%, valuación sobre la ganancia del ciclo 20%, valuación actual 10%, analistas 15%, tendencia 10%. Las ganancias siguen al precio del metal, por eso se valúa también sobre el promedio del ciclo.",
+    "negocio": "Extraen y venden metales cuyo precio no controlan: hierro (Vale), cobre y oro (Freeport), oro (Barrick, Harmony), plata (Hecla), tierras raras (MP Materials) y acero (Ternium). Cuando el precio del metal sube, la ganancia sube mucho más, porque el costo de extraer es casi fijo. Por eso son cíclicas y su P/E engaña igual que en las memorias. El oro y la plata suben cuando bajan las tasas reales o hay miedo; el hierro y el cobre siguen la construcción y la industria, sobre todo en China. Las tierras raras se volvieron estratégicas por la disputa con China, que domina su producción.",
+    "mirar": [
+     "Precio del metal que producen.",
+     "Costo total por onza o por tonelada: la diferencia con el precio es el margen.",
+     "Margen contra su propia historia y P/E sobre la ganancia del ciclo.",
+     "Flujo libre y dividendo.",
+     "Deuda neta / EBITDA."
+    ],
+    "riesgos": [
+     "Caída del precio del metal.",
+     "Riesgo país donde están las minas (Mali, Sudáfrica, Indonesia, Brasil).",
+     "Accidentes y paradas de producción.",
+     "En Ternium, aranceles al acero y la economía de México y Argentina."
+    ],
+    "balance": [
+     "Producción y costo por unidad.",
+     "Precio realizado del metal.",
+     "Guía de producción del año.",
+     "Dividendos y recompras."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Estanflación",
+      "efecto": "peor que el mercado",
+      "dato": "Las 7 rindieron peor que en el resto de sus meses, contra el SPY (mediana −46 puntos por año): Ternium −62, Harmony −53, Hecla −47, Vale −46, Freeport −38, Barrick −21, MP −19.",
+      "hipotesis": "Con la economía frenando, cae la demanda de metales industriales; y con tasas reales en alza, sufren también el oro y la plata.",
+      "confianza": "Consistente en las 7, pero buena parte de esos meses son de 2022."
+     },
+     {
+      "fase": "Desinflación",
+      "efecto": "mejor que el mercado",
+      "dato": "5 de las 7 rindieron mejor que en el resto de sus meses (mediana +61 puntos por año): Harmony +104, Hecla +73, MP +73, Barrick +61, Freeport +28. Vale y Ternium, más ligadas al acero, van al revés (−7).",
+      "hipotesis": "Con inflación y tasas bajando, suben el oro y la plata, que no pagan interés y ganan atractivo.",
+      "confianza": "Mayoría clara, explicada sobre todo por las mineras de oro y plata."
+     }
+    ],
+    "empresas": {
+     "VALE": "Brasileña, una de las mayores productoras de mineral de hierro del mundo, que vende sobre todo a las acerías chinas. También níquel y cobre. Su P/E de los últimos 12 meses está inflado por un cargo contable a fines de 2025; el esperado es más representativo. Dividendo alto.",
+     "FCX": "Freeport-McMoRan, gran productora de cobre (con la mina Grasberg en Indonesia) y también de oro. Un deslizamiento en Grasberg en septiembre de 2025 frenó parte de la producción. El cobre se beneficia de la electrificación y los centros de datos.",
+     "B": "Barrick, de las mayores mineras de oro del mundo, también con cobre. Tuvo un conflicto con el gobierno de Mali por una de sus minas. Con el oro en máximos, gana mucho y tiene más caja que deuda.",
+     "HMY": "Harmony, minera de oro sudafricana. Muy sensible al precio del oro y al rand. Su año fiscal cierra en junio.",
+     "HL": "Hecla, la mayor productora de plata de EE.UU. Se mueve más que el oro, para arriba y para abajo.",
+     "MP": "La única gran productora de tierras raras de EE.UU. En 2025 el Departamento de Defensa entró como accionista y le garantizó un precio mínimo, por la disputa con China. Todavía no gana plata: su valor es estratégico.",
+     "TXR": "Ternium (grupo Techint): acero en México, Argentina (Siderar) y Brasil. Depende de la industria de esos países y de los aranceles al acero. Cotiza a P/E bajo."
+    }
+   }
   },
   {
    "id": "farma",
@@ -625,7 +1121,49 @@
     "HIMS",
     "UNH"
    ],
-   "clave": "Resultados clínicos, caja disponible y regulación."
+   "clave": "Resultados clínicos, caja disponible y regulación.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "salud",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 15,
+     "crecimiento": 25,
+     "solidez": 25,
+     "analistas": 20,
+     "tendencia": 15
+    },
+    "pesos_txt": "Calidad 15%, crecimiento 25%, solidez 25%, analistas 20%, tendencia 15%. No usa valuación por ganancias porque varias todavía pierden plata.",
+    "negocio": "Un grupo heterogéneo de salud. Moderna y Vertex desarrollan medicamentos: Vertex es muy rentable gracias a su monopolio en fibrosis quística; Moderna depende de vacunas cuyas ventas cayeron después de la pandemia. Natera y Tempus hacen análisis genéticos y diagnóstico (prenatal y de cáncer). Hims vende tratamientos por internet. UnitedHealth es la mayor aseguradora de salud de EE.UU.: gana la diferencia entre lo que cobra de primas y lo que paga en atención médica. Lo que tienen en común es que dependen de resultados clínicos o regulatorios que pueden mover la acción de un día para el otro.",
+    "mirar": [
+     "Crecimiento de ventas.",
+     "Si ganan plata y, si no, cuánto les dura la caja.",
+     "Resultados de estudios clínicos y aprobaciones (Moderna, Vertex).",
+     "Costo médico sobre primas (UnitedHealth).",
+     "Reembolsos de las aseguradoras para sus análisis (Natera, Tempus)."
+    ],
+    "riesgos": [
+     "Fallas en estudios clínicos.",
+     "Cambios en reembolsos y precios del sistema de salud de EE.UU.",
+     "Regulación (por ejemplo, sobre medicamentos compuestos que vende Hims).",
+     "Investigaciones y juicios (UnitedHealth).",
+     "Dilución en las que pierden plata."
+    ],
+    "balance": [
+     "Ventas y guía.",
+     "Caja y ritmo de gasto.",
+     "Novedades clínicas y regulatorias.",
+     "Costo médico (UnitedHealth)."
+    ],
+    "empresas": {
+     "MRNA": "Vacunas de ARN mensajero (COVID, gripe, virus respiratorio) y vacunas contra el cáncer en desarrollo. Sus ventas cayeron fuerte desde la pandemia y pierde plata. En 2026 la acción se multiplicó por diez: no tengo información de qué la movió después de mediados de año, así que conviene revisar las noticias antes de usar esta ficha.",
+     "VRTX": "Domina el tratamiento de la fibrosis quística, lo que le da márgenes muy altos y caja sin deuda. Busca diversificarse: un analgésico no opioide (Journavx), terapia génica para enfermedades de la sangre (Casgevy) y riñón.",
+     "NTRA": "Análisis genéticos prenatales y de seguimiento de cáncer (Signatera). Crece más de 30% por año y está cerca de ganar plata.",
+     "TEM": "Usa IA y datos genéticos para orientar tratamientos de cáncer. Crece rápido pero pierde plata y tiene deuda. Cotiza a muchas veces sus ventas.",
+     "HIMS": "Telemedicina y venta de tratamientos por internet (caída del pelo, disfunción eréctil, pérdida de peso). Creció muy rápido con versiones compuestas de medicamentos GLP-1, algo regulatoriamente discutido. Muy volátil.",
+     "UNH": "La mayor aseguradora de salud de EE.UU., con un brazo de servicios médicos (Optum). En 2025 tuvo una crisis: el costo médico se disparó, retiró su guía, cambió de CEO y enfrentó una investigación del Departamento de Justicia. Sus márgenes son finos: la clave es el costo médico sobre primas."
+    }
+   }
   },
   {
    "id": "defensivo",
@@ -638,7 +1176,49 @@
     "WMT",
     "MCD"
    ],
-   "clave": "Estabilidad, poder de precio y dividendo."
+   "clave": "Estabilidad, poder de precio y dividendo.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "general",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 30,
+     "crecimiento": 10,
+     "valuacion": 25,
+     "solidez": 20,
+     "analistas": 5,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 30%, valuación 25%, solidez 20%, crecimiento 10%, tendencia 10%, analistas 5%. En defensivas importan la estabilidad y el precio que pagás, más que el crecimiento.",
+    "negocio": "Venden cosas que la gente compra aunque la economía ande mal: bebidas (Coca-Cola, Pepsi), productos de limpieza e higiene (P&G), cigarrillos (Altria), supermercados (Walmart) y comida rápida (McDonald's). Crecen poco, pero tienen marcas fuertes que les permiten subir precios y ganancias estables, que reparten con dividendos. Por eso se mueven poco con el mercado: suben menos en las subas y caen menos en las bajas. Lo que más las afecta son las tasas: cuando suben, un bono pasa a competir con su dividendo.",
+    "mirar": [
+     "Crecimiento por volumen y por precio: si solo crecen subiendo precios, el volumen puede empezar a caer.",
+     "Margen contra su propia historia.",
+     "Dividendo y devolución al accionista.",
+     "P/E contra su propia historia: en defensivas el precio que pagás define buena parte del resultado.",
+     "Deuda neta / EBITDA."
+    ],
+    "riesgos": [
+     "Suba de tasas, que hace más atractivos a los bonos.",
+     "Medicamentos para adelgazar (GLP-1), que pueden reducir el consumo de snacks y bebidas.",
+     "Marcas propias de los supermercados que les quitan clientes.",
+     "En Altria, la caída del consumo de cigarrillos."
+    ],
+    "balance": [
+     "Volumen y precio.",
+     "Margen bruto y costo de materias primas.",
+     "Guía del año.",
+     "Dividendos y recompras."
+    ],
+    "empresas": {
+     "KO": "Coca-Cola: vende el concentrado y la marca, y deja el embotellado a terceros, lo que le da márgenes muy altos. Sube el dividendo hace más de 60 años. Cotiza a P/E alto para lo poco que crece.",
+     "PEP": "Pepsi y snacks (Lay's, Doritos). Los snacks pierden volumen y en 2025 un fondo activista (Elliott) entró pidiendo cambios. Cotiza a un P/E bajo para su historia y paga un dividendo alto.",
+     "PG": "Procter & Gamble: detergentes, pañales, afeitadoras, higiene. La más estable del grupo, con marcas líderes en casi todas sus categorías. Su año fiscal cierra en junio.",
+     "MO": "Altria, cigarrillos Marlboro en EE.UU. El volumen cae todos los años y lo compensa subiendo precios. Paga uno de los dividendos más altos del mercado. Su patrimonio contable es negativo por las recompras, así que el ROE no se puede usar.",
+     "WMT": "Walmart: el mayor supermercado del mundo, que creció en comercio electrónico y publicidad. El mercado lo paga como una tecnológica (P/E cerca de 45), mucho más que su historia. Su año fiscal cierra en enero.",
+     "MCD": "McDonald's: la mayoría de los locales son franquicias, así que cobra alquileres y regalías con márgenes muy altos. En 2025 sufrió por la caída del consumo de las familias de menores ingresos. Patrimonio contable negativo por recompras."
+    }
+   }
   },
   {
    "id": "ciclico",
@@ -648,7 +1228,62 @@
     "ANF",
     "GT"
    ],
-   "clave": "Cuánto gasta la gente, inventarios y márgenes."
+   "clave": "Cuánto gasta la gente, inventarios y márgenes.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "general",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 20,
+     "crecimiento": 15,
+     "valuacion": 25,
+     "solidez": 20,
+     "analistas": 10,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 20%, valuación 25%, solidez 20%, crecimiento 15%, analistas 10%, tendencia 10%.",
+    "negocio": "Venden cosas que la gente deja de comprar cuando la plata no alcanza: ropa y zapatillas (Nike, Abercrombie) y neumáticos (Goodyear, que además depende de la industria automotriz). Sus ventas y márgenes suben y bajan con el consumo. Además, fabrican casi todo en Asia, así que los aranceles les pegan directo.",
+    "mirar": [
+     "Crecimiento de ventas y su tendencia.",
+     "Margen bruto: lo afectan las rebajas para liquidar stock y los aranceles.",
+     "Inventarios: si crecen más que las ventas, vienen rebajas.",
+     "Deuda neta / EBITDA (Goodyear).",
+     "P/E esperado contra su historia."
+    ],
+    "riesgos": [
+     "Consumo débil.",
+     "Aranceles a productos fabricados en Asia.",
+     "Cambios de moda y pérdida de marca.",
+     "En Goodyear, deuda alta y competencia de neumáticos asiáticos."
+    ],
+    "balance": [
+     "Ventas por canal y región.",
+     "Margen bruto y efecto de aranceles.",
+     "Inventarios.",
+     "Guía del año."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Estanflación",
+      "efecto": "peor que el mercado",
+      "dato": "Las 3 rindieron peor que en el resto de sus meses, contra el SPY (mediana −30 puntos por año): Abercrombie −64, Nike −30, Goodyear −10.",
+      "hipotesis": "Con inflación alta y la economía frenando, el consumo discrecional es lo primero que se recorta.",
+      "confianza": "Consistente, pero son solo 3 empresas y buena parte de esos meses son de 2022."
+     },
+     {
+      "fase": "Recalentamiento",
+      "efecto": "mejor que el mercado",
+      "dato": "Las 3 rindieron mejor que en el resto de sus meses (mediana +22 puntos por año): Goodyear +66, Abercrombie +22, Nike +14.",
+      "hipotesis": "Con la economía creciendo fuerte, la gente gasta más en lo que no es imprescindible.",
+      "confianza": "Consistente, pero son solo 3 empresas."
+     }
+    ],
+    "empresas": {
+     "NKE": "Nike: la mayor marca deportiva del mundo, en plena recuperación. Perdió terreno frente a marcas nuevas (On, Hoka) y por depender demasiado de la venta directa; desde fines de 2024 tiene nuevo CEO que volvió a apostar a las tiendas y al deporte. Los aranceles le pegan fuerte. Su año fiscal cierra en mayo.",
+     "ANF": "Abercrombie & Fitch y Hollister. Tuvo una recuperación muy fuerte de la marca entre 2023 y 2024 y luego se desaceleró. Sin deuda y con recompras. Cotiza a P/E bajo.",
+     "GT": "Goodyear: neumáticos. Tiene mucha deuda, pierde plata y está vendiendo negocios (como la marca Dunlop) para achicarla. Es la más riesgosa del bloque."
+    }
+   }
   },
   {
    "id": "aero",
@@ -661,7 +1296,65 @@
     "AAL",
     "DAL"
    ],
-   "clave": "Ciclo de viajes, pedidos de aviones y presupuesto de defensa."
+   "clave": "Ciclo de viajes, pedidos de aviones y presupuesto de defensa.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "general",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 20,
+     "crecimiento": 15,
+     "valuacion": 20,
+     "solidez": 20,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 20%, valuación 20%, solidez 20%, crecimiento 15%, analistas 15%, tendencia 10%.",
+    "negocio": "Tres negocios conectados. Boeing fabrica aviones y GE Aerospace los motores: tienen pedidos para años y el desafío es producir al ritmo de la demanda. Lockheed Martin vende armamento al gobierno de EE.UU. y aliados (el F-35), con contratos de largo plazo. United, American y Delta son aerolíneas: negocio de márgenes finos, mucha deuda y muy sensible al petróleo (el combustible es uno de sus mayores costos) y a la demanda de viajes.",
+    "mirar": [
+     "Ritmo de producción y entregas (Boeing) y horas de vuelo de los motores (GE).",
+     "Presupuesto de defensa de EE.UU. y de Europa (Lockheed).",
+     "En aerolíneas: precio del pasaje, ocupación y costo del combustible.",
+     "Deuda neta / EBITDA: alta en Boeing y American.",
+     "Cuánto se mueven con el petróleo: las aerolíneas caen cuando sube."
+    ],
+    "riesgos": [
+     "Problemas de calidad y regulación en Boeing.",
+     "Suba del petróleo para las aerolíneas.",
+     "Recesión: los viajes se recortan rápido.",
+     "Cambios en el presupuesto de defensa y sobrecostos en contratos (Lockheed)."
+    ],
+    "balance": [
+     "Entregas y flujo libre (Boeing).",
+     "Pedidos y servicios de mantenimiento (GE).",
+     "Ingreso por asiento, ocupación y costo de combustible (aerolíneas).",
+     "Contratos y cargos por sobrecostos (Lockheed)."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Estanflación",
+      "efecto": "peor que el mercado",
+      "dato": "5 de las 6 rindieron peor que en el resto de sus meses, contra el SPY (mediana −26 puntos por año): Delta −43, Boeing −41, United −28, American −23, GE −22. Lockheed es la excepción (+11): la defensa no depende del ciclo.",
+      "hipotesis": "Con la economía frenando, se recortan los viajes; con inflación alta, sube el combustible.",
+      "confianza": "Mayoría clara, aunque buena parte de esos meses son de 2022."
+     },
+     {
+      "fase": "Recalentamiento",
+      "efecto": "mejor que el mercado",
+      "dato": "5 de las 6 rindieron mejor que en el resto de sus meses (mediana +14 puntos por año): Boeing +32, GE +24, United +16, American +12, Delta +1. Lockheed es la excepción (−8).",
+      "hipotesis": "Con la economía creciendo fuerte, sube la demanda de viajes y de aviones.",
+      "confianza": "Mayoría clara; Delta casi no se mueve."
+     }
+    ],
+    "empresas": {
+     "BA": "Boeing: aviones comerciales (737, 787, 777) y defensa. Viene de años de problemas de calidad y del accidente del 737 MAX; en 2025 la FAA le permitió subir la producción del 737. Tiene mucha deuda y su flujo libre todavía es negativo. Su patrimonio es casi nulo, así que el P/VL no sirve.",
+     "GE": "GE Aerospace: motores para aviones comerciales y militares, con un negocio de mantenimiento muy rentable. Es lo que quedó de General Electric tras separar salud y energía. Cotiza a P/E alto por la calidad del negocio.",
+     "LMT": "Lockheed Martin: el mayor contratista de defensa del mundo (F-35, misiles, espacio). Ingresos estables, dividendo alto, y cargos por sobrecostos en algunos programas.",
+     "UAL": "United Airlines: la más rentable de las tres en rutas internacionales. Cotiza a P/E cercano a 10.",
+     "AAL": "American Airlines: la más endeudada de las tres; casi no gana plata y su patrimonio es negativo.",
+     "DAL": "Delta: la aerolínea de mejor reputación y con más ingresos de clientes premium y de su acuerdo con American Express."
+    }
+   }
   },
   {
    "id": "espacio",
@@ -673,7 +1366,55 @@
     "SPCE",
     "SATL"
    ],
-   "clave": "Contratos, lanzamientos y cuánto dura la caja."
+   "clave": "Contratos, lanzamientos y cuánto dura la caja.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "infra",
+    "ciclico": false,
+    "pesos": {
+     "crecimiento": 30,
+     "solidez": 30,
+     "analistas": 20,
+     "tendencia": 20
+    },
+    "pesos_txt": "Crecimiento 30%, solidez 30%, analistas 20%, tendencia 20%. No usa calidad ni valuación por ganancias: casi ninguna gana plata, así que pesa más cuánta caja tienen para llegar.",
+    "negocio": "Empresas del negocio espacial: lanzamiento de cohetes (SpaceX, Rocket Lab), internet satelital (Starlink de SpaceX, AST SpaceMobile), turismo espacial (Virgin Galactic) e imágenes satelitales (Satellogic). Es un sector de mucha inversión y largos plazos: casi todas pierden plata y se financian emitiendo acciones o deuda. SpaceX es la excepción por escala: domina los lanzamientos y Starlink ya tiene millones de clientes. El valor de casi todas depende de que la tecnología funcione y llegue a vender en volumen.",
+    "mirar": [
+     "Ventas y contratos firmados.",
+     "Caja contra lo que pierden por año: cuánto les dura.",
+     "Emisión de acciones (dilución).",
+     "Hitos técnicos: lanzamientos exitosos, satélites en órbita.",
+     "Contratos con el gobierno (NASA, defensa)."
+    ],
+    "riesgos": [
+     "Fallas en lanzamientos o satélites.",
+     "Demoras que obligan a pedir más plata.",
+     "Competencia de SpaceX en lanzamientos e internet satelital.",
+     "Valuaciones muy altas para ventas chicas."
+    ],
+    "balance": [
+     "Ventas y contratos nuevos.",
+     "Caja y gasto del trimestre.",
+     "Calendario de lanzamientos y avances técnicos.",
+     "Acciones nuevas emitidas."
+    ],
+    "catalizadores": [
+     {
+      "fase": "Recalentamiento",
+      "efecto": "peor que el mercado",
+      "dato": "Las 4 con historia suficiente rindieron peor que en el resto de sus meses, contra el SPY (mediana −112 puntos por año): Rocket Lab −121, Satellogic −113, AST −111, Virgin Galactic −17.",
+      "hipotesis": "Con inflación y tasas en alza, las acciones más especulativas, que valen por ganancias muy lejanas, son las más castigadas.",
+      "confianza": "Consistente, pero son acciones muy volátiles y con poca historia: tomarlo con cuidado."
+     }
+    ],
+    "empresas": {
+     "SPCX": "SpaceX: domina los lanzamientos de cohetes en el mundo y opera Starlink, el mayor servicio de internet satelital. Cotiza hace menos de un año, así que tiene poca historia de precio. Es por lejos la más grande del bloque y vale muchas veces sus ventas.",
+     "RKLB": "Rocket Lab: lanza cohetes chicos (Electron), fabrica componentes de satélites y desarrolla un cohete mediano (Neutron). Crece rápido pero pierde plata.",
+     "ASTS": "AST SpaceMobile: satélites para dar internet directo al celular, con acuerdos con AT&T, Verizon y Vodafone. Casi no tiene ventas todavía; está desplegando su constelación.",
+     "SPCE": "Virgin Galactic: turismo espacial. Frenó los vuelos para desarrollar una nave nueva, así que casi no tiene ventas. Quema caja y emite acciones.",
+     "SATL": "Satellogic, fundada en Argentina: satélites de observación de la Tierra que venden imágenes. Empresa muy chica que todavía pierde plata."
+    }
+   }
   },
   {
    "id": "industriales",
@@ -683,7 +1424,44 @@
     "PCAR",
     "ADGO"
    ],
-   "clave": "Ciclo de inversión del campo, la construcción y el transporte."
+   "clave": "Ciclo de inversión del campo, la construcción y el transporte.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "general",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 25,
+     "crecimiento": 10,
+     "valuacion": 25,
+     "solidez": 20,
+     "analistas": 10,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 25%, valuación 25%, solidez 20%, crecimiento 10%, analistas 10%, tendencia 10%.",
+    "negocio": "Negocios ligados a la inversión física. Caterpillar fabrica maquinaria para construcción y minería, y motores y generadores, que hoy se venden mucho para centros de datos. Paccar fabrica camiones (Kenworth, Peterbilt, DAF) y depende del ciclo del transporte de cargas. Adecoagro produce granos, leche, azúcar y etanol en Argentina, Brasil y Uruguay. Lo que los une es que dependen del ciclo de inversión y de los precios de lo que producen o de lo que producen sus clientes.",
+    "mirar": [
+     "Pedidos acumulados (Caterpillar) y pedidos de camiones (Paccar).",
+     "Margen contra su propia historia.",
+     "Precio de granos, azúcar y etanol (Adecoagro).",
+     "Flujo libre y devolución al accionista.",
+     "Deuda neta / EBITDA."
+    ],
+    "riesgos": [
+     "Caída de la inversión en construcción, minería y transporte.",
+     "Aranceles al acero y a componentes.",
+     "En Adecoagro, clima, precios agrícolas y la economía argentina."
+    ],
+    "balance": [
+     "Pedidos y ventas por segmento.",
+     "Margen y guía.",
+     "Producción y precios (Adecoagro)."
+    ],
+    "empresas": {
+     "CAT": "Caterpillar: maquinaria para construcción y minería, más motores y generadores, un negocio que crece fuerte por los centros de datos. Su ciclo sigue la inversión en infraestructura y minería.",
+     "PCAR": "Paccar: camiones Kenworth, Peterbilt y DAF, más un negocio de repuestos y financiamiento muy estable. El ciclo de camiones viene en baja (ventas −16% el último año).",
+     "ADGO": "Adecoagro: granos, leche, azúcar, etanol y energía en Argentina, Brasil y Uruguay. En 2025 Tether (la emisora de la stablecoin USDT) compró el control de la empresa."
+    }
+   }
   },
   {
    "id": "aparte",
@@ -694,7 +1472,46 @@
     "PLD",
     "BIOX"
    ],
-   "clave": "Empresas sin comparables: cada una con su propia lectura."
+   "clave": "Empresas sin comparables: cada una con su propia lectura.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "general",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 25,
+     "crecimiento": 20,
+     "valuacion": 15,
+     "solidez": 15,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Usa la nota general. Estas empresas no son comparables entre sí: el orden es solo referencia, y cada una se lee por su cuenta.",
+    "negocio": "Empresas que no tienen con quién compararse dentro de las 125, o que se analizan con criterios propios. Berkshire Hathaway es un conglomerado (seguros, ferrocarril, energía, decenas de empresas y una cartera de acciones). Tesla se valúa por robotaxis, robots y energía, no como automotriz. Prologis es una inmobiliaria de depósitos logísticos, que se mide por flujo de fondos y no por ganancia. Bioceres se negocia en BYMA sobre todo por flujo local.",
+    "mirar": [
+     "Berkshire: precio / valor libro contra su historia, caja acumulada y ganancia operativa (sin la suba o baja de sus acciones).",
+     "Tesla: entregas de autos, margen, avances en conducción autónoma y robots; su P/E refleja expectativas, no ganancias actuales.",
+     "Prologis: ocupación de los depósitos, alquileres y tasa de interés.",
+     "Bioceres: premio del CEDEAR y volumen en BYMA, más que la valuación."
+    ],
+    "riesgos": [
+     "Berkshire: la transición después de Buffett y el uso de su enorme caja.",
+     "Tesla: competencia en autos eléctricos y que lo prometido en autonomía tarde años.",
+     "Prologis: suba de tasas (es la más sensible a la tasa de las 125).",
+     "Bioceres: deuda y situación financiera."
+    ],
+    "balance": [
+     "Berkshire: ganancia operativa, recompras y caja.",
+     "Tesla: entregas, margen automotriz y novedades de robotaxi.",
+     "Prologis: ocupación y flujo de fondos operativo.",
+     "Bioceres: reestructuración de deuda."
+    ],
+    "empresas": {
+     "BRKB": "Berkshire Hathaway: seguros (Geico), ferrocarril (BNSF), energía y decenas de empresas, más una cartera de acciones con Apple como mayor posición. Warren Buffett dejó de ser CEO a fines de 2025 y lo reemplazó Greg Abel. Tiene una caja enorme. Su ganancia neta incluye la suba o la baja de sus acciones, por eso el P/E salta sin que cambie el negocio: conviene mirar el precio / valor libro.",
+     "TSLA": "Tesla: autos eléctricos, baterías para energía, y apuestas a robotaxis y robots humanoides (Optimus). Las ventas de autos vienen estancadas y el margen bajó, pero el mercado la paga por las apuestas futuras: P/E de más de 400 veces. Es la acción más polarizada del mercado.",
+     "PLD": "Prologis: el mayor dueño de depósitos logísticos del mundo, que alquila a Amazon, minoristas y empresas de logística. Como inmobiliaria, su ganancia contable está afectada por amortizaciones; se mide mejor por flujo de fondos operativo. Es la acción más sensible a la tasa de todo el sitio: cuando la tasa a 10 años sube 1 punto, cae alrededor de 10% más que el mercado.",
+     "BIOX": "Bioceres: biotecnología agrícola argentina (semillas resistentes a sequía, biológicos). Pasó por problemas de deuda en 2025 y la acción cayó más de 80% en el año. Se negocia en BYMA sobre todo por flujo local; conviene mirar el premio del CEDEAR y el volumen más que los números."
+    }
+   }
   }
  ]
 }

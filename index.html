@@ -510,7 +510,9 @@ function metr(f){
   const dn = u.deuda!=null ? (u.deuda-(u.caja||0)) : null;
   const dne = dn!=null && u.ebitda>0 ? dn/u.ebitda : null;
   const fcfm = u.fcf!=null && u.ventas>0 ? u.fcf/u.ventas : null, sbcv = u.sbc!=null && u.ventas>0 ? u.sbc/u.ventas : null;
-  const ex_ = {fcfm, sbcv, pfcf: f.val?.pfcf, cx, cx3, cxc, fcfy, vg1, dn, dne, fcf: u.fcf, deuda: u.deuda, caja: u.caja, dev: f.val?.rend_accionista};
+  const sn_ = f.sensibilidades || {};
+  const roe = u.neto!=null && u.patrimonio>0 ? u.neto/u.patrimonio : null, roa = u.neto!=null && u.activo>0 ? u.neto/u.activo : null, eqa = u.patrimonio!=null && u.activo>0 ? u.patrimonio/u.activo : null;
+  const ex_ = {roe, roa, eqa, pvl: f.val?.pvl, btc: sn_.bitcoin?.impacto, btct: sn_.bitcoin?.t, oil: sn_.petroleo?.impacto, oilt: sn_.petroleo?.t, beta: sn_.beta, fcfm, sbcv, pfcf: f.val?.pfcf, cx, cx3, cxc, fcfy, vg1, dn, dne, fcf: u.fcf, deuda: u.deuda, caja: u.caja, dev: f.val?.rend_accionista};
   return {...ex_, mu, pctl, mmin: ms.length?Math.min(...ms):null, mmax: ms.length?Math.max(...ms):null, nanos: me.length, nprom, nn: nets.length, peC, peMed, pe, desc, picos, v3, mb: u.m_bruto, mid: u.m_id, pefwd: f.val?.pe_fwd, peg: f.val?.peg, div: f.val?.div_yield, r12m: f.precio_bloque?.r12m};
 }
 function notaBloque(x, f, bl){
@@ -598,8 +600,66 @@ function lecturaHard(f, k){
   if (k.dev!=null) s.push(`Devuelve al accionista <b>${pc0(k.dev,1)}</b> por año entre dividendos y recompras.`);
   return s;
 }
+const pex = (k,txt) => k.desc==null ? null : (k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos años (${nx(k.peMed)}x).`);
+function lecturaGen(f, k){
+  const s = [];
+  if (k.vg1!=null) s.push(`Ventas: <b>${pct(k.vg1,0)}</b> el último año${k.v3!=null?`, ${pct(k.v3,0)} por año en los últimos 3`:""}.`);
+  if (k.mu!=null) s.push(`Margen operativo <b>${pc0(k.mu)}</b>${k.pctl!=null?`, ${rangoTxt(k)}`:""}.`);
+  if (k.pe!=null||k.pefwd!=null) s.push(`P/E <b>${k.pe?nx(k.pe)+"x":"—"}</b>; esperado <b>${k.pefwd>0?nx(k.pefwd)+"x":"—"}</b>.${k.pe&&k.pefwd>0&&k.pe/k.pefwd>1.8?" La ganancia de los últimos 12 meses está muy por debajo de la esperada: puede haber cargos únicos o una recuperación esperada.":""}`);
+  const p_ = pex(k); if (p_) s.push(p_);
+  if (k.fcfy!=null) s.push(`Flujo libre: <b>${pc0(k.fcfy,1)}</b> de lo que vale la empresa por año.`);
+  if (k.dev!=null && k.dev>0.002) s.push(`Devuelve al accionista <b>${pc0(k.dev,1)}</b> por año entre dividendos y recompras.`);
+  if (k.dne!=null) s.push(k.dne<0 ? `Tiene más caja que deuda.` : `Deuda neta / EBITDA: <b>${nx(k.dne,1)}x</b>${k.dne>3?": alta.":"."}`);
+  return s;
+}
+function lecturaBanco(f, k){
+  const s = [];
+  if (k.roe!=null) s.push(`ROE (ganancia sobre patrimonio): <b>${pc0(k.roe,1)}</b>${k.roe>0.15?": alto.":k.roe<0.09?": bajo.":"."}`);
+  if (k.pvl!=null && k.roe!=null) s.push(`El mercado paga <b>${nx(k.pvl,2)} veces</b> su patrimonio. Como regla general, un banco que gana más de lo que le cuesta su capital (alrededor de 10% a 12%) cotiza por encima de 1 vez; uno que gana menos, por debajo.`);
+  if (k.roa!=null) s.push(`ROA (ganancia sobre activos): <b>${pc0(k.roa,2)}</b>; patrimonio sobre activos: <b>${pc0(k.eqa,1)}</b>.`);
+  if (k.pe!=null) s.push(`P/E <b>${nx(k.pe)}x</b>${k.pefwd>0?`; esperado ${nx(k.pefwd)}x`:""}.`);
+  if (k.div!=null || k.dev!=null) s.push(`Dividendo <b>${pc0(k.div,1)}</b>; con recompras devuelve <b>${pc0(k.dev,1)}</b> por año.`);
+  return s;
+}
+function lecturaCripto(f, k){
+  const s = [];
+  if (k.btc!=null) s.push(`Si el bitcoin sube 10%, la acción se movió en promedio <b>${pct(k.btc,1)}</b> más allá de lo que explica el S&P${Math.abs(k.btct||0)>=2?" (relación clara)":" (relación débil)"}.`);
+  if (k.beta!=null) s.push(`Beta contra el S&P 500: <b>${nx(k.beta,2)}</b>.`);
+  if (k.vg1!=null) s.push(`Ventas: <b>${pct(k.vg1,0)}</b> el último año; margen operativo <b>${pc0(k.mu)}</b>.`);
+  if (k.deuda!=null) s.push(`Deuda US$ ${big(k.deuda)} contra caja US$ ${big(k.caja||0)}.`);
+  if (k.dev!=null && k.dev<-0.005) s.push(`Emitió acciones por el <b>${pc0(-k.dev,1)}</b> de su valor en el último año: el accionista se diluye.`);
+  return s;
+}
+function lecturaUtil(f, k){
+  const s = lecturaGen(f, k);
+  if (k.cx!=null) s.splice(2,0,`Invierte <b>${pc0(k.cx)}</b> de sus ventas en plantas y equipos.`);
+  return s;
+}
+function lecturaCommodity(f, k, L){
+  const s = [];
+  if (L.factor==="petroleo" && k.oil!=null) s.push(`Si el petróleo sube 10%, la acción se movió en promedio <b>${pct(k.oil,1)}</b> más allá del S&P${Math.abs(k.oilt||0)>=2?" (relación clara)":" (relación débil)"}.`);
+  if (k.fcfy!=null) s.push(`Flujo libre: <b>${pc0(k.fcfy,1)}</b> de lo que vale; dividendo <b>${pc0(k.div,1)}</b>${k.dev!=null?`, con recompras <b>${pc0(k.dev,1)}</b>`:""}.`);
+  if (k.dne!=null) s.push(k.dne<0 ? `Tiene más caja que deuda.` : `Deuda neta / EBITDA: <b>${nx(k.dne,1)}x</b>.`);
+  return s.concat(lecturaCiclo(f, k));
+}
+function lecturaSalud(f, k){
+  const s = [];
+  if (k.vg1!=null) s.push(`Ventas: <b>${pct(k.vg1,0)}</b> el último año${k.v3!=null?`, ${pct(k.v3,0)} por año en los últimos 3`:""}.`);
+  if (k.mu!=null) s.push(`Margen operativo <b>${pc0(k.mu)}</b>${k.mu<0?": todavía pierde plata.":"."}`);
+  if (k.fcf!=null) s.push(`Flujo libre <b>US$ ${big(k.fcf)}</b>; caja US$ ${big(k.caja||0)} y deuda US$ ${big(k.deuda||0)}.${k.fcf<0&&k.caja?` Al ritmo actual, la caja alcanza para unos ${nx(k.caja/-k.fcf,1)} años.`:""}`);
+  if (k.pefwd>0) s.push(`P/E esperado <b>${nx(k.pefwd)}x</b>.`);
+  const p_ = pex(k); if (p_) s.push(p_);
+  return s;
+}
 function columnasBloque(bl){
   const L = bl.lente, T = TIPO(L), r12 = ["12M",k=>`<span class="${cls(k.r12m)}">${pct(k.r12m,0)}</span>`];
+  const pe_ = ["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"], pef_ = ["P/E esperado",k=>k.pefwd==null||k.pefwd<0?"—":nx(k.pefwd)+"x"], vt_ = ["Ventas último año (3 años)",k=>`${pct(k.vg1,0)} <span class="mut">(${pct(k.v3,0)})</span>`];
+  if (T==="general") return [vt_,["Margen EBIT",k=>pc0(k.mu)],["Margen en su historia",k=>rangoTxt(k)],pe_,pef_,["Flujo libre / precio",k=>pc0(k.fcfy,1)],["Devolución",k=>pc0(k.dev,1)],r12];
+  if (T==="banco") return [["ROE",k=>pc0(k.roe,1)],["ROA",k=>pc0(k.roa,2)],["Patrimonio / activos",k=>pc0(k.eqa,1)],["P / valor libro",k=>k.pvl==null?"—":nx(k.pvl,2)+"x"],pe_,pef_,["Dividendo",k=>pc0(k.div,1)],["Devolución",k=>pc0(k.dev,1)],r12];
+  if (T==="cripto") return [["Mov. si bitcoin +10%",k=>k.btc==null?"—":`<span class="${cls(k.btc)}">${pct(k.btc,1)}</span>`],["Beta S&P",k=>k.beta==null?"—":nx(k.beta,2)],["Ventas último año",k=>pct(k.vg1,0)],["Margen EBIT",k=>pc0(k.mu)],["Deuda",k=>k.deuda==null?"—":"US$ "+big(k.deuda)],["Caja",k=>k.caja==null?"—":"US$ "+big(k.caja)],r12];
+  if (T==="utility") return [vt_,["Margen EBIT",k=>pc0(k.mu)],["Inversión / ventas",k=>pc0(k.cx)],["Deuda neta / EBITDA",k=>k.dne==null?"—":k.dne<0?"caja neta":nx(k.dne,1)+"x"],pe_,pef_,["Dividendo",k=>pc0(k.div,1)],r12];
+  if (T==="commodity") return [...(L.factor==="petroleo"?[["Mov. si petróleo +10%",k=>k.oil==null?"—":`<span class="${cls(k.oil)}">${pct(k.oil,1)}</span>`]]:[]),["Margen EBIT",k=>pc0(k.mu)],["Margen en su historia",k=>rangoTxt(k)],pe_,["P/E del ciclo",k=>k.peC==null?"—":k.peC<0?"pérdida":nx(k.peC)+"x"],pef_,["Flujo libre / precio",k=>pc0(k.fcfy,1)],["Dividendo",k=>pc0(k.div,1)],r12];
+  if (T==="salud") return [vt_,["Margen bruto",k=>pc0(k.mb)],["Margen EBIT",k=>pc0(k.mu)],["Flujo libre",k=>k.fcf==null?"—":"US$ "+big(k.fcf)],["Caja",k=>k.caja==null?"—":"US$ "+big(k.caja)],pef_,r12];
   if (T==="software") return [["Ventas último año (3 años)",k=>`${pct(k.vg1,0)} <span class="mut">(${pct(k.v3,0)})</span>`],["Margen bruto",k=>pc0(k.mb)],["Margen EBIT",k=>pc0(k.mu)],["Flujo libre / ventas",k=>pc0(k.fcfm)],["Comp. en acciones",k=>pc0(k.sbcv)],["Precio / flujo libre",k=>k.pfcf==null?"—":nx(k.pfcf)+"x"],["P/E esperado",k=>k.pefwd==null||k.pefwd<0?"—":nx(k.pefwd)+"x"],r12];
   if (T==="hardware") return [["Ventas último año",k=>pct(k.vg1,0)],["Ventas 3 años",k=>pct(k.v3,0)],["Margen bruto",k=>pc0(k.mb)],["Margen EBIT",k=>pc0(k.mu)],["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E esperado",k=>k.pefwd==null||k.pefwd<0?"—":nx(k.pefwd)+"x"],["Flujo libre / precio",k=>pc0(k.fcfy,1)],["Devolución",k=>pc0(k.dev,1)],r12];
   if (T==="plataforma") return [["Ventas 3 años",k=>pct(k.v3,0)],["Margen EBIT",k=>pc0(k.mu)],["Inversión / ventas (hace 3 años)",k=>k.cx==null?"—":`${pc0(k.cx)} <span class="mut">(${pc0(k.cx3)})</span>`],["Inversión / flujo operativo",k=>pc0(k.cxc)],["Flujo libre / precio",k=>pc0(k.fcfy,1)],["Devolución",k=>pc0(k.dev,1)],["P/E esperado",k=>k.pefwd==null?"—":nx(k.pefwd)+"x"],r12];
@@ -696,7 +756,18 @@ async function bloquePag(m, id){
   const fil = xs.map(x=>{ const f = FCACHE[x.ticker]; const ok = f && !f.sin; return {x, f: ok?f:null, k: ok?metr(f):{}, n: notaBloque(x, ok?f:null, bl)}; }).sort((a,b)=>(b.n??-1)-(a.n??-1));
   let hoy = [];
   const T = TIPO(L);
-  if (T==="software"){ const ks = fil.map(r=>r.k);
+  const KS = fil.map(r=>r.k), zal = KS.filter(k=>k.pctl!=null&&k.pctl>=0.75).length, zcn = KS.filter(k=>k.pctl!=null).length;
+  if (T==="general"){ hoy.push(`Ventas: <b>${pct(medi(KS.map(k=>k.vg1)),0)}</b> el último año (mediana). P/E esperado mediano: <b>${nx(medi(KS.map(k=>k.pefwd>0?k.pefwd:null)))}x</b>.`);
+    if (zcn) hoy.push(`<b>${zal} de ${zcn}</b> tienen el margen en la zona alta de su propia historia. Flujo libre mediano: <b>${pc0(medi(KS.map(k=>k.fcfy)),1)}</b> de lo que valen.`); }
+  else if (T==="banco"){ hoy.push(`ROE mediano: <b>${pc0(medi(KS.map(k=>k.roe)),1)}</b>. Precio / valor libro mediano: <b>${nx(medi(KS.map(k=>k.pvl)),2)}x</b>.`);
+    hoy.push(`Dividendo mediano: <b>${pc0(medi(KS.map(k=>k.div)),1)}</b>; con recompras, <b>${pc0(medi(KS.map(k=>k.dev)),1)}</b> por año.`); }
+  else if (T==="cripto"){ hoy.push(`Si el bitcoin sube 10%, la acción mediana del bloque se movió <b>${pct(medi(KS.map(k=>k.btc)),1)}</b> más allá del S&P. Beta mediano: <b>${nx(medi(KS.map(k=>k.beta)),2)}</b>.`); }
+  else if (T==="utility"){ hoy.push(`Ventas: <b>${pct(medi(KS.map(k=>k.vg1)),0)}</b> el último año (mediana). Inversión mediana: <b>${pc0(medi(KS.map(k=>k.cx)))}</b> de las ventas.`);
+    hoy.push(`Deuda neta / EBITDA mediana: <b>${nx(medi(KS.map(k=>k.dne)),1)}x</b>. P/E esperado mediano: <b>${nx(medi(KS.map(k=>k.pefwd>0?k.pefwd:null)))}x</b>.`); }
+  else if (T==="commodity"){ if (zcn) hoy.push(`<b>${zal} de ${zcn}</b> tienen el margen en la zona alta de su propia historia.`);
+    const pc_ = KS.filter(k=>k.peC>0&&k.pe); if (pc_.length) hoy.push(`P/E mediano: <b>${nx(medi(pc_.map(k=>k.pe)))}x</b> con la ganancia de hoy, <b>${nx(medi(pc_.map(k=>k.peC)))}x</b> con la ganancia promedio del ciclo. Dividendo mediano: <b>${pc0(medi(KS.map(k=>k.div)),1)}</b>.`); }
+  else if (T==="salud"){ const pr = KS.filter(k=>k.mu!=null&&k.mu>0).length; hoy.push(`<b>${pr} de ${KS.length}</b> ganan plata en la operación. Ventas: <b>${pct(medi(KS.map(k=>k.vg1)),0)}</b> el último año (mediana).`); }
+  else if (T==="software"){ const ks = fil.map(r=>r.k);
     hoy.push(`Ventas: <b>${pct(medi(ks.map(k=>k.vg1)),0)}</b> el último año (mediana), contra <b>${pct(medi(ks.map(k=>k.v3)),0)}</b> por año en 3 años.`);
     hoy.push(`Flujo libre mediano: <b>${pc0(medi(ks.map(k=>k.fcfm)))}</b> de las ventas; compensación en acciones: <b>${pc0(medi(ks.map(k=>k.sbcv)))}</b>. Precio / flujo libre mediano: <b>${nx(medi(ks.map(k=>k.pfcf)))}x</b>.`); }
   else if (T==="hardware"){ const ks = fil.map(r=>r.k);
@@ -738,7 +809,7 @@ async function bloquePag(m, id){
 function panelNicho(f){
   const bl = BQDE(f.byma); if (!bl || !bl.lente) return "";
   const L = bl.lente, k = metr(f), x = E.empresas.find(z=>z.ticker===f.ticker)||{};
-  const T = TIPO(L), s = T==="ciclo" ? lecturaCiclo(f,k) : T==="crecimiento" ? lecturaCrec(f,k) : T==="equipos" ? lecturaEquipos(f,k) : T==="plataforma" ? lecturaPlat(f,k) : T==="software" ? lecturaSoft(f,k) : T==="hardware" ? lecturaHard(f,k) : T==="infra" ? lecturaInfra(f,k) : lecturaFarma(f,k);
+  const T = TIPO(L), s = T==="ciclo" ? lecturaCiclo(f,k) : T==="crecimiento" ? lecturaCrec(f,k) : T==="equipos" ? lecturaEquipos(f,k) : T==="plataforma" ? lecturaPlat(f,k) : T==="software" ? lecturaSoft(f,k) : T==="general" ? lecturaGen(f,k) : T==="banco" ? lecturaBanco(f,k) : T==="cripto" ? lecturaCripto(f,k) : T==="utility" ? lecturaUtil(f,k) : T==="commodity" ? lecturaCommodity(f,k,L) : T==="salud" ? lecturaSalud(f,k) : T==="hardware" ? lecturaHard(f,k) : T==="infra" ? lecturaInfra(f,k) : lecturaFarma(f,k);
   return `<section class="fgrid"><div class="card"><h3>Lectura como ${esc(bl.nombre)}</h3><p class="lect">${esc(L.empresas[f.byma]||"")}</p>
     <h4>Lo que dicen los números</h4><ul class="lst">${s.map(t=>`<li>${t}</li>`).join("")}</ul>
     <p class="mut small">Nota dentro del bloque: <b style="color:${ncol(notaBloque(x,f,bl))}">${nx(notaBloque(x,f,bl))}</b> · ${esc(L.pesos_txt)}</p>

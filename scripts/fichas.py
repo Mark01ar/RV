@@ -602,6 +602,8 @@ def main():
         if not mcap and precio:
             sh_ = num(info.get("sharesOutstanding")) or num(info.get("impliedSharesOutstanding"))
             mcap = sh_ * precio if sh_ else None
+        if not mcap and num(info.get("trailingPE")) and num(info.get("netIncomeToCommon")) and info.get("financialCurrency") in (None, "USD"):
+            mcap = num(info.get("trailingPE")) * num(info.get("netIncomeToCommon"))
         fxc = None
         if info.get("currency") and info.get("currency") != "USD":
             fxc = fx_anual(info["currency"])(dt.date.today().year)
