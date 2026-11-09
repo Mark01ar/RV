@@ -206,6 +206,7 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .pil-r{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--muted)}
 .pil-bar{flex:1;height:4px;border-radius:2px;background:linear-gradient(90deg,#1e2a56,#3a4a86);position:relative}
 .pil-bar i{position:absolute;top:-4px;width:3px;height:12px;background:var(--accent);border-radius:2px;transform:translateX(-50%)}
+.inf{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--muted);color:var(--muted);font-size:10px;font-style:normal;margin-left:6px;cursor:help;vertical-align:1px}
 .pil-rl{font-size:10.5px;color:var(--muted);margin-top:3px}
 .pil-l{font-size:12.5px;line-height:1.5;margin:8px 0 4px;color:var(--text)}.pil-e{font-size:11.5px;line-height:1.45;margin:0;color:var(--muted)}
 .mtabs{margin-bottom:16px!important}
@@ -1689,22 +1690,22 @@ function spark(sr, c="#6ea8ff"){
 function pilarCard(x){
   const pos = x.max10>x.min10 ? (x.valor-x.min10)/(x.max10-x.min10)*100 : 50;
   const fmt = v => x.unidad==="%" ? nx(v,x.dec)+"%" : x.unidad==="B" ? nx(v/1000,1) : nx(v,x.dec);
-  return `<div class="pil"><div class="pil-h"><span>${esc(x.nombre)}</span><b>${valTxt(x)}</b></div>
+  return `<div class="pil"><div class="pil-h"><span>${esc(x.nombre)}<i class="inf" title="${esc(x.expl)}">i</i></span><b>${valTxt(x)}</b></div>
     <div class="pil-g">${spark(x.serie)}<div class="pil-c"><span>1 mes <b>${chgTxt(x,x.m1)}</b></span><span>3 meses <b>${chgTxt(x,x.m3)}</b></span><span>1 año <b>${chgTxt(x,x.a1)}</b></span></div></div>
     <div class="pil-r"><span>${fmt(x.min10)}</span><div class="pil-bar"><i style="left:${Math.max(0,Math.min(100,pos))}%"></i></div><span>${fmt(x.max10)}</span></div>
     <div class="pil-rl">Rango de ${x.anios||10} años${x.pctl10!=null?` · más alto que el ${Math.round(x.pctl10*100)}% de ese período`:""}</div>
-    <p class="pil-l">${esc(x.lectura).replace(/(\d)\.(\d)/g,"$1,$2")}</p><p class="pil-e">${esc(x.expl)}</p></div>`;
+    <p class="pil-l">${esc(x.lectura).replace(/(\d)\.(\d)/g,"$1,$2")}</p></div>`;
 }
 function pilaresHTML(soloResto, extra2){
   if (!PIL) return "";
   const G = [["tasas","Tasas y Fed"],["credito","Crédito y estrés"],["amplitud","Amplitud del mercado"],["dolar","Dólar y liquidez"]];
   const V = PIL.valuacion || {};
   const pb = V.pe_fwd || V.pe;
-  const valc = pb ? `<div class="pil"><div class="pil-h"><span>P/E ${V.pe_fwd?"esperado":"de los últimos 12 meses"} del S&P 500</span><b>${nx(pb,1)}x</b></div>
+  const valc = pb ? `<div class="pil"><div class="pil-h"><span>P/E ${V.pe_fwd?"esperado":"de los últimos 12 meses"} del S&P 500<i class="inf" title="El rendimiento por ganancias es la inversa del P/E: lo que gana el S&P por cada dólar invertido. Se compara con la tasa del bono, su alternativa sin riesgo. Históricamente, cuando la diferencia fue muy baja o negativa, los retornos de los años siguientes fueron más bajos que el promedio.">i</i></span><b>${nx(pb,1)}x</b></div>
     ${V.pe_fwd&&V.pe?`<div class="pil-c" style="margin-top:6px"><span>P/E de los últimos 12 meses <b>${nx(V.pe,1)}x</b></span></div>`:""}
     <div class="pil-c"><span>Rendimiento por ganancias <b>${nx(V.rend_ganancias,2)}%</b></span><span>Tasa a 10 años <b>${nx(V.t10,2)}%</b></span></div>
     <p class="pil-l">${V.prima!=null?(V.prima<0?`Las acciones rinden ${nx(-V.prima,2)} puntos menos por ganancias que el bono a 10 años: el mercado paga caro el crecimiento futuro y deja poco margen si las ganancias decepcionan.`:`Las acciones rinden ${nx(V.prima,2)} puntos más por ganancias que el bono a 10 años.`):""}</p>
-    <p class="pil-e">El rendimiento por ganancias es la inversa del P/E: lo que gana el S&P por cada dólar invertido. Se compara con la tasa del bono, su alternativa sin riesgo. Históricamente, cuando la diferencia fue muy baja o negativa, los retornos de los años siguientes fueron más bajos que el promedio.</p></div>` : "";
+    </div>` : "";
   const ord = ["credito","amplitud","dolar"], resto = ord.flatMap(g=>PIL.indicadores.filter(x=>x.pilar===g).map(pilarCard).concat(g==="amplitud"&&valc?[valc]:[]));
   const ta = PIL.indicadores.filter(x=>x.pilar==="tasas");
   if (soloResto){ const cr = PIL.indicadores.filter(x=>x.pilar==="credito").map(pilarCard).concat(extra2?[extra2]:[]), am = PIL.indicadores.filter(x=>x.pilar==="amplitud").map(pilarCard).concat(valc?[valc]:[]), dl = PIL.indicadores.filter(x=>x.pilar==="dolar").map(pilarCard);
@@ -1718,7 +1719,7 @@ function resumenMacro(){
   const bl = xs => xs.length ? xs.map(p=>`<span class="rbl" data-irb2="${p.bl.id}" style="--fc:${p.fam.c}"><span class="bc-ic sm"><svg viewBox="0 0 24 24">${ICO[p.bl.id]||""}</svg></span>${esc(p.bl.nombre)} <b class="${cls(p.md)}">${p.md>=0?"+":""}${Math.round(p.md*100)}</b></span>`).join("") : `<span class="mut">Ningún bloque con patrón consistente.</span>`;
   return sec("Resumen macro", `actualizado ${new Date(M.actualizado).toLocaleDateString("es-AR")}`, `<div class="rsm">
     <div class="rsm-a">
-      ${S?`<div class="rsm-k"><span>Semáforo de riesgo</span><b style="color:${SC[S.estado]}">${T.t}</b></div>`:""}
+      ${S?`<div class="rsm-k"><span>Semáforo de riesgo</span><b style="color:${SC[S.estado]};font-size:16px">${T.t}</b><em>${S.frena?"Alarma de crecimiento con los últimos datos publicados, todavía sin confirmar":"Sin alarma de crecimiento"} · S&P ${pct(S.dist,1)} contra su promedio de 200 ruedas${S.bajo?" (alarma)":""}. Rojo solo si se prenden las dos.</em></div>`:""}
       <div class="rsm-k"><span>Régimen</span><b style="color:${QC[M.actual]}">${esc(q.nombre)}</b><em>${Math.round(M.probs[M.actual]*100)}% de probabilidad · ${M.duracion} ${M.duracion===1?"mes":"meses"}</em>${M.crudo&&M.crudo!==M.actual?`<em>Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b></em>`:""}</div>
       ${cambios.length?`<div class="rsm-c"><span>Lo que más se movió en el último mes</span>${cambios.map(({x})=>`<div><em>${esc(x.nombre)}</em><b>${valTxt(x)}</b><i>${chgTxt(x,x.m1)}</i></div>`).join("")}</div>`:""}
     </div>
@@ -1732,21 +1733,20 @@ function macro(m){
   if (PIL===null || ESC===null){ Promise.all([PIL===null?fetch("data/pilares.json?v="+Date.now()).then(r=>r.ok?r.json():{indicadores:[]}).catch(()=>({indicadores:[]})).then(j=>PIL=j):0, ESC===null?fetch("data/escenarios.json?v="+Date.now()).then(r=>r.json()).catch(()=>({fases:[],empresas:[]})).then(j=>ESC=j):0]).then(()=>{ if (tab==="macro") macro(m); }); m.innerHTML = `<p class="mut">Cargando…</p>`; return; }
   const q = M.cuadrantes[M.actual], p = M.probs[M.actual];
   const div = ["crecimiento","inflacion"].filter(g=>M.lectura[g].diverge);
-  const MT = [["resumen","Resumen"],["tasas","Tasas y Fed"],["credito","Crédito y amplitud"],["semaforo","Semáforo"],["regimen","Régimen más probable"]];
+  const MT = [["resumen","Resumen"],["tasas","Tasas y Fed"],["credito","Crédito y amplitud"],["regimen","Régimen más probable"]];
   const mt = EST.mtab || "resumen";
   const I = M.informativos || {};
-  const tileGDP = I.gdpnow ? `<div class="pil"><div class="pil-h"><span>GDPNow · Fed de Atlanta</span><b style="color:${I.gdpnow.valor>=2?"var(--pos)":I.gdpnow.valor>=0?"var(--accent)":"var(--neg)"}">${I.gdpnow.valor>=0?"+":""}${nx(I.gdpnow.valor,1)}%</b></div>
+  const tileGDP = I.gdpnow ? `<div class="pil"><div class="pil-h"><span>GDPNow · Fed de Atlanta<i class="inf" title="Estimación en tiempo real que se actualiza con cada dato nuevo; el PBI oficial sale un mes después del trimestre. Más de 2% es crecimiento sólido; menos de 0%, contracción. Informativo: no entra en el cálculo del régimen.">i</i></span><b style="color:${I.gdpnow.valor>=2?"var(--pos)":I.gdpnow.valor>=0?"var(--accent)":"var(--neg)"}">${I.gdpnow.valor>=0?"+":""}${nx(I.gdpnow.valor,1)}%</b></div>
     <p class="pil-l">Crecimiento estimado del PBI de EE.UU. para el ${esc(I.gdpnow.trimestre)}, anualizado.${I.gdpnow.anterior!=null?` ${esc(I.gdpnow.trim_anterior)}: ${I.gdpnow.anterior>=0?"+":""}${nx(I.gdpnow.anterior,1)}%.`:""}</p>
-    <p class="pil-e">Estimación en tiempo real que se actualiza con cada dato nuevo; el PBI oficial sale un mes después del trimestre. Más de 2% es crecimiento sólido; menos de 0%, contracción. Informativo: no entra en el cálculo del régimen.</p></div>` : "";
+    </div>` : "";
   const n_ = I.nfci;
-  const tileNFCI = n_ ? `<div class="pil"><div class="pil-h"><span>Condiciones financieras · Fed de Chicago</span><b style="color:${n_.valor<0?"var(--pos)":"var(--neg)"}">${n_.valor>=0?"+":""}${nx(n_.valor,2)}</b></div>
+  const tileNFCI = n_ ? `<div class="pil"><div class="pil-h"><span>Condiciones financieras · Fed de Chicago<i class="inf" title="Resume tasas, spreads, volatilidad y acceso al financiamiento. Negativo: conseguir plata es más fácil que lo normal. Si sube rápido, suele anticipar problemas para la economía y para las acciones más especulativas.">i</i></span><b style="color:${n_.valor<0?"var(--pos)":"var(--neg)"}">${n_.valor>=0?"+":""}${nx(n_.valor,2)}</b></div>
     <p class="pil-l">${n_.valor<0?"Más laxas":"Más ajustadas"} que el promedio histórico; en 3 meses se ${n_.cambio_13s>0?"endurecieron":"relajaron"} (${n_.cambio_13s>=0?"+":""}${nx(n_.cambio_13s,2)}). Dato al ${esc(n_.fecha)}.</p>
-    <p class="pil-e">Resume tasas, spreads, volatilidad y acceso al financiamiento. Negativo: conseguir plata es más fácil que lo normal. Si sube rápido, suele anticipar problemas para la economía y para las acciones más especulativas.</p></div>` : "";
+    </div>` : "";
   let cuerpo = "";
   if (mt==="resumen") cuerpo = resumenMacro();
   else if (mt==="tasas") cuerpo = PIL ? sec("Tasas y Fed","",`<div class="pil-grid pg3">${PIL.indicadores.filter(x=>x.pilar==="tasas").map(pilarCard).join("")}</div>`) : "";
   else if (mt==="credito") cuerpo = pilaresHTML(true, tileNFCI);
-  else if (mt==="semaforo") cuerpo = semaforoHTML();
   else cuerpo = `<section class="fgrid" style="align-items:start">
       ${sec("Dónde está EE.UU.","el punto blanco es hoy; los grises, los 6 meses anteriores",cuadSVG())}
       ${sec("Régimen más probable",`confirmado · ${M.duracion} ${M.duracion===1?"mes":"meses"} seguidos`,`<div class="big" style="color:${QC[M.actual]};font-size:28px;font-weight:700">${esc(q.nombre)}</div>
@@ -1760,7 +1760,7 @@ function macro(m){
           <p><b>Regla de confirmación:</b> el régimen solo cambia si el nuevo cuadrante se repite dos meses seguidos o si su probabilidad supera el ${Math.round((M.umbral||0.45)*100)}%.</p>
         </details>`)}
     </section>
-    <div class="ejes">${tablaEje("crecimiento")}${tablaEje("inflacion")}</div>
+    <details class="help" style="margin:0 0 14px"><summary>Ver los indicadores de crecimiento e inflación que definen el régimen</summary><div class="ejes" style="margin-top:12px">${tablaEje("crecimiento")}${tablaEje("inflacion")}</div></details>
     ${tileGDP?sec("Otro indicador de crecimiento","informativo",`<div class="pil-grid pg3">${tileGDP}</div>`):""}
     ${sec("Régimen mes a mes","",`${bandaSVG()}<div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div>`)}`;
   m.innerHTML = `<div class="ftabs mtabs">${MT.map(([k,t])=>`<button class="${k===mt?"on":""}" data-mt="${k}">${t}</button>`).join("")}</div>${cuerpo}`;
