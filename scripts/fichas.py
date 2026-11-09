@@ -477,7 +477,7 @@ def main():
                     if pb.get(c_):
                         pb[c_] = pb[c_] / fxc
         usd = info.get("financialCurrency") in (None, "USD")
-        tipo = "cripto" if b in CRIPTO else "banco" if es_banco(info) else "inmobiliaria" if info.get("sector") == "Real Estate" else "general"
+        tipo = "cripto" if b in CRIPTO else "banco" if es_banco(info) or b in {"AXP"} else "inmobiliaria" if info.get("sector") == "Real Estate" else "general"
         val = {"pe": num(info.get("trailingPE")), "pe_fwd": num(info.get("forwardPE")), "ev_ebitda": num(info.get("enterpriseToEbitda")) if usd else None,
                "ps": num(info.get("priceToSalesTrailing12Months")) if usd else None, "pb": num(info.get("priceToBook")) if usd else None,
                "fcf_yield": num(info.get("freeCashflow")) / mcap if num(info.get("freeCashflow")) and mcap and usd else None,

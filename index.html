@@ -5,12 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>MaQ Renta Variable</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  --bg:#0b0e13;--panel:#11161e;--panel2:#161d27;--line:#232c39;--text:#d7dee8;--muted:#7d8a9b;
-  --accent:#f0b429;--pos:#3ecf8e;--neg:#f2555a;--blue:#5aa9ff;
-  --mono:"IBM Plex Mono",ui-monospace,monospace;--sans:"IBM Plex Sans",system-ui,sans-serif;
+  --bg:#070c1f;--panel:#0d1430;--panel2:#141d40;--line:#1e2a56;--text:#e9edf7;--muted:#8a94b8;
+  --accent:#e8c264;--pos:#45c27c;--neg:#ef6b6b;--blue:#6ea8ff;
+  --mono:"Inter",system-ui,sans-serif;--sans:"Inter",system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 html,body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px}
@@ -164,12 +164,59 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .ver{display:inline-block;border:1px solid;padding:3px 10px;font-family:var(--mono);font-size:12px;margin-bottom:4px}
 .coment{font-size:13px;line-height:1.5;margin:12px 0 0;border-left:2px solid var(--line);padding-left:10px}
 .desc{font-size:13px;line-height:1.55;margin:0 0 8px;max-height:150px;overflow:auto}
+html,body{font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
+.brand{font-size:19px;font-weight:700;letter-spacing:0;color:var(--text)}.brand em,#gate h1 em{font-style:normal;color:var(--accent)}
+#gate h1{font-size:19px;letter-spacing:0;color:var(--text)}
+#gate form,#gate input,#gate button{border-radius:10px}
+header{background:var(--bg);padding:14px 22px}
+nav{background:var(--bg);padding:0 14px}
+nav button{font-size:14px;letter-spacing:0;padding:12px 16px;font-weight:500}
+nav button.on{color:var(--text);font-weight:600}
+main{padding:18px 22px}
+.vivo button{border-radius:8px;font-size:13px;letter-spacing:0;padding:8px 14px;color:var(--text);border-color:var(--line);background:var(--panel)}
+.vivo button:hover{border-color:var(--accent)}
+.bar input,.bar select{border-radius:10px;padding:9px 12px;font-size:13px}
+details.help,.card,.fhead,.soon,.wrap{border-radius:14px}
+.card{background:var(--panel);padding:18px 20px}
+.card h3{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.card h3 .mut{text-transform:none;letter-spacing:0}
+.card h4{text-transform:uppercase;letter-spacing:.1em;font-size:11px;font-weight:600}
+th{text-transform:uppercase;letter-spacing:.06em;font-size:11px;font-weight:600;color:var(--muted)}
+.btn{border-radius:10px;font-size:13px;padding:8px 14px;background:var(--panel)}
+.nchip{border-radius:7px;font-weight:700;min-width:36px;padding:3px 6px;font-size:12px;color:#06101f !important;border:0}
+.tag{border-radius:6px}
+.kv b{font-size:14px}
+.ftabs{border-bottom:1px solid var(--line);margin:0 0 16px}
+.ftabs button{text-transform:uppercase;letter-spacing:.12em;font-size:12.5px;font-weight:600;padding:12px 18px}
+.ftabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+.seg button{border-radius:8px}.seg button.on{background:var(--accent);color:#06101f;border-color:var(--accent)}
+.fhead2{background:linear-gradient(180deg,#111a3b,#0d1430);border:1px solid var(--line);border-radius:16px;margin-bottom:14px;overflow:hidden}
+.fh-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:22px;padding:22px 24px;align-items:center}
+.fh-logo{width:150px;height:96px;border-radius:12px;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.fh-logo img{max-width:78%;max-height:70%;object-fit:contain}
+.fh-logo .sinlogo{font-size:28px;font-weight:800;color:#0d1430}
+.fh-info h2{margin:0;font-size:24px;font-weight:700}
+.fh-sub{color:var(--muted);font-size:14px;margin-top:4px}
+.fh-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.fh-tags span{font-size:12px;border:1px solid var(--line);border-radius:999px;padding:2px 10px;color:var(--muted)}
+.fh-tags .gold{color:var(--accent);border-color:rgba(232,194,100,.4)}
+.frase{font-style:italic;color:#c9d0e6;font-size:15px;line-height:1.5;margin:10px 0 0;max-width:820px}
+.fh-score{text-align:right;min-width:150px}
+.fh-score .big{font-size:56px;font-weight:800;line-height:1}
+.fh-score .lbl{font-size:12px;letter-spacing:.14em;color:var(--muted);font-weight:600;margin-top:6px}
+.fh-score .pill{display:inline-block;margin-top:10px;border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:12px}
+.fh-kpis{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--line)}
+.fh-kpis>div{padding:16px 22px;border-right:1px solid var(--line)}.fh-kpis>div:last-child{border-right:0}
+.fh-kpis span{display:block;font-size:11.5px;letter-spacing:.12em;color:var(--muted);font-weight:600;text-transform:uppercase}
+.fh-kpis b{display:block;font-size:28px;font-weight:700;margin:6px 0 4px}
+.fh-kpis small{color:var(--muted);font-size:12.5px;line-height:1.4;display:block}
+@media (max-width:900px){.fh-top{grid-template-columns:auto 1fr}.fh-score{grid-column:1/-1;text-align:left}.fh-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.fh-logo{width:96px;height:64px}}
 </style>
 </head>
 <body>
 <div id="gate">
   <form id="gf">
-    <h1>MAQ · RENTA VARIABLE</h1>
+    <h1>MaQ Renta <em>Variable</em></h1>
     <input id="gp" type="password" placeholder="Clave" autocomplete="current-password" autofocus>
     <button type="submit">Entrar</button>
     <div class="err" id="ge"></div>
@@ -177,7 +224,7 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 </div>
 
 <header>
-  <div class="brand">MAQ · RENTA VARIABLE</div>
+  <div class="brand">MaQ Renta <em>Variable</em></div>
   <div class="kpis" id="kpis"></div>
   <div class="vivo"><span id="vivoMsg"></span><button id="vivoBtn" type="button" title="Trae los precios del momento de BYMA y EE.UU. (data912). No cambia la cartera ni los puntajes: solo precios, CCL, premio, distancia a la MA200 y rendimiento desde que se armó.">ACTUALIZAR PRECIOS</button></div>
 </header>
@@ -197,7 +244,7 @@ const TABS = [
   {id:"revisor", t:"Revisor", d:"Pegás los CEDEARs de un cliente y ves qué posiciones están flojas, la concentración y por cuál conviene rotar cada una."},
   {id:"track", t:"Track record", d:"Ranking congelado cada semana y su rendimiento a 3 meses contra el S&P 500."}
 ];
-let D = null, M = null, F = null, C = null, E = null, tab = "empresas", sortK = "monto_usd", sortDir = -1;
+let D = null, M = null, F = null, C = null, E = null, FR = null, tab = "empresas", sortK = "monto_usd", sortDir = -1;
 const st = {q:"", sector:"", liq:"", datos:true};
 
 async function sha(s){
@@ -233,6 +280,10 @@ async function abrir(){
   try{
     const r = await fetch("data/empresas.json?v=" + Date.now());
     if (r.ok) E = await r.json();
+  }catch(e){}
+  try{
+    const r = await fetch("data/frases.json?v=" + Date.now());
+    if (r.ok) FR = await r.json();
   }catch(e){}
   kpis(); navegar(); render();
 }
@@ -359,7 +410,7 @@ const NOTA_TXT = {calidad:"Rentabilidad, márgenes y flujo de caja. Escala absol
 const big = x => x==null ? "—" : Math.abs(x)>=1e12 ? (x/1e12).toFixed(2)+" T" : Math.abs(x)>=1e9 ? (x/1e9).toFixed(1)+" B" : Math.abs(x)>=1e6 ? (x/1e6).toFixed(0)+" M" : x.toFixed(0);
 const nx = (x,d=1) => x==null ? "—" : x.toFixed(d).replace(".",",");
 const ncol = v => v==null ? "var(--line)" : v>=7 ? "var(--pos)" : v>=4.5 ? "var(--accent)" : "var(--neg)";
-const chip = v => `<span class="nchip" style="border-color:${ncol(v)};color:${v==null?"var(--muted)":ncol(v)}">${v==null?"—":nx(v)}</span>`;
+const chip = v => `<span class="nchip" style="background:${v==null?"var(--panel2)":ncol(v)};${v==null?"color:var(--muted)!important":""}">${v==null?"—":nx(v)}</span>`;
 const fch2 = f => f ? new Date(f+"T12:00").toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"2-digit"}) : "—";
 const PAIS = {"United States":"EE.UU.","Taiwan":"Taiwán","Brazil":"Brasil","China":"China","South Korea":"Corea","Netherlands":"Países Bajos","Japan":"Japón","United Kingdom":"Reino Unido","Germany":"Alemania","Switzerland":"Suiza","Argentina":"Argentina","Uruguay":"Uruguay","Luxembourg":"Luxemburgo","Canada":"Canadá","Israel":"Israel","Colombia":"Colombia","South Africa":"Sudáfrica","Denmark":"Dinamarca","Ireland":"Irlanda","Australia":"Australia","Nigeria":"Nigeria","Bermuda":"Bermudas","Singapore":"Singapur"};
 
@@ -456,15 +507,34 @@ async function ficha(m, t){
   const pb = f.precio_bloque || {}, a = f.analistas || {}, nt = f.notas || {}, nd = f.notas_detalle || {};
   const an = (f.anual||[]).slice(-10);
   const tipoTxt = {banco:"Banco / financiera: calidad y solidez se miden con ROE, ROA y patrimonio sobre activos.", cripto:"Su valor depende sobre todo del bitcoin: la valuación por múltiplos es poco representativa.", inmobiliaria:"Inmobiliaria: lo habitual es medirla por FFO; las ganancias contables subestiman su flujo."}[f.tipo];
-  const fmtDet = (k,v) => v==null ? "—" : /Cobertura|Deuda neta|Liquidez corr|P\/E|EV\/EBITDA/.test(k) ? nx(v)+"x" : typeof v==="number" ? pct(v) : esc(v);
   const xx = z => z==null ? "—" : nx(z)+"x";
+  const fmtDet = (k,v) => v==null ? "—" : /Cobertura|Deuda neta|Liquidez corr|P\/E|EV\/EBITDA/.test(k) ? nx(v)+"x" : typeof v==="number" ? pct(v) : esc(v);
   const sub = EST.ftab || "resumen";
-  const head = `<section class="fhead">
-    <div class="fid">${logoImg(f.byma)}<div><div class="tk2">${esc(f.byma)}${f.byma!==f.ticker?` <small>${esc(f.ticker)}</small>`:""}</div><h2>${esc(f.nombre)}</h2>
-    <div class="mut">${esc(f.sector||"")} · ${esc(f.industria||"")} · ${esc(PAIS[f.pais]||f.pais||"")} · ratio ${esc(f.ratio)}</div>
-    ${tipoTxt?`<div class="aviso">${tipoTxt}</div>`:""}</div></div>
-    ${kv([["Precio USD", pb.precio?num(pb.precio,2):"—"],["Precio CEDEAR $", f.px_ars?num(f.px_ars,0):"—"],["Premio CCL", pct(f.premio), f.premio>0.03?"neg":""],
-      ["Liquidez", `${esc(f.liquidez)} · ${usd(f.monto_usd)}/día`],["Capitalización", big(f.mcap)],["Próximo balance", fch2(a.proximo_balance)]])}
+  const u_ = an[an.length-1] || {};
+  const lev = f.tipo!=="banco" && u_.ebitda>0 && (u_.deuda!=null||u_.caja!=null) ? ((u_.deuda||0)-(u_.caja||0))/u_.ebitda : null;
+  const roe = u_.neto!=null && u_.patrimonio ? u_.neto/u_.patrimonio : null;
+  const dn = (u_.deuda||0)-(u_.caja||0);
+  const ub0 = f.ultimo_balance;
+  const frase = (FR||{})[f.byma];
+  const head = `<section class="fhead2">
+    <div class="fh-top">
+      <div class="fh-logo">${logoImg(f.byma,"")}</div>
+      <div class="fh-info"><h2>${esc(f.nombre)}</h2>
+        <div class="fh-sub">${esc(f.sector||"")} · ${esc(f.industria||"")} · ${esc(PAIS[f.pais]||f.pais||"")}</div>
+        <div class="fh-tags"><span class="gold">CEDEAR ${esc(f.byma)}</span>${f.byma!==f.ticker?`<span>${esc(f.ticker)}</span>`:""}<span>Ratio ${esc(f.ratio)}</span><span>Liquidez ${esc(f.liquidez)}</span>${f.tipo!=="general"?`<span>${esc({banco:"Banco",cripto:"Ligada a bitcoin",inmobiliaria:"Inmobiliaria"}[f.tipo])}</span>`:""}</div>
+        ${frase?`<p class="frase">${esc(frase)}</p>`:""}
+        ${tipoTxt?`<div class="aviso">${tipoTxt}</div>`:""}</div>
+      <div class="fh-score"><div class="big" style="color:${ncol(nt.negocio)}">${nt.negocio==null?"—":nx(nt.negocio)}</div><div class="lbl">NOTA NEGOCIO</div>
+        <div class="pill" style="color:${ncol(nt.tendencia)}">Tendencia ${nt.tendencia==null?"—":nx(nt.tendencia)}</div></div>
+    </div>
+    <div class="fh-kpis">
+      <div><span>Precio USD</span><b>${pb.precio?num(pb.precio,2):"—"}</b><small>CEDEAR $ ${f.px_ars?num(f.px_ars,0):"—"} · premio ${pct(f.premio)}</small></div>
+      <div><span>12 meses</span><b class="${cls(pb.r12m)}">${pct(pb.r12m,0)}</b><small>SPY ${pct(pb.r12m_spy,0)} · vs. MA200 ${pct(pb.vs_ma200,0)}</small></div>
+      <div><span>P/E</span><b>${xx(f.val?.pe)}</b><small>sector ${xx(f.pares?.pe)} · esperado ${xx(f.val?.pe_fwd)}</small></div>
+      ${f.tipo==="banco"?`<div><span>ROE</span><b>${pct(roe,1).replace("+","")}</b><small>patrimonio / activo ${u_.patrimonio&&u_.activo?pct(u_.patrimonio/u_.activo,1).replace("+",""):"—"}</small></div>`
+        :`<div><span>Deuda neta / EBITDA</span><b class="${lev==null?"":lev<=1?"pos":lev>3?"neg":""}">${lev==null?"—":lev<0?"caja neta":nx(lev)+"x"}</b><small>${u_.deuda!=null||u_.caja!=null?(dn<0?"caja neta US$ "+big(-dn):"deuda neta US$ "+big(dn)):"—"}</small></div>`}
+      <div><span>Próximo balance</span><b>${fch2(a.proximo_balance)}</b><small>${ub0?`último: <span style="color:${ub0.sorpresa>0.02?"var(--pos)":ub0.sorpresa<-0.02?"var(--neg)":"var(--accent)"}">${esc((ub0.veredicto||"").replace(" lo esperado","").replace(" con lo esperado",""))}</span> (${pct(ub0.sorpresa)})`:"—"}</small></div>
+    </div>
   </section>
   <div class="ftabs">${FTABS.map(([k,tt])=>`<button data-ft="${k}" class="${k===sub?"on":""}">${tt}</button>`).join("")}</div>`;
 
