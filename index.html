@@ -495,6 +495,7 @@ function lecturaFarma(f, k){
   if (k.mb!=null) s.push(`Margen bruto <b>${pc0(k.mb)}</b>${k.mb>0.7?": típico de un negocio protegido por patentes.":k.mb<0.6?": bajo para una farma; indica un negocio con más productos sin patente o de dispositivos.":"."}`);
   if (k.mid!=null) s.push(`Invierte <b>${pc0(k.mid)}</b> de sus ventas en investigación.`);
   if (k.pefwd!=null) s.push(`P/E esperado <b>${nx(k.pefwd)}x</b>${k.peg!=null?`, PEG ${nx(k.peg,2)}`:""}.${k.v3!=null&&k.v3<0.03&&k.pefwd<14?" Crecimiento bajo con P/E bajo: el mercado está descontando que pierde ventas por vencimientos.":k.v3!=null&&k.v3>0.15&&k.pefwd>25?" Crecimiento alto con P/E alto: el precio ya descuenta que el crecimiento sigue.":""}`);
+  if (k.pe && k.pefwd && k.pe/k.pefwd>1.8) s.push(`El P/E de los últimos 12 meses (${nx(k.pe)}x) es mucho más alto que el esperado (${nx(k.pefwd)}x): la ganancia contable reciente probablemente está golpeada por cargos únicos (compras de empresas o juicios). Conviene mirar más el esperado.`);
   if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos años (${nx(k.peMed)}x).`);
   if (k.mu!=null && k.pctl!=null) s.push(`Margen EBIT ${pc0(k.mu)}, ${rangoTxt(k)}.`);
   return s;
