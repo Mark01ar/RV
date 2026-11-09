@@ -1,0 +1,378 @@
+{
+ "bloques": [
+  {
+   "id": "memorias",
+   "nombre": "Memorias y almacenamiento",
+   "empresas": [
+    "MU",
+    "SKHY",
+    "SNDK",
+    "WDC"
+   ],
+   "clave": "Negocio cíclico: el P/E bajo suele aparecer en el pico de ganancias.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "ciclico": true,
+    "pesos": {
+     "calidad": 15,
+     "solidez": 20,
+     "valuacion_ciclo": 30,
+     "analistas": 20,
+     "tendencia": 15
+    },
+    "pesos_txt": "Calidad 15%, solidez 20%, valuación sobre la ganancia del ciclo 30%, analistas 20%, tendencia 15%. No usa crecimiento: en un pico, el crecimiento alto es parte del problema.",
+    "negocio": "Fabrican chips de memoria (DRAM, HBM y NAND) y discos. Es un producto casi commodity: el precio lo fija la oferta y la demanda global, y la oferta tarda dos o tres años en ajustar porque una fábrica nueva lleva ese tiempo. Por eso las ganancias pasan de récord a pérdidas en pocos trimestres. La IA cambió parte de la demanda: la HBM, la memoria que va pegada a los chips de IA, se vende con contratos más largos y precios más estables. Ese es el argumento de que \"esta vez el ciclo es más largo\". Lo que el sitio muestra es si los números de hoy se parecen a los picos anteriores.",
+    "mirar": [
+     "Margen contra su propio rango histórico. Es el dato más importante: con márgenes récord, un P/E bajo suele ser una trampa.",
+     "P/E sobre la ganancia promedio del ciclo, no la de este año.",
+     "Qué descuenta el precio: cuánto puede caer la ganancia antes de que el P/E deje de ser bajo.",
+     "Qué pasó con la ganancia las veces anteriores que el margen estuvo en la zona alta.",
+     "Inversión (capex) del sector: cuando todos invierten fuerte a la vez, uno o dos años después suele sobrar oferta."
+    ],
+    "riesgos": [
+     "Caída de precios de la memoria si la demanda de IA se frena o entra demasiada oferta nueva.",
+     "Competencia china (CXMT en DRAM, YMTC en NAND), sobre todo en gama baja.",
+     "Restricciones de exportación entre EE.UU. y China.",
+     "Dependencia de pocos clientes en HBM, con Nvidia como el principal."
+    ],
+    "balance": [
+     "Margen bruto y la guía de margen para el trimestre siguiente.",
+     "Comentarios sobre precios de contrato de DRAM y NAND.",
+     "Plan de inversión del año: si lo suben mucho, es señal de más oferta futura.",
+     "Inventario en días: si crece, la demanda se está enfriando.",
+     "Participación en HBM y contratos firmados para el año siguiente."
+    ],
+    "empresas": {
+     "MU": "El único fabricante grande de memoria de EE.UU.: DRAM (la mayor parte de sus ventas), HBM y NAND. Su año fiscal cierra entre agosto y septiembre, así que el último año de la tabla ya refleja buena parte del ciclo actual.",
+     "SKHY": "Líder en HBM y principal proveedor de memoria para Nvidia. Cotiza en Corea: los números están convertidos a dólares. Tiene fábricas en China, lo que la expone a las restricciones de exportación.",
+     "SNDK": "Memoria NAND y discos sólidos. Se separó de Western Digital en febrero de 2025, así que tiene pocos años de historia propia y las métricas de ciclo son poco confiables.",
+     "WDC": "Desde la separación de SanDisk en 2025 es solo discos rígidos, que se usan en centros de datos para guardar datos en masa. Tiene menos competidores (básicamente Seagate) y un ciclo algo más suave. Los años anteriores mezclan negocios distintos y no son del todo comparables."
+    }
+   }
+  },
+  {
+   "id": "chips",
+   "nombre": "Diseño de chips",
+   "empresas": [
+    "NVDA",
+    "AMD",
+    "AVGO",
+    "QCOM",
+    "MRVL",
+    "ALAB",
+    "INTC"
+   ],
+   "clave": "Crecimiento y dependencia de pocos clientes grandes."
+  },
+  {
+   "id": "fabricacion",
+   "nombre": "Fabricación y equipos de chips",
+   "empresas": [
+    "TSM",
+    "ASML",
+    "AMAT",
+    "LRCX"
+   ],
+   "clave": "Dependen de cuánto invierten los fabricantes y de las restricciones de exportación."
+  },
+  {
+   "id": "bigtech",
+   "nombre": "Big tech",
+   "empresas": [
+    "MSFT",
+    "GOOGL",
+    "META",
+    "AMZN",
+    "AAPL"
+   ],
+   "clave": "Flujo libre, recompras y cuánto gastan en IA."
+  },
+  {
+   "id": "infraia",
+   "nombre": "Infraestructura de IA",
+   "empresas": [
+    "ORCL",
+    "CRWV",
+    "NBIS",
+    "IREN"
+   ],
+   "clave": "Mucha deuda e inversión, contratos con pocos clientes."
+  },
+  {
+   "id": "software",
+   "nombre": "Software y ciberseguridad",
+   "empresas": [
+    "CRM",
+    "ADBE",
+    "NOW",
+    "TEAM",
+    "SAP",
+    "PLTR",
+    "PANW",
+    "CRWD",
+    "IBM",
+    "GLOB"
+   ],
+   "clave": "Crecimiento más margen, y el riesgo de que la IA reemplace el producto."
+  },
+  {
+   "id": "hardware",
+   "nombre": "Hardware y equipos",
+   "empresas": [
+    "CSCO",
+    "DELL",
+    "HPQ",
+    "XROX",
+    "BB",
+    "RGTI"
+   ],
+   "clave": "Grupo heterogéneo: ciclo de renovación de equipos y servidores."
+  },
+  {
+   "id": "medios",
+   "nombre": "Medios, internet y telecom",
+   "empresas": [
+    "NFLX",
+    "SPOT",
+    "DISN",
+    "YELP",
+    "TMUS"
+   ],
+   "clave": "Suscriptores, precio por usuario y costo del contenido."
+  },
+  {
+   "id": "ecommerce",
+   "nombre": "Comercio electrónico y plataformas",
+   "empresas": [
+    "MELI",
+    "EBAY",
+    "JMIA",
+    "UBER"
+   ],
+   "clave": "Volumen vendido, comisión que cobran y negocio financiero asociado."
+  },
+  {
+   "id": "china",
+   "nombre": "China",
+   "empresas": [
+    "BABA",
+    "JD",
+    "BIDU",
+    "NIO"
+   ],
+   "clave": "El riesgo principal es el país: regulación, estímulos y tensión con EE.UU."
+  },
+  {
+   "id": "bancos",
+   "nombre": "Bancos",
+   "empresas": [
+    "JPM",
+    "C",
+    "BA.C",
+    "GS",
+    "BBD",
+    "ITUB",
+    "NMR"
+   ],
+   "clave": "Precio / valor libro contra ROE, y sensibilidad a la tasa."
+  },
+  {
+   "id": "pagos",
+   "nombre": "Pagos",
+   "empresas": [
+    "V",
+    "MA",
+    "AXP",
+    "PYPL",
+    "HOOD"
+   ],
+   "clave": "Volumen procesado y margen."
+  },
+  {
+   "id": "cripto",
+   "nombre": "Cripto",
+   "empresas": [
+    "MSTR",
+    "COIN",
+    "RIOT",
+    "HUT"
+   ],
+   "clave": "Dependen del bitcoin; el balance dice poco."
+  },
+  {
+   "id": "electrica",
+   "nombre": "Energía eléctrica",
+   "empresas": [
+    "VST",
+    "CEG",
+    "GEV",
+    "OKLO",
+    "FSLR"
+   ],
+   "clave": "Demanda de los centros de datos y precio de la electricidad."
+  },
+  {
+   "id": "petroleo",
+   "nombre": "Petróleo y gas",
+   "empresas": [
+    "XOM",
+    "CVX",
+    "SHEL",
+    "PBR",
+    "GPRK",
+    "TEN"
+   ],
+   "clave": "Precio del crudo con el que empatan y dividendo."
+  },
+  {
+   "id": "mineria",
+   "nombre": "Minería y acero",
+   "empresas": [
+    "VALE",
+    "FCX",
+    "B",
+    "HMY",
+    "HL",
+    "MP",
+    "TXR"
+   ],
+   "clave": "Precio del metal y costo por onza o tonelada."
+  },
+  {
+   "id": "farma",
+   "nombre": "Farma grande",
+   "empresas": [
+    "LLY",
+    "NVO",
+    "JNJ",
+    "PFE",
+    "ABT"
+   ],
+   "clave": "Patentes que vencen, lo que tienen en desarrollo y cuánto pesa su producto principal.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 20,
+     "crecimiento": 25,
+     "valuacion": 20,
+     "solidez": 15,
+     "analistas": 10,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 20%, crecimiento 25%, valuación 20%, solidez 15%, analistas 10%, tendencia 10%. El crecimiento pesa más porque es lo que muestra si están reemplazando los productos que vencen.",
+    "negocio": "Venden medicamentos protegidos por patentes. Mientras dura la patente, el margen es enorme; cuando vence, entran los genéricos y las ventas de ese producto caen entre 50% y 90% en pocos años (el \"precipicio de patentes\"). Por eso una farma vale lo que ganan sus productos actuales hasta que vencen, más lo que tiene en desarrollo para reemplazarlos. Hoy el grupo está partido: Lilly y Novo crecen por los tratamientos de obesidad y diabetes (GLP-1), mientras Pfizer y J&J pelean contra vencimientos. Abbott es otro negocio: dispositivos, diagnósticos y nutrición, poco dependiente de patentes.",
+    "mirar": [
+     "Crecimiento de ventas contra P/E esperado (PEG): si crece poco y el P/E es bajo, el mercado está descontando vencimientos.",
+     "Margen bruto: muy alto (más de 70%) en las que dependen de patentes.",
+     "Gasto en investigación sobre ventas: cuánto reinvierte para el próximo producto.",
+     "P/E contra su propia banda histórica.",
+     "Cargos únicos: la ganancia contable de una farma suele caer por compras de empresas (se cargan de golpe los proyectos comprados) o por juicios. Cuando el P/E actual se dispara y el esperado no, casi siempre es eso.",
+     "Deuda: muchas compran otras empresas con deuda para reponer productos que vencen."
+    ],
+    "riesgos": [
+     "Vencimiento de patentes de sus productos principales.",
+     "Regulación de precios en EE.UU.: negociación de Medicare y acuerdos de precios con el gobierno.",
+     "Fallas en estudios clínicos de productos clave.",
+     "Juicios (por ejemplo, talco en J&J).",
+     "Competencia creciente en obesidad, que puede bajar precios."
+    ],
+    "balance": [
+     "Ventas de los dos o tres productos principales y su crecimiento.",
+     "Guía de ventas y ganancia del año.",
+     "Resultados de estudios en fase 3 y aprobaciones de la FDA.",
+     "Comentarios sobre precios y descuentos en EE.UU."
+    ],
+    "empresas": {
+     "LLY": "Crece por la tirzepatida (Mounjaro para diabetes y Zepbound para obesidad), que ya es su producto más vendido, con patentes hasta mediados de la década de 2030. Su próxima apuesta es orforglipron, un GLP-1 en pastilla. El riesgo es la concentración y el precio: cotiza muy por encima del grupo porque el mercado descuenta años de crecimiento.",
+     "NVO": "La semaglutida (Ozempic y Wegovy) explica la mayor parte de sus ventas. Perdió terreno frente a Lilly en 2024 y 2025, recortó previsiones y cambió de CEO, y la acción cayó fuerte. La patente vence en 2026 en varios países (China, Canadá, Brasil, India) y hacia 2031–2032 en EE.UU. Reporta en coronas danesas, convertidas a dólares.",
+     "JNJ": "Desde 2023 es solo farma y dispositivos médicos (separó consumo en Kenvue). Su mayor producto, Stelara, enfrenta biosimilares desde 2025, y lo compensa con oncología (Darzalex) e inmunología. Arrastra juicios por talco. Sube el dividendo hace más de 60 años.",
+     "PFE": "Vende mucho menos que en la pandemia (vacuna y Paxlovid) y enfrenta vencimientos fuertes entre 2026 y 2028 (Eliquis, Ibrance, Xeljanz, Vyndaqel). Compró Seagen (oncología) y Metsera (obesidad) para reponer. El P/E esperado bajo y el dividendo alto muestran que el mercado duda de que lo logre.",
+     "ABT": "No depende de patentes: vende dispositivos (monitores de glucosa FreeStyle Libre, dispositivos cardíacos), diagnósticos, nutrición y genéricos de marca. Crece de forma más estable y es menos sensible a la regulación de precios de medicamentos. A fines de 2025 anunció la compra de Exact Sciences (diagnóstico de cáncer). Es la que menos se compara con las otras cuatro."
+    }
+   }
+  },
+  {
+   "id": "biotech",
+   "nombre": "Biotech y servicios de salud",
+   "empresas": [
+    "MRNA",
+    "VRTX",
+    "NTRA",
+    "TEM",
+    "HIMS",
+    "UNH"
+   ],
+   "clave": "Resultados clínicos, caja disponible y regulación."
+  },
+  {
+   "id": "defensivo",
+   "nombre": "Consumo defensivo",
+   "empresas": [
+    "KO",
+    "PEP",
+    "PG",
+    "MO",
+    "WMT",
+    "MCD"
+   ],
+   "clave": "Estabilidad, poder de precio y dividendo."
+  },
+  {
+   "id": "ciclico",
+   "nombre": "Consumo cíclico",
+   "empresas": [
+    "NKE",
+    "ANF",
+    "GT"
+   ],
+   "clave": "Cuánto gasta la gente, inventarios y márgenes."
+  },
+  {
+   "id": "aero",
+   "nombre": "Aeroespacial, defensa y aerolíneas",
+   "empresas": [
+    "BA",
+    "GE",
+    "LMT",
+    "UAL",
+    "AAL",
+    "DAL"
+   ],
+   "clave": "Ciclo de viajes, pedidos de aviones y presupuesto de defensa."
+  },
+  {
+   "id": "espacio",
+   "nombre": "Espacio",
+   "empresas": [
+    "SPCX",
+    "RKLB",
+    "ASTS",
+    "SPCE",
+    "SATL"
+   ],
+   "clave": "Contratos, lanzamientos y cuánto dura la caja."
+  },
+  {
+   "id": "industriales",
+   "nombre": "Industriales y agro",
+   "empresas": [
+    "CAT",
+    "PCAR",
+    "ADGO"
+   ],
+   "clave": "Ciclo de inversión del campo, la construcción y el transporte."
+  },
+  {
+   "id": "aparte",
+   "nombre": "Casos aparte",
+   "empresas": [
+    "BRKB",
+    "TSLA",
+    "PLD",
+    "BIOX"
+   ],
+   "clave": "Empresas sin comparables: cada una con su propia lectura."
+  }
+ ]
+}

@@ -135,6 +135,22 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .aviso{margin-top:8px;font-size:12px;color:var(--accent);border-left:2px solid var(--accent);padding-left:8px}
 .kv{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px 14px;font-family:var(--mono);font-size:12px;margin-top:8px}
 .kv span{display:block;color:var(--muted);font-size:11px}.kv b{font-weight:500}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,280px),1fr));gap:12px}
+.bcard{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;cursor:pointer;transition:border-color .15s}
+.bcard:hover{border-color:var(--accent)}
+.bcard.lista{background:linear-gradient(180deg,#141d40,#0d1430)}
+.bc-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.bc-top h3{margin:0;font-size:15px;font-weight:600;font-family:var(--sans,inherit);letter-spacing:0;color:var(--text)}
+.bc-top span{font-size:11px;white-space:nowrap}.bc-top .gold{color:var(--accent)}
+.bc-logos{display:flex;flex-wrap:wrap;gap:4px;margin:10px 0 8px}.bc-logos .logo-s{margin:0}
+.bcard p{margin:0 0 10px;color:var(--muted);font-size:12.5px;line-height:1.45}
+.bc-kpi{display:flex;gap:12px;font-size:12px;flex-wrap:wrap}.bc-kpi b{font-weight:600}
+.bhead{padding:18px 22px}.bhead h2{margin:0}
+.lect{font-size:13.5px;line-height:1.6;margin:0 0 6px;color:#d4d9ea}
+.lst{margin:0;padding-left:18px;font-size:13px;line-height:1.55}.lst li{margin-bottom:6px}
+.bemp{padding:10px 0;border-bottom:1px solid var(--line)}.bemp:last-of-type{border-bottom:0}
+.bemp .tk{font-weight:600;display:flex;align-items:center;gap:6px}.bemp p{margin:6px 0 0;font-size:13px;line-height:1.55;color:#d4d9ea}
+.bqtag{cursor:pointer;border-color:var(--blue)!important;color:var(--blue)!important}
 .fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,460px),1fr));gap:12px;margin-bottom:12px}
 .card{background:var(--panel);border:1px solid var(--line);padding:12px 14px;margin-bottom:12px;min-width:0}
 .fgrid .card{margin-bottom:0}
@@ -251,7 +267,7 @@ const TABS = [
   {id:"revisor", t:"Revisor", d:"Pegás los CEDEARs de un cliente y ves qué posiciones están flojas, la concentración y por cuál conviene rotar cada una."},
   {id:"track", t:"Track record", d:"Ranking congelado cada semana y su rendimiento a 3 meses contra el S&P 500."}
 ];
-let D = null, M = null, F = null, C = null, E = null, FR = null, LM = null, tab = "empresas", sortK = "monto_usd", sortDir = -1;
+let D = null, M = null, F = null, C = null, E = null, FR = null, LM = null, BQ = null, tab = "empresas", sortK = "monto_usd", sortDir = -1;
 const st = {q:"", sector:"", liq:"", datos:true};
 
 async function sha(s){
@@ -295,6 +311,10 @@ async function abrir(){
   try{
     const r = await fetch("data/logos_meta.json?v=" + Date.now());
     if (r.ok) LM = await r.json();
+  }catch(e){}
+  try{
+    const r = await fetch("data/bloques.json?v=" + Date.now());
+    if (r.ok) BQ = await r.json();
   }catch(e){}
   kpis(); navegar(); render();
 }
@@ -427,11 +447,130 @@ const PAIS = {"United States":"EE.UU.","Taiwan":"Taiwán","Brazil":"Brasil","Chi
 
 const PESOS = {calidad:25, crecimiento:20, solidez:15, valuacion:15, analistas:15, tendencia:10};
 function general(n){ if (!n) return null; if (n.general!=null) return n.general; const k = Object.keys(PESOS).filter(k=>n[k]!=null); if (k.length<3) return null; return Math.round(k.reduce((s,x)=>s+n[x]*PESOS[x],0)/k.reduce((s,x)=>s+PESOS[x],0)*10)/10; }
+const BQDE = b => (BQ?.bloques||[]).find(x=>x.empresas.includes(b));
+const lerp = (x, pts) => { if (x==null) return null; if (x<=pts[0][0]) return pts[0][1]; for (let i=1;i<pts.length;i++) if (x<=pts[i][0]) { const [a,va]=pts[i-1],[b,vb]=pts[i]; return va+(vb-va)*(x-a)/(b-a); } return pts[pts.length-1][1]; };
+const medi = a => { const s=(a||[]).filter(v=>v!=null&&isFinite(v)).sort((p,q)=>p-q); if(!s.length) return null; const k=(s.length-1)/2; return (s[Math.floor(k)]+s[Math.ceil(k)])/2; };
+const pc0 = (z,d=0) => z==null ? "—" : pct(z,d).replace("+","");
+function metr(f){
+  const an = (f.anual||[]).filter(r=>r.ventas>0);
+  const u = an[an.length-1]||{};
+  const me = an.filter(r=>r.m_ebit!=null);
+  const ms = me.map(r=>r.m_ebit);
+  const mu = me.length ? me[me.length-1].m_ebit : null;
+  const pctl = me.length>=4 ? ms.filter(v=>v<mu).length/(ms.length-1) : null;
+  const nets = an.slice(-10).map(r=>r.neto).filter(v=>v!=null);
+  const nprom = nets.length>=4 ? nets.reduce((s,v)=>s+v,0)/nets.length : null;
+  const mcap = f.mcap;
+  const peC = nprom==null||!mcap ? null : nprom<=0 ? -1 : mcap/nprom;
+  const peMed = f.pe_banda ? medi(f.pe_banda.pe) : null;
+  const pe = f.val?.pe;
+  const desc = pe && peMed ? pe/peMed - 1 : null;
+  const srt = [...ms].sort((a,b)=>a-b);
+  const thr = ms.length>=4 ? srt[Math.floor((srt.length-1)*0.75)] : null;
+  const picos = thr==null ? [] : me.slice(0,-1).filter(r=>r.m_ebit>=thr).map(r=>{ const s_=an.find(z=>z.anio===r.anio+1); return {anio:r.anio, m:r.m_ebit, perd: !!(s_&&s_.neto<0), sig: s_&&r.neto>0&&s_.neto!=null&&s_.neto>=0 ? s_.neto/r.neto-1 : null}; }).filter(p=>p.perd||p.sig!=null);
+  const a3 = an[an.length-4];
+  const v3 = a3 && a3.ventas>0 && u.ventas ? Math.pow(u.ventas/a3.ventas,1/3)-1 : null;
+  return {mu, pctl, mmin: ms.length?Math.min(...ms):null, mmax: ms.length?Math.max(...ms):null, nanos: me.length, nprom, nn: nets.length, peC, peMed, pe, desc, picos, v3, mb: u.m_bruto, mid: u.m_id, pefwd: f.val?.pe_fwd, peg: f.val?.peg, div: f.val?.div_yield, r12m: f.precio_bloque?.r12m};
+}
+function notaBloque(x, f, bl){
+  const L = bl.lente; if (!L) return general(x.notas);
+  const n = Object.assign({}, x.notas||{});
+  if (L.pesos.valuacion_ciclo!=null && f){ const k = metr(f); n.valuacion_ciclo = k.peC==null ? null : k.peC<0 ? 1 : Math.round(lerp(k.peC,[[6,10],[10,8],[15,6],[25,3.5],[40,1]])*10)/10; }
+  const ks = Object.keys(L.pesos).filter(k=>n[k]!=null); if (ks.length<3) return null;
+  return Math.round(ks.reduce((s,k)=>s+n[k]*L.pesos[k],0)/ks.reduce((s,k)=>s+L.pesos[k],0)*10)/10;
+}
+function rangoTxt(k){ if (k.pctl==null) return "—"; if (k.pctl>=1) return `máximo de ${k.nanos} años`; if (k.pctl<=0) return `mínimo de ${k.nanos} años`; return `${Math.round(k.pctl*100)}% de su historia`; }
+function lecturaCiclo(f, k){
+  const s = [];
+  if (k.mu!=null) s.push(k.pctl==null ? `Margen EBIT del último año: <b>${pc0(k.mu)}</b>. Hay pocos años de historia para ubicarlo en su ciclo.` : `Margen EBIT del último año: <b>${pc0(k.mu)}</b>, ${k.pctl>=1?`<b>el más alto de los ${k.nanos} años con datos</b>`:k.pctl<=0?`el más bajo de los ${k.nanos} años con datos`:`más alto que el <b>${Math.round(k.pctl*100)}%</b> de sus otros años`} (rango ${pc0(k.mmin)} a ${pc0(k.mmax)}).${k.pctl>=0.75?" Está en la zona alta de su ciclo.":k.pctl<=0.25?" Está en la zona baja de su ciclo.":""}`);
+  if (k.peC!=null) s.push(k.peC<0 ? `Sumando los últimos ${k.nn} años, la empresa <b>perdió plata en promedio</b>: el P/E de hoy (${nx(k.pe)}x) depende de que la ganancia actual se sostenga.` : `Con la ganancia de hoy el P/E es <b>${nx(k.pe)}x</b>; con la ganancia promedio de los últimos ${k.nn} años (US$ ${big(k.nprom)}) sería <b>${nx(k.peC)}x</b>.`);
+  else s.push(`No hay suficientes años de ganancia para calcular el P/E del ciclo.`);
+  if (k.desc!=null) s.push(k.desc<0 ? `Para que el P/E llegue a su mediana de los últimos años (${nx(k.peMed)}x) con el precio de hoy, la ganancia podría caer <b>${pc0(-k.desc)}</b>.` : `Su P/E está <b>${pc0(k.desc)}</b> por encima de su mediana de los últimos años (${nx(k.peMed)}x).`);
+  if (k.picos.length) s.push(`Las otras veces que el margen estuvo en la zona alta: ${k.picos.map(p=>`<b>${p.anio}</b> → ${p.perd?"al año siguiente pasó a pérdida":`al año siguiente la ganancia ${p.sig>=0?"subió":"cayó"} ${pc0(Math.abs(p.sig))}`}`).join("; ")}.`);
+  return s;
+}
+function lecturaFarma(f, k){
+  const s = [];
+  if (k.v3!=null) s.push(`Ventas: <b>${pct(k.v3,0)}</b> por año en los últimos 3 años.`);
+  if (k.mb!=null) s.push(`Margen bruto <b>${pc0(k.mb)}</b>${k.mb>0.7?": típico de un negocio protegido por patentes.":k.mb<0.6?": bajo para una farma; indica un negocio con más productos sin patente o de dispositivos.":"."}`);
+  if (k.mid!=null) s.push(`Invierte <b>${pc0(k.mid)}</b> de sus ventas en investigación.`);
+  if (k.pefwd!=null) s.push(`P/E esperado <b>${nx(k.pefwd)}x</b>${k.peg!=null?`, PEG ${nx(k.peg,2)}`:""}.${k.v3!=null&&k.v3<0.03&&k.pefwd<14?" Crecimiento bajo con P/E bajo: el mercado está descontando que pierde ventas por vencimientos.":k.v3!=null&&k.v3>0.15&&k.pefwd>25?" Crecimiento alto con P/E alto: el precio ya descuenta que el crecimiento sigue.":""}`);
+  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos años (${nx(k.peMed)}x).`);
+  if (k.mu!=null && k.pctl!=null) s.push(`Margen EBIT ${pc0(k.mu)}, ${rangoTxt(k)}.`);
+  return s;
+}
+function columnasBloque(bl){
+  const L = bl.lente;
+  if (L && L.ciclico) return [["Margen EBIT",k=>pc0(k.mu)],["Margen en su historia",k=>rangoTxt(k)],["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E del ciclo",k=>k.peC==null?"—":k.peC<0?"pérdida":nx(k.peC)+"x"],["Ganancia puede caer",k=>k.desc==null?"—":k.desc<0?pc0(-k.desc):"—"],["12M",k=>`<span class="${cls(k.r12m)}">${pct(k.r12m,0)}</span>`]];
+  if (L) return [["Ventas 3 años",k=>pct(k.v3,0)],["Margen bruto",k=>pc0(k.mb)],["Investigación / ventas",k=>pc0(k.mid)],["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E esperado",k=>k.pefwd==null?"—":nx(k.pefwd)+"x"],["PEG",k=>k.peg==null?"—":nx(k.peg,2)],["P/E vs su mediana",k=>pct(k.desc,0)],["Dividendo",k=>pc0(k.div,1)],["12M",k=>`<span class="${cls(k.r12m)}">${pct(k.r12m,0)}</span>`]];
+  return [["P/E",k=>k.pe==null?"—":nx(k.pe)+"x"],["P/E esperado",k=>k.pefwd==null?"—":nx(k.pefwd)+"x"],["Ventas 3 años",k=>pct(k.v3,0)],["Margen EBIT",k=>pc0(k.mu)],["12M",k=>`<span class="${cls(k.r12m)}">${pct(k.r12m,0)}</span>`]];
+}
+async function cargarFichas(ts){
+  await Promise.all(ts.filter(t=>!FCACHE[t]).map(async t=>{ try{ const r = await fetch(`data/fichas/${encodeURIComponent(t)}.json?v=${Date.now()}`); FCACHE[t] = r.ok ? await r.json() : {sin:true}; }catch(e){ FCACHE[t] = {sin:true}; } }));
+}
+function portada(m){
+  const BL = BQ.bloques, byB = b => E.empresas.find(z=>z.byma===b) || {};
+  const q = (EST.q||"").trim().toLowerCase();
+  const hits = q ? E.empresas.filter(x=>(x.byma+" "+x.ticker+" "+x.nombre).toLowerCase().includes(q)).slice(0,12) : [];
+  m.innerHTML = `<details class="help"><summary>Cómo funciona</summary>
+    <p>Las 125 empresas con CEDEAR más operadas en BYMA, agrupadas en bloques que se analizan con la misma vara. Cada bloque tiene su lectura (cómo gana plata el nicho, qué mirar, qué riesgos tiene) y un ranking interno con las métricas que importan en ese nicho. Comparar una memoria con una farma no tiene sentido; dentro del bloque, sí.</p>
+    <p>Las lecturas se van armando de a poco. Los bloques sin lectura muestran por ahora un ranking con la nota general.</p></details>
+  <div class="bar"><input id="eq" placeholder="Buscar ticker o empresa" value="${esc(EST.q)}"><button class="btn" id="elista" style="margin:0">Ver las 125 en lista</button><span class="count">${BL.length} bloques · ${BL.filter(b=>b.lente).length} con lectura</span></div>
+  ${hits.length?`<div class="card"><table><tbody>${hits.map(x=>`<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td class="tk l">${logoImg(x.byma,"logo-s")}${esc(x.byma)}</td><td class="nm l">${esc(x.nombre)}</td><td class="l mut">${esc(BQDE(x.byma)?.nombre||"")}</td><td>${chip(x.notas?.general)}</td></tr>`).join("")}</tbody></table></div>`:""}
+  <div class="bgrid">${BL.map(b=>{ const xs = b.empresas.map(byB);
+    const r3 = medi(xs.map(x=>x.r3m)), r12 = medi(xs.map(x=>x.r12m));
+    return `<div class="bcard${b.lente?" lista":""}" data-b="${b.id}"><div class="bc-top"><h3>${esc(b.nombre)}</h3><span class="${b.lente?"gold":"mut"}">${b.lente?"Lectura lista":"Lectura en preparación"}</span></div>
+      <div class="bc-logos">${b.empresas.map(t=>`<span title="${esc(t)}">${logoImg(t,"logo-s")}</span>`).join("")}</div>
+      <p>${esc(b.clave)}</p>
+      <div class="bc-kpi"><span>${b.empresas.length} empresas</span><span>3M <b class="${cls(r3)}">${pct(r3,0)}</b></span><span>12M <b class="${cls(r12)}">${pct(r12,0)}</b></span><span class="mut">mediana</span></div></div>`; }).join("")}</div>`;
+  m.querySelector("#eq").oninput = e=>{EST.q=e.target.value; portada(m); const i=m.querySelector("#eq"); i.focus(); i.setSelectionRange(i.value.length,i.value.length);};
+  m.querySelector("#elista").onclick = ()=>{EST.vista="lista"; window.scrollTo(0,0); render();};
+  m.querySelectorAll("[data-b]").forEach(c=>c.onclick=()=>{EST.bloque=c.dataset.b; window.scrollTo(0,0); render();});
+  m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
+}
+async function bloquePag(m, id){
+  const bl = BQ.bloques.find(b=>b.id===id); if (!bl){ EST.bloque=null; return portada(m); }
+  const xs = bl.empresas.map(b=>E.empresas.find(z=>z.byma===b)).filter(Boolean);
+  if (xs.some(x=>!FCACHE[x.ticker])){ m.innerHTML = `<p class="mut">Cargando bloque…</p>`; await cargarFichas(xs.map(x=>x.ticker)); }
+  const L = bl.lente, cols = columnasBloque(bl);
+  const fil = xs.map(x=>{ const f = FCACHE[x.ticker]; const ok = f && !f.sin; return {x, f: ok?f:null, k: ok?metr(f):{}, n: notaBloque(x, ok?f:null, bl)}; }).sort((a,b)=>(b.n??-1)-(a.n??-1));
+  let hoy = [];
+  if (L && L.ciclico){ const al = fil.filter(r=>r.k.pctl!=null&&r.k.pctl>=0.75).length, cn = fil.filter(r=>r.k.pctl!=null).length;
+    hoy.push(`<b>${al} de ${cn}</b> empresas tienen el margen en la zona alta de su propia historia.`);
+    const pcs = fil.map(r=>r.k).filter(k=>k.peC!=null&&k.peC>0&&k.pe); if (pcs.length) hoy.push(`P/E mediano del bloque: <b>${nx(medi(pcs.map(k=>k.pe)))}x</b> con la ganancia de hoy, <b>${nx(medi(pcs.map(k=>k.peC)))}x</b> con la ganancia promedio del ciclo.`); }
+  else if (L){ const ks = fil.map(r=>r.k); hoy.push(`Crecimiento mediano de ventas: <b>${pct(medi(ks.map(k=>k.v3)),0)}</b> por año en 3 años. P/E esperado mediano: <b>${nx(medi(ks.map(k=>k.pefwd)))}x</b>.`);
+    const sob = ks.filter(k=>k.desc!=null&&k.desc>0).length; hoy.push(`<b>${sob} de ${ks.filter(k=>k.desc!=null).length}</b> cotizan por encima de su propio P/E mediano.`); }
+  m.innerHTML = `<button class="btn" id="bv">← Bloques</button> <button class="btn" id="bcmp">Comparar precios del bloque</button>
+  <section class="fhead2 bhead"><div class="fh-info"><h2>${esc(bl.nombre)}</h2><div class="fh-sub">${xs.length} empresas · ${esc(bl.clave)}</div>${L?`<div class="fh-sub">Lectura revisada: ${esc(L.revisado)}</div>`:""}</div></section>
+  ${L?`<section class="fgrid"><div class="card"><h3>Cómo gana plata el nicho</h3><p class="lect">${esc(L.negocio)}</p>${hoy.length?`<h4>El bloque hoy</h4><ul class="lst">${hoy.map(h=>`<li>${h}</li>`).join("")}</ul>`:""}</div>
+    <div class="card"><h3>Qué mirar</h3><ul class="lst">${L.mirar.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><h4>Riesgos del nicho</h4><ul class="lst">${L.riesgos.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><h4>En cada balance</h4><ul class="lst">${L.balance.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div></section>`
+   :`<div class="aviso">La lectura de este bloque todavía no está armada. Por ahora el ranking usa la nota general.</div>`}
+  <div class="card"><h3>Ranking del bloque</h3><div class="wrap" style="max-height:none"><table><thead><tr><th class="l">CEDEAR</th><th class="l">Empresa</th><th>${L?"Nota del bloque":"Nota general"}</th>${cols.map(c=>`<th>${c[0]}</th>`).join("")}</tr></thead>
+  <tbody>${fil.map(r=>`<tr data-e="${esc(r.x.ticker)}" style="cursor:pointer"><td class="tk l">${logoImg(r.x.byma,"logo-s")}${esc(r.x.byma)}</td><td class="nm l">${esc(r.x.nombre)}</td><td>${chip(r.n)}</td>${cols.map(c=>`<td>${r.f?c[1](r.k):"—"}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
+  <p class="mut small">${L?esc(L.pesos_txt):"Nota general: calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15%, tendencia 10%."} Sirve para ordenar dentro del bloque; no es una señal de compra.${L&&L.ciclico?" P/E del ciclo: precio dividido por la ganancia promedio de hasta 10 años.":""}</p></div>
+  ${L?`<div class="card"><h3>Empresa por empresa</h3>${fil.map(r=>`<div class="bemp"><div class="tk">${logoImg(r.x.byma,"logo-s")}${esc(r.x.nombre)}</div><p>${esc(L.empresas[r.x.byma]||"")}</p></div>`).join("")}<p class="mut small">Textos de contexto escritos para el sitio; los datos de la tabla se actualizan solos cada semana. Es historia, no predicción.</p></div>`:""}`;
+  m.querySelector("#bv").onclick = ()=>{EST.bloque=null; window.scrollTo(0,0); render();};
+  m.querySelector("#bcmp").onclick = ()=>{CMP.splice(0,CMP.length,...fil.slice(0,4).map(r=>r.x.ticker)); EST.vista="cmp"; window.scrollTo(0,0); render();};
+  m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
+}
+function panelNicho(f){
+  const bl = BQDE(f.byma); if (!bl || !bl.lente) return "";
+  const L = bl.lente, k = metr(f), x = E.empresas.find(z=>z.ticker===f.ticker)||{};
+  const s = L.ciclico ? lecturaCiclo(f,k) : lecturaFarma(f,k);
+  return `<section class="fgrid"><div class="card"><h3>Lectura como ${esc(bl.nombre)}</h3><p class="lect">${esc(L.empresas[f.byma]||"")}</p>
+    <h4>Lo que dicen los números</h4><ul class="lst">${s.map(t=>`<li>${t}</li>`).join("")}</ul>
+    <p class="mut small">Nota dentro del bloque: <b style="color:${ncol(notaBloque(x,f,bl))}">${nx(notaBloque(x,f,bl))}</b> · ${esc(L.pesos_txt)}</p>
+    <button class="btn" data-irb="${bl.id}">Ver el bloque completo →</button></div>
+    <div class="card"><h3>Cómo se lee el nicho</h3><p class="lect">${esc(L.negocio)}</p><h4>Riesgos del nicho</h4><ul class="lst">${L.riesgos.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><h4>En cada balance</h4><ul class="lst">${L.balance.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
+    <p class="mut small">Lectura revisada: ${esc(L.revisado)}. Es historia y contexto, no predicción.</p></div></section>`;
+}
 function empresas(m){
   (E.empresas||[]).forEach(x=>{ if (x.notas) x.notas.general = general(x.notas); });
   if (!E){ m.innerHTML = `<div class="soon"><h2>Empresas</h2>Todavía no hay datos. Se generan con la próxima actualización.</div>`; return; }
   if (EST.vista==="cmp" && CMP.length) return comparador(m);
   if (EST.sel) return ficha(m, EST.sel);
+  if (BQ && EST.bloque) return bloquePag(m, EST.bloque);
+  if (BQ && EST.vista!=="lista") return portada(m);
   const L = E.empresas;
   const sectores = [...new Set(L.map(x=>x.sector).filter(Boolean))].sort();
   const nf = L.filter(x=>x.ficha).length;
@@ -448,7 +587,7 @@ function empresas(m){
     <p>Fichas completas: ${nf} de ${L.length}. Las demás muestran por ahora solo precio, valuación y tendencia.</p>
   </details>
   <div class="bar">
-    <input id="eq" placeholder="Buscar ticker o empresa" value="${esc(EST.q)}">
+    ${BQ?'<button class="btn" id="ebq" style="margin:0">← Bloques</button>':""}<input id="eq" placeholder="Buscar ticker o empresa" value="${esc(EST.q)}">
     <select id="es"><option value="">Todos los sectores</option>${sectores.map(s=>`<option ${s===EST.sector?"selected":""}>${esc(s)}</option>`).join("")}</select>
     <select id="ep"><option value="">Todos los países</option><option value="us" ${EST.pais==="us"?"selected":""}>EE.UU.</option><option value="ext" ${EST.pais==="ext"?"selected":""}>Resto del mundo</option></select>
     <select id="el"><option value="">Toda liquidez</option>${["Alta","Media","Baja","Muy baja"].map(s=>`<option ${s===EST.liq?"selected":""}>${s}</option>`).join("")}</select>
@@ -473,6 +612,7 @@ function empresas(m){
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=e=>{ if (e.target.classList.contains("cmpk")) return; EST.sel=r.dataset.e; window.scrollTo(0,0); re();});
   m.querySelectorAll(".cmpk").forEach(c=>c.onchange=()=>{ const t=c.dataset.c, i=CMP.indexOf(t); if (c.checked && i<0){ if (CMP.length>=4){ c.checked=false; return; } CMP.push(t); } else if (!c.checked && i>=0) CMP.splice(i,1); re(); });
   const bc = m.querySelector("#ecmp"); if (bc) bc.onclick = ()=>{ EST.vista="cmp"; window.scrollTo(0,0); re(); };
+  const bq_ = m.querySelector("#ebq"); if (bq_) bq_.onclick = ()=>{ EST.vista=null; window.scrollTo(0,0); re(); };
   const bl = m.querySelector("#elim"); if (bl) bl.onclick = ()=>{ CMP.length=0; re(); };
 }
 
@@ -694,7 +834,7 @@ async function comparador(m){
   const u = f => (f.anual||[]).filter(x=>x.ventas!=null).slice(-1)[0]||{};
   const u3 = f => { const an=(f.anual||[]).filter(x=>x.ventas!=null); return an[an.length-4]; };
   const pc0 = z => z==null||!isFinite(z) ? "—" : pct(z,0), xx = z => z==null ? "—" : nx(z)+"x";
-  m.innerHTML = `<button class="btn" id="cv">← Volver a la lista</button>
+  m.innerHTML = `<button class="btn" id="cv">← Volver</button>
     <section class="card"><h3>Comparador</h3>
     <div class="seg">${[["1y","1 año"],["3y","3 años"],["5y","5 años"]].map(([p,t])=>`<button data-per="${p}" class="${EST.per===p?"on":""}">${t}</button>`).join("")}</div>
     ${chart}</section>
@@ -711,7 +851,7 @@ async function comparador(m){
     ${fila("Beta", f=>f.sensibilidades?.beta, z=>z==null?"—":nx(z,2))}${fila("Premio CEDEAR", f=>f.premio, z=>pct(z))}${fila("Liquidez", f=>esc(f.liquidez||"—"))}
     ${fila("Próximo balance", f=>fch2(f.analistas?.proximo_balance))}
     </tbody></table></div></section>`;
-  m.querySelector("#cv").onclick = ()=>{EST.vista=null; render();};
+  m.querySelector("#cv").onclick = ()=>{EST.vista=EST.bloque?null:"lista"; render();};
   m.querySelectorAll("[data-per]").forEach(b=>b.onclick=()=>{EST.per=b.dataset.per; comparador(m);});
 }
 
@@ -721,7 +861,9 @@ async function ficha(m, t){
     try{ const r = await fetch(`data/fichas/${encodeURIComponent(t)}.json?v=${Date.now()}`); FCACHE[t] = r.ok ? await r.json() : {sin:true}; }catch(e){ FCACHE[t] = {sin:true}; }
   }
   const f = FCACHE[t], x = E.empresas.find(z=>z.ticker===t) || {};
-  const volver = `<button class="btn" id="fv">← Volver a la lista</button>`;
+  const volver = `<button class="btn" id="fv">${EST.bloque?"← Volver al bloque":"← Volver"}</button>`;
+  const BQF = BQDE(f.byma||x.byma);
+  const TABS = BQF?.lente ? [FTABS[0],["nicho","Lectura del nicho"],...FTABS.slice(1)] : FTABS;
   if (f.sin){
     m.innerHTML = `${volver}<div class="soon"><h2>${esc(x.nombre||t)}</h2>La ficha completa de esta empresa todavía no está generada. Se arma en las próximas tandas.</div>`;
     m.querySelector("#fv").onclick = ()=>{EST.sel=null; render();};
@@ -746,7 +888,7 @@ async function ficha(m, t){
       <div class="fh-logo">${logoImg(f.byma,"")}</div>
       <div class="fh-info"><h2>${esc(f.nombre)}</h2>
         <div class="fh-sub">${esc(f.sector||"")} · ${esc(f.industria||"")} · ${esc(PAIS[f.pais]||f.pais||"")}</div>
-        <div class="fh-tags"><span class="gold">CEDEAR ${esc(f.byma)}</span>${f.byma!==f.ticker?`<span>${esc(f.ticker)}</span>`:""}<span>Ratio ${esc(f.ratio)}</span><span>Liquidez ${esc(f.liquidez)}</span>${f.tipo!=="general"?`<span>${esc({banco:"Banco",cripto:"Ligada a bitcoin",inmobiliaria:"Inmobiliaria"}[f.tipo])}</span>`:""}</div>
+        <div class="fh-tags"><span class="gold">CEDEAR ${esc(f.byma)}</span>${f.byma!==f.ticker?`<span>${esc(f.ticker)}</span>`:""}<span>Ratio ${esc(f.ratio)}</span><span>Liquidez ${esc(f.liquidez)}</span>${BQF?`<span class="bqtag" data-irb="${BQF.id}">${esc(BQF.nombre)}</span>`:""}${f.tipo!=="general"?`<span>${esc({banco:"Banco",cripto:"Ligada a bitcoin",inmobiliaria:"Inmobiliaria"}[f.tipo])}</span>`:""}</div>
         <div class="fh-tend" style="color:${acol}">${AN.tend==="Mejora"?"▲ Mejora":AN.tend==="Empeora"?"▼ Empeora":"= Estable"}</div>
         ${frase?`<p class="frase">${esc(frase)}</p>`:""}
         ${tipoTxt?`<div class="aviso">${tipoTxt}</div>`:""}</div>
@@ -762,7 +904,7 @@ async function ficha(m, t){
       <div><span>Próximo balance</span><b>${fch2(a.proximo_balance)}</b><small>${ub0?`último: <span style="color:${ub0.sorpresa>0.02?"var(--pos)":ub0.sorpresa<-0.02?"var(--neg)":"var(--accent)"}">${esc((ub0.veredicto||"").replace(" lo esperado","").replace(" con lo esperado",""))}</span> (${pct(ub0.sorpresa)})`:"—"}</small></div>
     </div>
   </section>
-  <div class="ftabs">${FTABS.map(([k,tt])=>`<button data-ft="${k}" class="${k===sub?"on":""}">${tt}</button>`).join("")}</div>`;
+  <div class="ftabs">${TABS.map(([k,tt])=>`<button data-ft="${k}" class="${k===sub?"on":""}">${tt}</button>`).join("")}</div>`;
 
   const perfil = `<div class="card"><h3>Perfil <span class="mut">· 1 a 10, para ubicarse; no es recomendación</span></h3>${NOTAS.map(([k,tt])=>{ const v = nt[k]; const det = nd[k]||{};
     return `<div class="nrow"><div class="nlab">${tt}</div><div class="nbar"><i style="width:${v==null?0:v*10}%;background:${ncol(v)}"></i></div><div class="nval" style="color:${ncol(v)}">${v==null?"—":nx(v)}</div>
@@ -874,6 +1016,8 @@ async function ficha(m, t){
       ${kv([["Premio hoy", pct(f.premio), f.premio>0.03?"neg":f.premio<-0.03?"pos":""],["Precio CEDEAR $", f.px_ars?num(f.px_ars,0):"—"],["Ratio", esc(f.ratio)],["Volumen típico", usd(f.monto_usd)+"/día"],["Liquidez", esc(f.liquidez)]])}
       ${ch?premioCh(ch):`<p class="mut" style="margin-top:10px">Sin historia de precios del CEDEAR disponible.</p>`}
       <p class="mut small">El premio compara el dólar implícito en este CEDEAR contra el de una canasta de los más líquidos (Apple, Microsoft, Alphabet, Amazon, Nvidia, Coca-Cola, MercadoLibre y SPY). Positivo es que está caro contra su precio en EE.UU.; negativo, que está barato. Conviene comprar con premio bajo o negativo y vender con premio alto.</p></section>`;
+  } else if (sub==="nicho"){
+    cuerpo = panelNicho(f);
   } else if (sub==="vigilar"){
     cuerpo = panelVigilar(f);
   } else if (sub==="analistas"){
@@ -905,6 +1049,7 @@ async function ficha(m, t){
   m.innerHTML = `${volver}${head}${cuerpo}<p class="mut small">Ficha actualizada ${f.actualizado?new Date(f.actualizado).toLocaleDateString("es-AR"):"—"}. Datos de Yahoo Finance, SEC y data912.</p>`;
   m.querySelector("#fv").onclick = ()=>{EST.sel=null; EST.ftab="resumen"; render();};
   m.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{EST.ftab=b.dataset.ft; ficha(m,t);});
+  m.querySelectorAll("[data-irb]").forEach(b=>b.onclick=()=>{EST.bloque=b.dataset.irb; EST.sel=null; EST.ftab="resumen"; window.scrollTo(0,0); render();});
   m.querySelectorAll("[data-per]").forEach(b=>b.onclick=()=>{EST.per=b.dataset.per; ficha(m,t);});
   const ta = m.querySelector("#nota");
   if (ta) ta.oninput = ()=>{ try{ localStorage.setItem("rvnota:"+f.ticker, ta.value); m.querySelector("#notamsg").textContent = "Guardado en este navegador."; }catch(e){ m.querySelector("#notamsg").textContent = "Este navegador no permite guardar notas."; } };
