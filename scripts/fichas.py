@@ -86,7 +86,7 @@ def fx_anual(cur):
 
 SEC_C = {"rev": ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTax", "SalesRevenueNet", "RevenueFromContractWithCustomerIncludingAssessedTax"],
          "gp": ["GrossProfit"], "op": ["OperatingIncomeLoss"], "ni": ["NetIncomeLoss", "ProfitLoss"],
-         "cfo": ["NetCashProvidedByUsedInOperatingActivities"], "capex": ["PaymentsToAcquirePropertyPlantAndEquipment"],
+         "cfo": ["NetCashProvidedByUsedInOperatingActivities"], "capex": ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"],
          "da": ["DepreciationDepletionAndAmortization", "DepreciationAndAmortization", "DepreciationAmortizationAndAccretionNet"],
          "int": ["InterestExpense", "InterestExpenseNonoperating", "InterestExpenseDebt"],
          "ta": ["Assets"], "ca": ["AssetsCurrent"], "cl": ["LiabilitiesCurrent"], "eq": ["StockholdersEquity", "StockholdersEquityIncludingPortionAttributableToNoncontrollingInterest"],
@@ -205,7 +205,7 @@ def anual_tabla(df):
         anio = e.year - 1 if e.month == 1 and e.day <= 20 else e.year
         deuda = (g("ltd") or 0) + (g("std") or 0) if (g("ltd") is not None or g("std") is not None) else None
         ebitda = op + (g("da") or 0) if op is not None else None
-        fcf = cfo - (capex or 0) if cfo is not None else None
+        fcf = cfo - capex if cfo is not None and capex is not None else None
         caja = g("cashsti") if g("cashsti") is not None else ((g("cash") or 0) + (g("sti") or 0) if g("cash") is not None else None)
         t.append({"anio": int(anio), "cierre": e.strftime("%Y-%m"), "ventas": rev, "bruto": gp, "ebit": op, "ebitda": ebitda, "neto": ni,
                   "fco": cfo, "capex": capex, "fcf": fcf, "deuda": deuda, "caja": caja, "patrimonio": g("eq"), "activo": g("ta"),
@@ -640,7 +640,7 @@ def main():
                                     for c_ in ["deuda", "caja", "recompras", "dividendos", "emisiones", "sbc", "id", "m_id"]:
                                         if z.get(c_) is not None:
                                             x[c_] = z[c_]
-                                    for c_ in ["bruto", "ebit", "ebitda", "id", "m_bruto", "m_ebit", "m_id"]:
+                                    for c_ in ["bruto", "ebit", "ebitda", "id", "m_bruto", "m_ebit", "m_id", "capex", "fcf"]:
                                         if x.get(c_) is None and z.get(c_) is not None:
                                             x[c_] = z[c_]
                                     if x.get("fcf") is not None and x.get("sbc") is not None:
