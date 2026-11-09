@@ -806,10 +806,8 @@ function escNav(m){
   m.querySelectorAll("[data-ev]").forEach(b=>b.onclick=()=>{EST.escV=b.dataset.ev; escenarios(m);});
 }
 function escBloques(m, fz){
-  const por = {}; ESC.empresas.forEach(e=>{ const bl = BQDE(e.b); if (bl && e.r[fz]) (por[bl.id] = por[bl.id] || []).push(e); });
-  const pts = BQ.bloques.filter(b=>b.id!=="aparte").map(bl=>{ const xs = por[bl.id]||[]; const n = xs.length; if (n<3) return {bl, n, pocos:true};
-    const md = medi(xs.map(e=>e.r[fz].dif)); const mismo = xs.filter(e=>Math.sign(e.r[fz].dif)===Math.sign(md)).length;
-    return {bl, n, md, mismo, sh: mismo/n, xs, fam: FAM.find(fm=>fm.b.includes(bl.id))||{c:"#8a94b8"}, ok: Math.abs(md)>=0.05 && mismo/n>=0.75}; });
+  const st = statsBloques(fz), con = new Set(st.map(p=>p.bl.id));
+  const pts = [...st, ...BQ.bloques.filter(b=>b.id!=="aparte"&&!con.has(b.id)).map(bl=>({bl, pocos:true}))];
   const val = pts.filter(p=>!p.pocos), pocos = pts.filter(p=>p.pocos);
   const XM = 0.8;
   const sel = EST.escB && val.find(p=>p.bl.id===EST.escB);
@@ -817,17 +815,17 @@ function escBloques(m, fz){
   <section class="fhead2 bhead"><div class="bh-top"><div><h2>Escenarios macro</h2><div class="fh-sub">Elegí una fase de la economía y mirá cómo les fue históricamente a los bloques en esa fase.</div></div></div>${escCab(fz)}</section>
   ${sec("Régimen mes a mes desde 2024", "el mismo régimen que usan los patrones de esta página", mesAMes()+`<div class="mut small" style="margin-top:6px">Régimen confirmado con los datos tal como se conocían cada mes. El mes en curso (rayado) es provisorio: se recalcula cada semana hasta que el mes termina. Puede diferir del cuadrante de Macro en los meses en que los datos después se corrigieron.</div>`)}
   ${sec(`${esc(fz)} · por bloque`, "ordenados de mejor a peor · tocá un bloque para ver sus empresas", `<div id="escbox"></div>
-    <div class="mut small" style="margin-top:12px">La barra es la mediana de las empresas del bloque: cuánto mejor o peor les fue en esta fase que en el resto de sus meses, contra el SPY, en puntos por año. A la derecha, cuántas fueron en esa misma dirección. Las barras llenas son patrones consistentes (3 de cada 4 o más y más de 5 puntos de diferencia); las tenues, mixtos. Solo cuentan empresas con al menos 12 meses en la fase; bloques con menos de 3 empresas así no aparecen${pocos.length?` (${pocos.map(p=>esc(p.bl.nombre)).join(", ")})`:""}. Es historia, no predicción.</div>`, "main")}
-  ${sel?sec(`${esc(sel.bl.nombre)} en ${esc(fz.toLowerCase())}`, `mediana ${sel.md>=0?"+":""}${Math.round(sel.md*100)} pts · ${sel.mismo} de ${sel.n} en la misma dirección`, `<table class="tb2"><thead><tr><th class="l">CEDEAR</th><th class="l">Empresa</th><th>vs su promedio</th><th>Dato</th><th>Meses</th></tr></thead><tbody>${[...sel.xs].sort((a,b)=>b.r[fz].dif-a.r[fz].dif).map(e=>`<tr data-e="${esc(e.ticker)}" style="cursor:pointer"><td class="tk l">${logoImg(e.b,"logo-s")}${esc(e.b)}</td><td class="nm l">${esc(e.nombre)}</td><td class="${cls(e.r[fz].dif)} big">${e.r[fz].dif>=0?"+":""}${Math.round(e.r[fz].dif*100)} pts</td><td class="mut">${Math.abs(e.r[fz].t)>=2?"claro":Math.abs(e.r[fz].t)>=1.5?"casi claro":"puede ser casualidad"}</td><td>${e.r[fz].meses}</td></tr>`).join("")}</tbody></table><button class="btn" data-irb="${sel.bl.id}" style="margin-top:10px">Ver el bloque completo →</button>`):""}
-  <section class="fgrid">${sec("Patrón consistente · mejor en esta fase","",blis(val.filter(p=>p.ok&&p.md>0).sort((a,b)=>b.md-a.md)))}${sec("Patrón consistente · peor en esta fase","",blis(val.filter(p=>p.ok&&p.md<0).sort((a,b)=>a.md-b.md)))}</section>`;
+    <div class="mut small" style="margin-top:12px">La barra es la mediana de las empresas del bloque: cuánto mejor o peor les fue en esta fase que en el resto de sus meses, contra el SPY, en puntos por año. A la derecha, cuántas fueron en esa misma dirección. Las barras llenas le ganan al azar: se repitió la cuenta ${ESC.pruebas||"muchas"} veces con los regímenes corridos de lugar y en menos de 5 de cada 100 salió una diferencia tan grande. Las tenues pueden ser casualidad, aunque la diferencia parezca grande. Datos mensuales desde ${esc(ESC.desde||"2015")}. Solo cuentan empresas con al menos 12 meses en la fase; bloques con menos de 3 empresas así no aparecen${pocos.length?` (${pocos.map(p=>esc(p.bl.nombre)).join(", ")})`:""}. Como se prueban 24 bloques en 4 fases, unos 4 o 5 pueden pasar la prueba de pura suerte: tomalo como pista, no como regla. Es historia, no predicción.</div>`, "main")}
+  ${sel?sec(`${esc(sel.bl.nombre)} en ${esc(fz.toLowerCase())}`, `mediana ${sel.md>=0?"+":""}${Math.round(sel.md*100)} pts · ${sel.mismo} de ${sel.n} en la misma dirección · ${pTxt(sel.p)}`, `<table class="tb2"><thead><tr><th class="l">CEDEAR</th><th class="l">Empresa</th><th>vs su promedio</th><th>Dato</th><th>Meses</th></tr></thead><tbody>${[...sel.xs].sort((a,b)=>b.r[fz].dif-a.r[fz].dif).map(e=>`<tr data-e="${esc(e.ticker)}" style="cursor:pointer"><td class="tk l">${logoImg(e.b,"logo-s")}${esc(e.b)}</td><td class="nm l">${esc(e.nombre)}</td><td class="${cls(e.r[fz].dif)} big">${e.r[fz].dif>=0?"+":""}${Math.round(e.r[fz].dif*100)} pts</td><td class="mut">${Math.abs(e.r[fz].t)>=2?"claro":Math.abs(e.r[fz].t)>=1.5?"casi claro":"puede ser casualidad"}</td><td>${e.r[fz].meses}</td></tr>`).join("")}</tbody></table><button class="btn" data-irb="${sel.bl.id}" style="margin-top:10px">Ver el bloque completo →</button>`):""}
+  <section class="fgrid">${sec("Le gana al azar · mejor en esta fase","",blis(val.filter(p=>p.ok&&p.md>0).sort((a,b)=>b.md-a.md)))}${sec("Le gana al azar · peor en esta fase","",blis(val.filter(p=>p.ok&&p.md<0).sort((a,b)=>a.md-b.md)))}</section>`;
   function blis(xs){ return xs.length ? `<table class="tb2"><tbody>${xs.map(p=>`<tr data-bs="${p.bl.id}" style="cursor:pointer"><td class="l"><span class="bc-ic sm" style="--fc:${p.fam.c}"><svg viewBox="0 0 24 24">${ICO[p.bl.id]||""}</svg></span></td><td class="nm l">${esc(p.bl.nombre)}</td><td class="mut">${p.mismo} de ${p.n}</td><td class="${cls(p.md)} big">${p.md>=0?"+":""}${Math.round(p.md*100)} pts</td></tr>`).join("")}</tbody></table>` : `<p class="mut">Ningún bloque tiene un patrón consistente en esta dirección.</p>`; }
   const box = m.querySelector("#escbox");
   const orden = [...val].sort((a,b)=>b.md-a.md), mx = Math.max(0.2, ...orden.map(p=>Math.min(XM, Math.abs(p.md))));
-  box.innerHTML = `<div class="dv-h"><span>Bloque</span><span style="display:flex;justify-content:space-between"><span>← Peor que su promedio</span><span>Mejor que su promedio →</span></span><span style="text-align:right">Misma dirección</span></div>` + orden.map(p=>{ const w = Math.min(XM, Math.abs(p.md))/mx*100;
+  box.innerHTML = `<div class="dv-h"><span>Bloque</span><span style="display:flex;justify-content:space-between"><span>← Peor que su promedio</span><span>Mejor que su promedio →</span></span><span style="text-align:right">Contra el azar</span></div>` + orden.map(p=>{ const w = Math.min(XM, Math.abs(p.md))/mx*100;
     return `<div class="dv${p.ok?" cl":""}${sel&&sel.bl.id===p.bl.id?" sel":""}" data-bs="${p.bl.id}" style="--fc:${p.fam.c}">
       <div class="dv-n"><span class="bc-ic sm"><svg viewBox="0 0 24 24">${ICO[p.bl.id]||""}</svg></span>${esc(p.bl.nombre)}</div>
       <div class="dv-bar"><div class="dv-half">${p.md<0?`<div class="dv-fill neg" style="width:${w}%"></div><span class="dv-v l">${Math.round(p.md*100)} pts</span>`:""}</div><div class="dv-half">${p.md>=0?`<div class="dv-fill pos" style="width:${w}%"></div><span class="dv-v r">+${Math.round(p.md*100)} pts</span>`:""}</div></div>
-      <div class="dv-c">${p.mismo} de ${p.n}<span>${p.ok?"consistente":"mixto"}</span></div></div>`; }).join("");
+      <div class="dv-c">${p.mismo} de ${p.n}<span>${pTxt(p.p)}</span></div></div>`; }).join("");
   box.querySelectorAll("[data-bs]").forEach(d=>d.onclick=()=>{EST.escB = EST.escB===d.dataset.bs ? null : d.dataset.bs; escenarios(m);});
   escNav(m);
   m.querySelectorAll("tr[data-bs]").forEach(r=>r.onclick=()=>{EST.escB=r.dataset.bs; escenarios(m);});
@@ -899,22 +897,39 @@ function portada(m){
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
 }
 const sec = (t,sub,body,cl="") => `<div class="bsec ${cl}"><div class="bh">${t}${sub?`<span>${sub}</span>`:""}</div><div class="bb">${body}</div></div>`;
-function sensBloque(fil){
+function catBloque(bl, L){
+  if (bl.id==="aparte" || !ESC?.bloques) return "";
+  const fs = (ESC.fases||[]).map(fz=>({fz, d: ESC.bloques[bl.id]?.[fz]})).filter(z=>z.d && z.d.p!=null && z.d.p<0.05);
+  const hip = fz => (L?.catalizadores||[]).find(k=>k.fase===fz);
+  const body = fs.length ? fs.map(({fz,d})=>{ const xs = (ESC.empresas||[]).filter(e=>BQDE(e.b)?.id===bl.id && e.r[fz]).sort((a,b)=>b.r[fz].dif-a.r[fz].dif), h = hip(fz);
+    return `<div class="bemp"><div class="tk">${esc(fz)}: <span style="color:${d.md<0?"var(--neg)":"var(--pos)"}">${d.md<0?"peor":"mejor"} que en el resto de los meses</span></div>
+    <p>Mediana del bloque <b class="${cls(d.md)}">${d.md>=0?"+":""}${Math.round(d.md*100)} pts</b> por año contra su propio promedio, ${d.mismo} de ${d.n} empresas en la misma dirección. ${xs.map(e=>`${esc(e.ticker)} <span class="${cls(e.r[fz].dif)}">${e.r[fz].dif>=0?"+":""}${Math.round(e.r[fz].dif*100)}</span>`).join(" · ")}</p>
+    ${h?`<p class="mut">Por qué podría pasar: ${esc(h.hipotesis)}</p>`:""}
+    <p class="mut small">Le gana al azar: con los regímenes corridos de lugar, ${d.p<0.01?`ninguna de las ${ESC.pruebas} pruebas dio`:`solo ${Math.round(d.p*100)} de cada 100 pruebas dieron`} una diferencia tan grande.</p></div>`; }).join("")
+    : `<p class="mut">Ninguna fase le gana al azar en este bloque: las diferencias por régimen que se ven en el cuadro de abajo aparecen igual con meses tomados al azar. Para este nicho el régimen macro no es una buena guía.</p>`;
+  return sec("Posibles patrones macro", "solo los que le ganan al azar · historia, no predicción", body + (fs.length?`<p class="mut small">Con 24 bloques y 4 fases, unos 4 o 5 pueden pasar la prueba de pura suerte. Es una pista para mirar, no una regla.</p>`:""));
+}
+function sensBloque(fil, bid){
   const R = ["Crecimiento sin inflación","Recalentamiento","Estanflación","Desinflación"];
   const ss = fil.map(r=>r.f?.sensibilidades).filter(z=>z&&z.regimen);
   if (ss.length<2) return {reg:"", sens:""};
-  const filas = R.map(fz=>{ const xs = ss.map(z=>{ const rg = z.regimen, d = rg[fz]; if (!d || d.meses<12) return null; const o = Object.entries(rg).filter(([k])=>k!==fz); const om = o.reduce((a,[,v])=>a+v.exceso_anual*v.meses,0)/o.reduce((a,[,v])=>a+v.meses,0); return {ex:d.exceso_anual, dif:d.exceso_anual-om}; }).filter(Boolean);
+  const filas0 = R.map(fz=>{ const xs = ss.map(z=>{ const rg = z.regimen, d = rg[fz]; if (!d || d.meses<12) return null; const o = Object.entries(rg).filter(([k])=>k!==fz); const om = o.reduce((a,[,v])=>a+v.exceso_anual*v.meses,0)/o.reduce((a,[,v])=>a+v.meses,0); return {ex:d.exceso_anual, dif:d.exceso_anual-om}; }).filter(Boolean);
     if (xs.length<3) return {fz, mx:null, md:null, mismo:0, n:xs.length, lect:"Pocos datos", ok:false};
     const md = medi(xs.map(x=>x.dif)), mx = medi(xs.map(x=>x.ex));
     const mismo = xs.filter(x=>Math.sign(x.dif)===Math.sign(md)).length;
     const lect = Math.abs(md)<0.05 ? "Sin diferencia" : mismo/xs.length>=0.75 ? (md<0?"Peor · consistente":"Mejor · consistente") : "Mixto";
     return {fz, mx, md, mismo, n:xs.length, lect, ok: Math.abs(md)>=0.05 && mismo/xs.length>=0.75}; }).filter(Boolean);
+  const eb = ESC?.bloques?.[bid];
+  const filas = !eb ? filas0 : R.map(fz=>{ const d = eb[fz], vs = (ESC.empresas||[]).filter(e=>BQDE(e.b)?.id===bid && e.r[fz]).map(e=>e.r[fz].vs_spy);
+    if (!d) return {fz, mx:null, md:null, mismo:0, n:vs.length, lect:"Pocos datos", ok:false};
+    const ok = d.p!=null && d.p<0.05;
+    return {fz, md:d.md, mismo:d.mismo, n:d.n, mx: vs.length?medi(vs):null, ok, lect: ok ? (d.md<0?"Peor · le gana al azar":"Mejor · le gana al azar") : d.p!=null&&d.p<0.10 ? "En el límite" : "Puede ser azar"}; });
   const F = [["tasa","Tasa a 10 años","si la tasa sube 1 punto"],["dolar","Dólar global (DXY)","si el dólar se fortalece 5%"],["petroleo","Petróleo","si el petróleo sube 10%"],["bitcoin","Bitcoin","si el bitcoin sube 10%"]];
   const ff = F.map(([k,t,e])=>{ const xs = ss.map(z=>z[k]).filter(Boolean); if (!xs.length) return null; const m = xs.reduce((a,x)=>a+x.impacto,0)/xs.length; const cl = xs.filter(x=>Math.abs(x.t)>=2&&Math.sign(x.impacto)===Math.sign(m)).length; return {t,e,m,cl,n:xs.length}; }).filter(Boolean);
   const beta = ss.map(z=>z.beta).filter(v=>v!=null);
-  return {reg: sec("Según el régimen macro","promedio del bloque · historia, no predicción",`<div class="wrap" style="max-height:none"><table class="tb2"><thead><tr><th class="l">Régimen</th><th>vs su promedio</th><th>Misma dirección</th><th class="l">Lectura</th><th>vs SPY</th></tr></thead><tbody>
+  return {reg: sec("Según el régimen macro","promedio del bloque · historia, no predicción",`<div class="wrap" style="max-height:none"><table class="tb2"><thead><tr><th class="l">Régimen</th><th>vs su promedio</th><th>Misma dirección</th><th class="l">Contra el azar</th><th>vs SPY</th></tr></thead><tbody>
     ${filas.map(r=>`<tr><td class="l">${esc(r.fz)}</td><td class="${cls(r.md)} big">${r.md==null?"—":`${r.md>=0?"+":""}${Math.round(r.md*100)} pts`}</td><td>${r.md==null?`${r.n} con historia`:`${r.mismo} de ${r.n}`}</td><td class="l" style="${r.ok?"color:var(--accent);font-weight:600":"color:var(--muted)"}">${r.lect}</td><td class="mut">${pct(r.mx,0)}</td></tr>`).join("")}</tbody></table></div>
-    <p class="mut small">Mediana de las empresas del bloque. "vs su promedio" compara cada fase con el resto de los meses de la misma empresa, así una acción que le ganó al SPY siempre no parece buena en todo. Consistente: al menos 3 de cada 4 empresas en la misma dirección y diferencia mayor a 5 puntos. Solo cuentan las empresas con al menos 12 meses en esa fase.</p>`),
+    <p class="mut small">Mediana de las empresas del bloque. "vs su promedio" compara cada fase con el resto de los meses de la misma empresa, así una acción que le ganó al SPY siempre no parece buena en todo. ${eb?`"Le gana al azar": se repitió la cuenta ${ESC.pruebas} veces con los regímenes corridos de lugar y en menos de 5 de cada 100 salió una diferencia tan grande. "Puede ser azar": una diferencia así aparece seguido aunque el régimen no tenga nada que ver. Datos mensuales desde ${esc(ESC.desde)}, con el régimen del mes anterior.`:`Consistente: al menos 3 de cada 4 empresas en la misma dirección y diferencia mayor a 5 puntos.`} Solo cuentan las empresas con al menos 12 meses en esa fase.</p>`),
     sens: sec("Sensibilidades","promedio del bloque · últimos 3 años",`${beta.length?`<div class="bkpi"><div><span>Beta contra el S&P 500</span><b>${nx(beta.reduce((a,b)=>a+b,0)/beta.length,2)}</b></div></div>`:""}
     <div class="wrap" style="max-height:none"><table class="tb2"><thead><tr><th class="l">Escenario</th><th>Movimiento extra</th><th>Relación clara</th></tr></thead><tbody>
     ${ff.map(r=>`<tr><td class="l">${r.t} <span class="mut">${r.e}</span></td><td class="${cls(r.m)} big">${pct(r.m,1)}</td><td>${r.cl} de ${r.n}</td></tr>`).join("")}</tbody></table></div>
@@ -924,6 +939,7 @@ async function bloquePag(m, id){
   const bl = BQ.bloques.find(b=>b.id===id); if (!bl){ EST.bloque=null; return portada(m); }
   const xs = bl.empresas.map(b=>E.empresas.find(z=>z.byma===b)).filter(Boolean);
   if (xs.some(x=>!FCACHE[x.ticker])){ m.innerHTML = `<p class="mut">Cargando bloque…</p>`; await cargarFichas(xs.map(x=>x.ticker)); }
+  if (!ESC){ try{ ESC = await (await fetch("data/escenarios.json?v="+Date.now())).json(); }catch(e){ ESC = {fases:[],empresas:[]}; } }
   const L = bl.lente, cols = columnasBloque(bl);
   const fil = xs.map(x=>{ const f = FCACHE[x.ticker]; const ok = f && !f.sin; return {x, f: ok?f:null, k: ok?metr(f):{}, n: notaBloque(x, ok?f:null, bl)}; }).sort((a,b)=>(b.n??-1)-(a.n??-1));
   let hoy = [];
@@ -960,7 +976,7 @@ async function bloquePag(m, id){
     const pcs = fil.map(r=>r.k).filter(k=>k.peC!=null&&k.peC>0&&k.pe); if (pcs.length) hoy.push(`P/E mediano del bloque: <b>${nx(medi(pcs.map(k=>k.pe)))}x</b> con la ganancia de hoy, <b>${nx(medi(pcs.map(k=>k.peC)))}x</b> con la ganancia promedio del ciclo.`); }
   else if (L){ const ks = fil.map(r=>r.k); hoy.push(`Crecimiento mediano de ventas: <b>${pct(medi(ks.map(k=>k.v3)),0)}</b> por año en 3 años. P/E esperado mediano: <b>${nx(medi(ks.map(k=>k.pefwd)))}x</b>.`);
     const sob = ks.filter(k=>k.desc!=null&&k.desc>0).length; hoy.push(`<b>${sob} de ${ks.filter(k=>k.desc!=null).length}</b> cotizan por encima de su propio P/E mediano.`); }
-  const sb = bl.id==="aparte" ? {reg:"", sens:""} : sensBloque(fil), r3 = medi(xs.map(x=>x.r3m)), r12 = medi(xs.map(x=>x.r12m)), nm = medi(fil.map(r=>r.n));
+  const sb = bl.id==="aparte" ? {reg:"", sens:""} : sensBloque(fil, bl.id), r3 = medi(xs.map(x=>x.r3m)), r12 = medi(xs.map(x=>x.r12m)), nm = medi(fil.map(r=>r.n));
   m.innerHTML = `<button class="btn" id="bv">← Bloques</button> <button class="btn" id="bcmp">Comparar precios del bloque</button>
   <section class="fhead2 bhead"><div class="bh-top"><div><h2>${esc(bl.nombre)}</h2><div class="fh-sub">${esc(bl.clave)}</div>${L?`<div class="fh-sub mut">Lectura revisada: ${esc(L.revisado)}</div>`:""}</div>
     <div class="bkpi"><div><span>Empresas</span><b>${xs.length}</b></div><div><span>3 meses</span><b class="${cls(r3)}">${pct(r3,0)}</b></div><div><span>12 meses</span><b class="${cls(r12)}">${pct(r12,0)}</b></div><div><span>${L?"Nota del bloque":"Nota general"}</span><b style="color:${ncol(nm)}">${nx(nm)}</b></div></div></div>
@@ -968,7 +984,7 @@ async function bloquePag(m, id){
   ${sec("Ranking del bloque", L?"nota del bloque con las métricas del nicho":"nota general · lectura en preparación", `<div class="wrap" style="max-height:none"><table class="tb2 rk"><thead><tr><th class="l">CEDEAR</th><th class="l">Empresa</th><th>${L?"Nota del bloque":"Nota general"}</th>${cols.map(c=>`<th>${c[0]}</th>`).join("")}</tr></thead>
   <tbody>${fil.map((r,i)=>`<tr data-e="${esc(r.x.ticker)}" style="cursor:pointer"><td class="tk l"><span class="pos-n">${i+1}</span>${logoImg(r.x.byma,"logo-s")}${esc(r.x.byma)}</td><td class="nm l">${esc(r.x.nombre)}</td><td>${chip(r.n)}</td>${cols.map(c=>`<td>${r.f?c[1](r.k):"—"}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
   <p class="mut small">${L?esc(L.pesos_txt):"Nota general: calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15%, tendencia 10%."} Sirve para ordenar dentro del bloque; no es una señal de compra.${L&&L.ciclico?" P/E del ciclo: precio dividido por la ganancia promedio de hasta 10 años.":""}</p>`, "main")}
-  ${L&&L.catalizadores?sec("Catalizadores macro","patrones históricos, no predicción",L.catalizadores.map(k=>`<div class="bemp"><div class="tk">${esc(k.fase)}: <span style="color:${/peor/.test(k.efecto)?"var(--neg)":"var(--pos)"}">${esc(k.efecto)}</span></div><p>${esc(k.dato)}</p><p class="mut">Por qué podría pasar: ${esc(k.hipotesis)}</p><p class="mut small">Confianza: ${esc(k.confianza)}</p></div>`).join("")):""}
+  ${catBloque(bl, L)}
   ${sb.reg?`<section class="fgrid">${sb.reg}${sb.sens}</section>`:""}
   ${L?`<section class="fgrid" style="align-items:start">${sec("Cómo gana plata el nicho","",`<p class="lect">${esc(L.negocio)}</p>`)}
     ${sec("Qué mirar","",`<ul class="lst">${L.mirar.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><h4>Riesgos del nicho</h4><ul class="lst">${L.riesgos.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><h4>En cada balance</h4><ul class="lst">${L.balance.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`)}</section>
@@ -1698,11 +1714,11 @@ function mesAMes(desde="2024-01"){
 }
 function statsBloques(fz){
   if (!ESC || !BQ) return [];
-  const por = {}; ESC.empresas.forEach(e=>{ const bl = BQDE(e.b); if (bl && e.r[fz]) (por[bl.id] = por[bl.id] || []).push(e); });
-  return BQ.bloques.filter(b=>b.id!=="aparte").map(bl=>{ const xs = por[bl.id]||[]; if (xs.length<3) return null;
-    const md = medi(xs.map(e=>e.r[fz].dif)), mismo = xs.filter(e=>Math.sign(e.r[fz].dif)===Math.sign(md)).length;
-    return {bl, md, mismo, n: xs.length, ok: Math.abs(md)>=0.05 && mismo/xs.length>=0.75, fam: FAM.find(fm=>fm.b.includes(bl.id))||{c:"#8a94b8"}}; }).filter(Boolean);
+  const por = {}; (ESC.empresas||[]).forEach(e=>{ const bl = BQDE(e.b); if (bl && e.r[fz]) (por[bl.id] = por[bl.id] || []).push(e); });
+  return BQ.bloques.filter(b=>b.id!=="aparte").map(bl=>{ const d = ESC.bloques?.[bl.id]?.[fz]; if (!d) return null;
+    return {bl, md:d.md, mismo:d.mismo, n:d.n, p:d.p, xs: por[bl.id]||[], ok: d.p!=null && d.p<0.05, fam: FAM.find(fm=>fm.b.includes(bl.id))||{c:"#8a94b8"}}; }).filter(Boolean);
 }
+function pTxt(p){ return p==null ? "—" : p<0.05 ? "le gana al azar" : p<0.10 ? "en el límite" : "puede ser azar"; }
 function chgTxt(x, base){
   if (base==null || x.valor==null) return "—";
   if (x.unidad==="%" || x.unidad==="pts"){ const d = x.valor-base; return `${d>=0?"+":""}${nx(d,2)} pts`; }
@@ -1744,7 +1760,7 @@ function resumenMacro(){
   const S = M.semaforo, T = S ? SEM_TXT[S.estado] : null, q = M.cuadrantes[M.actual], fz = FZ[M.actual];
   const st = statsBloques(fz), mej = st.filter(x=>x.ok&&x.md>0).sort((a,b)=>b.md-a.md), peo = st.filter(x=>x.ok&&x.md<0).sort((a,b)=>a.md-b.md);
   const cambios = (PIL?.indicadores||[]).filter(x=>x.m1!=null&&x.max10>x.min10).map(x=>({x, z: Math.abs(x.valor-x.m1)/(x.max10-x.min10)})).sort((a,b)=>b.z-a.z).slice(0,4);
-  const bl = xs => xs.length ? xs.map(p=>`<span class="rbl" data-irb2="${p.bl.id}" style="--fc:${p.fam.c}"><span class="bc-ic sm"><svg viewBox="0 0 24 24">${ICO[p.bl.id]||""}</svg></span>${esc(p.bl.nombre)} <b class="${cls(p.md)}">${p.md>=0?"+":""}${Math.round(p.md*100)}</b></span>`).join("") : `<span class="mut">Ningún bloque con patrón consistente.</span>`;
+  const bl = xs => xs.length ? xs.map(p=>`<span class="rbl" data-irb2="${p.bl.id}" style="--fc:${p.fam.c}"><span class="bc-ic sm"><svg viewBox="0 0 24 24">${ICO[p.bl.id]||""}</svg></span>${esc(p.bl.nombre)} <b class="${cls(p.md)}">${p.md>=0?"+":""}${Math.round(p.md*100)}</b></span>`).join("") : `<span class="mut">Ningún bloque le gana al azar en esta fase.</span>`;
   return sec("Resumen macro", `actualizado ${new Date(M.actualizado).toLocaleDateString("es-AR")}`, `<div class="rsm">
     <div class="rsm-a">
       ${S?`<div class="rsm-k"><span>Semáforo de riesgo</span><b style="color:${SC[S.estado]};font-size:16px">${T.t}</b><em>${S.frena?"Alarma de crecimiento con los últimos datos publicados, todavía sin confirmar":"Sin alarma de crecimiento"} · S&P ${pct(S.dist,1)} contra su promedio de 200 ruedas${S.bajo?" (alarma)":""}. Rojo solo si se prenden las dos.</em></div>`:""}
@@ -1755,7 +1771,7 @@ function resumenMacro(){
       <div class="rsm-l"><em class="pos">Históricamente mejor</em>${bl(mej)}</div>
       <div class="rsm-l"><em class="neg">Históricamente peor</em>${bl(peo)}</div>
       ${conviccion().n==="Régimen poco definido"?`<div class="warn" style="margin:6px 0">${conviccion().t}</div>`:""}
-      <p class="mut small">Mediana del bloque contra su propio promedio, en puntos por año; solo patrones consistentes. Es historia, no predicción. <a href="#" id="iresc">Ver todos en Escenarios →</a></p></div></div>`, "main");
+      <p class="mut small">Mediana del bloque contra su propio promedio, en puntos por año; solo los que le ganan al azar. Es historia, no predicción. <a href="#" id="iresc">Ver todos en Escenarios →</a></p></div></div>`, "main");
 }
 function macro(m){
   if (!M){ m.innerHTML = `<div class="empty">Todavía no hay datos macro. Corré Actions → Actualizar datos.</div>`; return; }
