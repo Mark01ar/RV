@@ -183,6 +183,27 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .bpt:hover{z-index:5}.bpt:hover .ett{display:block}
 .bc-ic.sm{display:inline-grid;width:26px;height:26px;flex:none}.bc-ic.sm svg{width:15px;height:15px;fill:none;stroke:var(--fc);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .hfoto{height:46px;width:auto;border-radius:9px;border:1px solid var(--accent);box-shadow:0 0 12px rgba(232,194,100,.25)}
+.rsm{display:grid;grid-template-columns:minmax(260px,1fr) 1.4fr;gap:22px}
+@media(max-width:900px){.rsm{grid-template-columns:1fr}}
+.rsm-k{margin-bottom:14px}.rsm-k>span,.rsm-c>span,.rsm-t{display:block;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:4px}
+.rsm-k b{font-size:22px;font-weight:700}.rsm-k em{display:block;font-style:normal;font-size:12.5px;color:var(--muted);margin-top:2px}
+.rsm-c div{display:grid;grid-template-columns:1fr auto 80px;gap:8px;font-size:12.5px;padding:4px 0;border-bottom:1px solid var(--line)}
+.rsm-c em{font-style:normal;color:#c8d0ea}.rsm-c i{font-style:normal;text-align:right;font-weight:600}
+.rsm-t{color:var(--accent)!important;font-weight:700}
+.rsm-l{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:8px 0}
+.rsm-l>em{font-style:normal;font-size:12px;font-weight:700;width:150px}
+.rbl{display:inline-flex;align-items:center;gap:6px;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--fc);border-radius:8px;padding:3px 9px 3px 4px;font-size:12.5px;cursor:pointer}
+.rbl:hover{border-color:var(--fc)}
+.pil-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:12px}
+.pil{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+.pil-h{display:flex;justify-content:space-between;align-items:baseline;gap:10px}.pil-h span{font-size:13px;color:#c8d0ea}.pil-h b{font-size:20px;font-weight:700;white-space:nowrap}
+.pil-g{display:flex;align-items:center;gap:12px;margin:8px 0}.spk{flex:0 0 auto}
+.pil-c{display:flex;flex-direction:column;gap:2px;font-size:11.5px;color:var(--muted)}.pil-c b{color:var(--text);font-weight:600;margin-left:4px}
+.pil-r{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--muted)}
+.pil-bar{flex:1;height:4px;border-radius:2px;background:linear-gradient(90deg,#1e2a56,#3a4a86);position:relative}
+.pil-bar i{position:absolute;top:-4px;width:3px;height:12px;background:var(--accent);border-radius:2px;transform:translateX(-50%)}
+.pil-rl{font-size:10.5px;color:var(--muted);margin-top:3px}
+.pil-l{font-size:12.5px;line-height:1.5;margin:8px 0 4px;color:var(--text)}.pil-e{font-size:11.5px;line-height:1.45;margin:0;color:var(--muted)}
 .segs{display:flex;gap:6px;flex-wrap:wrap}
 .seg{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer}
 .seg.on{background:var(--accent);color:#1a1405;border-color:var(--accent);font-weight:700}
@@ -1656,12 +1677,74 @@ function informativosHTML(){
   return `<div style="margin-top:16px"><div class="sub" style="margin-bottom:8px;font-family:var(--mono);font-size:11px;letter-spacing:.06em">OTROS INDICADORES · INFORMATIVOS, NO ENTRAN EN EL CÁLCULO</div><div class="ejes" style="margin-top:0">${o}</div></div>`;
 }
 
+let PIL = null;
+const FZ = {CSI:"Crecimiento sin inflación", REC:"Recalentamiento", EST:"Estanflación", DES:"Desinflación"};
+function statsBloques(fz){
+  if (!ESC || !BQ) return [];
+  const por = {}; ESC.empresas.forEach(e=>{ const bl = BQDE(e.b); if (bl && e.r[fz]) (por[bl.id] = por[bl.id] || []).push(e); });
+  return BQ.bloques.filter(b=>b.id!=="aparte").map(bl=>{ const xs = por[bl.id]||[]; if (xs.length<3) return null;
+    const md = medi(xs.map(e=>e.r[fz].dif)), mismo = xs.filter(e=>Math.sign(e.r[fz].dif)===Math.sign(md)).length;
+    return {bl, md, mismo, n: xs.length, ok: Math.abs(md)>=0.05 && mismo/xs.length>=0.75, fam: FAM.find(fm=>fm.b.includes(bl.id))||{c:"#8a94b8"}}; }).filter(Boolean);
+}
+function chgTxt(x, base){
+  if (base==null || x.valor==null) return "—";
+  if (x.unidad==="%" || x.unidad==="pts"){ const d = x.valor-base; return `${d>=0?"+":""}${nx(d,2)} pts`; }
+  return pct(x.valor/base-1,1);
+}
+function valTxt(x){ const v = nx(x.valor, x.dec); return x.unidad==="%" ? v+"%" : x.unidad==="pts" ? (x.valor>=0?"+":"")+v+" pts" : x.unidad==="B" ? "US$ "+nx(x.valor/1000,2)+" billones" : v; }
+function spark(sr, c="#6ea8ff"){
+  if (!sr || sr.v.length<3) return "";
+  const W = 160, H = 38, mn = Math.min(...sr.v), mx = Math.max(...sr.v), d = mx-mn || 1;
+  const pts = sr.v.map((v,i)=>`${(i/(sr.v.length-1)*W).toFixed(1)},${(H-2-(v-mn)/d*(H-4)).toFixed(1)}`).join(" ");
+  return `<svg width="${W}" height="${H}" class="spk"><polyline points="${pts}" fill="none" stroke="${c}" stroke-width="1.6"/></svg>`;
+}
+function pilarCard(x){
+  const pos = x.max10>x.min10 ? (x.valor-x.min10)/(x.max10-x.min10)*100 : 50;
+  const fmt = v => x.unidad==="%" ? nx(v,x.dec)+"%" : x.unidad==="B" ? nx(v/1000,1) : nx(v,x.dec);
+  return `<div class="pil"><div class="pil-h"><span>${esc(x.nombre)}</span><b>${valTxt(x)}</b></div>
+    <div class="pil-g">${spark(x.serie)}<div class="pil-c"><span>1 mes <b>${chgTxt(x,x.m1)}</b></span><span>3 meses <b>${chgTxt(x,x.m3)}</b></span><span>1 año <b>${chgTxt(x,x.a1)}</b></span></div></div>
+    <div class="pil-r"><span>${fmt(x.min10)}</span><div class="pil-bar"><i style="left:${Math.max(0,Math.min(100,pos))}%"></i></div><span>${fmt(x.max10)}</span></div>
+    <div class="pil-rl">Rango de ${x.anios||10} años${x.pctl10!=null?` · más alto que el ${Math.round(x.pctl10*100)}% de ese período`:""}</div>
+    <p class="pil-l">${esc(x.lectura)}</p><p class="pil-e">${esc(x.expl)}</p></div>`;
+}
+function pilaresHTML(){
+  if (!PIL) return "";
+  const G = [["tasas","Tasas y Fed"],["credito","Crédito y estrés"],["amplitud","Amplitud del mercado"],["dolar","Dólar y liquidez"]];
+  const V = PIL.valuacion || {};
+  const pb = V.pe_fwd || V.pe;
+  const valc = pb ? `<div class="pil"><div class="pil-h"><span>P/E ${V.pe_fwd?"esperado":"de los últimos 12 meses"} del S&P 500</span><b>${nx(pb,1)}x</b></div>
+    ${V.pe_fwd&&V.pe?`<div class="pil-c" style="margin-top:6px"><span>P/E de los últimos 12 meses <b>${nx(V.pe,1)}x</b></span></div>`:""}
+    <div class="pil-c"><span>Rendimiento por ganancias <b>${nx(V.rend_ganancias,2)}%</b></span><span>Tasa a 10 años <b>${nx(V.t10,2)}%</b></span></div>
+    <p class="pil-l">${V.prima!=null?(V.prima<0?`Las acciones rinden ${nx(-V.prima,2)} puntos menos por ganancias que el bono a 10 años: el mercado paga caro el crecimiento futuro y deja poco margen si las ganancias decepcionan.`:`Las acciones rinden ${nx(V.prima,2)} puntos más por ganancias que el bono a 10 años.`):""}</p>
+    <p class="pil-e">El rendimiento por ganancias es la inversa del P/E: lo que gana el S&P por cada dólar invertido. Se compara con la tasa del bono, su alternativa sin riesgo. Históricamente, cuando la diferencia fue muy baja o negativa, los retornos de los años siguientes fueron más bajos que el promedio.</p></div>` : "";
+  return G.map(([g,t])=>{ const xs = PIL.indicadores.filter(x=>x.pilar===g); const extra = g==="amplitud" ? valc : "";
+    if (!xs.length && !extra) return ""; return sec(t==="Amplitud del mercado"?"Amplitud y valuación del mercado":t, "", `<div class="pil-grid">${xs.map(pilarCard).join("")}${extra}</div>`); }).join("");
+}
+function resumenMacro(){
+  const S = M.semaforo, T = S ? SEM_TXT[S.estado] : null, q = M.cuadrantes[M.actual], fz = FZ[M.actual];
+  const st = statsBloques(fz), mej = st.filter(x=>x.ok&&x.md>0).sort((a,b)=>b.md-a.md), peo = st.filter(x=>x.ok&&x.md<0).sort((a,b)=>a.md-b.md);
+  const cambios = (PIL?.indicadores||[]).filter(x=>x.m1!=null&&x.max10>x.min10).map(x=>({x, z: Math.abs(x.valor-x.m1)/(x.max10-x.min10)})).sort((a,b)=>b.z-a.z).slice(0,4);
+  const bl = xs => xs.length ? xs.map(p=>`<span class="rbl" data-irb2="${p.bl.id}" style="--fc:${p.fam.c}"><span class="bc-ic sm"><svg viewBox="0 0 24 24">${ICO[p.bl.id]||""}</svg></span>${esc(p.bl.nombre)} <b class="${cls(p.md)}">${p.md>=0?"+":""}${Math.round(p.md*100)}</b></span>`).join("") : `<span class="mut">Ningún bloque con patrón consistente.</span>`;
+  return sec("Resumen macro", `actualizado ${new Date(M.actualizado).toLocaleDateString("es-AR")}`, `<div class="rsm">
+    <div class="rsm-a">
+      ${S?`<div class="rsm-k"><span>Semáforo de riesgo</span><b style="color:${SC[S.estado]}">${T.t}</b></div>`:""}
+      <div class="rsm-k"><span>Régimen</span><b style="color:${QC[M.actual]}">${esc(q.nombre)}</b><em>${Math.round(M.probs[M.actual]*100)}% de probabilidad · ${M.duracion} ${M.duracion===1?"mes":"meses"}</em>${M.crudo&&M.crudo!==M.actual?`<em>Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b></em>`:""}</div>
+      ${cambios.length?`<div class="rsm-c"><span>Lo que más se movió en el último mes</span>${cambios.map(({x})=>`<div><em>${esc(x.nombre)}</em><b>${valTxt(x)}</b><i class="${cls(x.valor-x.m1)}">${chgTxt(x,x.m1)}</i></div>`).join("")}</div>`:""}
+    </div>
+    <div class="rsm-b"><span class="rsm-t">Qué significa para los bloques · ${esc(q.nombre.toLowerCase())}</span>
+      <div class="rsm-l"><em class="pos">Históricamente mejor</em>${bl(mej)}</div>
+      <div class="rsm-l"><em class="neg">Históricamente peor</em>${bl(peo)}</div>
+      <p class="mut small">Mediana del bloque contra su propio promedio, en puntos por año; solo patrones consistentes. Es historia, no predicción. <a href="#" id="iresc">Ver todos en Escenarios →</a></p></div></div>`, "main");
+}
 function macro(m){
   if (!M){ m.innerHTML = `<div class="empty">Todavía no hay datos macro. Corré Actions → Actualizar datos.</div>`; return; }
+  if (PIL===null || ESC===null){ Promise.all([PIL===null?fetch("data/pilares.json?v="+Date.now()).then(r=>r.ok?r.json():{indicadores:[]}).catch(()=>({indicadores:[]})).then(j=>PIL=j):0, ESC===null?fetch("data/escenarios.json?v="+Date.now()).then(r=>r.json()).catch(()=>({fases:[],empresas:[]})).then(j=>ESC=j):0]).then(()=>{ if (tab==="macro") macro(m); }); m.innerHTML = `<p class="mut">Cargando…</p>`; return; }
   const q = M.cuadrantes[M.actual], p = M.probs[M.actual];
   const div = ["crecimiento","inflacion"].filter(g=>M.lectura[g].diverge);
   const f = new Date(M.actualizado).toLocaleDateString("es-AR");
-  m.innerHTML = `${semaforoHTML()}
+  m.innerHTML = `${resumenMacro()}
+  ${pilaresHTML()}
+  ${semaforoHTML()}
   <div class="mx" style="margin-top:16px">
     <div class="card"><h3>DÓNDE ESTÁ EE.UU.</h3>${cuadSVG()}
       <div class="sub" style="margin-top:6px">El punto blanco es hoy. Los grises son los 6 meses anteriores.</div></div>
@@ -1689,6 +1772,8 @@ function macro(m){
     <div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div></div>`;
   const sm = document.getElementById("secm");
   if (sm) sm.onchange = e => { secModo = e.target.value; macro(m); };
+  const ie = document.getElementById("iresc"); if (ie) ie.onclick = e => { e.preventDefault(); EST.fase = FZ[M.actual]; EST.escV="bloques"; tab="escenarios"; navegar(); window.scrollTo(0,0); render(); };
+  m.querySelectorAll("[data-irb2]").forEach(b=>b.onclick=()=>{ EST.bloque=b.dataset.irb2; EST.sel=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
 }
 
 const fs = {q:"", sector:"", liq:"", ma:false, av:false, sig:"", sort:"total", dir:-1, abierto:null};

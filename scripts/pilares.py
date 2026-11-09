@@ -41,7 +41,7 @@ def ficha(id_, pilar, nombre, unidad, s, expl, lectura, dec=2):
             "fecha": s.index[-1].strftime("%Y-%m-%d"), "m1": atras(s, 30), "m3": atras(s, 91), "a1": atras(s, 365),
             "pctl10": pctl(s), "min10": float(s[s.index >= s.index[-1] - pd.Timedelta(days=3650)].min()),
             "max10": float(s[s.index >= s.index[-1] - pd.Timedelta(days=3650)].max()),
-            "serie": semanal(s), "expl": expl, "lectura": lectura(s)}
+            "anios": round(min(10, (s.index[-1] - s.index[0]).days / 365.25)), "serie": semanal(s), "expl": expl, "lectura": lectura(s)}
 
 
 def main():
@@ -139,8 +139,10 @@ def main():
         i = yf.Ticker("SPY").info
         pe, pef = i.get("trailingPE"), i.get("forwardPE")
         t10 = float(f["DGS10"].iloc[-1]) if "DGS10" in f else None
-        val = {"pe": pe, "pe_fwd": pef, "t10": t10, "rend_ganancias": (1 / pef * 100) if pef else None,
-               "prima": (1 / pef * 100 - t10) if pef and t10 is not None else None}
+        base = pef or pe
+        val = {"pe": pe, "pe_fwd": pef, "t10": t10, "base": "esperado" if pef else "12m",
+               "rend_ganancias": (1 / base * 100) if base else None,
+               "prima": (1 / base * 100 - t10) if base and t10 is not None else None}
     except Exception as e:
         print(f"valuacion: {e}", file=sys.stderr)
     SALIDA.write_text(json.dumps({"actualizado": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
