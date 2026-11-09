@@ -1,0 +1,509 @@
+
+##### Memorias y almacenamiento  [No hay un precio gratis de memorias DRAM/NAND con historia larga: tasa y dólar son aproximaciones, no el motor real.]
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE   +13.5%   -0.1%  antigua
+  MU       +25.2%   -0.3%  antigua
+  SKHY      +6.7%   -0.6%  
+  SNDK      sin historia suficiente
+  WDC       +9.5%   +0.5%  antigua
+-- si el dólar global sube 5%
+  BLOQUE    +4.0%   +1.5%  antigua
+  MU        +6.6%   +2.2%  antigua
+  SKHY      +3.1%   +2.3%  
+  SNDK      sin historia suficiente
+  WDC       +2.4%   +0.1%  
+
+##### Diseño de chips  [No hay un dato gratis de inversión en IA: tasa y dólar son aproximaciones, no el motor real.]
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    +4.1%   -1.8%  
+  NVDA      +5.2%   -1.8%  
+  AMD       +9.7%   -4.2%  
+  AVGO      +7.6%   +1.0%  
+  QCOM      +2.8%   -2.4%  
+  MRVL      +4.0%   +0.1%  
+  ALAB      sin historia suficiente
+  INTC      -0.9%   -3.1%  
+-- si el dólar global sube 5%
+  BLOQUE    +2.8%   +1.4%  antigua
+  NVDA      +5.0%   +0.9%  antigua
+  AMD       +2.2%   +0.8%  
+  AVGO      +4.8%   +0.7%  antigua
+  QCOM      -0.5%   -1.6%  
+  MRVL      +4.2%   +7.5%  clara
+  ALAB      sin historia suficiente
+  INTC      +2.6%   +0.2%  antigua
+
+##### Fabricación y equipos de chips
+-- si el dólar global sube 5%
+  BLOQUE    -0.7%   -1.0%  
+  TSM       -1.0%   -2.2%  
+  ASML      -0.6%   -2.8%  
+  AMAT      -0.9%   +1.9%  
+  LRCX      -0.1%   -0.7%  
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    +2.1%   -3.3%  
+  TSM       -0.0%   -4.0%  
+  ASML      +3.1%   -6.1%  reciente
+  AMAT      +3.1%   -0.2%  
+  LRCX      +2.2%   -2.6%  
+-- si el yuan se debilita 3%
+  BLOQUE    -0.1%   -1.8%  
+  TSM       +1.8%   -3.8%  reciente
+  ASML      -1.6%   -2.0%  
+  AMAT      -3.1%   -0.2%  
+  LRCX      +2.7%   -1.2%  
+
+##### Big tech
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    +3.1%   -1.1%  
+  MSFT      +0.1%   +0.1%  
+  GOOGL     +6.7%   +0.3%  antigua
+  META        -     -0.6%  
+  AMZN      +2.2%   -2.6%  
+  AAPL      +3.3%   -2.8%  
+-- si el dólar global sube 5%
+  BLOQUE    +1.1%   +0.4%  
+  MSFT      +0.1%   -1.1%  
+  GOOGL     +2.4%   +1.1%  
+  META        -     -1.1%  
+  AMZN      -0.3%   +1.3%  
+  AAPL      +3.9%   +2.0%  antigua
+
+##### Infraestructura de IA  [Casi todas las empresas cotizan hace pocos años: solo se puede medir el tramo reciente.]
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    +3.4%   -2.9%  
+  ORCL      +3.4%   -0.4%  
+  CRWV      sin historia suficiente
+  NBIS      sin historia suficiente
+  IREN        -    +16.6%  
+-- si el spread de crédito sube 1 punto
+  BLOQUE    +0.0%   +9.5%  
+  ORCL      +0.0%   +5.0%  
+  CRWV      sin historia suficiente
+  NBIS      sin historia suficiente
+  IREN        -    -24.3%  
+-- si bitcoin sube 20%
+  BLOQUE      -     +2.0%  
+  ORCL        -     +0.5%  
+  CRWV      sin historia suficiente
+  NBIS      sin historia suficiente
+  IREN        -    +16.0%  
+
+##### Software y ciberseguridad
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    +0.8%   -1.1%  
+  CRM       -1.6%   -2.0%  
+  ADBE      +2.6%   -6.1%  reciente
+  NOW         -     -1.1%  
+  TEAM        -     -2.5%  
+  SAP       +0.1%   -4.0%  
+  PLTR        -    +10.3%  
+  PANW        -     +3.1%  
+  CRWD        -     +3.9%  
+  IBM       +4.7%   +0.7%  antigua
+  GLOB        -     -2.7%  
+-- si el dólar global sube 5%
+  BLOQUE    -0.1%   +0.8%  
+  CRM       +1.4%   +0.2%  
+  ADBE      +2.2%   -2.7%  
+  NOW         -     +0.6%  
+  TEAM        -     +4.4%  
+  SAP       -4.8%   -3.7%  clara
+  PLTR        -     +5.3%  
+  PANW        -     +1.2%  
+  CRWD        -     +8.5%  
+  IBM       -0.5%   +0.6%  
+  GLOB        -     +1.1%  
+
+##### Hardware y equipos
+-- si el dólar global sube 5%
+  BLOQUE    +0.8%   +2.8%  
+  CSCO      +0.3%   +0.8%  
+  DELL        -     +6.2%  
+  HPQ       +2.9%   -1.0%  antigua
+  XROX      -1.1%   -2.3%  
+  BB        +1.2%   +1.7%  
+  RGTI        -    +37.1%  reciente
+-- si la confianza del consumidor sube 5 puntos
+  BLOQUE    -0.0%   +0.8%  
+  CSCO      -0.3%   -0.3%  
+  DELL        -     -0.2%  
+  HPQ       +0.3%   +0.9%  
+  XROX      +0.3%   +1.9%  
+  BB        -0.4%   -1.2%  
+  RGTI        -     +4.9%  
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    +1.9%   +5.5%  
+  CSCO      +0.9%   +1.6%  
+  DELL        -     +7.9%  
+  HPQ       +3.3%   +3.7%  
+  XROX      +1.4%   +4.7%  
+  BB        +2.0%   +0.4%  
+  RGTI        -    +52.0%  reciente
+
+##### Medios, internet y telecom
+-- si la confianza del consumidor sube 5 puntos
+  BLOQUE    -0.1%   +0.6%  
+  NFLX      -0.4%   -0.3%  
+  SPOT        -     -0.3%  
+  DISN      -0.1%   +1.1%  
+  YELP        -     +2.3%  
+  TMUS      +1.9%   -0.1%  
+-- si el dólar global sube 5%
+  BLOQUE    +0.1%   -0.6%  
+  NFLX      -2.7%   -3.6%  
+  SPOT        -     -4.7%  
+  DISN      +1.1%   +0.5%  
+  YELP        -     +3.9%  
+  TMUS      +4.4%   -1.0%  
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    +3.0%   -0.5%  
+  NFLX      -1.2%   -6.8%  
+  SPOT        -     -6.3%  
+  DISN      +1.6%   +2.1%  
+  YELP        -    +12.2%  reciente
+  TMUS      +9.1%   -3.7%  
+
+##### Comercio electrónico y plataformas
+-- si el real se debilita 5%
+  BLOQUE    -0.0%   -1.9%  
+  MELI      -1.9%   -2.5%  reciente
+  EBAY      +1.1%   +0.7%  
+  JMIA        -     -7.0%  
+  UBER        -     -1.3%  
+-- si la confianza del consumidor sube 5 puntos
+  BLOQUE    -0.6%   -0.1%  
+  MELI      -2.4%   +0.7%  
+  EBAY      +0.5%   -0.7%  
+  JMIA        -     -3.3%  
+  UBER        -     +2.6%  
+-- si el dólar global sube 5%
+  BLOQUE    -1.2%   -4.1%  
+  MELI      -1.4%   -5.5%  reciente
+  EBAY      -1.3%   -0.2%  
+  JMIA        -    -11.4%  
+  UBER        -     -0.7%  
+
+##### China  [El yuan estuvo casi fijo en buena parte de 2005–2014 y varias empresas cotizan desde 2014: pesa más el tramo reciente.]
+-- si el yuan se debilita 3%
+  BLOQUE    -6.8%   -8.8%  reciente
+  BABA        -     -7.4%  reciente
+  JD          -     -7.8%  reciente
+  BIDU      -7.1%   -7.8%  reciente
+  NIO         -    -14.7%  reciente
+-- si el cobre sube 10%
+  BLOQUE    +1.9%   +4.5%  
+  BABA        -     +4.0%  reciente
+  JD          -     +3.7%  
+  BIDU      +2.0%   +4.9%  reciente
+  NIO         -     +8.6%  
+-- si el dólar global sube 5%
+  BLOQUE    -4.5%   -7.1%  reciente
+  BABA        -     -7.2%  reciente
+  JD          -     -6.2%  reciente
+  BIDU      -4.2%   -6.9%  reciente
+  NIO         -    -11.1%  
+
+##### Bancos  [El real aplica a los bancos brasileños (BBD, ITUB).]
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    +0.8%   +6.7%  reciente
+  JPM       +5.8%   +7.5%  clara
+  C         -2.2%   +8.8%  reciente
+  BA.C      -3.6%  +10.0%  reciente
+  GS        +7.8%   +5.6%  clara
+  BBD       +0.9%   +5.7%  
+  ITUB      -3.4%   +5.6%  
+  NMR       +1.3%   +4.1%  
+-- si la curva se empina 0,5 punto
+  BLOQUE    +1.6%   +4.2%  
+  JPM       +6.6%   +4.8%  clara
+  C         +2.4%   +5.3%  reciente
+  BA.C      +3.6%   +4.7%  reciente
+  GS        +1.5%   +4.8%  reciente
+  BBD       -1.1%   +3.3%  
+  ITUB      -2.8%   +1.8%  
+  NMR       +1.4%   +5.0%  
+-- si el spread de crédito sube 1 punto
+  BLOQUE    +2.5%  -10.6%  reciente
+  JPM       +4.3%   -7.7%  vuelta
+  C        +18.0%  -12.1%  vuelta
+  BA.C     +13.6%   -9.1%  vuelta
+  GS        -9.6%   -7.2%  clara
+  BBD       -2.0%  -19.1%  reciente
+  ITUB      -2.4%  -18.4%  reciente
+  NMR       -1.8%   +0.9%  
+-- si el real se debilita 5%
+  BLOQUE    -1.4%   -3.0%  clara
+  JPM       +0.6%   -0.3%  
+  C         +2.3%   -0.6%  
+  BA.C      +2.7%   -0.1%  
+  GS        -2.5%   -0.6%  antigua
+  BBD       -6.1%   -9.9%  clara
+  ITUB      -4.9%   -8.9%  clara
+  NMR       -1.6%   +0.3%  
+
+##### Pagos
+-- si la confianza del consumidor sube 5 puntos
+  BLOQUE    -1.0%   +0.9%  
+  V         -2.0%   +0.3%  antigua
+  MA        -1.9%   +0.7%  antigua
+  AXP       -0.2%   +1.1%  
+  PYPL        -     +1.9%  
+  HOOD        -     +0.8%  
+-- si el dólar global sube 5%
+  BLOQUE    +0.7%   -0.8%  
+  V         +1.0%   -0.5%  
+  MA        -1.4%   -1.4%  
+  AXP       +3.3%   -0.6%  antigua
+  PYPL        -     -3.4%  
+  HOOD        -     +6.8%  
+-- si el spread de crédito sube 1 punto
+  BLOQUE    -1.4%   -1.3%  
+  V         -3.7%   +2.4%  
+  MA        -2.4%   -0.2%  
+  AXP       +1.4%   -3.7%  
+  PYPL        -     -4.6%  
+  HOOD        -    -24.8%  
+
+##### Cripto  [Bitcoin tiene datos desde 2014: solo se puede medir el tramo reciente.]
+-- si bitcoin sube 20%
+  BLOQUE      -    +11.4%  reciente
+  MSTR        -     +7.8%  reciente
+  COIN        -    +18.0%  reciente
+  RIOT        -    +14.4%  reciente
+  HUT         -    +20.0%  reciente
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    +2.7%   +0.2%  
+  MSTR      +2.7%   -2.4%  
+  COIN        -    +14.5%  
+  RIOT        -     +3.0%  
+  HUT         -     +7.2%  
+
+##### Energía eléctrica  [No hay un dato gratis de demanda eléctrica de data centers.]
+-- si el gas natural sube 10%
+  BLOQUE    +0.8%   +0.1%  
+  VST         -     +0.3%  
+  CEG         -     +0.0%  
+  GEV       sin historia suficiente
+  OKLO        -     -0.5%  
+  FSLR      +0.8%   +0.7%  
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    +0.9%   +4.5%  
+  VST         -     +0.2%  
+  CEG         -    +14.8%  
+  GEV       sin historia suficiente
+  OKLO        -    +42.4%  reciente
+  FSLR      +0.9%   -3.9%  
+
+##### Petróleo y gas  [El real aplica sobre todo a PBR.]
+-- si el petróleo sube 10%
+  BLOQUE    +3.9%   +3.7%  clara
+  XOM       +0.9%   +2.9%  clara
+  CVX       +1.8%   +2.6%  clara
+  SHEL      +2.6%   +2.9%  clara
+  PBR       +7.0%   +5.3%  clara
+  GPRK      +5.8%   +5.0%  clara
+  TEN       +6.7%   +3.4%  clara
+-- si el gas natural sube 10%
+  BLOQUE    +1.3%   +0.7%  antigua
+  XOM       +0.5%   +0.7%  antigua
+  CVX       +0.7%   +0.7%  antigua
+  SHEL      +0.8%   +0.4%  antigua
+  PBR       +1.6%   +0.8%  antigua
+  GPRK      +2.9%   +0.9%  
+  TEN       +2.3%   +0.5%  antigua
+-- si el real se debilita 5%
+  BLOQUE    -2.8%   -3.8%  clara
+  XOM       -0.0%   -1.6%  
+  CVX       -0.8%   -1.6%  
+  SHEL      -1.8%   -2.6%  clara
+  PBR       -7.7%   -9.8%  clara
+  GPRK      -1.9%   -3.5%  reciente
+  TEN       -3.9%   -3.2%  clara
+
+##### Minería y acero  [Cobre, oro y dólar suelen moverse juntos: no son tres motores independientes. No hay factor para hierro (VALE) ni tierras raras (MP).]
+-- si el cobre sube 10%
+  BLOQUE    +4.9%   +9.3%  clara
+  VALE      +4.4%  +11.8%  clara
+  FCX       +8.6%  +17.2%  clara
+  B         +4.1%   +6.6%  clara
+  HMY       +3.1%   +6.2%  clara
+  HL        +5.1%  +11.1%  clara
+  MP          -     +4.7%  
+  TXR       +3.9%   +6.0%  clara
+-- si el oro sube 10%
+  BLOQUE   +10.9%  +14.7%  clara
+  VALE      +6.0%   +7.8%  clara
+  FCX       +8.3%   +7.8%  clara
+  B        +16.8%  +21.0%  clara
+  HMY      +14.6%  +33.9%  clara
+  HL       +15.4%  +24.5%  clara
+  MP          -     +1.7%  
+  TXR       +4.3%   +2.9%  antigua
+-- si el dólar global sube 5%
+  BLOQUE    -7.6%  -11.1%  clara
+  VALE      -6.4%  -13.4%  clara
+  FCX       -7.5%  -13.1%  clara
+  B         -8.7%  -10.7%  clara
+  HMY       -8.7%  -14.9%  clara
+  HL        -8.6%  -14.4%  clara
+  MP          -     -1.5%  
+  TXR       -6.1%   -3.0%  antigua
+
+##### Farma grande  [El motor real son las patentes y aprobaciones, que no tienen una serie de datos: tasa y dólar son aproximaciones.]
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    -3.5%   -3.4%  clara
+  LLY       -8.8%   -4.9%  antigua
+  NVO       +1.9%   -5.4%  
+  JNJ       -2.6%   -1.3%  antigua
+  PFE       -5.4%   -1.3%  antigua
+  ABT       -2.1%   -3.9%  
+-- si el dólar global sube 5%
+  BLOQUE    -1.9%   -1.4%  antigua
+  LLY       -1.9%   +0.5%  antigua
+  NVO       -3.5%   -3.3%  antigua
+  JNJ       -0.6%   -0.5%  
+  PFE       -1.6%   -0.6%  antigua
+  ABT       -1.8%   -2.8%  clara
+
+##### Biotech y servicios de salud
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    -1.4%   -3.9%  
+  MRNA        -    -13.4%  
+  VRTX      -1.4%   -1.6%  
+  NTRA        -     -6.2%  
+  TEM       sin historia suficiente
+  HIMS        -     -3.3%  
+  UNH       -1.3%   -0.5%  
+-- si el spread de crédito sube 1 punto
+  BLOQUE    -2.7%   +2.9%  
+  MRNA        -     -3.2%  
+  VRTX      -6.2%   +9.0%  reciente
+  NTRA        -     +3.4%  
+  TEM       sin historia suficiente
+  HIMS        -     +1.7%  
+  UNH       +0.9%   +3.6%  
+
+##### Consumo defensivo
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    -2.7%   -2.4%  clara
+  KO        -3.9%   -2.8%  clara
+  PEP       -3.5%   -3.3%  clara
+  PG        -3.3%   -3.1%  clara
+  MO        +1.6%   +0.5%  
+  WMT       -3.2%   -2.5%  antigua
+  MCD       -3.6%   -3.5%  clara
+-- si el dólar global sube 5%
+  BLOQUE    -0.1%   -0.9%  
+  KO        -1.6%   -2.3%  clara
+  PEP       -0.1%   -0.5%  
+  PG        +0.7%   -1.5%  
+  MO        +0.9%   -0.1%  
+  WMT       -0.0%   -0.2%  
+  MCD       -0.4%   -0.5%  
+
+##### Consumo cíclico
+-- si la confianza del consumidor sube 5 puntos
+  BLOQUE    +0.4%   +1.5%  
+  NKE       +0.9%   +0.8%  
+  ANF       -0.6%   +2.6%  
+  GT        +1.0%   +1.0%  
+-- si el dólar global sube 5%
+  BLOQUE    -0.2%   -0.5%  
+  NKE       +0.8%   -2.3%  
+  ANF       -3.5%   +1.5%  
+  GT        +2.1%   -0.7%  
+-- si el petróleo sube 10%
+  BLOQUE    +0.3%   +0.6%  
+  NKE       -0.4%   +0.0%  
+  ANF       +1.5%   +0.9%  
+  GT        -0.3%   +0.9%  
+
+##### Aeroespacial, defensa y aerolíneas  [Bloque mixto: aerolíneas y defensa no se mueven por lo mismo.]
+-- si el petróleo sube 10%
+  BLOQUE    -4.7%   +0.5%  antigua
+  BA        -0.4%   +1.4%  reciente
+  GE        -1.3%   +0.5%  antigua
+  LMT       -0.4%   +0.0%  
+  UAL       -9.9%   +0.6%  antigua
+  AAL      -11.9%   -0.4%  antigua
+  DAL       -7.3%   +0.7%  antigua
+-- si la confianza del consumidor sube 5 puntos
+  BLOQUE    +1.7%   +2.2%  clara
+  BA        -0.0%   +1.3%  
+  GE        +0.8%   +1.6%  
+  LMT       +1.1%   -0.5%  antigua
+  UAL       +3.9%   +4.0%  clara
+  AAL       +4.4%   +3.1%  reciente
+  DAL       +2.0%   +3.6%  reciente
+-- si el spread de crédito sube 1 punto
+  BLOQUE   +13.3%   -7.7%  vuelta
+  BA        +3.8%  -11.7%  vuelta
+  GE        +7.3%   -1.2%  antigua
+  LMT       +1.0%   +1.4%  
+  UAL      +29.1%  -16.0%  vuelta
+  AAL      +24.1%   -8.0%  antigua
+  DAL      +20.3%   -9.5%  vuelta
+
+##### Espacio  [Casi todas las empresas cotizan hace pocos años: solo se puede medir el tramo reciente.]
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE      -     -7.0%  
+  SPCX      sin historia suficiente
+  RKLB        -     +9.1%  
+  ASTS        -    -13.9%  
+  SPCE        -    -11.5%  
+  SATL        -    +17.8%  
+-- si el spread de crédito sube 1 punto
+  BLOQUE      -     -8.6%  
+  SPCX      sin historia suficiente
+  RKLB        -    -21.8%  
+  ASTS        -     +7.1%  
+  SPCE        -    -16.8%  
+  SATL        -    -37.9%  
+
+##### Industriales y agro
+-- si el cobre sube 10%
+  BLOQUE    +1.0%   +2.6%  clara
+  CAT       +2.0%   +3.2%  clara
+  PCAR      -0.2%   +0.6%  
+  ADGO      +2.7%   +4.0%  clara
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    -1.7%   +5.9%  reciente
+  CAT       -6.0%   +4.1%  antigua
+  PCAR      +4.4%   +2.4%  antigua
+  ADGO      -3.8%  +11.2%  reciente
+-- si el dólar global sube 5%
+  BLOQUE    -2.0%   -1.0%  antigua
+  CAT       -4.7%   -1.9%  antigua
+  PCAR      +0.5%   -1.7%  
+  ADGO      -0.6%   +0.5%  
+
+##### Casos aparte  [No tienen un motor común: cada empresa se mueve por lo suyo.]
+-- si la tasa a 10 años sube 1 punto
+  BLOQUE    -2.2%   -0.6%  
+  BRKB      -1.3%   -0.4%  
+  TSLA     +19.5%   +0.5%  
+  PLD       -5.8%   -8.6%  clara
+  BIOX        -     +8.4%  
+-- si la confianza del consumidor sube 5 puntos
+  BLOQUE    +1.5%   -0.4%  antigua
+  BRKB      +0.7%   -0.2%  
+  TSLA      +3.0%   -1.2%  
+  PLD       +1.6%   -0.1%  antigua
+  BIOX        -     -0.2%  
+
+conteo todas las combinaciones empresa-factor: {'antigua': 142, 'nada': 1098, 'reciente': 86, 'clara': 78, 'vuelta': 12}
+
+ultimos meses por factor:
+  tasa      2026-09:+0.54  2026-10:-0.35  2026-11:-0.08
+  curva     2026-09:+0.00  2026-10:-0.03  2026-11:-0.03
+  credito   2026-09:-0.12  2026-10:+0.06  2026-11:+0.04
+  dolar     2026-09:+2.03  2026-10:+0.42  2026-11:-0.19
+  petroleo  2026-09:+5.43  2026-10:+15.15  2026-11:-16.72
+  gas       2026-09:+3.10  2026-10:-4.23  2026-11:+10.90
+  cobre     2026-09:-0.52  2026-10:-1.53  2026-11:-1.29
+  oro       2026-09:-6.58  2026-10:-6.87  2026-11:+6.34
+  bitcoin   2026-09:+6.37  2026-10:-7.32  2026-11:-3.45
+  yuan      2026-09:-0.34  2026-10:-0.63  2026-11:+0.02
+  real      2026-09:+0.23  2026-10:+3.50  2026-11:+2.28
+  consumo   2026-07:+5.70  2026-08:-3.50  2026-09:-3.60
