@@ -1,0 +1,32 @@
+name: Logos
+
+on:
+  workflow_dispatch:
+    inputs:
+      logos:
+        description: "CEDEARs a rehacer, separados por coma"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  logos:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install requests pillow
+      - run: python scripts/logos.py
+        env:
+          LOGOS: ${{ github.event.inputs.logos }}
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add data
+          git diff --cached --quiet || git commit -m "Logos"
+          git pull --rebase
+          git push
