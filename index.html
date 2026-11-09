@@ -216,6 +216,8 @@ th{text-transform:uppercase;letter-spacing:.06em;font-size:11px;font-weight:600;
 .alist{list-style:none;margin:0;padding:0}.alist li{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45}.alist li:last-child{border-bottom:0}.alist i{flex:none;width:8px;height:8px;border-radius:50%;transform:translateY(-1px)}
 .logo-s.osc{background:#141d40}
 .fh-logo:has(img.osc){background:#141d40}
+.nota{width:100%;min-height:200px;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:10px;padding:12px;font:14px/1.5 var(--sans);resize:vertical}
+.btn:disabled{opacity:.45;cursor:default}
 </style>
 </head>
 <body>
@@ -428,6 +430,7 @@ function general(n){ if (!n) return null; if (n.general!=null) return n.general;
 function empresas(m){
   (E.empresas||[]).forEach(x=>{ if (x.notas) x.notas.general = general(x.notas); });
   if (!E){ m.innerHTML = `<div class="soon"><h2>Empresas</h2>Todavía no hay datos. Se generan con la próxima actualización.</div>`; return; }
+  if (EST.vista==="cmp" && CMP.length) return comparador(m);
   if (EST.sel) return ficha(m, EST.sel);
   const L = E.empresas;
   const sectores = [...new Set(L.map(x=>x.sector).filter(Boolean))].sort();
@@ -450,11 +453,12 @@ function empresas(m){
     <select id="ep"><option value="">Todos los países</option><option value="us" ${EST.pais==="us"?"selected":""}>EE.UU.</option><option value="ext" ${EST.pais==="ext"?"selected":""}>Resto del mundo</option></select>
     <select id="el"><option value="">Toda liquidez</option>${["Alta","Media","Baja","Muy baja"].map(s=>`<option ${s===EST.liq?"selected":""}>${s}</option>`).join("")}</select>
     <label class="mut" style="font-size:12px;font-family:var(--mono)"><input type="checkbox" id="ef" ${EST.fichas?"checked":""}> Solo fichas completas</label>
-    <span class="count">${rows.length} empresas</span>
+    <button class="btn" id="ecmp" style="margin:0" ${CMP.length<2?"disabled":""}>Comparar${CMP.length?` (${CMP.length})`:""}</button>${CMP.length?`<button class="btn" id="elim" style="margin:0">Limpiar</button>`:""}
+    <span class="count">${rows.length} empresas · marcá hasta 4 para comparar</span>
   </div>
-  <div class="wrap"><table><thead><tr>${th("puesto","#")}${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("sector","Sector","l")}${th("pais","País","l")}
+  <div class="wrap"><table><thead><tr><th></th>${th("puesto","#")}${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("sector","Sector","l")}${th("pais","País","l")}
   ${th("general","General")}${th("negocio","Negocio")}${NOTAS.map(([k,t])=>th(k,t)).join("")}${th("r1m","1M")}${th("r12m","12M")}${th("premio","Premio")}${th("liquidez","Liquidez","l")}${th("proximo_balance","Balance")}</tr></thead>
-  <tbody>${rows.map(x=>`<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td class="mut">${x.puesto}</td><td class="tk l">${logoImg(x.byma,"logo-s")}${esc(x.byma)}${x.byma!==x.ticker?`<small>${esc(x.ticker)}</small>`:""}</td>
+  <tbody>${rows.map(x=>`<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td><input type="checkbox" class="cmpk" data-c="${esc(x.ticker)}" ${CMP.includes(x.ticker)?"checked":""}></td><td class="mut">${x.puesto}</td><td class="tk l">${logoImg(x.byma,"logo-s")}${esc(x.byma)}${x.byma!==x.ticker?`<small>${esc(x.ticker)}</small>`:""}</td>
   <td class="nm l">${esc(x.nombre)}${x.ficha?"":' <span class="mut" title="Ficha completa pendiente">·</span>'}</td><td class="l">${esc(x.sector||"—")}</td><td class="l">${esc(PAIS[x.pais]||x.pais||"—")}</td>
   <td>${chip(x.notas?.general)}</td><td>${chip(x.notas?.negocio)}</td>${NOTAS.map(([k])=>`<td>${chip(x.notas?.[k])}</td>`).join("")}
   <td class="${cls(x.r1m)}">${pct(x.r1m)}</td><td class="${cls(x.r12m)}">${pct(x.r12m,0)}</td><td class="${x.premio>0.03?"neg":x.premio<-0.03?"pos":""}">${pct(x.premio)}</td>
@@ -466,7 +470,10 @@ function empresas(m){
   m.querySelector("#el").onchange = e=>{EST.liq=e.target.value; re();};
   m.querySelector("#ef").onchange = e=>{EST.fichas=e.target.checked; re();};
   m.querySelectorAll("th[data-s]").forEach(h=>h.onclick=()=>{const k=h.dataset.s; if (EST.sort===k) EST.dir*=-1; else {EST.sort=k; EST.dir=["byma","nombre","sector","pais","liquidez","puesto","proximo_balance"].includes(k)?1:-1;} re();});
-  m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; window.scrollTo(0,0); re();});
+  m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=e=>{ if (e.target.classList.contains("cmpk")) return; EST.sel=r.dataset.e; window.scrollTo(0,0); re();});
+  m.querySelectorAll(".cmpk").forEach(c=>c.onchange=()=>{ const t=c.dataset.c, i=CMP.indexOf(t); if (c.checked && i<0){ if (CMP.length>=4){ c.checked=false; return; } CMP.push(t); } else if (!c.checked && i>=0) CMP.splice(i,1); re(); });
+  const bc = m.querySelector("#ecmp"); if (bc) bc.onclick = ()=>{ EST.vista="cmp"; window.scrollTo(0,0); re(); };
+  const bl = m.querySelector("#elim"); if (bl) bl.onclick = ()=>{ CMP.length=0; re(); };
 }
 
 function lineas(sr, per){
@@ -501,7 +508,7 @@ function barras(an){
 
 function kv(pares){ return `<div class="kv">${pares.map(([k,v,c])=>`<div><span>${k}</span><b class="${c||""}">${v}</b></div>`).join("")}</div>`; }
 
-const FTABS = [["resumen","Resumen"],["analisis","Análisis"],["numeros","Números"],["valuacion","Valuación"],["analistas","Analistas"],["posicion","Posicionamiento"]];
+const FTABS = [["resumen","Resumen"],["analisis","Análisis"],["numeros","Números"],["valuacion","Valuación"],["analistas","Analistas"],["sensib","Sensibilidades"],["cedear","CEDEAR"],["posicion","Posicionamiento"],["vigilar","Qué vigilar"]];
 const logoImg = (b, cls="logo") => `<img class="${cls}${(LM||{})[b]?" osc":""}" src="data/logos/${encodeURIComponent(b)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} sinlogo',textContent:'${esc(b).slice(0,2)}'}))">`;
 
 function analizar(f){
@@ -607,6 +614,107 @@ function panelAnalisis(f){
   <p class="mut small">Análisis automático a partir de los números de la ficha; se actualiza cada semana. No reemplaza leer el balance ni las noticias.</p>`;
 }
 
+function bandaPE(b, hoy){
+  const v = b.pe, n = v.length, W=620, H=240, pl=40, pb=22;
+  const srt = v.slice().sort((p,q)=>p-q), q = z => srt[Math.floor(z*(n-1))];
+  const p25=q(0.25), p50=q(0.5), p75=q(0.75);
+  const ys = v.concat(hoy?[hoy]:[]);
+  const lo = Math.max(0, Math.min(...ys)*0.9), hi = Math.max(...ys)*1.05;
+  const X = i => pl + i/(n-1)*(W-pl-10), Y = z => 8 + (hi-z)/(hi-lo||1)*(H-pb-8);
+  const path = v.map((z,i)=>(i?"L":"M")+X(i).toFixed(1)+" "+Y(z).toFixed(1)).join("");
+  const xt = [0, Math.floor(n/2), n-1].map((i,j)=>`<text x="${X(i)}" y="${H-6}" text-anchor="${["start","middle","end"][j]}">${b.f[i]}</text>`).join("");
+  const yt = [lo,(lo+hi)/2,hi].map(z=>`<text x="${pl-6}" y="${Y(z)+4}" text-anchor="end">${z.toFixed(0)}</text>`).join("");
+  const pos = hoy==null ? "" : hoy>p75 ? "por encima de su rango habitual (cara contra su historia)" : hoy<p25 ? "por debajo de su rango habitual (barata contra su historia)" : "dentro de su rango habitual";
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Banda de P/E">
+    <rect x="${pl}" y="${Y(p75)}" width="${W-pl-10}" height="${Math.max(1,Y(p25)-Y(p75))}" fill="rgba(110,168,255,.12)"/>
+    <line x1="${pl}" x2="${W-10}" y1="${Y(p50)}" y2="${Y(p50)}" stroke="var(--blue)" stroke-dasharray="4 4"/>
+    ${yt}<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2"/>
+    ${hoy?`<circle cx="${X(n-1)}" cy="${Y(Math.min(hoy,hi))}" r="4" fill="var(--text)"/>`:""}${xt}</svg>
+    <div class="leg"><span style="color:var(--accent)">— P/E mensual</span><span style="color:var(--blue)">- - mediana ${nx(p50,0)}x</span><span class="mut">▮ rango habitual ${nx(p25,0)}x a ${nx(p75,0)}x</span></div>
+    <p class="small" style="margin:6px 0 0">Hoy: <b>${hoy==null?"—":nx(hoy,1)+"x"}</b>${pos?`, ${pos}.`:""}</p>
+    <p class="mut small">P/E con el precio de cada mes y la ganancia del último ejercicio publicado. Aproximado: supone la misma cantidad de acciones que hoy.</p>`;
+}
+
+function premioCh(ch){
+  const n = ch.f.length, W=1240, H=230, pl=46, pb=22, hB=60;
+  const ps = ch.premio, lo = Math.min(-0.03,...ps), hi = Math.max(0.03,...ps);
+  const X = i => pl + i/(n-1)*(W-pl-10), Y = z => 8 + (hi-z)/(hi-lo)*(H-pb-hB-14);
+  const mx = Math.max(...ch.monto_ars,1), bw = (W-pl-10)/n*0.7;
+  const bars = ch.monto_ars.map((m,i)=>`<rect x="${X(i)-bw/2}" y="${H-pb-m/mx*hB}" width="${bw}" height="${m/mx*hB}" fill="var(--panel2)" stroke="var(--line)"/>`).join("");
+  const path = ps.map((z,i)=>(i?"L":"M")+X(i).toFixed(1)+" "+Y(z).toFixed(1)).join("");
+  const yt = [lo,0,hi].map(z=>`<line x1="${pl}" x2="${W-10}" y1="${Y(z)}" y2="${Y(z)}" stroke="${z===0?"var(--muted)":"var(--line)"}" ${z===0?'stroke-dasharray="3 3"':""}/><text x="${pl-6}" y="${Y(z)+4}" text-anchor="end">${(z*100).toFixed(0)}%</text>`).join("");
+  const xt = [0, Math.floor(n/2), n-1].map((i,j)=>`<text x="${X(i)}" y="${H-6}" text-anchor="${["start","middle","end"][j]}">${ch.f[i].slice(0,7)}</text>`).join("");
+  const prom = ps.reduce((s,z)=>s+z,0)/n;
+  return `<svg viewBox="0 0 ${W} ${H}" class="chart" style="margin-top:12px" role="img" aria-label="Premio del CEDEAR">${yt}${bars}<path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2"/>${xt}</svg>
+    <div class="leg"><span style="color:var(--accent)">— Premio contra el CCL de la canasta</span><span class="mut">▮ Volumen semanal en BYMA</span><span class="mut">Promedio del año: ${pct(prom)}</span></div>`;
+}
+
+function panelVigilar(f){
+  const a = f.analistas||{}, pb = f.precio_bloque||{}, p = f.posicion||{}, dv = f.dividendos||{}, v = f.val||{};
+  const hoy = new Date(); const dias = s => s ? Math.round((new Date(s+"T12:00")-hoy)/864e5) : null;
+  const al = [];
+  const db = dias(a.proximo_balance); if (db!=null && db>=0 && db<=21) al.push(["accent",`Presenta balance en ${db} días (${fch2(a.proximo_balance)}). En los últimos 4, la acción se movió en promedio ${pct(((a.sorpresas||[]).map(s=>Math.abs(s.reaccion||0)).reduce((x,y)=>x+y,0)/Math.max((a.sorpresas||[]).length,1)),1).replace("+","")} al día siguiente.`]);
+  const dc = dias(dv.fecha_corte); if (dc!=null && dc>=0 && dc<=21) al.push(["pos",`Corte de dividendo en ${dc} días (${fch2(dv.fecha_corte)}).`]);
+  if (f.premio!=null && f.premio>0.03) al.push(["neg",`El CEDEAR está ${pct(f.premio).replace("+","")} caro contra su precio en EE.UU.`]);
+  if (f.premio!=null && f.premio<-0.03) al.push(["pos",`El CEDEAR está ${pct(-f.premio).replace("+","")} barato contra su precio en EE.UU.`]);
+  if (pb.vs_ma200!=null && pb.vs_ma200<0) al.push(["neg",`Cotiza ${pct(-pb.vs_ma200).replace("+","")} debajo de su media de 200 ruedas.`]);
+  if (pb.vs_max52!=null && pb.vs_max52<-0.25) al.push(["neg",`Está ${pct(-pb.vs_max52,0).replace("+","")} debajo de su máximo de 52 semanas.`]);
+  if ((a.bajan_30d||0) > (a.suben_30d||0)+1) al.push(["neg",`Los analistas vienen bajando estimaciones: ${a.bajan_30d} bajan contra ${a.suben_30d||0} que suben en 30 días.`]);
+  if ((a.suben_30d||0) > (a.bajan_30d||0)+3) al.push(["pos",`Los analistas vienen subiendo estimaciones: ${a.suben_30d} suben contra ${a.bajan_30d||0} que bajan en 30 días.`]);
+  if (p.short_cambio!=null && p.short_cambio>0.2) al.push(["neg",`El interés corto subió ${pct(p.short_cambio,0).replace("+","")} en el último mes.`]);
+  const A = analizar(f); if (A.tend==="Empeora") al.push(["neg","La tendencia del negocio empeora (ver Análisis)."]);
+  if (f.liquidez==="Baja"||f.liquidez==="Muy baja") al.push(["accent",`Liquidez ${f.liquidez.toLowerCase()} en BYMA: conviene operar con órdenes límite.`]);
+  const key = "rvnota:"+f.ticker; let nota = ""; try{ nota = localStorage.getItem(key)||""; }catch(e){}
+  return `<section class="fgrid"><div class="card"><h3>Qué vigilar <span class="mut">· automático, con los datos de esta semana</span></h3>
+    ${al.length?`<ul class="alist">${al.map(([c,t])=>`<li><i style="background:var(--${c})"></i>${t}</li>`).join("")}</ul>`:`<p class="mut">Nada para destacar esta semana.</p>`}</div>
+    <div class="card"><h3>Tus notas</h3><textarea id="nota" class="nota" placeholder="Tesis, precio de entrada, qué esperás del próximo balance, por qué la mirás…">${esc(nota)}</textarea>
+    <p class="mut small" id="notamsg">Se guardan solas en este navegador (no se comparten ni se suben al sitio). Si cambiás de computadora, no las vas a ver.</p></div></section>`;
+}
+
+const CMP = [];
+async function comparador(m){
+  for (const t of CMP) if (!FCACHE[t]){ try{ const r = await fetch(`data/fichas/${encodeURIComponent(t)}.json?v=${Date.now()}`); FCACHE[t] = r.ok ? await r.json() : {sin:true}; }catch(e){ FCACHE[t]={sin:true}; } }
+  const fs = CMP.map(t=>FCACHE[t]).filter(f=>f && !f.sin);
+  const cols = ["var(--accent)","var(--blue)","var(--pos)","#c58cff"];
+  const n = {"1y":52,"3y":156,"5y":9999}[EST.per];
+  const base = fs[0]?.precio_bloque?.serie;
+  let chart = "";
+  if (base){
+    const len = Math.min(...fs.map(f=>f.precio_bloque.serie.p.length)), i0 = Math.max(0,len-n);
+    const ser = fs.map((f,j)=>{ const p = f.precio_bloque.serie.p.slice(-len).slice(i0); return {c:cols[j], t:f.byma, v:p.map(x=>x/p[0]*100)}; });
+    const all = ser.flatMap(s=>s.v), lo=Math.min(...all), hi=Math.max(...all), W=1240, H=260, pl=44;
+    const X = i => pl + i/(ser[0].v.length-1)*(W-pl-10), Y = z => 8 + (hi-z)/(hi-lo||1)*(H-30);
+    const fsd = base.f.slice(-len).slice(i0);
+    chart = `<svg viewBox="0 0 ${W} ${H}" class="chart">${[lo,(lo+hi)/2,hi].map(z=>`<line x1="${pl}" x2="${W-10}" y1="${Y(z)}" y2="${Y(z)}" stroke="var(--line)"/><text x="${pl-6}" y="${Y(z)+4}" text-anchor="end">${z.toFixed(0)}</text>`).join("")}
+      ${ser.map(s=>`<path d="${s.v.map((z,i)=>(i?"L":"M")+X(i).toFixed(1)+" "+Y(z).toFixed(1)).join("")}" fill="none" stroke="${s.c}" stroke-width="2"/>`).join("")}
+      ${[0,Math.floor(fsd.length/2),fsd.length-1].map((i,j)=>`<text x="${X(i)}" y="${H-6}" text-anchor="${["start","middle","end"][j]}">${fsd[i].slice(0,7)}</text>`).join("")}</svg>
+      <div class="leg">${ser.map(s=>`<span style="color:${s.c}">■ ${esc(s.t)} ${pct(s.v[s.v.length-1]/100-1,0)}</span>`).join("")}<span class="mut">· base 100</span></div>`;
+  }
+  const fila = (t, fn, fmt=z=>z) => `<tr><td class="l">${t}</td>${fs.map(f=>`<td>${fmt(fn(f))}</td>`).join("")}</tr>`;
+  const u = f => (f.anual||[]).filter(x=>x.ventas!=null).slice(-1)[0]||{};
+  const u3 = f => { const an=(f.anual||[]).filter(x=>x.ventas!=null); return an[an.length-4]; };
+  const pc0 = z => z==null||!isFinite(z) ? "—" : pct(z,0), xx = z => z==null ? "—" : nx(z)+"x";
+  m.innerHTML = `<button class="btn" id="cv">← Volver a la lista</button>
+    <section class="card"><h3>Comparador</h3>
+    <div class="seg">${[["1y","1 año"],["3y","3 años"],["5y","5 años"]].map(([p,t])=>`<button data-per="${p}" class="${EST.per===p?"on":""}">${t}</button>`).join("")}</div>
+    ${chart}</section>
+    <section class="card"><div class="wrap" style="max-height:none"><table><thead><tr><th class="l"></th>${fs.map((f,j)=>`<th style="color:${cols[j]}">${logoImg(f.byma,"logo-s")}${esc(f.byma)}</th>`).join("")}</tr></thead><tbody>
+    ${fila("Nota general", f=>chip(general(f.notas)))}${fila("Calidad", f=>chip(f.notas?.calidad))}${fila("Solidez", f=>chip(f.notas?.solidez))}${fila("Crecimiento", f=>chip(f.notas?.crecimiento))}
+    ${fila("Valuación", f=>chip(f.notas?.valuacion))}${fila("Tendencia", f=>chip(f.notas?.tendencia))}${fila("Analistas", f=>chip(f.notas?.analistas))}
+    ${fila("Tendencia del negocio", f=>analizar(f).tend)}
+    ${fila("Capitalización", f=>big(f.mcap))}${fila("12 meses", f=>f.precio_bloque?.r12m, z=>`<span class="${cls(z)}">${pc0(z)}</span>`)}
+    ${fila("P/E", f=>f.val?.pe, xx)}${fila("P/E esperado", f=>f.val?.pe_fwd, xx)}${fila("PEG", f=>f.val?.peg, z=>z==null?"—":nx(z,2))}${fila("EV/EBITDA", f=>f.val?.ev_ebitda, xx)}
+    ${fila("Flujo libre / precio", f=>f.val?.fcf_yield, pc0)}${fila("Devolución al accionista", f=>f.val?.rend_accionista, pc0)}
+    ${fila("Ventas, 3 años por año", f=>{const a=u(f),b=u3(f); return b&&b.ventas>0&&a.ventas>0?(a.ventas/b.ventas)**(1/3)-1:null;}, pc0)}
+    ${fila("Margen EBIT", f=>u(f).m_ebit, pc0)}${fila("Margen flujo libre", f=>u(f).m_fcf, pc0)}
+    ${fila("Deuda neta / EBITDA", f=>{const r=u(f); return f.tipo!=="banco"&&r.ebitda>0?((r.deuda||0)-(r.caja||0))/r.ebitda:null;}, z=>z==null?"—":z<0?"caja neta":nx(z)+"x")}
+    ${fila("Beta", f=>f.sensibilidades?.beta, z=>z==null?"—":nx(z,2))}${fila("Premio CEDEAR", f=>f.premio, z=>pct(z))}${fila("Liquidez", f=>esc(f.liquidez||"—"))}
+    ${fila("Próximo balance", f=>fch2(f.analistas?.proximo_balance))}
+    </tbody></table></div></section>`;
+  m.querySelector("#cv").onclick = ()=>{EST.vista=null; render();};
+  m.querySelectorAll("[data-per]").forEach(b=>b.onclick=()=>{EST.per=b.dataset.per; comparador(m);});
+}
+
 async function ficha(m, t){
   if (!FCACHE[t]){
     m.innerHTML = `<p class="mut">Cargando ficha…</p>`;
@@ -689,19 +797,21 @@ async function ficha(m, t){
     const roic = r => { const cap=(r.patrimonio||0)+(r.deuda||0)-(r.caja||0); return r.ebit!=null && cap>0 ? r.ebit*0.79/cap : null; };
     const filasA = banco ? [["Ingresos","ventas",big],["Crecimiento","_g",null],["Ganancia neta","neto",big],["ROE","_roe",v=>pct(v,1)],["ROA","_roa",v=>pct(v,2)],["Patrimonio / activo","_eqa",v=>pct(v,1)],["Patrimonio","patrimonio",big],["Acciones (M)","acciones",v=>v==null?"—":(v/1e6).toFixed(0)]]
       : [["Ventas","ventas",big],["Crecimiento de ventas","_g",null],["Margen bruto","m_bruto",v=>pct(v,0)],["EBIT","ebit",big],["Margen EBIT","m_ebit",v=>pct(v,0)],
-      ["Ganancia neta","neto",big],["Margen neto","m_neto",v=>pct(v,0)],["Flujo libre","fcf",big],["Margen flujo libre","m_fcf",v=>pct(v,0)],["ROIC","_roic",v=>pct(v,0)],
+      ["Ganancia neta","neto",big],["Margen neto","m_neto",v=>pct(v,0)],["Flujo libre","fcf",big],["Margen flujo libre","m_fcf",v=>pct(v,0)],
+      ["Compensación en acciones","sbc",big],["Comp. en acciones / ventas","_sbcv",v=>pct(v,1).replace("+","")],["Flujo libre menos comp. en acciones","fcf_sbc",big],["ROIC","_roic",v=>pct(v,0)],
       ["Deuda neta","_dn",big],["Deuda neta / EBITDA","_lev",v=>v==null?"—":nx(v)+"x"],["Acciones (M)","acciones",v=>v==null?"—":(v/1e6).toFixed(0)]];
     const cel = (r,i,k,fmt) => { if (k==="_g"){ const p = an[i-1]; return p&&p.ventas&&r.ventas ? `<span class="${cls(r.ventas/p.ventas-1)}">${pct(r.ventas/p.ventas-1,0)}</span>` : "—"; }
       if (k==="_dn") return r.deuda==null&&r.caja==null ? "—" : big((r.deuda||0)-(r.caja||0));
       if (k==="_lev") return r.ebitda>0 && (r.deuda!=null||r.caja!=null) ? fmt(((r.deuda||0)-(r.caja||0))/r.ebitda) : "—";
       if (k==="_roic") return fmt(roic(r));
+      if (k==="_sbcv") return fmt(r.sbc!=null&&r.ventas ? r.sbc/r.ventas : null);
       if (k==="_roe") return fmt(r.neto!=null&&r.patrimonio ? r.neto/r.patrimonio : null);
       if (k==="_roa") return fmt(r.neto!=null&&r.activo ? r.neto/r.activo : null);
       if (k==="_eqa") return fmt(r.patrimonio&&r.activo ? r.patrimonio/r.activo : null);
       return fmt(r[k]); };
     const tablaA = an.length ? `<div class="wrap" style="max-height:none"><table><thead><tr><th class="l">USD</th>${an.map(r=>`<th>${r.anio}</th>`).join("")}</tr></thead><tbody>
       ${filasA.map(([t_,k,fmt])=>`<tr><td class="l">${t_}</td>${an.map((r,i)=>`<td>${cel(r,i,k,fmt)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
-      <p class="mut small">Fuente: ${an[an.length-1].fuente==="SEC"?"balances presentados a la SEC":"Yahoo Finance"}${f.moneda_reporte&&f.moneda_reporte!=="USD"?`; reporta en ${esc(f.moneda_reporte)}, convertido a dólares al tipo de cambio promedio de cada año`:""}.${banco?"":" ROIC: EBIT después de impuestos (21%) sobre patrimonio más deuda neta."}</p>` : `<p class="mut">Sin balances disponibles.</p>`;
+      <p class="mut small">Fuente: ${an[an.length-1].fuente==="SEC"?"balances presentados a la SEC":"Yahoo Finance"}${f.moneda_reporte&&f.moneda_reporte!=="USD"?`; reporta en ${esc(f.moneda_reporte)}, convertido a dólares al tipo de cambio promedio de cada año`:""}.${banco?"":" ROIC: EBIT después de impuestos (21%) sobre patrimonio más deuda neta. La compensación en acciones es un costo real que no pasa por caja: en tecnología puede ser grande, por eso mostramos el flujo libre descontándola."}</p>` : `<p class="mut">Sin balances disponibles.</p>`;
     const tr = f.trimestral||[];
     const tablaT = tr.length ? `<h4>Últimos trimestres</h4><div class="wrap" style="max-height:none"><table><thead><tr><th class="l">Trimestre</th>${tr.map(q=>`<th>${q.trimestre}</th>`).join("")}</tr></thead><tbody>
       <tr><td class="l">Ventas</td>${tr.map(q=>`<td>${big(q.ventas)}</td>`).join("")}</tr><tr><td class="l">Ventas vs. año anterior</td>${tr.map((q,i)=>{const p=tr[i-4]; return `<td>${p&&p.ventas&&q.ventas?`<span class="${cls(q.ventas/p.ventas-1)}">${pct(q.ventas/p.ventas-1,0)}</span>`:"—"}</td>`;}).join("")}</tr>
@@ -709,21 +819,63 @@ async function ficha(m, t){
       <tr><td class="l">Ganancia neta</td>${tr.map(q=>`<td>${big(q.neto)}</td>`).join("")}</tr></tbody></table></div>` : "";
     cuerpo = `<section class="card"><h3>Números <span class="mut">· anuales, en dólares</span></h3>${banco?"":barras(an)}${tablaA}${tablaT}</section>`;
   } else if (sub==="valuacion"){
-    const v = f.val || {}, pr = f.pares || {};
-    const peh = (f.pe_historia||[]).filter(z=>z.pe>0 && z.pe<300);
-    const peMed = peh.length ? peh.map(z=>z.pe).sort((a,b)=>a-b)[Math.floor(peh.length/2)] : null;
-    const filaV = (t_,k,fmt) => `<tr><td class="l">${t_}</td><td>${fmt(v[k])}</td><td class="mut">${fmt(pr[k])}</td></tr>`;
-    const pares = E.empresas.filter(z=>z.sector===f.sector).sort((p,q)=>(q.mcap||0)-(p.mcap||0)).slice(0,12);
+    const v = f.val || {};
+    const secE = E.empresas.filter(z=>z.sector===f.sector);
+    const med = k => { const xs = secE.map(z=>z.val?.[k]).filter(z=>z!=null && isFinite(z) && z>0).sort((p,q)=>p-q); return xs.length ? xs[Math.floor(xs.length/2)] : null; };
+    const filaV = (t_,k,fmt,ayuda) => `<tr><td class="l">${t_}${ayuda?`<div class="mut small" style="white-space:normal;max-width:300px;font-weight:400">${ayuda}</div>`:""}</td><td>${fmt(v[k])}</td><td class="mut">${fmt(med(k))}</td></tr>`;
+    const pares = secE.slice().sort((p,q)=>(q.mcap||0)-(p.mcap||0)).slice(0,12);
+    const bd = f.pe_banda;
+    const pc = z => z==null ? "—" : pct(z).replace("+","");
+    const an5 = an.slice(-5);
+    const devol = an5.length && an5.some(r=>r.dividendos!=null||r.recompras!=null) ? `<div class="wrap" style="max-height:none"><table><thead><tr><th class="l">USD</th>${an5.map(r=>`<th>${r.anio}</th>`).join("")}</tr></thead><tbody>
+      <tr><td class="l">Dividendos pagados</td>${an5.map(r=>`<td>${big(r.dividendos)}</td>`).join("")}</tr>
+      <tr><td class="l">Recompras de acciones</td>${an5.map(r=>`<td>${big(r.recompras)}</td>`).join("")}</tr>
+      <tr><td class="l">Emisión de acciones</td>${an5.map(r=>`<td>${big(r.emisiones)}</td>`).join("")}</tr></tbody></table></div>` : "";
+    const dv = f.dividendos || {};
     cuerpo = `<section class="fgrid"><div class="card"><h3>Múltiplos</h3>
-      <table><thead><tr><th class="l">Múltiplo</th><th>${esc(f.byma)}</th><th>Mediana del sector</th></tr></thead><tbody>
-      ${filaV("P/E (últimos 12 meses)","pe",xx)}${filaV("P/E esperado","pe_fwd",xx)}${filaV("EV/EBITDA","ev_ebitda",xx)}${filaV("Precio / ventas","ps",xx)}${filaV("Flujo libre / precio","fcf_yield",z=>pct(z))}
-      </tbody></table><p class="mut small">Sector dentro de las 125: ${pr.n||0} empresas.${v.div_yield?` Dividendo: ${pct(v.div_yield)} anual.`:""}</p>
-      ${peh.length>=3?`<h4>P/E al cierre de cada año</h4><div class="peh">${peh.map(z=>`<span>${z.anio}<b>${nx(z.pe,0)}x</b></span>`).join("")}</div><p class="mut small">Mediana de ${peh.length} años: <b>${nx(peMed,0)}x</b> · hoy: <b>${xx(v.pe)}</b>${v.pe&&peMed?` (${pct(v.pe/peMed-1,0)} contra su historia)`:""}. Es aproximado: supone la misma cantidad de acciones que hoy, así que recompras o emisiones lo distorsionan un poco.</p>`:""}
+      <div class="wrap" style="max-height:none"><table><thead><tr><th class="l">Múltiplo</th><th>${esc(f.byma)}</th><th>Mediana del sector</th></tr></thead><tbody>
+      ${filaV("P/E (últimos 12 meses)","pe",xx)}${filaV("P/E esperado","pe_fwd",xx)}
+      ${filaV("PEG","peg",z=>z==null?"—":nx(z,2),"P/E esperado dividido por el crecimiento esperado de la ganancia. Cerca de 1 o menos: el precio acompaña el crecimiento.")}
+      ${f.tipo==="banco"?filaV("Precio / valor libro","pvl",xx,"El múltiplo clave para bancos: se mira junto con el ROE."):`${filaV("EV/EBITDA","ev_ebitda",xx)}${filaV("Precio / flujo libre","pfcf",xx)}`}
+      ${filaV("Precio / ventas","ps",xx)}
+      </tbody></table></div><p class="mut small">Mediana de su sector dentro de las 125 (${secE.length} empresas).</p>
       ${f.tipo==="cripto"?`<p class="aviso">Valuación poco representativa: depende del bitcoin.</p>`:""}</div>
-      <div class="card"><h3>Comparables <span class="mut">· mismo sector, por capitalización</span></h3>
-      <div class="wrap" style="max-height:none"><table><thead><tr><th class="l">CEDEAR</th><th>Capitalización</th><th>P/E</th><th>P/E esp.</th><th>EV/EBITDA</th><th>FCF/precio</th><th>Valuación</th><th>12M</th></tr></thead><tbody>
-      ${pares.map(z=>`<tr data-e="${esc(z.ticker)}" style="cursor:pointer${z.ticker===f.ticker?";background:var(--panel2)":""}"><td class="tk l">${esc(z.byma)}</td><td>${big(z.mcap)}</td><td>${xx(z.val?.pe)}</td><td>${xx(z.val?.pe_fwd)}</td><td>${xx(z.val?.ev_ebitda)}</td><td>${pct(z.val?.fcf_yield)}</td><td>${chip(z.notas?.valuacion)}</td><td class="${cls(z.r12m)}">${pct(z.r12m,0)}</td></tr>`).join("")}
-      </tbody></table></div><p class="mut small">Hacé clic en una para abrir su ficha.</p></div></section>`;
+      <div class="card"><h3>P/E en los últimos años</h3>${bd?bandaPE(bd, v.pe):`<p class="mut">Sin historia suficiente de ganancias positivas.</p>`}</div></section>
+    <section class="fgrid"><div class="card"><h3>Devolución al accionista</h3>
+      ${kv([["Rendimiento total", pc(v.rend_accionista), v.rend_accionista>0.03?"pos":""],["Dividendo", pc(v.div_yield)],["Recompras netas", pc(v.recompra_yield)]])}
+      <p class="mut small">Lo que la empresa devuelve por año, como porcentaje de su valor: dividendos más recompras, menos acciones emitidas. Muchas tecnológicas devuelven más por recompras que por dividendos.</p>${devol}</div>
+      <div class="card"><h3>Dividendos</h3>
+      ${dv.tasa_anual||dv.pagos_12m?`${kv([["Por acción, anual", dv.tasa_anual==null?"—":"US$ "+nx(dv.tasa_anual,2)],["Rendimiento", pc(v.div_yield)],["Promedio 5 años", pc(dv.prom_5a)],["Parte de la ganancia que reparte", pc(dv.payout)],
+        ["Pagos en 12 meses", dv.pagos_12m??"—"],["Próximo corte", fch2(dv.fecha_corte)],["Próximo pago", fch2(dv.fecha_pago)]])}
+      ${(dv.historial||[]).length?`<h4>Últimos pagos</h4><div class="peh">${dv.historial.slice().reverse().map(h=>`<span>${fch2(h.fecha)}<b>US$ ${nx(h.monto,3)}</b></span>`).join("")}</div>`:""}
+      <p class="mut small">Montos por acción de la empresa en EE.UU.; para el CEDEAR se dividen por el ratio (${esc(f.ratio)}). Para cobrar, hay que tener el CEDEAR antes de la fecha de corte.</p>`:`<p class="mut">No paga dividendos.</p>`}</div></section>
+    <section class="card"><h3>Comparables <span class="mut">· mismo sector, por capitalización</span></h3>
+      <div class="wrap" style="max-height:none"><table><thead><tr><th class="l">CEDEAR</th><th>Capitalización</th><th>P/E</th><th>P/E esp.</th><th>PEG</th><th>EV/EBITDA</th><th>FCF/precio</th><th>Devolución</th><th>Valuación</th><th>12M</th></tr></thead><tbody>
+      ${pares.map(z=>`<tr data-e="${esc(z.ticker)}" style="cursor:pointer${z.ticker===f.ticker?";background:var(--panel2)":""}"><td class="tk l">${logoImg(z.byma,"logo-s")}${esc(z.byma)}</td><td>${big(z.mcap)}</td><td>${xx(z.val?.pe)}</td><td>${xx(z.val?.pe_fwd)}</td><td>${z.val?.peg==null?"—":nx(z.val.peg,2)}</td><td>${xx(z.val?.ev_ebitda)}</td><td>${pc(z.val?.fcf_yield)}</td><td>${pc(z.val?.rend_accionista)}</td><td>${chip(z.notas?.valuacion)}</td><td class="${cls(z.r12m)}">${pct(z.r12m,0)}</td></tr>`).join("")}
+      </tbody></table></div><p class="mut small">Hacé clic en una para abrir su ficha.</p></section>`;
+  } else if (sub==="sensib"){
+    const se = f.sensibilidades || {};
+    const fuerza = t => Math.abs(t)>=2 ? ["clara","var(--text)"] : Math.abs(t)>=1 ? ["débil","var(--muted)"] : ["no significativa","var(--muted)"];
+    const filas = [["tasa","Tasa a 10 años","si la tasa sube 1 punto"],["dolar","Dólar global (DXY)","si el dólar se fortalece 5%"],["petroleo","Petróleo","si el petróleo sube 10%"],["bitcoin","Bitcoin","si el bitcoin sube 10%"]];
+    const reg = se.regimen || {};
+    cuerpo = se.beta==null ? `<div class="card"><p class="mut">Sin historia suficiente para calcular sensibilidades.</p></div>` : `<section class="fgrid"><div class="card"><h3>Sensibilidades <span class="mut">· últimos 3 años, semanal</span></h3>
+      ${kv([["Beta contra el S&P 500", nx(se.beta,2)]])}
+      <p class="mut small" style="margin:6px 0 10px">Beta 1,2 quiere decir que, en promedio, cuando el S&P sube 10% esta acción sube 12%. Lo de abajo es el movimiento extra, más allá de lo que explica el mercado.</p>
+      <table><thead><tr><th class="l">Factor</th><th class="l">Escenario</th><th>Movimiento extra</th><th>Relación</th></tr></thead><tbody>
+      ${filas.map(([k,t_,esc_])=>{ const z = se[k]||{}; const [fz,c] = fuerza(z.t||0); return `<tr><td class="l">${t_}</td><td class="l mut">${esc_}</td><td class="${Math.abs(z.t||0)>=1?cls(z.impacto):""}">${pct(z.impacto,1)}</td><td style="color:${c}">${fz}</td></tr>`; }).join("")}
+      </tbody></table><p class="mut small">"Clara" quiere decir que la relación se repitió de forma consistente en estos 3 años; "débil" o "no significativa", que puede ser casualidad. Es lo que pasó, no una predicción.</p></div>
+      <div class="card"><h3>Según el régimen macro <span class="mut">· contra el SPY</span></h3>
+      ${Object.keys(reg).length?`<table><thead><tr><th class="l">Régimen</th><th>Diferencia anual contra el SPY</th><th>Meses</th></tr></thead><tbody>
+      ${Object.entries(reg).sort((p,q)=>q[1].exceso_anual-p[1].exceso_anual).map(([k,z])=>`<tr><td class="l">${esc(k)}</td><td class="${cls(z.exceso_anual)}">${pct(z.exceso_anual,0)}</td><td class="mut">${z.meses}</td></tr>`).join("")}</tbody></table>
+      <p class="mut small">Cómo rindió históricamente esta acción en cada fase de la economía (régimen con datos de cada momento, ver Macro). Es contexto histórico: probamos que el régimen no sirve para anticipar qué acción va a rendir más.</p>`:`<p class="mut">Sin historia suficiente.</p>`}</div></section>`;
+  } else if (sub==="cedear"){
+    const ch = f.cedear_hist;
+    cuerpo = `<section class="card"><h3>El CEDEAR en BYMA <span class="mut">· último año, semanal</span></h3>
+      ${kv([["Premio hoy", pct(f.premio), f.premio>0.03?"neg":f.premio<-0.03?"pos":""],["Precio CEDEAR $", f.px_ars?num(f.px_ars,0):"—"],["Ratio", esc(f.ratio)],["Volumen típico", usd(f.monto_usd)+"/día"],["Liquidez", esc(f.liquidez)]])}
+      ${ch?premioCh(ch):`<p class="mut" style="margin-top:10px">Sin historia de precios del CEDEAR disponible.</p>`}
+      <p class="mut small">El premio compara el dólar implícito en este CEDEAR contra el de una canasta de los más líquidos (Apple, Microsoft, Alphabet, Amazon, Nvidia, Coca-Cola, MercadoLibre y SPY). Positivo es que está caro contra su precio en EE.UU.; negativo, que está barato. Conviene comprar con premio bajo o negativo y vender con premio alto.</p></section>`;
+  } else if (sub==="vigilar"){
+    cuerpo = panelVigilar(f);
   } else if (sub==="analistas"){
     const votos = a.votos ? Object.values(a.votos).reduce((p,c)=>p+c,0) : 0;
     const VT = [["strongBuy","var(--pos)","Compra fuerte"],["buy","#7fdcb0","Compra"],["hold","var(--muted)","Mantener"],["sell","#f39a9d","Venta"],["strongSell","var(--neg)","Venta fuerte"]];
@@ -754,6 +906,8 @@ async function ficha(m, t){
   m.querySelector("#fv").onclick = ()=>{EST.sel=null; EST.ftab="resumen"; render();};
   m.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{EST.ftab=b.dataset.ft; ficha(m,t);});
   m.querySelectorAll("[data-per]").forEach(b=>b.onclick=()=>{EST.per=b.dataset.per; ficha(m,t);});
+  const ta = m.querySelector("#nota");
+  if (ta) ta.oninput = ()=>{ try{ localStorage.setItem("rvnota:"+f.ticker, ta.value); m.querySelector("#notamsg").textContent = "Guardado en este navegador."; }catch(e){ m.querySelector("#notamsg").textContent = "Este navegador no permite guardar notas."; } };
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); ficha(m, r.dataset.e);});
 }
 

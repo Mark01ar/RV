@@ -450,7 +450,7 @@ def sensibilidades(s, fac, reg):
     out = {}
     if len(w) < 60:
         return out
-    for col, esc_ in [("tasa", 1.0), ("dolar", 0.05), ("petroleo", 0.10), ("bitcoin", 0.10)]:
+    for col, esc_ in [("tasa", 0.01), ("dolar", 0.05), ("petroleo", 0.10), ("bitcoin", 0.10)]:
         X = np.column_stack([np.ones(len(w)), w["spy"].values, w[col].values])
         y = w["r"].values
         b = np.linalg.lstsq(X, y, rcond=None)[0]
