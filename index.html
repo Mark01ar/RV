@@ -206,6 +206,16 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .pil-r{display:flex;align-items:center;gap:8px;font-size:10.5px;color:var(--muted)}
 .pil-bar{flex:1;height:4px;border-radius:2px;background:linear-gradient(90deg,#1e2a56,#3a4a86);position:relative}
 .pil-bar i{position:absolute;top:-4px;width:3px;height:12px;background:var(--accent);border-radius:2px;transform:translateX(-50%)}
+.mam{display:flex;flex-direction:column;gap:6px}
+.mam-r{display:grid;grid-template-columns:44px repeat(12,1fr);gap:4px;align-items:stretch}
+.mam-a{font-weight:700;font-size:13px;align-self:center;color:var(--muted)}
+.mam-c{background:color-mix(in srgb,var(--qc) 22%,#0d1430);border:1px solid color-mix(in srgb,var(--qc) 60%,transparent);border-top:3px solid var(--qc);border-radius:7px;padding:5px 6px;min-width:0}
+.mam-c em{display:block;font-style:normal;font-size:10.5px;color:var(--muted)}
+.mam-c b{display:block;font-size:11.5px;font-weight:700;color:var(--qc);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mam-c.vac{background:transparent;border:1px dashed var(--line)}
+.conv{margin-top:10px;border-left:3px solid var(--cc);padding:6px 10px;background:var(--panel2);border-radius:6px;font-size:12.5px}.conv b{color:var(--cc);margin-right:8px}
+@media(max-width:700px){.mam-c b{display:none}}
+.rsm-k em b{font-size:inherit!important}
 .inf{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--muted);color:var(--muted);font-size:10px;font-style:normal;margin-left:6px;cursor:help;vertical-align:1px}
 .pil-rl{font-size:10.5px;color:var(--muted);margin-top:3px}
 .pil-l{font-size:12.5px;line-height:1.5;margin:8px 0 4px;color:var(--text)}.pil-e{font-size:11.5px;line-height:1.45;margin:0;color:var(--muted)}
@@ -802,6 +812,7 @@ function escBloques(m, fz){
   const sel = EST.escB && val.find(p=>p.bl.id===EST.escB);
   m.innerHTML = `
   <section class="fhead2 bhead"><div class="bh-top"><div><h2>Escenarios macro</h2><div class="fh-sub">Elegí una fase de la economía y mirá cómo les fue históricamente a los bloques en esa fase.</div></div></div>${escCab(fz)}</section>
+  ${sec("Régimen mes a mes desde 2024", "el mismo régimen que usan los patrones de esta página", mesAMes()+`<div class="mut small" style="margin-top:6px">Régimen confirmado con los datos tal como se conocían cada mes. Puede diferir del cuadrante de Macro en los meses en que los datos después se corrigieron.</div>`)}
   ${sec(`${esc(fz)} · por bloque`, "ordenados de mejor a peor · tocá un bloque para ver sus empresas", `<div id="escbox"></div>
     <div class="mut small" style="margin-top:12px">La barra es la mediana de las empresas del bloque: cuánto mejor o peor les fue en esta fase que en el resto de sus meses, contra el SPY, en puntos por año. A la derecha, cuántas fueron en esa misma dirección. Las barras llenas son patrones consistentes (3 de cada 4 o más y más de 5 puntos de diferencia); las tenues, mixtos. Solo cuentan empresas con al menos 12 meses en la fase; bloques con menos de 3 empresas así no aparecen${pocos.length?` (${pocos.map(p=>esc(p.bl.nombre)).join(", ")})`:""}. Es historia, no predicción.</div>`, "main")}
   ${sel?sec(`${esc(sel.bl.nombre)} en ${esc(fz.toLowerCase())}`, `mediana ${sel.md>=0?"+":""}${Math.round(sel.md*100)} pts · ${sel.mismo} de ${sel.n} en la misma dirección`, `<table class="tb2"><thead><tr><th class="l">CEDEAR</th><th class="l">Empresa</th><th>vs su promedio</th><th>Dato</th><th>Meses</th></tr></thead><tbody>${[...sel.xs].sort((a,b)=>b.r[fz].dif-a.r[fz].dif).map(e=>`<tr data-e="${esc(e.ticker)}" style="cursor:pointer"><td class="tk l">${logoImg(e.b,"logo-s")}${esc(e.b)}</td><td class="nm l">${esc(e.nombre)}</td><td class="${cls(e.r[fz].dif)} big">${e.r[fz].dif>=0?"+":""}${Math.round(e.r[fz].dif*100)} pts</td><td class="mut">${Math.abs(e.r[fz].t)>=2?"claro":Math.abs(e.r[fz].t)>=1.5?"casi claro":"puede ser casualidad"}</td><td>${e.r[fz].meses}</td></tr>`).join("")}</tbody></table><button class="btn" data-irb="${sel.bl.id}" style="margin-top:10px">Ver el bloque completo →</button>`):""}
@@ -822,7 +833,7 @@ function escBloques(m, fz){
 }
 async function escenarios(m){
   if (!ESC){ m.innerHTML = `<p class="mut">Cargando…</p>`; try{ const r = await fetch("data/escenarios.json?v="+Date.now()); ESC = await r.json(); }catch(e){ m.innerHTML = `<p class="mut">No se pudieron cargar los escenarios.</p>`; return; } }
-  const fz = EST.fase || "Estanflación";
+  const fz = EST.fase || (M && FZ[M.actual]) || "Estanflación";
   if ((EST.escV||"bloques")==="bloques") return escBloques(m, fz);
   const famOff = EST.famOff || (EST.famOff = {});
   const pts = ESC.empresas.filter(e=>e.r[fz]).map(e=>({...e, ...e.r[fz], fam: famDe(e.b), bl: BQDE(e.b)}));
@@ -1668,6 +1679,20 @@ function informativosHTML(){
 
 let PIL = null;
 const FZ = {CSI:"Crecimiento sin inflación", REC:"Recalentamiento", EST:"Estanflación", DES:"Desinflación"};
+function conviccion(){
+  const p = M.probs[M.actual], ord = Object.values(M.probs).sort((a,b)=>b-a), gap = ord[0]-ord[1];
+  if (p>=0.45) return {n:"Régimen claro", c:"var(--pos)", t:`El régimen más probable tiene ${Math.round(p*100)}% y le saca ${Math.round(gap*100)} puntos al segundo.`};
+  if (p>=0.35) return {n:"Régimen moderado", c:"var(--accent)", t:`El régimen más probable tiene ${Math.round(p*100)}%; el segundo está a ${Math.round(gap*100)} puntos.`};
+  return {n:"Régimen poco definido", c:"var(--neg)", t:`El más probable tiene solo ${Math.round(p*100)}% y el segundo está a ${Math.round(gap*100)} ${Math.round(gap*100)===1?"punto":"puntos"}: los cuatro están casi empatados. Lo que dice el régimen hoy hay que tomarlo con mucho cuidado.`};
+}
+function mesAMes(desde="2024-01"){
+  const H = (M.historial_rt||[]).filter(x=>x.f>=desde);
+  if (!H.length) return "";
+  const anios = [...new Set(H.map(x=>x.f.slice(0,4)))], MS = ["Ene","Feb","Mar","Abr","May","Jun","Jul","Ago","Sep","Oct","Nov","Dic"], AB = {CSI:"Crec. sin infl.", REC:"Recalent.", EST:"Estanfl.", DES:"Desinfl."};
+  const by = {}; H.forEach(x=>by[x.f.slice(0,7)]=x);
+  return `<div class="mam">${anios.map(a=>`<div class="mam-r"><span class="mam-a">${a}</span>${MS.map((ms,i)=>{ const k = `${a}-${String(i+1).padStart(2,"0")}`, x = by[k]; return x ? `<div class="mam-c" style="--qc:${QC[x.qc]}" title="${ms} ${a}: ${esc(M.cuadrantes[x.qc].nombre)}"><em>${ms}</em><b>${AB[x.qc]}</b></div>` : `<div class="mam-c vac"><em>${ms}</em></div>`; }).join("")}</div>`).join("")}</div>
+  <div class="sub" style="margin-top:8px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div>`;
+}
 function statsBloques(fz){
   if (!ESC || !BQ) return [];
   const por = {}; ESC.empresas.forEach(e=>{ const bl = BQDE(e.b); if (bl && e.r[fz]) (por[bl.id] = por[bl.id] || []).push(e); });
@@ -1720,12 +1745,13 @@ function resumenMacro(){
   return sec("Resumen macro", `actualizado ${new Date(M.actualizado).toLocaleDateString("es-AR")}`, `<div class="rsm">
     <div class="rsm-a">
       ${S?`<div class="rsm-k"><span>Semáforo de riesgo</span><b style="color:${SC[S.estado]};font-size:16px">${T.t}</b><em>${S.frena?"Alarma de crecimiento con los últimos datos publicados, todavía sin confirmar":"Sin alarma de crecimiento"} · S&P ${pct(S.dist,1)} contra su promedio de 200 ruedas${S.bajo?" (alarma)":""}. Rojo solo si se prenden las dos.</em></div>`:""}
-      <div class="rsm-k"><span>Régimen</span><b style="color:${QC[M.actual]}">${esc(q.nombre)}</b><em>${Math.round(M.probs[M.actual]*100)}% de probabilidad · ${M.duracion} ${M.duracion===1?"mes":"meses"}</em>${M.crudo&&M.crudo!==M.actual?`<em>Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b></em>`:""}</div>
+      <div class="rsm-k"><span>Régimen</span><b style="color:${QC[M.actual]}">${esc(q.nombre)}</b><em>${Math.round(M.probs[M.actual]*100)}% de probabilidad · ${M.duracion} ${M.duracion===1?"mes":"meses"} · <b style="color:${conviccion().c}">${conviccion().n}</b></em>${M.crudo&&M.crudo!==M.actual?`<em>Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b></em>`:""}</div>
       ${cambios.length?`<div class="rsm-c"><span>Lo que más se movió en el último mes</span>${cambios.map(({x})=>`<div><em>${esc(x.nombre)}</em><b>${valTxt(x)}</b><i>${chgTxt(x,x.m1)}</i></div>`).join("")}</div>`:""}
     </div>
     <div class="rsm-b"><span class="rsm-t">Qué significa para los bloques · ${esc(q.nombre.toLowerCase())}</span>
       <div class="rsm-l"><em class="pos">Históricamente mejor</em>${bl(mej)}</div>
       <div class="rsm-l"><em class="neg">Históricamente peor</em>${bl(peo)}</div>
+      ${conviccion().n==="Régimen poco definido"?`<div class="warn" style="margin:6px 0">${conviccion().t}</div>`:""}
       <p class="mut small">Mediana del bloque contra su propio promedio, en puntos por año; solo patrones consistentes. Es historia, no predicción. <a href="#" id="iresc">Ver todos en Escenarios →</a></p></div></div>`, "main");
 }
 function macro(m){
@@ -1751,6 +1777,7 @@ function macro(m){
       ${sec("Dónde está EE.UU.","el punto blanco es hoy; los grises, los 6 meses anteriores",cuadSVG())}
       ${sec("Régimen más probable",`confirmado · ${M.duracion} ${M.duracion===1?"mes":"meses"} seguidos`,`<div class="big" style="color:${QC[M.actual]};font-size:28px;font-weight:700">${esc(q.nombre)}</div>
         <div class="sub">Probabilidad hoy ${Math.round(p*100)}% · actualizado ${new Date(M.actualizado).toLocaleDateString("es-AR")}</div>
+        <div class="conv" style="--cc:${conviccion().c}"><b>${conviccion().n}</b><span>${conviccion().t}</span></div>
         ${M.crudo && M.crudo!==M.actual?`<div class="warn">Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b> (${Math.round(M.probs[M.crudo]*100)}%). Se confirma si se repite el mes que viene.</div>`:""}
         <div class="probs" style="margin-top:12px">${["CSI","REC","EST","DES"].map(k=>`<div style="border-color:${k===M.actual?QC[k]:"var(--line)"}">${esc(M.cuadrantes[k].nombre)}<b style="color:${QC[k]}">${Math.round(M.probs[k]*100)}%</b></div>`).join("")}</div>
         ${div.length?`<div class="warn">Datos y mercado no coinciden en ${div.map(g=>g==="inflacion"?"inflación":g).join(" e ")}: el mercado puede estar anticipando un cambio que los datos todavía no muestran.</div>`:""}
