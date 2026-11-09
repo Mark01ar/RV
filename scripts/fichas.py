@@ -95,7 +95,9 @@ SEC_C = {"rev": ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTa
          "sti": ["ShortTermInvestments", "MarketableSecuritiesCurrent", "AvailableForSaleSecuritiesDebtSecuritiesCurrent"],
          "ltd": ["LongTermDebtNoncurrent", "LongTermDebt"], "std": ["LongTermDebtCurrent", "DebtCurrent", "ShortTermBorrowings"],
          "rep": ["PaymentsForRepurchaseOfCommonStock"], "div": ["PaymentsOfDividendsCommonStock", "PaymentsOfDividends"],
-         "emis": ["ProceedsFromIssuanceOfCommonStock"], "sbc": ["ShareBasedCompensation", "AllocatedShareBasedCompensationExpense"]}
+         "emis": ["ProceedsFromIssuanceOfCommonStock"], "sbc": ["ShareBasedCompensation", "AllocatedShareBasedCompensationExpense"],
+         "cogs": ["CostOfGoodsAndServicesSold", "CostOfRevenue", "CostOfGoodsSold"], "rd": ["ResearchAndDevelopmentExpense", "ResearchAndDevelopmentExpenseExcludingAcquiredInProcessCost"],
+         "pti": ["IncomeLossFromContinuingOperationsBeforeIncomeTaxesExtraordinaryItemsNoncontrollingInterest", "IncomeLossFromContinuingOperationsBeforeIncomeTaxesMinorityInterestAndIncomeLossFromEquityMethodInvestments"]}
 INST = {"ta", "ca", "cl", "eq", "cash", "cashsti", "sti", "ltd", "std"}
 
 
@@ -176,7 +178,8 @@ def yahoo_anual(k, conv):
                                   "ltd": g(bal, "Long Term Debt"), "std": g(bal, "Current Debt"), "sh": g(bal, "Ordinary Shares Number", "Share Issued"),
                                   "rep": (lambda v: abs(v) if v is not None else None)(g(cf, "Repurchase Of Capital Stock", "Common Stock Payments")),
                                   "div": (lambda v: abs(v) if v is not None else None)(g(cf, "Cash Dividends Paid", "Common Stock Dividend Paid")),
-                                  "emis": g(cf, "Common Stock Issuance", "Issuance Of Capital Stock"), "sbc": g(cf, "Stock Based Compensation")}
+                                  "emis": g(cf, "Common Stock Issuance", "Issuance Of Capital Stock"), "sbc": g(cf, "Stock Based Compensation"),
+                                  "cogs": g(inc, "Cost Of Revenue"), "rd": g(inc, "Research And Development"), "pti": g(inc, "Pretax Income")}
     df = pd.DataFrame(rows).T.sort_index().astype(float)
     df = df[df["rev"].notna() | df["ni"].notna()]
     for y in df.index:
@@ -194,16 +197,22 @@ def anual_tabla(df):
     for e, r in df.iterrows():
         g = lambda k: num(r.get(k))
         rev, op, ni, cfo, capex = g("rev"), g("op"), g("ni"), g("cfo"), g("capex")
+        if not rev and ni is None:
+            continue
+        gp = g("gp") if g("gp") is not None else (rev - g("cogs") if rev and g("cogs") is not None else None)
+        if op is None and g("pti") is not None:
+            op = g("pti") + abs(g("int") or 0)
+        anio = e.year - 1 if e.month == 1 and e.day <= 20 else e.year
         deuda = (g("ltd") or 0) + (g("std") or 0) if (g("ltd") is not None or g("std") is not None) else None
         ebitda = op + (g("da") or 0) if op is not None else None
         fcf = cfo - (capex or 0) if cfo is not None else None
         caja = g("cashsti") if g("cashsti") is not None else ((g("cash") or 0) + (g("sti") or 0) if g("cash") is not None else None)
-        t.append({"anio": int(e.year), "cierre": e.strftime("%Y-%m"), "ventas": rev, "bruto": g("gp"), "ebit": op, "ebitda": ebitda, "neto": ni,
+        t.append({"anio": int(anio), "cierre": e.strftime("%Y-%m"), "ventas": rev, "bruto": gp, "ebit": op, "ebitda": ebitda, "neto": ni,
                   "fco": cfo, "capex": capex, "fcf": fcf, "deuda": deuda, "caja": caja, "patrimonio": g("eq"), "activo": g("ta"),
                   "intereses": abs(g("int")) if g("int") is not None else None, "acciones": g("sh"), "act_corr": g("ca"), "pas_corr": g("cl"),
-                  "recompras": g("rep"), "dividendos": g("div"), "emisiones": g("emis"), "sbc": g("sbc"),
+                  "recompras": g("rep"), "dividendos": g("div"), "emisiones": g("emis"), "sbc": g("sbc"), "id": g("rd"),
                   "fcf_sbc": fcf - g("sbc") if fcf is not None and g("sbc") is not None else None,
-                  "m_bruto": g("gp") / rev if rev and g("gp") is not None else None, "m_ebit": op / rev if rev and op is not None else None,
+                  "m_bruto": gp / rev if rev and gp is not None else None, "m_id": g("rd") / rev if rev and g("rd") is not None else None, "m_ebit": op / rev if rev and op is not None else None,
                   "m_neto": ni / rev if rev and ni is not None else None, "m_fcf": fcf / rev if rev and fcf is not None else None, "fuente": r.get("fuente")})
     return t
 
@@ -630,6 +639,9 @@ def main():
                                 if z:
                                     for c_ in ["deuda", "caja", "recompras", "dividendos", "emisiones", "sbc"]:
                                         if z.get(c_) is not None:
+                                            x[c_] = z[c_]
+                                    for c_ in ["bruto", "ebit", "ebitda", "id", "m_bruto", "m_ebit", "m_id"]:
+                                        if x.get(c_) is None and z.get(c_) is not None:
                                             x[c_] = z[c_]
                                     if x.get("fcf") is not None and x.get("sbc") is not None:
                                         x["fcf_sbc"] = x["fcf"] - x["sbc"]
