@@ -233,6 +233,15 @@
      "Recompras del trimestre.",
      "Publicidad y usuarios (Meta, Alphabet); iPhone y servicios (Apple)."
     ],
+    "catalizadores": [
+     {
+      "fase": "Estanflación",
+      "efecto": "peor que el mercado",
+      "dato": "4 de las 5 rindieron peor que en el resto de sus meses, contra el SPY (mediana del bloque −17 puntos por año): Meta −80, Amazon −19, Alphabet −17, Microsoft −7. Apple es la excepción (+12).",
+      "hipotesis": "Con la economía frenando e inflación alta, las empresas recortan publicidad y gasto en tecnología, y las tasas altas castigan a las acciones valuadas por crecimiento. Apple, que vende un producto de consumo con mucha fidelidad, aguanta mejor.",
+      "confianza": "Mayoría clara, pero Meta en 2022 explica buena parte del número."
+     }
+    ],
     "empresas": {
      "MSFT": "Software de oficina y para empresas, Windows, y Azure, la segunda nube del mundo. Es socio principal de OpenAI. Es la que más subió la inversión: ya se lleva más de un tercio de sus ventas. Su año fiscal cierra en junio.",
      "GOOGL": "Búsqueda, YouTube y publicidad, más Google Cloud y sus propios chips de IA (los TPU) y su modelo de IA (Gemini). El mercado duda de que la IA le quite búsquedas, y enfrenta juicios antimonopolio en EE.UU. por búsqueda y por publicidad. Es la más barata del grupo por P/E.",
