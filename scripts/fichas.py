@@ -673,7 +673,8 @@ def main():
                 tq = ficha["trimestral"][-4:]
                 u_ = an[-1] if an else {}
                 ventas_ttm = sum(q["ventas"] for q in tq) if len(tq) == 4 and all(q.get("ventas") for q in tq) else u_.get("ventas")
-                neto_ttm = sum(q["neto"] for q in tq) if len(tq) == 4 and all(q.get("neto") is not None for q in tq) else u_.get("neto")
+                completo = len(tq) == 4 and all(q.get("neto") is not None for q in tq)
+                neto_ttm = sum(q["neto"] for q in tq) if completo else u_.get("neto")
                 if mcap:
                     if ventas_ttm:
                         val["ps"] = mcap / ventas_ttm
@@ -681,7 +682,9 @@ def main():
                         val["fcf_yield"] = u_["fcf"] / mcap
                     if u_.get("ebitda") and u_["ebitda"] > 0 and tipo != "banco":
                         val["ev_ebitda"] = (mcap + (u_.get("deuda") or 0) - (u_.get("caja") or 0)) / u_["ebitda"]
-                    if neto_ttm and neto_ttm > 0:
+                    if not completo and usd and num(info.get("trailingPE")):
+                        val["pe"] = num(info.get("trailingPE"))
+                    elif neto_ttm and neto_ttm > 0:
                         val["pe"] = mcap / neto_ttm
                     elif neto_ttm is not None and neto_ttm <= 0:
                         val["pe"] = None
