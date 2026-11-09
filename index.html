@@ -214,6 +214,8 @@ th{text-transform:uppercase;letter-spacing:.06em;font-size:11px;font-weight:600;
 @media (max-width:900px){.fh-top{grid-template-columns:auto 1fr}.fh-score{grid-column:1/-1;text-align:left}.fh-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.fh-logo{width:96px;height:64px}}
 .fh-tend{margin-top:8px;font-weight:600;font-size:15px}
 .alist{list-style:none;margin:0;padding:0}.alist li{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45}.alist li:last-child{border-bottom:0}.alist i{flex:none;width:8px;height:8px;border-radius:50%;transform:translateY(-1px)}
+.logo-s.osc{background:#141d40}
+.fh-logo:has(img.osc){background:#141d40}
 </style>
 </head>
 <body>
@@ -247,7 +249,7 @@ const TABS = [
   {id:"revisor", t:"Revisor", d:"Pegás los CEDEARs de un cliente y ves qué posiciones están flojas, la concentración y por cuál conviene rotar cada una."},
   {id:"track", t:"Track record", d:"Ranking congelado cada semana y su rendimiento a 3 meses contra el S&P 500."}
 ];
-let D = null, M = null, F = null, C = null, E = null, FR = null, tab = "empresas", sortK = "monto_usd", sortDir = -1;
+let D = null, M = null, F = null, C = null, E = null, FR = null, LM = null, tab = "empresas", sortK = "monto_usd", sortDir = -1;
 const st = {q:"", sector:"", liq:"", datos:true};
 
 async function sha(s){
@@ -287,6 +289,10 @@ async function abrir(){
   try{
     const r = await fetch("data/frases.json?v=" + Date.now());
     if (r.ok) FR = await r.json();
+  }catch(e){}
+  try{
+    const r = await fetch("data/logos_meta.json?v=" + Date.now());
+    if (r.ok) LM = await r.json();
   }catch(e){}
   kpis(); navegar(); render();
 }
@@ -496,7 +502,7 @@ function barras(an){
 function kv(pares){ return `<div class="kv">${pares.map(([k,v,c])=>`<div><span>${k}</span><b class="${c||""}">${v}</b></div>`).join("")}</div>`; }
 
 const FTABS = [["resumen","Resumen"],["analisis","Análisis"],["numeros","Números"],["valuacion","Valuación"],["analistas","Analistas"],["posicion","Posicionamiento"]];
-const logoImg = (b, cls="logo") => `<img class="${cls}" src="data/logos/${encodeURIComponent(b)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} sinlogo',textContent:'${esc(b).slice(0,2)}'}))">`;
+const logoImg = (b, cls="logo") => `<img class="${cls}${(LM||{})[b]?" osc":""}" src="data/logos/${encodeURIComponent(b)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} sinlogo',textContent:'${esc(b).slice(0,2)}'}))">`;
 
 function analizar(f){
   const an = (f.anual||[]).filter(x=>x.ventas!=null), u = an[an.length-1]||{}, u1 = an[an.length-2]||{}, u3 = an[an.length-4];

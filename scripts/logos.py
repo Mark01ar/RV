@@ -13,7 +13,8 @@ DOM = {"SKHY": "skhynix.com", "IREN": "iren.com", "HUT": "hut8.com", "GT": "good
        "MRVL": "marvell.com", "NKE": "nike.com", "NIO": "nio.com", "ANF": "abercrombie.com", "ADGO": "adecoagro.com", "RGTI": "rigetti.com",
        "DISN": "disney.com", "HIMS": "hims.com", "LMT": "lockheedmartin.com", "BB": "blackberry.com", "UNH": "unitedhealthgroup.com",
        "CEG": "constellationenergy.com", "BA": "boeing.com", "VRTX": "vrtx.com", "NOW": "servicenow.com", "SATL": "satellogic.com"}
-TICK = {"SKHY": "000660.KS", "DISN": "DIS", "BA.C": "BAC"}
+TICK = {"SKHY": "000660.KS", "DISN": "DIS", "BA.C": "BAC", "TEN": "TS"}
+SOLO_WEB = {"IREN", "TEN"}
 
 
 def bajar(url):
@@ -32,7 +33,7 @@ def mejor(b):
     cands = []
     for url in [f"https://financialmodelingprep.com/image-stock/{t}.png", f"https://img.logo.dev/ticker/{t}?size=256&format=png",
                 f"https://www.google.com/s2/favicons?domain={DOM.get(b, '')}&sz=256", f"https://icon.horse/icon/{DOM.get(b, '')}"]:
-        if "domain=&" in url or url.endswith("/icon/"):
+        if "domain=&" in url or url.endswith("/icon/") or (b in SOLO_WEB and "favicons" not in url and "icon.horse" not in url):
             continue
         im = bajar(url)
         if im is not None:
@@ -44,11 +45,11 @@ def mejor(b):
 def luz(im):
     im = im.convert("RGBA")
     im.thumbnail((96, 96))
-    px = [p for p in im.getdata() if p[3] > 60]
+    px = [p for p in list(im.getdata()) if p[3] > 60]
     if not px:
-        return 1.0, 0.0
-    lum = sum((0.299 * r + 0.587 * g + 0.114 * b) / 255 for r, g, b, a in px) / len(px)
-    return lum, len(px) / (im.width * im.height)
+        return 1.0
+    oscuros = sum(1 for r, g, b, a in px if (0.299 * r + 0.587 * g + 0.114 * b) / 255 < 0.85)
+    return 1 - oscuros / len(px)
 
 
 def main():
@@ -63,10 +64,10 @@ def main():
     meta = {}
     for p in sorted(LOGOS.glob("*.png")):
         try:
-            lum, cob = luz(Image.open(p))
+            lum = luz(Image.open(p))
         except Exception:
             continue
-        if lum > 0.82:
+        if lum > 0.97:
             meta[p.stem] = "oscuro"
     (ROOT / "data" / "logos_meta.json").write_text(json.dumps(meta, indent=1))
     print("fondo oscuro:", sorted(meta))
