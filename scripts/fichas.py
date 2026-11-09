@@ -11,6 +11,12 @@ import pandas as pd
 import requests
 import yfinance as yf
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import actualizar as A
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import actualizar as A
+
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 OUT = DATA / "fichas"
@@ -87,7 +93,9 @@ SEC_C = {"rev": ["Revenues", "RevenueFromContractWithCustomerExcludingAssessedTa
          "cashsti": ["CashCashEquivalentsAndShortTermInvestments"],
          "cash": ["CashAndCashEquivalentsAtCarryingValue", "CashCashEquivalentsRestrictedCashAndRestrictedCashEquivalents"],
          "sti": ["ShortTermInvestments", "MarketableSecuritiesCurrent", "AvailableForSaleSecuritiesDebtSecuritiesCurrent"],
-         "ltd": ["LongTermDebtNoncurrent", "LongTermDebt"], "std": ["LongTermDebtCurrent", "DebtCurrent", "ShortTermBorrowings"]}
+         "ltd": ["LongTermDebtNoncurrent", "LongTermDebt"], "std": ["LongTermDebtCurrent", "DebtCurrent", "ShortTermBorrowings"],
+         "rep": ["PaymentsForRepurchaseOfCommonStock"], "div": ["PaymentsOfDividendsCommonStock", "PaymentsOfDividends"],
+         "emis": ["ProceedsFromIssuanceOfCommonStock"], "sbc": ["ShareBasedCompensation", "AllocatedShareBasedCompensationExpense"]}
 INST = {"ta", "ca", "cl", "eq", "cash", "cashsti", "sti", "ltd", "std"}
 
 
@@ -165,7 +173,10 @@ def yahoo_anual(k, conv):
                                   "capex": (lambda v: -v if v is not None else None)(g(cf, "Capital Expenditure")),
                                   "ta": g(bal, "Total Assets"), "ca": g(bal, "Current Assets"), "cl": g(bal, "Current Liabilities"),
                                   "eq": g(bal, "Stockholders Equity", "Common Stock Equity"), "cashsti": g(bal, "Cash Cash Equivalents And Short Term Investments"), "cash": g(bal, "Cash And Cash Equivalents"),
-                                  "ltd": g(bal, "Long Term Debt"), "std": g(bal, "Current Debt"), "sh": g(bal, "Ordinary Shares Number", "Share Issued")}
+                                  "ltd": g(bal, "Long Term Debt"), "std": g(bal, "Current Debt"), "sh": g(bal, "Ordinary Shares Number", "Share Issued"),
+                                  "rep": (lambda v: abs(v) if v is not None else None)(g(cf, "Repurchase Of Capital Stock", "Common Stock Payments")),
+                                  "div": (lambda v: abs(v) if v is not None else None)(g(cf, "Cash Dividends Paid", "Common Stock Dividend Paid")),
+                                  "emis": g(cf, "Common Stock Issuance", "Issuance Of Capital Stock"), "sbc": g(cf, "Stock Based Compensation")}
     df = pd.DataFrame(rows).T.sort_index().astype(float)
     df = df[df["rev"].notna() | df["ni"].notna()]
     for y in df.index:
@@ -190,6 +201,8 @@ def anual_tabla(df):
         t.append({"anio": int(e.year), "cierre": e.strftime("%Y-%m"), "ventas": rev, "bruto": g("gp"), "ebit": op, "ebitda": ebitda, "neto": ni,
                   "fco": cfo, "capex": capex, "fcf": fcf, "deuda": deuda, "caja": caja, "patrimonio": g("eq"), "activo": g("ta"),
                   "intereses": abs(g("int")) if g("int") is not None else None, "acciones": g("sh"), "act_corr": g("ca"), "pas_corr": g("cl"),
+                  "recompras": g("rep"), "dividendos": g("div"), "emisiones": g("emis"), "sbc": g("sbc"),
+                  "fcf_sbc": fcf - g("sbc") if fcf is not None and g("sbc") is not None else None,
                   "m_bruto": g("gp") / rev if rev and g("gp") is not None else None, "m_ebit": op / rev if rev and op is not None else None,
                   "m_neto": ni / rev if rev and ni is not None else None, "m_fcf": fcf / rev if rev and fcf is not None else None, "fuente": r.get("fuente")})
     return t
@@ -371,6 +384,90 @@ def logo(t, b, info):
             pass
 
 
+def banda_pe(an, s, mcap, precio):
+    if not mcap or not precio or not len(s):
+        return None
+    fy = [(pd.Timestamp(x["cierre"]) + pd.offsets.MonthEnd(0) + pd.Timedelta(days=75), x["neto"]) for x in an if x.get("neto")]
+    m = s.resample("ME").last().dropna()
+    m = m[m.index >= m.index[-1] - pd.Timedelta(days=3660)]
+    f_, pe_ = [], []
+    for d, p in m.items():
+        disp = [n for fd, n in fy if fd <= d]
+        if not disp or disp[-1] <= 0:
+            continue
+        v = float(p) / precio * mcap / disp[-1]
+        if 0 < v < 400:
+            f_.append(d.strftime("%Y-%m"))
+            pe_.append(round(v, 1))
+    return {"f": f_, "pe": pe_} if len(pe_) >= 24 else None
+
+
+def dividendos(k, info):
+    d = {"tasa_anual": num(info.get("dividendRate")), "ultimo": num(info.get("lastDividendValue")), "payout": num(info.get("payoutRatio")),
+         "prom_5a": (num(info.get("fiveYearAvgDividendYield")) or 0) / 100 if num(info.get("fiveYearAvgDividendYield")) is not None else None}
+    try:
+        cal = k.calendar or {}
+        for c, n in [("Ex-Dividend Date", "fecha_corte"), ("Dividend Date", "fecha_pago")]:
+            v = cal.get(c)
+            if v is not None:
+                d[n] = pd.Timestamp(v).strftime("%Y-%m-%d")
+    except Exception:
+        pass
+    try:
+        h = k.dividends
+        if h is not None and len(h):
+            h = h[h.index >= h.index[-1] - pd.Timedelta(days=400)]
+            d["pagos_12m"] = int(len(h))
+            d["historial"] = [{"fecha": i.strftime("%Y-%m-%d"), "monto": round(float(v), 4)} for i, v in h.tail(8).items()]
+    except Exception:
+        pass
+    return d
+
+
+def cedear_hist(b, ratio, s_usd, ccl_canasta):
+    try:
+        h = A.byma_historico(b)
+    except Exception:
+        h = None
+    if h is None or not len(h) or not ratio:
+        return None
+    h = h.set_index("fecha")
+    h = h[h.index >= h.index.max() - pd.Timedelta(days=400)]
+    px = pd.to_numeric(h["c"], errors="coerce")
+    usd = s_usd.reindex(px.index, method="pad")
+    impl = px * ratio / usd
+    prem = impl / ccl_canasta.reindex(px.index, method="pad") - 1
+    prem = prem.where(prem.abs() < 0.3)
+    w = pd.DataFrame({"p": prem, "m": pd.to_numeric(h["monto"], errors="coerce")}).resample("W-FRI").agg({"p": "median", "m": "sum"}).dropna(subset=["p"])
+    if len(w) < 8:
+        return None
+    return {"f": [d.strftime("%Y-%m-%d") for d in w.index], "premio": [round(float(v), 4) for v in w["p"]], "monto_ars": [round(float(v)) for v in w["m"]]}
+
+
+def sensibilidades(s, fac, reg):
+    w = pd.DataFrame({"r": s.resample("W-FRI").last().pct_change()}).join(fac, how="inner").dropna()
+    w = w[w.index >= w.index[-1] - pd.Timedelta(days=365 * 3)]
+    out = {}
+    if len(w) < 60:
+        return out
+    for col, esc_ in [("tasa", 1.0), ("dolar", 0.05), ("petroleo", 0.10), ("bitcoin", 0.10)]:
+        X = np.column_stack([np.ones(len(w)), w["spy"].values, w[col].values])
+        y = w["r"].values
+        b = np.linalg.lstsq(X, y, rcond=None)[0]
+        e = y - X @ b
+        cov = (e @ e) / (len(y) - 3) * np.linalg.inv(X.T @ X)
+        t = b[2] / math.sqrt(cov[2, 2]) if cov[2, 2] > 0 else 0
+        out[col] = {"impacto": round(float(b[2] * esc_), 4), "t": round(float(t), 2)}
+    X = np.column_stack([np.ones(len(w)), w["spy"].values])
+    out["beta"] = round(float(np.linalg.lstsq(X, w["r"].values, rcond=None)[0][1]), 2)
+    m = s.resample("ME").last().pct_change()
+    sp = fac["spy_px"].resample("ME").last().pct_change()
+    ex = (m - sp).dropna()
+    g = pd.DataFrame({"ex": ex}).join(reg, how="inner").dropna()
+    out["regimen"] = {r_: {"exceso_anual": round(float(x["ex"].mean() * 12), 4), "meses": int(len(x))} for r_, x in g.groupby("reg")}
+    return out
+
+
 def es_banco(info):
     ind = (info.get("industry") or "").lower()
     return info.get("sector") == "Financial Services" and any(x in ind for x in ["bank", "capital markets", "insurance", "credit services"]) and "credit services" not in ind
@@ -430,9 +527,34 @@ def main():
     except Exception:
         vivo = {}
     tick = list(u["ticker_us"])
-    px = yf.download(tick + ["SPY"] + list(ETF_SECTOR.values()), period="6y", auto_adjust=True, progress=False, threads=True)["Close"]
+    px = yf.download(tick + ["SPY"] + list(ETF_SECTOR.values()) + ["^TNX", "DX-Y.NYB", "CL=F", "BTC-USD"], period="11y", auto_adjust=True, progress=False, threads=True)["Close"]
     px.index = pd.to_datetime(px.index).tz_localize(None)
     spy = px["SPY"].dropna()
+    fw = px[["SPY", "^TNX", "DX-Y.NYB", "CL=F", "BTC-USD"]].ffill().resample("W-FRI").last()
+    fac = pd.DataFrame({"spy": fw["SPY"].pct_change(), "tasa": fw["^TNX"].diff() / 100, "dolar": fw["DX-Y.NYB"].pct_change(),
+                        "petroleo": fw["CL=F"].pct_change().clip(-0.5, 0.5), "bitcoin": fw["BTC-USD"].pct_change()})
+    fac["spy_px"] = spy.reindex(fw.index, method="pad")
+    nomreg = {"REC": "Recalentamiento", "EST": "Estanflación", "DES": "Desinflación", "CSI": "Crecimiento sin inflación"}
+    try:
+        rt = pd.DataFrame(json.loads((DATA / "macro.json").read_text())["historial_rt"])
+        reg = pd.Series(rt["qc"].values, index=pd.to_datetime(rt["f"]) + pd.offsets.MonthEnd(0), name="reg").shift(1).dropna().map(lambda z: nomreg.get(z, z))
+    except Exception:
+        reg = pd.Series(dtype=object, name="reg")
+    uv = pd.read_csv(DATA / "universo_rv.csv").set_index("byma")
+    canasta = {}
+    for cb in ["AAPL", "MSFT", "GOOGL", "KO", "AMZN", "NVDA", "SPY", "MELI"]:
+        try:
+            h = A.byma_historico(cb)
+            rr = A.ratio_num(uv.loc[cb, "ratio"])
+            tu = uv.loc[cb, "ticker_us"]
+            if h is not None and len(h) and rr and tu in px.columns:
+                h = h.set_index("fecha")
+                canasta[cb] = pd.to_numeric(h["c"], errors="coerce") * rr / px[tu].reindex(h.index, method="pad")
+        except Exception:
+            pass
+        time.sleep(0.5)
+    ccl_canasta = pd.DataFrame(canasta).median(axis=1).dropna() if canasta else pd.Series(dtype=float)
+    print(f"canasta CCL: {len(canasta)} especies", flush=True)
     try:
         mapa = requests.get("https://www.sec.gov/files/company_tickers.json", headers=UA, timeout=60).json()
         cik = {v["ticker"].upper(): int(v["cik_str"]) for v in mapa.values()}
@@ -495,10 +617,22 @@ def main():
                 if df is None:
                     df = yahoo_anual(k, conv)
                 an = anual_tabla(df) if df is not None else []
-                if df is not None and df["fuente"].iloc[0] == "SEC" and an and an[-1]["anio"] < dt.date.today().year - 1:
+                if df is not None and df["fuente"].iloc[0] == "SEC":
                     y = yahoo_anual(k, conv)
                     if y is not None:
-                        an = [x for x in an if x["anio"] < min(z["anio"] for z in anual_tabla(y))] + anual_tabla(y)
+                        ya = anual_tabla(y)
+                        if an and an[-1]["anio"] < dt.date.today().year - 1:
+                            an = [x for x in an if x["anio"] < min(z["anio"] for z in ya)] + ya
+                        else:
+                            porano = {z["anio"]: z for z in ya}
+                            for x in an:
+                                z = porano.get(x["anio"])
+                                if z:
+                                    for c_ in ["deuda", "caja", "recompras", "dividendos", "emisiones", "sbc"]:
+                                        if z.get(c_) is not None:
+                                            x[c_] = z[c_]
+                                    if x.get("fcf") is not None and x.get("sbc") is not None:
+                                        x["fcf_sbc"] = x["fcf"] - x["sbc"]
                 ana = analistas(k, info, precio, s)
                 if fxc:
                     for c_ in ["objetivo", "objetivo_alto", "objetivo_bajo"]:
@@ -518,6 +652,12 @@ def main():
                          "empleados": num(info.get("fullTimeEmployees")), "precio_bloque": pb, "anual": an, "trimestral": trimestral(k, conv),
                          "analistas": ana, "pe_historia": hist_pe, "posicion": posicion(k, info)}
                 ficha["ultimo_balance"] = ultimo_balance(ana, ficha["trimestral"])
+                ficha["pe_banda"] = banda_pe(an, s, mcap, precio)
+                ficha["dividendos"] = dividendos(k, info)
+                ficha["sensibilidades"] = sensibilidades(s, fac, reg)
+                if len(ccl_canasta) and not t.endswith(".KS"):
+                    ficha["cedear_hist"] = cedear_hist(b, A.ratio_num(r["ratio"]), s, ccl_canasta)
+                    time.sleep(0.5)
                 tq = ficha["trimestral"][-4:]
                 u_ = an[-1] if an else {}
                 ventas_ttm = sum(q["ventas"] for q in tq) if len(tq) == 4 and all(q.get("ventas") for q in tq) else u_.get("ventas")
@@ -529,11 +669,25 @@ def main():
                         val["fcf_yield"] = u_["fcf"] / mcap
                     if u_.get("ebitda") and u_["ebitda"] > 0 and tipo != "banco":
                         val["ev_ebitda"] = (mcap + (u_.get("deuda") or 0) - (u_.get("caja") or 0)) / u_["ebitda"]
-                    if not usd and neto_ttm and neto_ttm > 0:
+                    if neto_ttm and neto_ttm > 0:
                         val["pe"] = mcap / neto_ttm
+                    elif neto_ttm is not None and neto_ttm <= 0:
+                        val["pe"] = None
+                if mcap:
+                    if u_.get("fcf") and u_["fcf"] > 0:
+                        val["pfcf"] = mcap / u_["fcf"]
+                    if u_.get("patrimonio") and u_["patrimonio"] > 0:
+                        val["pvl"] = mcap / u_["patrimonio"]
+                    if u_.get("dividendos") is not None or u_.get("recompras") is not None:
+                        val["rend_accionista"] = ((u_.get("dividendos") or 0) + (u_.get("recompras") or 0) - (u_.get("emisiones") or 0)) / mcap
+                        val["recompra_yield"] = ((u_.get("recompras") or 0) - (u_.get("emisiones") or 0)) / mcap
+                cr_ = ana.get("crec_eps_1y")
+                if val.get("pe_fwd") and cr_ and cr_ > 0.03:
+                    val["peg"] = val["pe_fwd"] / (cr_ * 100)
                 if tipo == "banco":
                     val["ev_ebitda"] = None
                     val["fcf_yield"] = None
+                    val["pfcf"] = None
                 e["val"] = val
                 ficha["val"] = val
                 ficha["notas_abs"] = notas_absolutas(ficha)
