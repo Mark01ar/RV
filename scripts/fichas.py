@@ -130,7 +130,7 @@ def sec_anual(ticker, cik):
                     rows.append((end, pd.Timestamp(e["filed"]), float(e["val"]), pri))
         if rows:
             r = pd.DataFrame(rows, columns=["end", "filed", "val", "pri"]).sort_values(["end", "pri", "filed"], ascending=[True, True, False])
-            r = r.groupby("end").first()
+            r = r.groupby("end").max() if k == "rd" else r.groupby("end").first()
             out[k] = r["val"]
     if "rev" not in out or "ni" not in out:
         return None
@@ -637,7 +637,7 @@ def main():
                             for x in an:
                                 z = porano.get(x["anio"])
                                 if z:
-                                    for c_ in ["deuda", "caja", "recompras", "dividendos", "emisiones", "sbc"]:
+                                    for c_ in ["deuda", "caja", "recompras", "dividendos", "emisiones", "sbc", "id", "m_id"]:
                                         if z.get(c_) is not None:
                                             x[c_] = z[c_]
                                     for c_ in ["bruto", "ebit", "ebitda", "id", "m_bruto", "m_ebit", "m_id"]:
