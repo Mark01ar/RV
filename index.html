@@ -208,6 +208,8 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .pil-bar i{position:absolute;top:-4px;width:3px;height:12px;background:var(--accent);border-radius:2px;transform:translateX(-50%)}
 .pil-rl{font-size:10.5px;color:var(--muted);margin-top:3px}
 .pil-l{font-size:12.5px;line-height:1.5;margin:8px 0 4px;color:var(--text)}.pil-e{font-size:11.5px;line-height:1.45;margin:0;color:var(--muted)}
+.mtabs{margin-bottom:16px!important}
+.bsec .semgrid h3{font-size:11px;letter-spacing:.1em;color:var(--muted);font-weight:700;text-transform:uppercase}
 .segs{display:flex;gap:6px;flex-wrap:wrap}
 .seg{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer}
 .seg.on{background:var(--accent);color:#1a1405;border-color:var(--accent);font-weight:700}
@@ -1577,29 +1579,10 @@ function tablaEje(g){
     <td class="r">${esc(x.valor)}<small>${esc(x.fecha)}</small></td>
     <td class="r"><span class="${x.z>=0?"pos":"neg"}">${x.z==null?"":x.z>=0?"Acelera":"Frena"}</span><br>${zbar(x.z)}</td></tr>`).join("");
   const sg = v => v==null?"—":`<b class="${v>=0?"pos":"neg"}">${v>=0?"+":""}${v.toFixed(2)}</b>`;
-  return `<div class="card"><h3>${g==="crecimiento"?"CRECIMIENTO":"INFLACIÓN"}</h3>
+  return `<div class="bsec" style="margin:0"><div class="bh">${g==="crecimiento"?"Crecimiento":"Inflación"}<span>indicadores que definen el régimen</span></div><div class="bb">
     <div class="comp"><span>Total ${sg(L.total)}</span><span>Datos ${sg(L.dato)}</span><span>Mercado ${sg(L.mercado)}</span></div>
     <table class="ind"><tr><td colspan="3" class="tipo">DATOS OFICIALES · ${Math.round(M.peso_dato*100)}%</td></tr>${rows("dato")}
-    <tr><td colspan="3" class="tipo">SEÑALES DE MERCADO · ${Math.round((1-M.peso_dato)*100)}%</td></tr>${rows("mercado")}</table></div>`;
-}
-
-let secModo = "sig";
-function tablaSectores(){
-  if (!M.sectores) return "";
-  const SEC = secModo==="mismo" && M.sectores_mismo ? M.sectores_mismo : M.sectores;
-  const qs = ["CSI","REC","EST","DES"];
-  const etfs = [...new Set(qs.flatMap(q=>(SEC[q]||[]).map(x=>x.etf)))];
-  const get = (q,e) => (SEC[q]||[]).find(x=>x.etf===e);
-  const nom = e => qs.map(q=>get(q,e)).find(Boolean)?.nombre || e;
-  etfs.sort((a,b)=>(get(M.actual,b)?.exceso??-9)-(get(M.actual,a)?.exceso??-9));
-  const cel = x => { if(!x) return `<td class="mut">—</td>`;
-    const a = Math.min(Math.abs(x.exceso)/0.15,1)*0.45, c = x.exceso>=0?"62,207,142":"242,85,90";
-    return `<td style="background:rgba(${c},${a})" title="Le ganó al S&P en ${Math.round(x.gana*100)}% de ${x.n} meses">${pct(x.exceso)}</td>`; };
-  return `<div class="card" style="margin-top:16px"><h3>QUÉ SECTORES GANARON EN CADA RÉGIMEN (DESDE 2000)</h3>
-    <div class="bar"><select id="secm"><option value="sig" ${secModo==="sig"?"selected":""}>Mes siguiente (lo que se podía aprovechar)</option><option value="mismo" ${secModo==="mismo"?"selected":""}>Mismo mes (lo que pasó durante el régimen)</option></select></div>
-    <div class="wrap" style="max-height:none"><table class="hm"><tr><th class="l">Sector</th>${qs.map(q=>`<th class="${q===M.actual?"on":""}" style="color:${QC[q]}">${esc(M.cuadrantes[q].nombre)}</th>`).join("")}</tr>
-    ${etfs.map(e=>`<tr><td class="l">${esc(nom(e))} <span class="mut">${e}</span></td>${qs.map(q=>cel(get(q,e))).join("")}</tr>`).join("")}</table></div>
-    <div class="sub" style="margin-top:8px">Rendimiento anual promedio del ETF del sector <b>por encima o por debajo del S&P 500</b> ${secModo==="sig"?"en el mes <b>siguiente</b> a cada mes clasificado en ese régimen, o sea, lo que podías aprovechar sabiendo el régimen":"en el <b>mismo mes</b> en que la economía estaba en ese régimen"}. Pasá el mouse para ver en qué % de los meses le ganó al índice. La columna marcada es el régimen actual. Ojo: usa datos macro revisados, así que es una referencia, no una garantía.</div></div>`;
+    <tr><td colspan="3" class="tipo">SEÑALES DE MERCADO · ${Math.round((1-M.peso_dato)*100)}%</td></tr>${rows("mercado")}</table></div></div>`;
 }
 
 const SC = {verde:"var(--pos)", amarillo:"var(--accent)", rojo:"var(--neg)"};
@@ -1610,6 +1593,7 @@ const SEM_TXT = {
 };
 
 const fch = f => f ? new Date(f+"T12:00").toLocaleDateString("es-AR") : "—";
+
 function semBanda(h){
   const W = 1000, H = 46, n = h.length, bw = W/n;
   let o = `<svg viewBox="0 0 ${W} ${H}" width="100%" preserveAspectRatio="none" style="display:block;height:${H}px">`;
@@ -1625,7 +1609,7 @@ function semaforoHTML(){
   const fila = (n, f, mejorBajo) => { const x=f(a), y=f(b); const ok = mejorBajo ? x>y : x>y;
     return `<tr><td class="l">${n}</td><td class="${ok?"pos":""}">${pct(x)}</td><td>${pct(y)}</td></tr>`; };
   const tr = R.tramos;
-  return `<div class="card" style="border-color:${SC[S.estado]}"><h3>SEMÁFORO DE RIESGO</h3>
+  return `<div class="bsec main" style="border-color:${SC[S.estado]}"><div class="bh">Semáforo de riesgo<span>revisión quincenal</span></div><div class="bb">
     <div class="sem">
       <div class="luz"><i class="rojo ${S.estado==="rojo"?"on":""}"></i><i class="amarillo ${S.estado==="amarillo"?"on":""}"></i><i class="verde ${S.estado==="verde"?"on":""}"></i></div>
       <div><div class="big" style="color:${SC[S.estado]}">${T.t}</div><div class="sub">${T.d}</div>
@@ -1662,7 +1646,7 @@ function semaforoHTML(){
       <p><b>Uso sugerido:</b> aplicarlo a la parte indexada (núcleo) de clientes conservadores: en rojo, bajar exposición; en amarillo, no hacer cambios pero no sumar riesgo.</p>
       <p><b>No aplicarlo a las señales de Fundamentals:</b> se probó combinarlo con la estrategia de momentum + MA200 (2006–2026). Salvó 2008, pero en 2019–2026 restó rendimiento y no mejoró la caída, porque esa estrategia ya se protege sola: sale de las acciones que pierden su MA200 y rota hacia las que vienen bien (por ejemplo, energía en 2022).</p>
       <p>${S.base==="tiempo_real"?`<b>Datos honestos:</b> el historial se reconstruyó con los datos macro <b>tal como se conocían cada mes</b> (archivo ALFRED de la Fed de St. Louis), sin las revisiones posteriores. O sea, muestra lo que el semáforo hubiera dicho en su momento. Actividad (CFNAI) tiene versiones desde ${S.cobertura?.CFNAIMA3||"2011"} y subsidios por desempleo desde ${S.cobertura?.ICSA||"2009"}; antes de esas fechas se usa su primera versión disponible.`:`Ojo: el historial usa datos macro revisados, así que en tiempo real podría haber funcionado algo distinto.`}</p>
-    </details></div>`;
+    </details></div></div>`;
 }
 
 function informativosHTML(){
@@ -1711,7 +1695,7 @@ function pilarCard(x){
     <div class="pil-rl">Rango de ${x.anios||10} años${x.pctl10!=null?` · más alto que el ${Math.round(x.pctl10*100)}% de ese período`:""}</div>
     <p class="pil-l">${esc(x.lectura).replace(/(\d)\.(\d)/g,"$1,$2")}</p><p class="pil-e">${esc(x.expl)}</p></div>`;
 }
-function pilaresHTML(){
+function pilaresHTML(soloResto, extra2){
   if (!PIL) return "";
   const G = [["tasas","Tasas y Fed"],["credito","Crédito y estrés"],["amplitud","Amplitud del mercado"],["dolar","Dólar y liquidez"]];
   const V = PIL.valuacion || {};
@@ -1723,6 +1707,8 @@ function pilaresHTML(){
     <p class="pil-e">El rendimiento por ganancias es la inversa del P/E: lo que gana el S&P por cada dólar invertido. Se compara con la tasa del bono, su alternativa sin riesgo. Históricamente, cuando la diferencia fue muy baja o negativa, los retornos de los años siguientes fueron más bajos que el promedio.</p></div>` : "";
   const ord = ["credito","amplitud","dolar"], resto = ord.flatMap(g=>PIL.indicadores.filter(x=>x.pilar===g).map(pilarCard).concat(g==="amplitud"&&valc?[valc]:[]));
   const ta = PIL.indicadores.filter(x=>x.pilar==="tasas");
+  if (soloResto){ const cr = PIL.indicadores.filter(x=>x.pilar==="credito").map(pilarCard).concat(extra2?[extra2]:[]), am = PIL.indicadores.filter(x=>x.pilar==="amplitud").map(pilarCard).concat(valc?[valc]:[]), dl = PIL.indicadores.filter(x=>x.pilar==="dolar").map(pilarCard);
+    return sec("Crédito y estrés","",`<div class="pil-grid pg3">${cr.join("")}</div>`) + sec("Amplitud y valuación del mercado","",`<div class="pil-grid pg3">${am.join("")}</div>`) + sec("Dólar y liquidez","",`<div class="pil-grid pg3">${dl.join("")}</div>`); }
   return (ta.length?sec("Tasas y Fed","",`<div class="pil-grid pg3">${ta.map(pilarCard).join("")}</div>`):"") + (resto.length?sec("Crédito, amplitud, valuación y dólar","",`<div class="pil-grid pg3">${resto.join("")}</div>`):"");
 }
 function resumenMacro(){
@@ -1746,37 +1732,39 @@ function macro(m){
   if (PIL===null || ESC===null){ Promise.all([PIL===null?fetch("data/pilares.json?v="+Date.now()).then(r=>r.ok?r.json():{indicadores:[]}).catch(()=>({indicadores:[]})).then(j=>PIL=j):0, ESC===null?fetch("data/escenarios.json?v="+Date.now()).then(r=>r.json()).catch(()=>({fases:[],empresas:[]})).then(j=>ESC=j):0]).then(()=>{ if (tab==="macro") macro(m); }); m.innerHTML = `<p class="mut">Cargando…</p>`; return; }
   const q = M.cuadrantes[M.actual], p = M.probs[M.actual];
   const div = ["crecimiento","inflacion"].filter(g=>M.lectura[g].diverge);
-  const f = new Date(M.actualizado).toLocaleDateString("es-AR");
-  m.innerHTML = `${resumenMacro()}
-  ${pilaresHTML()}
-  ${semaforoHTML()}
-  <div class="mx" style="margin-top:16px">
-    <div class="card"><h3>DÓNDE ESTÁ EE.UU.</h3>${cuadSVG()}
-      <div class="sub" style="margin-top:6px">El punto blanco es hoy. Los grises son los 6 meses anteriores.</div></div>
-    <div>
-      <div class="card"><h3>RÉGIMEN MÁS PROBABLE</h3>
-        <div class="big" style="color:${QC[M.actual]}">${esc(q.nombre)}</div>
-        <div class="sub">Régimen confirmado · ${M.duracion} ${M.duracion===1?"mes":"meses"} seguidos · probabilidad hoy ${Math.round(p*100)}% · actualizado ${f}</div>
-        ${M.crudo && M.crudo!==M.actual?`<div class="warn">Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b> (${Math.round(M.probs[M.crudo]*100)}%). Se confirma si se repite el mes que viene o si supera el ${Math.round(M.umbral*100)}%.</div>`:""}
-        <div class="sub" style="margin-top:8px">${esc(q.guia)}</div>
-        <div class="probs">${["CSI","REC","EST","DES"].map(k=>`<div style="border-color:${k===M.actual?QC[k]:"var(--line)"}">${esc(M.cuadrantes[k].nombre)}<b style="color:${QC[k]}">${Math.round(M.probs[k]*100)}%</b></div>`).join("")}</div>
+  const MT = [["resumen","Resumen"],["tasas","Tasas y Fed"],["credito","Crédito y amplitud"],["semaforo","Semáforo"],["regimen","Régimen más probable"]];
+  const mt = EST.mtab || "resumen";
+  const I = M.informativos || {};
+  const tileGDP = I.gdpnow ? `<div class="pil"><div class="pil-h"><span>GDPNow · Fed de Atlanta</span><b style="color:${I.gdpnow.valor>=2?"var(--pos)":I.gdpnow.valor>=0?"var(--accent)":"var(--neg)"}">${I.gdpnow.valor>=0?"+":""}${nx(I.gdpnow.valor,1)}%</b></div>
+    <p class="pil-l">Crecimiento estimado del PBI de EE.UU. para el ${esc(I.gdpnow.trimestre)}, anualizado.${I.gdpnow.anterior!=null?` ${esc(I.gdpnow.trim_anterior)}: ${I.gdpnow.anterior>=0?"+":""}${nx(I.gdpnow.anterior,1)}%.`:""}</p>
+    <p class="pil-e">Estimación en tiempo real que se actualiza con cada dato nuevo; el PBI oficial sale un mes después del trimestre. Más de 2% es crecimiento sólido; menos de 0%, contracción. Informativo: no entra en el cálculo del régimen.</p></div>` : "";
+  const n_ = I.nfci;
+  const tileNFCI = n_ ? `<div class="pil"><div class="pil-h"><span>Condiciones financieras · Fed de Chicago</span><b style="color:${n_.valor<0?"var(--pos)":"var(--neg)"}">${n_.valor>=0?"+":""}${nx(n_.valor,2)}</b></div>
+    <p class="pil-l">${n_.valor<0?"Más laxas":"Más ajustadas"} que el promedio histórico; en 3 meses se ${n_.cambio_13s>0?"endurecieron":"relajaron"} (${n_.cambio_13s>=0?"+":""}${nx(n_.cambio_13s,2)}). Dato al ${esc(n_.fecha)}.</p>
+    <p class="pil-e">Resume tasas, spreads, volatilidad y acceso al financiamiento. Negativo: conseguir plata es más fácil que lo normal. Si sube rápido, suele anticipar problemas para la economía y para las acciones más especulativas.</p></div>` : "";
+  let cuerpo = "";
+  if (mt==="resumen") cuerpo = resumenMacro();
+  else if (mt==="tasas") cuerpo = PIL ? sec("Tasas y Fed","",`<div class="pil-grid pg3">${PIL.indicadores.filter(x=>x.pilar==="tasas").map(pilarCard).join("")}</div>`) : "";
+  else if (mt==="credito") cuerpo = pilaresHTML(true, tileNFCI);
+  else if (mt==="semaforo") cuerpo = semaforoHTML();
+  else cuerpo = `<section class="fgrid" style="align-items:start">
+      ${sec("Dónde está EE.UU.","el punto blanco es hoy; los grises, los 6 meses anteriores",cuadSVG())}
+      ${sec("Régimen más probable",`confirmado · ${M.duracion} ${M.duracion===1?"mes":"meses"} seguidos`,`<div class="big" style="color:${QC[M.actual]};font-size:28px;font-weight:700">${esc(q.nombre)}</div>
+        <div class="sub">Probabilidad hoy ${Math.round(p*100)}% · actualizado ${new Date(M.actualizado).toLocaleDateString("es-AR")}</div>
+        ${M.crudo && M.crudo!==M.actual?`<div class="warn">Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b> (${Math.round(M.probs[M.crudo]*100)}%). Se confirma si se repite el mes que viene.</div>`:""}
+        <div class="probs" style="margin-top:12px">${["CSI","REC","EST","DES"].map(k=>`<div style="border-color:${k===M.actual?QC[k]:"var(--line)"}">${esc(M.cuadrantes[k].nombre)}<b style="color:${QC[k]}">${Math.round(M.probs[k]*100)}%</b></div>`).join("")}</div>
         ${div.length?`<div class="warn">Datos y mercado no coinciden en ${div.map(g=>g==="inflacion"?"inflación":g).join(" e ")}: el mercado puede estar anticipando un cambio que los datos todavía no muestran.</div>`:""}
-      </div>
-      <details class="help" style="margin-top:16px"><summary>Cómo se calcula</summary>
-        <p>Cada indicador se mide como <b>dirección</b>: si se acelera o se frena en los últimos 3 meses. Ese cambio se compara con su propia historia (desvíos respecto de su promedio), así un número alto quiere decir "se acelera más de lo normal".</p>
-        <p>Se promedian los indicadores de cada eje: ${Math.round(M.peso_dato*100)}% datos oficiales (FRED) y ${Math.round((1-M.peso_dato)*100)}% señales de mercado, que reaccionan antes. Con el puntaje de cada eje sale la probabilidad de que el crecimiento y la inflación se estén acelerando, y de ahí la probabilidad de cada cuadrante.</p>
-        <p>Los datos oficiales salen con 1–2 meses de rezago: el mercado suele anticiparse, y por eso se marca cuando no coinciden.</p>
-        <p><b>Regla de confirmación:</b> el régimen solo cambia si el nuevo cuadrante se repite dos meses seguidos o si su probabilidad supera el ${Math.round((M.umbral||0.45)*100)}%. Así se evita rotar la cartera por un dato aislado.${M.cambios!=null?` Desde 2000 hubo ${M.cambios} cambios con la regla, contra ${M.cambios_sin_regla} sin ella.`:""}</p>
-      </details>
-    </div>
-  </div>
-  <div class="ejes">${tablaEje("crecimiento")}${tablaEje("inflacion")}</div>
-  ${informativosHTML()}
-  ${tablaSectores()}
-  <div class="card" style="margin-top:16px">${bandaSVG()}
-    <div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div></div>`;
-  const sm = document.getElementById("secm");
-  if (sm) sm.onchange = e => { secModo = e.target.value; macro(m); };
+        <details class="help" style="margin-top:12px"><summary>Cómo se calcula</summary>
+          <p>Cada indicador se mide como <b>dirección</b>: si se acelera o se frena en los últimos 3 meses, comparado con su propia historia. Se promedian los indicadores de cada eje: ${Math.round(M.peso_dato*100)}% datos oficiales (FRED) y ${Math.round((1-M.peso_dato)*100)}% señales de mercado, que reaccionan antes. Con el puntaje de cada eje sale la probabilidad de cada cuadrante.</p>
+          <p>Los datos oficiales salen con 1–2 meses de rezago: el mercado suele anticiparse, y por eso se marca cuando no coinciden.</p>
+          <p><b>Regla de confirmación:</b> el régimen solo cambia si el nuevo cuadrante se repite dos meses seguidos o si su probabilidad supera el ${Math.round((M.umbral||0.45)*100)}%.</p>
+        </details>`)}
+    </section>
+    <div class="ejes">${tablaEje("crecimiento")}${tablaEje("inflacion")}</div>
+    ${tileGDP?sec("Otro indicador de crecimiento","informativo",`<div class="pil-grid pg3">${tileGDP}</div>`):""}
+    ${sec("Régimen mes a mes","",`${bandaSVG()}<div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div>`)}`;
+  m.innerHTML = `<div class="ftabs mtabs">${MT.map(([k,t])=>`<button class="${k===mt?"on":""}" data-mt="${k}">${t}</button>`).join("")}</div>${cuerpo}`;
+  m.querySelectorAll("[data-mt]").forEach(b=>b.onclick=()=>{ EST.mtab=b.dataset.mt; window.scrollTo(0,0); macro(m); });
   const ie = document.getElementById("iresc"); if (ie) ie.onclick = e => { e.preventDefault(); EST.fase = FZ[M.actual]; EST.escV="bloques"; tab="escenarios"; navegar(); window.scrollTo(0,0); render(); };
   m.querySelectorAll("[data-irb2]").forEach(b=>b.onclick=()=>{ EST.bloque=b.dataset.irb2; EST.sel=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
 }
