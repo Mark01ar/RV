@@ -335,6 +335,8 @@ th{text-transform:uppercase;letter-spacing:.06em;font-size:11px;font-weight:600;
 const HASH = "3a892eea646c4e4fc44df3a264545ce2e51f4bdc752cbd996dae588e5c839602";
 const TABS = [
   {id:"empresas", t:"Empresas", ok:true},
+  {id:"lista", t:"Lista", ok:true},
+  {id:"escenarios", t:"Escenarios", ok:true},
   {id:"cartera", t:"Cartera del mes", ok:true},
   {id:"universo", t:"Universo", ok:true},
   {id:"macro", t:"Macro", ok:true},
@@ -473,7 +475,7 @@ function kpis(){
 function navegar(){
   document.getElementById("nav").innerHTML = TABS.map(x=>
     `<button class="${x.id===tab?"on":""}" data-t="${x.id}">${x.t}${x.ok?"":'<span class="pr">·</span>'}</button>`).join("");
-  document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t;navegar();render()});
+  document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t; if (["empresas","lista","escenarios"].includes(tab)){ EST.sel=null; EST.bloque=null; EST.vista=null; } window.scrollTo(0,0); navegar(); render()});
 }
 
 function render(){
@@ -483,7 +485,9 @@ function render(){
   if (tab==="macro") return macro(m);
   if (tab==="fund") return fundamentals(m);
   if (tab==="cartera") return cartera(m);
-  if (tab==="empresas") return empresas(m);
+  if (tab==="empresas"){ if (EST.vista==="lista"||EST.vista==="esc") EST.vista=null; return empresas(m); }
+  if (tab==="lista"){ if (EST.vista!=="cmp") EST.vista="lista"; EST.bloque=null; return empresas(m); }
+  if (tab==="escenarios"){ EST.vista="esc"; return empresas(m); }
   universo(m);
 }
 
@@ -759,7 +763,7 @@ function escCab(fz){
   <div class="segs vsel" style="margin-top:10px"><button class="seg sm${v==="bloques"?" on2":""}" data-ev="bloques">Por bloque</button><button class="seg sm${v==="empresas"?" on2":""}" data-ev="empresas">Por empresa</button></div>`;
 }
 function escNav(m){
-  m.querySelector("#ev").onclick = ()=>{EST.vista=null; window.scrollTo(0,0); render();};
+
   m.querySelectorAll("[data-fz]").forEach(b=>b.onclick=()=>{EST.fase=b.dataset.fz; escenarios(m);});
   m.querySelectorAll("[data-ev]").forEach(b=>b.onclick=()=>{EST.escV=b.dataset.ev; escenarios(m);});
 }
@@ -771,7 +775,7 @@ function escBloques(m, fz){
   const val = pts.filter(p=>!p.pocos), pocos = pts.filter(p=>p.pocos);
   const XM = 0.8;
   const sel = EST.escB && val.find(p=>p.bl.id===EST.escB);
-  m.innerHTML = `<button class="btn" id="ev">← Bloques</button>
+  m.innerHTML = `
   <section class="fhead2 bhead"><div class="bh-top"><div><h2>Escenarios macro</h2><div class="fh-sub">Elegí una fase de la economía y mirá cómo les fue históricamente a los bloques en esa fase.</div></div></div>${escCab(fz)}</section>
   ${sec(`${esc(fz)} · por bloque`, "ordenados de mejor a peor · tocá un bloque para ver sus empresas", `<div id="escbox"></div>
     <div class="mut small" style="margin-top:12px">La barra es la mediana de las empresas del bloque: cuánto mejor o peor les fue en esta fase que en el resto de sus meses, contra el SPY, en puntos por año. A la derecha, cuántas fueron en esa misma dirección. Las barras llenas son patrones consistentes (3 de cada 4 o más y más de 5 puntos de diferencia); las tenues, mixtos. Solo cuentan empresas con al menos 12 meses en la fase; bloques con menos de 3 empresas así no aparecen${pocos.length?` (${pocos.map(p=>esc(p.bl.nombre)).join(", ")})`:""}. Es historia, no predicción.</div>`, "main")}
@@ -789,7 +793,7 @@ function escBloques(m, fz){
   escNav(m);
   m.querySelectorAll("tr[data-bs]").forEach(r=>r.onclick=()=>{EST.escB=r.dataset.bs; escenarios(m);});
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
-  m.querySelectorAll("[data-irb]").forEach(b=>b.onclick=()=>{EST.bloque=b.dataset.irb; EST.vista=null; window.scrollTo(0,0); render();});
+  m.querySelectorAll("[data-irb]").forEach(b=>b.onclick=()=>{EST.bloque=b.dataset.irb; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render();});
 }
 async function escenarios(m){
   if (!ESC){ m.innerHTML = `<p class="mut">Cargando…</p>`; try{ const r = await fetch("data/escenarios.json?v="+Date.now()); ESC = await r.json(); }catch(e){ m.innerHTML = `<p class="mut">No se pudieron cargar los escenarios.</p>`; return; } }
@@ -799,7 +803,7 @@ async function escenarios(m){
   const pts = ESC.empresas.filter(e=>e.r[fz]).map(e=>({...e, ...e.r[fz], fam: famDe(e.b), bl: BQDE(e.b)}));
   const XM = 1.0, YM = 4;
   const cl = pts.filter(p=>Math.abs(p.t)>=2);
-  m.innerHTML = `<button class="btn" id="ev">← Bloques</button>
+  m.innerHTML = `
   <section class="fhead2 bhead"><div class="bh-top"><div><h2>Escenarios macro</h2><div class="fh-sub">Elegí una fase de la economía y mirá dónde cae cada empresa según cómo le fue históricamente en esa fase.</div></div></div>
   ${escCab(fz)}
   <div class="famf">${FAM.map((fm,i)=>`<button class="famc${famOff[i]?" off":""}" data-fi="${i}" style="--fc:${fm.c}"><span class="fam-dot"></span>${fm.n}</button>`).join("")}</div></section>
@@ -830,7 +834,7 @@ async function escenarios(m){
   }
   dibujar();
   window.onresize = () => { if (document.body.contains(box)) dibujar(); };
-  m.querySelector("#ev").onclick = ()=>{EST.vista=null; window.scrollTo(0,0); render();};
+
   escNav(m);
   m.querySelectorAll("[data-fi]").forEach(b=>b.onclick=()=>{famOff[b.dataset.fi]=!famOff[b.dataset.fi]; escenarios(m);});
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
@@ -842,7 +846,7 @@ function portada(m){
   m.innerHTML = `<details class="help"><summary>Cómo funciona</summary>
     <p>Las 125 empresas con CEDEAR más operadas en BYMA, agrupadas en bloques que se analizan con la misma vara. Cada bloque tiene su lectura (cómo gana plata el nicho, qué mirar, qué riesgos tiene) y un ranking interno con las métricas que importan en ese nicho. Comparar una memoria con una farma no tiene sentido; dentro del bloque, sí.</p>
     <p>Las lecturas se van armando de a poco. Los bloques sin lectura muestran por ahora un ranking con la nota general.</p></details>
-  <div class="bar"><input id="eq" placeholder="Buscar ticker o empresa" value="${esc(EST.q)}"><button class="btn" id="elista" style="margin:0">Ver las 125 en lista</button><button class="btn gold-b" id="eesc" style="margin:0">Escenarios macro</button><span class="count">${BL.length} bloques · ${BL.filter(b=>b.lente).length} con lectura · rendimientos: mediana de las empresas del bloque</span></div>
+  <div class="bar"><input id="eq" placeholder="Buscar ticker o empresa" value="${esc(EST.q)}"><span class="count">${BL.length} bloques · ${BL.filter(b=>b.lente).length} con lectura · rendimientos: mediana de las empresas del bloque</span></div>
   ${hits.length?`<div class="card"><table><tbody>${hits.map(x=>`<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td class="tk l">${logoImg(x.byma,"logo-s")}${esc(x.byma)}</td><td class="nm l">${esc(x.nombre)}</td><td class="l mut">${esc(BQDE(x.byma)?.nombre||"")}</td><td>${chip(x.notas?.general)}</td></tr>`).join("")}</tbody></table></div>`:""}
   <div class="fams">${FAM.map(fm=>{ const bs = fm.b.map(id=>BL.find(b=>b.id===id)).filter(Boolean); return `<div class="fam" style="--fc:${fm.c}"><div class="fam-h"><span class="fam-dot"></span>${fm.n}<span class="mut">${bs.length} ${bs.length===1?"bloque":"bloques"}</span></div><div class="bgrid">${bs.map(b=>{ const xs = b.empresas.map(byB);
     const r3 = medi(xs.map(x=>x.r3m)), r12 = medi(xs.map(x=>x.r12m));
@@ -851,8 +855,7 @@ function portada(m){
       <p>${esc(b.clave)}</p>
       <div class="bc-kpi"><div><span>3 meses</span><b class="${cls(r3)}">${pct(r3,0)}</b></div><div><span>12 meses</span><b class="${cls(r12)}">${pct(r12,0)}</b></div><div class="bc-n"><span>Empresas</span><b>${b.empresas.length}</b></div></div></div>`; }).join("")}</div></div>`; }).join("")}</div>`;
   m.querySelector("#eq").oninput = e=>{EST.q=e.target.value; portada(m); const i=m.querySelector("#eq"); i.focus(); i.setSelectionRange(i.value.length,i.value.length);};
-  m.querySelector("#elista").onclick = ()=>{EST.vista="lista"; window.scrollTo(0,0); render();};
-  m.querySelector("#eesc").onclick = ()=>{EST.vista="esc"; window.scrollTo(0,0); render();};
+
   m.querySelectorAll("[data-b]").forEach(c=>c.onclick=()=>{EST.bloque=c.dataset.b; window.scrollTo(0,0); render();});
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
 }
@@ -971,7 +974,7 @@ function empresas(m){
     <p>Fichas completas: ${nf} de ${L.length}. Las demás muestran por ahora solo precio, valuación y tendencia.</p>
   </details>
   <div class="bar">
-    ${BQ?'<button class="btn" id="ebq" style="margin:0">← Bloques</button>':""}<input id="eq" placeholder="Buscar ticker o empresa" value="${esc(EST.q)}">
+    <input id="eq" placeholder="Buscar ticker o empresa" value="${esc(EST.q)}">
     <select id="es"><option value="">Todos los sectores</option>${sectores.map(s=>`<option ${s===EST.sector?"selected":""}>${esc(s)}</option>`).join("")}</select>
     <select id="ep"><option value="">Todos los países</option><option value="us" ${EST.pais==="us"?"selected":""}>EE.UU.</option><option value="ext" ${EST.pais==="ext"?"selected":""}>Resto del mundo</option></select>
     <select id="el"><option value="">Toda liquidez</option>${["Alta","Media","Baja","Muy baja"].map(s=>`<option ${s===EST.liq?"selected":""}>${s}</option>`).join("")}</select>
@@ -1433,7 +1436,7 @@ async function ficha(m, t){
   m.innerHTML = `${volver}${head}${cuerpo}<p class="mut small">Ficha actualizada ${f.actualizado?new Date(f.actualizado).toLocaleDateString("es-AR"):"—"}. Datos de Yahoo Finance, SEC y data912.</p>`;
   m.querySelector("#fv").onclick = ()=>{EST.sel=null; EST.ftab="resumen"; render();};
   m.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{EST.ftab=b.dataset.ft; ficha(m,t);});
-  m.querySelectorAll("[data-irb]").forEach(b=>b.onclick=()=>{EST.bloque=b.dataset.irb; EST.sel=null; EST.ftab="resumen"; window.scrollTo(0,0); render();});
+  m.querySelectorAll("[data-irb]").forEach(b=>b.onclick=()=>{EST.bloque=b.dataset.irb; EST.sel=null; EST.vista=null; EST.ftab="resumen"; tab="empresas"; navegar(); window.scrollTo(0,0); render();});
   m.querySelectorAll("[data-per]").forEach(b=>b.onclick=()=>{EST.per=b.dataset.per; ficha(m,t);});
   const ta = m.querySelector("#nota");
   if (ta) ta.oninput = ()=>{ try{ localStorage.setItem("rvnota:"+f.ticker, ta.value); m.querySelector("#notamsg").textContent = "Guardado en este navegador."; }catch(e){ m.querySelector("#notamsg").textContent = "Este navegador no permite guardar notas."; } };
