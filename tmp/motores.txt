@@ -1,178 +1,178 @@
 
 ##### Memorias y almacenamiento
-  MU     Cobre +4.1% (reciente)
-  SKHY   Cobre +3.8% (clara)
+  MU     Rentables vs no rentables -4.2% (clara)  ·  Cobre +4.1% (reciente)
+  SKHY   Rentables vs no rentables -4.5% (clara)  ·  Cobre +3.8% (clara)  ·  Producción de chips EE.UU. +3.1% (clara)
   SNDK   sin historia suficiente
-  WDC    Cobre +2.9% (reciente)
+  WDC    Rentables vs no rentables -2.4% (reciente)
 
 ##### Diseño de chips
-  NVDA   Soja -2.5% (reciente*)
-  AMD    sin motor macro claro
+  NVDA   Valor vs crecimiento -2.9% (clara)  ·  Soja -2.5% (reciente*)   [repetidos: Invierten poco vs mucho]
+  AMD    Rentables vs no rentables -3.4% (reciente)  ·  Valor vs crecimiento -3.1% (reciente)   [repetidos: Invierten poco vs mucho]
   AVGO   sin motor macro claro
   QCOM   sin motor macro claro
-  MRVL   Dólar global +3.2% (clara)   [repetidos: Curva 10a-2a]
+  MRVL   Dólar global +3.2% (clara)  ·  Valor vs crecimiento -2.4% (clara)  ·  Rentables vs no rentables -3.9% (reciente)   [repetidos: Curva 10a-2a, Momentum]
   ALAB   sin historia suficiente
-  INTC   sin motor macro claro
+  INTC   Rentables vs no rentables -3.4% (reciente)  ·  Momentum +2.7% (reciente*)
 
 ##### Fabricación y equipos de chips
-  TSM    Yuan débil -1.4% (reciente*)  ·  Petróleo -1.2% (reciente*)
+  TSM    sin motor macro claro
   ASML   Tasa 10a -1.6% (reciente*)
-  AMAT   sin motor macro claro
-  LRCX   sin motor macro claro
+  AMAT   Rentables vs no rentables -2.2% (clara)   [repetidos: Chicas vs grandes]
+  LRCX   Rentables vs no rentables -2.3% (reciente)
 
 ##### Big tech
-  MSFT   Spread de crédito +1.4% (reciente*)
-  GOOGL  sin motor macro claro
-  META   sin motor macro claro
-  AMZN   Spread de crédito +2.1% (reciente*)  ·  Mineral de hierro -1.5% (reciente*)
-  AAPL   sin motor macro claro
+  MSFT   Chicas vs grandes -2.0% (reciente)  ·  Valor vs crecimiento -1.8% (reciente)   [repetidos: Invierten poco vs mucho, Spread de crédito]
+  GOOGL  Invierten poco vs mucho -1.8% (clara)   [repetidos: Valor vs crecimiento]
+  META   Valor vs crecimiento -2.0% (reciente)   [repetidos: Chicas vs grandes, Invierten poco vs mucho]
+  AMZN   Valor vs crecimiento -3.0% (clara)  ·  Invierten poco vs mucho -2.8% (clara)   [repetidos: Spread de crédito]
+  AAPL   Valor vs crecimiento -1.5% (clara)   [repetidos: Invierten poco vs mucho]
 
 ##### Infraestructura de IA
-  ORCL   sin motor macro claro
+  ORCL   Valor vs crecimiento -1.5% (reciente)  ·  Chicas vs grandes -2.1% (reciente*)
   CRWV   sin historia suficiente
   NBIS   sin historia suficiente
   IREN   sin motor macro claro
 
 ##### Software y ciberseguridad
-  CRM    sin motor macro claro
-  ADBE   Tasa 10a -1.6% (reciente*)
-  NOW    sin motor macro claro
-  TEAM   sin motor macro claro
-  SAP    Dólar global -1.6% (clara)  ·  Gas natural -1.9% (reciente*)
-  PLTR   Bitcoin +6.7% (reciente*)
-  PANW   sin motor macro claro
-  CRWD   sin motor macro claro
+  CRM    Invierten poco vs mucho -2.6% (clara)  ·  Valor vs crecimiento -2.4% (clara)
+  ADBE   Valor vs crecimiento -1.8% (reciente)   [repetidos: Invierten poco vs mucho, Tasa 10a]
+  NOW    Valor vs crecimiento -2.8% (reciente)   [repetidos: Invierten poco vs mucho]
+  TEAM   Invierten poco vs mucho -5.1% (reciente)  ·  Rentables vs no rentables -3.3% (reciente)   [repetidos: Valor vs crecimiento, Real débil]
+  SAP    Dólar global -1.6% (clara)  ·  Valor vs crecimiento -1.4% (reciente)  ·  Gas natural -1.9% (reciente*)   [repetidos: Chicas vs grandes]
+  PLTR   Valor vs crecimiento -5.7% (reciente)  ·  Rentables vs no rentables -4.3% (reciente)  ·  Bitcoin +6.7% (reciente*)   [repetidos: Invierten poco vs mucho]
+  PANW   Rentables vs no rentables -2.9% (reciente)   [repetidos: Invierten poco vs mucho]
+  CRWD   Valor vs crecimiento -5.0% (reciente)  ·  Rentables vs no rentables -4.9% (reciente)   [repetidos: Invierten poco vs mucho]
   IBM    Bitcoin -1.5% (reciente*)
-  GLOB   Real débil +2.9% (reciente*)
+  GLOB   Invierten poco vs mucho -3.2% (reciente)  ·  Real débil +2.9% (reciente*)   [repetidos: Valor vs crecimiento]
 
 ##### Hardware y equipos
   CSCO   sin motor macro claro
   DELL   sin motor macro claro
-  HPQ    Acero +1.3% (reciente*)
+  HPQ    Momentum -1.9% (reciente*)  ·  Acero +1.3% (reciente*)
   XROX   Real débil -2.2% (reciente*)
-  BB     sin motor macro claro
+  BB     Valor vs crecimiento -2.7% (clara)  ·  Rentables vs no rentables -5.3% (reciente)
   RGTI   Dólar global +15.0% (reciente*)   [repetidos: Tasa 10a]
 
 ##### Medios, internet y telecom
-  NFLX   Gas natural -2.0% (reciente*)
-  SPOT   sin motor macro claro
+  NFLX   Invierten poco vs mucho -3.5% (reciente)  ·  Pedidos de electrónica -5.2% (reciente*)   [repetidos: Valor vs crecimiento]
+  SPOT   Invierten poco vs mucho -2.3% (reciente)   [repetidos: Valor vs crecimiento]
   DISN   Bitcoin +1.6% (reciente*)
-  YELP   Spread de crédito -5.6% (reciente*)  ·  Combustible aviones +3.7% (reciente*)   [repetidos: Tasa 10a]
+  YELP   Chicas vs grandes +4.8% (reciente)  ·  Spread de crédito -5.6% (reciente*)  ·  Combustible aviones +3.7% (reciente*)   [repetidos: Tasa 10a]
   TMUS   sin motor macro claro
 
 ##### Comercio electrónico y plataformas
-  MELI   Dólar global -2.5% (reciente*)  ·  Real débil -2.3% (reciente*)
-  EBAY   Soja -1.9% (reciente*)
-  JMIA   sin motor macro claro
-  UBER   Uranio +2.7% (reciente*)
+  MELI   Valor vs crecimiento -2.1% (clara)  ·  Dólar global -2.5% (reciente*)  ·  Real débil -2.3% (reciente*)   [repetidos: Invierten poco vs mucho]
+  EBAY   Chicas vs grandes +1.1% (reciente)  ·  Soja -1.9% (reciente*)
+  JMIA   Chicas vs grandes +10.4% (reciente)  ·  Rentables vs no rentables -6.5% (reciente)
+  UBER   Rentables vs no rentables -2.0% (reciente)  ·  Uranio +2.7% (reciente*)
 
 ##### China
-  BABA   Dólar global -3.3% (reciente)  ·  Yuan débil -2.8% (reciente)   [repetidos: Oro, Cobre]
+  BABA   Dólar global -3.3% (reciente)  ·  Yuan débil -2.8% (reciente)   [repetidos: Oro]
   JD     Yuan débil -2.9% (reciente)   [repetidos: Dólar global]
   BIDU   Real débil -2.3% (clara)  ·  Dólar global -3.1% (reciente)  ·  Yuan débil -2.9% (reciente)   [repetidos: Cobre]
-  NIO    Yuan débil -5.6% (reciente)  ·  Spread de crédito -5.5% (reciente*)
+  NIO    Yuan débil -5.6% (reciente)  ·  Chicas vs grandes +6.9% (reciente*)  ·  Spread de crédito -5.5% (reciente*)
 
 ##### Bancos
-  JPM    Tasa 10a +1.8% (clara)  ·  Curva 10a-2a +1.6% (clara)  ·  Oro -1.8% (reciente*)
-  C      Tasa 10a +2.1% (reciente)  ·  Curva 10a-2a +1.7% (reciente)  ·  Petróleo +1.6% (reciente)   [repetidos: Oro]
-  BA.C   Tasa 10a +2.4% (reciente)  ·  Oro -2.2% (reciente*)   [repetidos: Curva 10a-2a]
-  GS     Spread de crédito -1.7% (clara)  ·  Tasa 10a +1.4% (clara)  ·  Curva 10a-2a +1.6% (reciente)   [repetidos: Petróleo]
-  BBD    Real débil -9.0% (clara)   [repetidos: Dólar global, Oro, Cobre, Combustible aviones, Spread de crédito, Soja]
-  ITUB   Real débil -8.1% (clara)   [repetidos: Dólar global, Combustible aviones, Petróleo, Spread de crédito, Soja]
-  NMR    sin motor macro claro
+  JPM    Valor vs crecimiento +2.6% (clara)  ·  Tasa 10a +1.8% (clara)   [repetidos: Curva 10a-2a, Momentum, Chicas vs grandes, Invierten poco vs mucho, Oro]
+  C      Valor vs crecimiento +3.2% (clara)  ·  Momentum -2.2% (clara)  ·  Rentables vs no rentables -0.9% (clara)   [repetidos: Tasa 10a, Chicas vs grandes, Curva 10a-2a, Petróleo, Combustible aviones, Oro]
+  BA.C   Valor vs crecimiento +3.2% (clara)  ·  Tasa 10a +2.4% (reciente)  ·  Chicas vs grandes +2.1% (reciente)   [repetidos: Momentum, Curva 10a-2a, Invierten poco vs mucho, Oro]
+  GS     Spread de crédito -1.7% (clara)  ·  Tasa 10a +1.4% (clara)  ·  Valor vs crecimiento +2.3% (reciente)   [repetidos: Chicas vs grandes, Curva 10a-2a, Momentum, Petróleo]
+  BBD    Real débil -9.0% (clara)   [repetidos: Dólar global, Oro, Cobre, Combustible aviones, Spread de crédito, Valor vs crecimiento, Soja]
+  ITUB   Real débil -8.1% (clara)   [repetidos: Dólar global, Combustible aviones, Petróleo, Spread de crédito, Valor vs crecimiento, Momentum, Soja]
+  NMR    Valor vs crecimiento +1.5% (clara)
 
 ##### Pagos
   V      sin motor macro claro
-  MA     Petróleo +1.1% (reciente*)
-  AXP    Oro -1.3% (clara)  ·  Mineral de hierro +1.3% (reciente*)
+  MA     Rentables vs no rentables +0.9% (clara)  ·  Petróleo +1.1% (reciente*)
+  AXP    Valor vs crecimiento +1.6% (clara)  ·  Momentum -1.6% (clara)  ·  Chicas vs grandes +1.6% (reciente*)   [repetidos: Mineral de hierro, Oro]
   PYPL   sin motor macro claro
-  HOOD   Bitcoin +10.1% (reciente)  ·  Yuan débil +2.9% (reciente*)
+  HOOD   Bitcoin +10.1% (reciente)  ·  Rentables vs no rentables -6.0% (reciente*)   [repetidos: Yuan débil]
 
 ##### Cripto
-  MSTR   Bitcoin +8.2% (reciente)
-  COIN   Bitcoin +19.1% (reciente)
-  RIOT   Bitcoin +15.2% (reciente)
-  HUT    Bitcoin +21.1% (reciente)
+  MSTR   Invierten poco vs mucho -3.5% (clara)  ·  Bitcoin +8.2% (reciente)  ·  Pedidos de electrónica -7.4% (reciente*)
+  COIN   Bitcoin +19.1% (reciente)  ·  Invierten poco vs mucho -5.0% (reciente)  ·  Rentables vs no rentables -4.8% (reciente)
+  RIOT   Bitcoin +15.2% (reciente)  ·  Chicas vs grandes +6.9% (reciente)  ·  Rentables vs no rentables -5.8% (reciente)
+  HUT    Bitcoin +21.1% (reciente)  ·  Chicas vs grandes +7.8% (reciente)
 
 ##### Energía eléctrica
-  VST    sin motor macro claro
+  VST    Momentum +2.4% (reciente*)
   CEG    sin motor macro claro
   GEV    sin historia suficiente
   OKLO   Tasa 10a +9.2% (reciente*)   [repetidos: Dólar global]
-  FSLR   sin motor macro claro
+  FSLR   Invierten poco vs mucho -2.2% (clara)  ·  Acero -3.3% (reciente*)
 
 ##### Petróleo y gas
-  XOM    Petróleo +3.5% (clara)   [repetidos: Combustible aviones, Spread de crédito]
-  CVX    Petróleo +3.1% (clara)  ·  Cobre +2.2% (reciente)   [repetidos: Combustible aviones, Spread de crédito]
-  SHEL   Petróleo +3.4% (clara)  ·  Real débil -2.4% (clara)   [repetidos: Combustible aviones, Soja, Spread de crédito, Tasa 10a]
-  PBR    Real débil -8.9% (clara)  ·  Spread de crédito -8.8% (clara)  ·  Petróleo +6.4% (clara)   [repetidos: Combustible aviones, Soja, Cobre, Dólar global, Tasa 10a]
-  GPRK   Spread de crédito -7.3% (clara)  ·  Petróleo +6.1% (clara)  ·  Combustible aviones +5.5% (clara)   [repetidos: Cobre, Tasa 10a]
-  TEN    Petróleo +4.1% (clara)  ·  Spread de crédito -3.9% (clara)  ·  Cobre +3.1% (clara)   [repetidos: Combustible aviones, Real débil, Soja, Tasa 10a]
+  XOM    Petróleo +3.5% (clara)  ·  Valor vs crecimiento +3.5% (reciente)   [repetidos: Combustible aviones, Rentables vs no rentables, Spread de crédito, Tasa 10a, Invierten poco vs mucho]
+  CVX    Petróleo +3.1% (clara)  ·  Valor vs crecimiento +3.3% (reciente)   [repetidos: Combustible aviones, Rentables vs no rentables, Cobre, Spread de crédito, Chicas vs grandes, Invierten poco vs mucho]
+  SHEL   Petróleo +3.4% (clara)  ·  Real débil -2.4% (clara)   [repetidos: Combustible aviones, Soja, Valor vs crecimiento, Spread de crédito, Tasa 10a, Invierten poco vs mucho]
+  PBR    Real débil -8.9% (clara)  ·  Spread de crédito -8.8% (clara)  ·  Petróleo +6.4% (clara)   [repetidos: Combustible aviones, Soja, Cobre, Dólar global, Valor vs crecimiento, Tasa 10a, Momentum]
+  GPRK   Spread de crédito -7.3% (clara)  ·  Petróleo +6.1% (clara)  ·  Combustible aviones +5.5% (clara)   [repetidos: Valor vs crecimiento, Cobre, Tasa 10a, Chicas vs grandes, Momentum]
+  TEN    Petróleo +4.1% (clara)  ·  Spread de crédito -3.9% (clara)  ·  Cobre +3.1% (clara)   [repetidos: Combustible aviones, Real débil, Soja, Valor vs crecimiento, Chicas vs grandes, Tasa 10a, Momentum]
 
 ##### Minería y acero
-  VALE   Cobre +9.0% (clara)  ·  Real débil -6.6% (clara)  ·  Dólar global -6.2% (clara)   [repetidos: Soja, Mineral de hierro, Oro, Spread de crédito, Combustible aviones, Petróleo, Yuan débil]
-  FCX    Cobre +13.1% (clara)  ·  Dólar global -6.0% (clara)   [repetidos: Soja, Oro, Spread de crédito, Real débil, Petróleo, Combustible aviones, Mineral de hierro, Yuan débil]
+  VALE   Cobre +9.0% (clara)  ·  Real débil -6.6% (clara)  ·  Dólar global -6.2% (clara)   [repetidos: Soja, Mineral de hierro, Oro, Spread de crédito, Combustible aviones, Petróleo, Momentum, Yuan débil]
+  FCX    Cobre +13.1% (clara)  ·  Dólar global -6.0% (clara)   [repetidos: Soja, Oro, Spread de crédito, Real débil, Petróleo, Combustible aviones, Momentum, Mineral de hierro, Yuan débil, Chicas vs grandes]
   B      Oro +10.5% (clara)  ·  Cobre +5.0% (clara)   [repetidos: Dólar global, Tasa 10a, Real débil]
-  HMY    Oro +16.5% (clara)  ·  Real débil -6.6% (clara)   [repetidos: Dólar global, Cobre, Tasa 10a]
+  HMY    Oro +16.5% (clara)  ·  Real débil -6.6% (clara)   [repetidos: Dólar global, Cobre, Tasa 10a, Rentables vs no rentables]
   HL     Oro +12.1% (clara)  ·  Cobre +8.5% (clara)   [repetidos: Dólar global, Real débil, Soja, Yuan débil]
-  MP     Real débil -7.7% (reciente)
-  TXR    Cobre +4.6% (clara)  ·  Real débil -3.6% (clara)  ·  Spread de crédito -3.3% (clara)   [repetidos: Soja, Petróleo, Combustible aviones]
+  MP     Real débil -7.7% (reciente)  ·  Chicas vs grandes +5.9% (reciente*)
+  TXR    Cobre +4.6% (clara)  ·  Real débil -3.6% (clara)  ·  Spread de crédito -3.3% (clara)   [repetidos: Soja, Petróleo, Combustible aviones, Momentum, Valor vs crecimiento]
 
 ##### Farma grande
-  LLY    sin motor macro claro
-  NVO    sin motor macro claro
-  JNJ    sin motor macro claro
-  PFE    Confianza consumidor -1.6% (reciente*)
+  LLY    Momentum +2.1% (reciente*)
+  NVO    Momentum +2.0% (clara)  ·  Dólar global -1.5% (clara)
+  JNJ    Invierten poco vs mucho +1.3% (reciente*)
+  PFE    Invierten poco vs mucho +1.0% (clara)  ·  Confianza consumidor -1.6% (reciente*)  ·  Rentables vs no rentables +1.4% (reciente*)
   ABT    Dólar global -1.2% (clara)  ·  Combustible aviones -1.1% (reciente)
 
 ##### Biotech y servicios de salud
   MRNA   sin motor macro claro
   VRTX   Spread de crédito +2.0% (reciente*)
-  NTRA   sin motor macro claro
+  NTRA   Rentables vs no rentables -3.1% (reciente)   [repetidos: Invierten poco vs mucho]
   TEM    sin historia suficiente
   HIMS   Curva 10a-2a -5.5% (reciente*)
   UNH    sin motor macro claro
 
 ##### Consumo defensivo
-  KO     Dólar global -1.0% (clara)
-  PEP    Tasa 10a -0.8% (clara)
-  PG     Tasa 10a -0.8% (clara)  ·  Oro +1.1% (reciente)
-  MO     sin motor macro claro
-  WMT    Spread de crédito +1.0% (clara)
-  MCD    sin motor macro claro
+  KO     Rentables vs no rentables +1.2% (clara)  ·  Dólar global -1.0% (clara)  ·  Chicas vs grandes -0.8% (clara)   [repetidos: Invierten poco vs mucho]
+  PEP    Curva 10a-2a -0.8% (clara)  ·  Tasa 10a -0.8% (clara)  ·  Rentables vs no rentables +1.5% (reciente)   [repetidos: Invierten poco vs mucho]
+  PG     Invierten poco vs mucho +1.3% (clara)  ·  Chicas vs grandes -1.1% (clara)  ·  Tasa 10a -0.8% (clara)   [repetidos: Rentables vs no rentables, Oro]
+  MO     Invierten poco vs mucho +2.1% (reciente)   [repetidos: Rentables vs no rentables, Valor vs crecimiento]
+  WMT    Rentables vs no rentables +0.9% (clara)
+  MCD    Rentables vs no rentables +1.3% (clara)  ·  Tasa 10a -0.9% (clara)  ·  Invierten poco vs mucho +0.8% (reciente)
 
 ##### Consumo cíclico
-  NKE    Tasa 10a -1.3% (reciente*)
-  ANF    sin motor macro claro
-  GT     Spread de crédito -2.7% (reciente*)  ·  Tasa 10a +2.7% (reciente*)
+  NKE    Rentables vs no rentables +1.3% (reciente*)  ·  Yuan débil -1.1% (reciente*)
+  ANF    Momentum -4.0% (reciente)
+  GT     Momentum -4.1% (clara)  ·  Chicas vs grandes +3.9% (clara)  ·  Valor vs crecimiento +4.1% (reciente*)   [repetidos: Spread de crédito, Tasa 10a]
 
 ##### Aeroespacial, defensa y aerolíneas
-  BA     Gas natural -2.0% (reciente*)  ·  Petróleo +1.7% (reciente*)   [repetidos: Combustible aviones]
-  GE     sin motor macro claro
-  LMT    sin motor macro claro
-  UAL    Confianza consumidor +3.5% (clara)  ·  Dólar global +3.1% (clara)  ·  Tasa 10a +3.4% (reciente)   [repetidos: Oro]
-  AAL    Dólar global +2.1% (clara)  ·  Tasa 10a +3.1% (reciente)  ·  Confianza consumidor +2.7% (reciente)
-  DAL    Oro -2.8% (clara)  ·  Confianza consumidor +3.2% (reciente)  ·  Tasa 10a +2.5% (reciente)
+  BA     Momentum -2.4% (clara)  ·  Chicas vs grandes +2.2% (reciente)  ·  Gas natural -2.0% (reciente*)   [repetidos: Petróleo, Combustible aviones]
+  GE     Momentum -2.4% (clara)  ·  Valor vs crecimiento +1.9% (clara)   [repetidos: Chicas vs grandes]
+  LMT    Invierten poco vs mucho +1.5% (reciente)  ·  Rentables vs no rentables +1.6% (reciente*)
+  UAL    Valor vs crecimiento +3.4% (clara)  ·  Dólar global +3.1% (clara)  ·  Chicas vs grandes +3.0% (clara)   [repetidos: Oro, Invierten poco vs mucho, Confianza consumidor, Tasa 10a]
+  AAL    Chicas vs grandes +2.5% (clara)  ·  Valor vs crecimiento +2.4% (clara)  ·  Dólar global +2.1% (clara)   [repetidos: Oro, Invierten poco vs mucho, Tasa 10a, Confianza consumidor]
+  DAL    Oro -2.8% (clara)  ·  Valor vs crecimiento +2.8% (clara)  ·  Confianza consumidor +3.2% (reciente)   [repetidos: Chicas vs grandes, Tasa 10a]
 
 ##### Espacio
   SPCX   sin historia suficiente
-  RKLB   sin motor macro claro
-  ASTS   sin motor macro claro
-  SPCE   sin motor macro claro
+  RKLB   Rentables vs no rentables -5.9% (reciente)
+  ASTS   Rentables vs no rentables -6.6% (reciente)
+  SPCE   Rentables vs no rentables -6.2% (reciente)
   SATL   sin motor macro claro
 
 ##### Industriales y agro
-  CAT    Cobre +2.5% (clara)  ·  Confianza consumidor +1.6% (reciente*)
-  PCAR   sin motor macro claro
-  ADGO   Cobre +3.1% (clara)  ·  Real débil -2.4% (clara)  ·  Petróleo +4.9% (reciente)   [repetidos: Combustible aviones, Spread de crédito, Tasa 10a]
+  CAT    Cobre +2.5% (clara)  ·  Chicas vs grandes +1.6% (clara)  ·  Valor vs crecimiento +1.6% (reciente)   [repetidos: Invierten poco vs mucho]
+  PCAR   Chicas vs grandes +1.5% (clara)  ·  Valor vs crecimiento +1.6% (reciente)  ·  Invierten poco vs mucho +1.3% (reciente)
+  ADGO   Cobre +3.1% (clara)  ·  Real débil -2.4% (clara)  ·  Petróleo +4.9% (reciente)   [repetidos: Combustible aviones, Spread de crédito, Valor vs crecimiento, Tasa 10a, Momentum]
 
 ##### Casos aparte
-  BRKB   sin motor macro claro
-  TSLA   sin motor macro claro
+  BRKB   Valor vs crecimiento +1.4% (clara)  ·  Rentables vs no rentables +0.7% (reciente*)   [repetidos: Invierten poco vs mucho]
+  TSLA   Invierten poco vs mucho -3.4% (clara)  ·  Rentables vs no rentables -2.7% (clara)   [repetidos: Valor vs crecimiento]
   PLD    Tasa 10a -2.2% (clara)   [repetidos: Curva 10a-2a, Spread de crédito]
   BIOX   sin motor macro claro
 
-Empresas con motor: 71 de 118
+Empresas con motor: 104 de 118
 
 Mes típico de cada factor (desvío mensual 2005-hoy):
   Tasa 10a               0.25 pts
@@ -192,3 +192,10 @@ Mes típico de cada factor (desvío mensual 2005-hoy):
   Uranio                 7.27 %
   Acero                  3.17 %
   Combustible aviones    12.17 %
+  Producción de chips EE.UU. 1.97 %
+  Pedidos de electrónica 3.41 %
+  Chicas vs grandes      2.66 %
+  Valor vs crecimiento   3.19 %
+  Rentables vs no rentables 2.12 %
+  Invierten poco vs mucho 1.96 %
+  Momentum               4.43 %
