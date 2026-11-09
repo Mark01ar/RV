@@ -39,8 +39,6 @@ jobs:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       - run: python scripts/fichas.py
         continue-on-error: true
-      - run: python scripts/escenarios.py
-        continue-on-error: true
       - run: python scripts/factores.py
         continue-on-error: true
         env:

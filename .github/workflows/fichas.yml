@@ -24,7 +24,9 @@ jobs:
       - run: python scripts/fichas.py
         env:
           FICHAS_SOLO: ${{ github.event.inputs.solo }}
-      - run: python scripts/escenarios.py
+      - run: python scripts/factores.py
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"

@@ -66,11 +66,7 @@
      "WDC": "Desde la separación de SanDisk en 2025 es solo discos rígidos, que se usan en centros de datos para guardar datos en masa. Tiene menos competidores (básicamente Seagate) y un ciclo algo más suave. Los años anteriores mezclan negocios distintos y no son del todo comparables."
     }
    },
-   "motores": [
-    "tasa",
-    "dolar"
-   ],
-   "motores_nota": "No hay un precio gratis de memorias DRAM/NAND con historia larga: tasa y dólar son aproximaciones, no el motor real."
+   "motores_nota": "No hay un precio gratis de las memorias con historia larga, que sería el motor real. El cobre aparece como termómetro del ciclo industrial global."
   },
   {
    "id": "chips",
@@ -139,11 +135,7 @@
      "INTC": "Diseña y fabrica. Perdió terreno frente a AMD en servidores y PC y frente a Nvidia en IA, y está invirtiendo fuerte para volver a competir en fabricación. En 2025 el gobierno de EE.UU. tomó cerca del 10% de la empresa y Nvidia invirtió US$ 5.000 millones. Pierde plata: no tiene P/E de los últimos 12 meses, y el esperado depende de que el plan funcione."
     }
    },
-   "motores": [
-    "tasa",
-    "dolar"
-   ],
-   "motores_nota": "No hay un dato gratis de inversión en IA: tasa y dólar son aproximaciones, no el motor real."
+   "motores_nota": "No hay un dato gratis de inversión en IA, que sería el motor real."
   },
   {
    "id": "fabricacion",
@@ -211,12 +203,7 @@
      "AMAT": "La mayor empresa de equipos por ventas: deposición, grabado e inspección. Estuvo muy expuesta a China en los últimos años, lo que la hace sensible a las restricciones de exportación.",
      "LRCX": "Especialista en grabado y deposición, con mucho peso en memoria (clientes como Samsung, SK Hynix y Micron). Por eso sigue de cerca el ciclo de las memorias."
     }
-   },
-   "motores": [
-    "dolar",
-    "tasa",
-    "yuan"
-   ]
+   }
   },
   {
    "id": "bigtech",
@@ -280,11 +267,7 @@
      "AMZN": "Comercio electrónico (mucho volumen, poco margen) y AWS, la nube más grande, que genera la mayor parte de la ganancia operativa. Suma publicidad, que crece rápido. Invierte fuerte en centros de datos y en sus propios chips (Trainium), y no paga dividendos ni hace recompras relevantes.",
      "AAPL": "El iPhone es cerca de la mitad de sus ventas; los servicios (App Store, iCloud, Apple Music) crecen y tienen mucho más margen. Casi no invierte en centros de datos: su apuesta en IA es más chica y con socios. Devuelve casi todo su flujo con recompras y dividendos. Crece poco y cotiza a P/E alto por su estabilidad."
     }
-   },
-   "motores": [
-    "tasa",
-    "dolar"
-   ]
+   }
   },
   {
    "id": "infraia",
@@ -336,12 +319,7 @@
      "IREN": "Ex minera de bitcoin con energía barata en Canadá y Texas, que está reconvirtiendo su capacidad a centros de datos de IA. En 2025 firmó un contrato con Microsoft por cerca de US$ 9.700 millones. Depende de ejecutar esa reconversión a tiempo."
     }
    },
-   "motores": [
-    "tasa",
-    "credito",
-    "bitcoin"
-   ],
-   "motores_nota": "Casi todas las empresas cotizan hace pocos años: solo se puede medir el tramo reciente."
+   "motores_nota": "Casi todas las empresas cotizan hace pocos años: todavía no se puede medir bien."
   },
   {
    "id": "software",
@@ -416,10 +394,14 @@
      "GLOB": "Argentina, servicios de desarrollo de software para empresas grandes. Es un negocio de personas, con margen bruto bajo comparado con el resto del bloque. Sus ventas se frenaron en 2025 y la acción cayó mucho: el mercado teme que la IA automatice parte del trabajo que vende."
     }
    },
-   "motores": [
-    "tasa",
-    "dolar"
-   ]
+   "rescates": {
+    "PLTR": [
+     "bitcoin"
+    ],
+    "GLOB": [
+     "real"
+    ]
+   }
   },
   {
    "id": "hardware",
@@ -483,12 +465,7 @@
      "BB": "Ya no hace teléfonos: vende software de seguridad y QNX, el sistema operativo que usan muchos autos. Empresa chica que crece poco.",
      "RGTI": "Computación cuántica. Casi no tiene ventas y pierde mucha plata; vive de la caja que levanta emitiendo acciones. El precio refleja expectativas sobre una tecnología que todavía no es comercial."
     }
-   },
-   "motores": [
-    "dolar",
-    "consumo",
-    "tasa"
-   ]
+   }
   },
   {
    "id": "medios",
@@ -551,12 +528,7 @@
      "YELP": "Reseñas y publicidad para negocios locales en EE.UU. Empresa chica, sin deuda, que crece poco y usa casi todo su flujo para recomprar acciones. Cotiza muy barata (P/E cerca de 8).",
      "TMUS": "La operadora de celulares que más creció en EE.UU. en la última década. Negocio estable, con mucha inversión en red y mucha deuda; devuelve plata con dividendo y recompras. Se mueve poco con el mercado (beta muy bajo)."
     }
-   },
-   "motores": [
-    "consumo",
-    "dolar",
-    "tasa"
-   ]
+   }
   },
   {
    "id": "ecommerce",
@@ -625,11 +597,12 @@
      "UBER": "Viajes y reparto de comida en todo el mundo. Desde 2023 gana plata y genera mucho flujo libre. El gran debate son los robotaxis: pueden ser una amenaza o un socio, y Uber hizo acuerdos con varias empresas de manejo autónomo. El P/E de los últimos 12 meses es mucho más alto que el esperado; conviene mirar el esperado."
     }
    },
-   "motores": [
-    "real",
-    "consumo",
-    "dolar"
-   ]
+   "rescates": {
+    "MELI": [
+     "real",
+     "dolar"
+    ]
+   }
   },
   {
    "id": "china",
@@ -698,11 +671,6 @@
      "NIO": "Autos eléctricos premium. Crece en ventas pero pierde mucha plata y vive de ampliaciones de capital; su patrimonio es casi nulo. Es la más volátil del bloque."
     }
    },
-   "motores": [
-    "yuan",
-    "cobre",
-    "dolar"
-   ],
    "motores_nota": "El yuan estuvo casi fijo en buena parte de 2005–2014 y varias empresas cotizan desde 2014: pesa más el tramo reciente."
   },
   {
@@ -778,13 +746,7 @@
      "NMR": "Nomura, el mayor broker y banco de inversión de Japón. Sus ganancias dependen de la actividad del mercado japonés y global. Reporta en yenes, convertidos a dólares; su año fiscal cierra en marzo."
     }
    },
-   "motores": [
-    "tasa",
-    "curva",
-    "credito",
-    "real"
-   ],
-   "motores_nota": "El real aplica a los bancos brasileños (BBD, ITUB)."
+   "motores_nota": "El real aplica solo a los bancos brasileños (BBD, ITUB)."
   },
   {
    "id": "pagos",
@@ -853,12 +815,7 @@
      "PYPL": "PayPal y Venmo. Después de años perdiendo terreno, priorizó ganancias sobre volumen y recompra muchas acciones. Cotiza barata (P/E cercano a 10) porque crece poco.",
      "HOOD": "Broker online para inversores minoristas, con cripto, tarjeta de crédito y planes de suscripción. Crece muy rápido pero se mueve mucho con el bitcoin y con el ánimo del mercado (beta cercano a 3)."
     }
-   },
-   "motores": [
-    "consumo",
-    "dolar",
-    "credito"
-   ]
+   }
   },
   {
    "id": "cripto",
@@ -924,10 +881,6 @@
      "HUT": "Minera de bitcoin que también desarrolla centros de datos. Tiene participación en American Bitcoin, otra minera. Invierte mucho más de lo que vende."
     }
    },
-   "motores": [
-    "bitcoin",
-    "tasa"
-   ],
    "motores_nota": "Bitcoin tiene datos desde 2014: solo se puede medir el tramo reciente."
   },
   {
@@ -982,11 +935,7 @@
      "FSLR": "El mayor fabricante de paneles solares de EE.UU. Se beneficia de los aranceles a los paneles chinos y de los créditos fiscales a la fabricación local, pero depende de la política energética."
     }
    },
-   "motores": [
-    "gas",
-    "tasa"
-   ],
-   "motores_nota": "No hay un dato gratis de demanda eléctrica de data centers."
+   "motores_nota": "No hay un dato gratis de demanda eléctrica de centros de datos."
   },
   {
    "id": "petroleo",
@@ -1060,11 +1009,6 @@
      "TEN": "Tenaris (grupo Techint): caños de acero sin costura para pozos de petróleo y gas. Depende de cuánto se perfora en el mundo. Tiene más caja que deuda y devuelve plata con dividendos y recompras."
     }
    },
-   "motores": [
-    "petroleo",
-    "gas",
-    "real"
-   ],
    "motores_nota": "El real aplica sobre todo a PBR."
   },
   {
@@ -1139,12 +1083,7 @@
      "TXR": "Ternium (grupo Techint): acero en México, Argentina (Siderar) y Brasil. Depende de la industria de esos países y de los aranceles al acero. Cotiza a P/E bajo."
     }
    },
-   "motores": [
-    "cobre",
-    "oro",
-    "dolar"
-   ],
-   "motores_nota": "Cobre, oro y dólar suelen moverse juntos: no son tres motores independientes. No hay factor para hierro (VALE) ni tierras raras (MP)."
+   "motores_nota": "Cobre, oro y dólar suelen moverse juntos: no son motores independientes. El hierro de VALE ya lo captura el cobre."
   },
   {
    "id": "farma",
@@ -1209,11 +1148,7 @@
      "ABT": "No depende de patentes: vende dispositivos (monitores de glucosa FreeStyle Libre, dispositivos cardíacos), diagnósticos, nutrición y genéricos de marca. Crece de forma más estable y es menos sensible a la regulación de precios de medicamentos. A fines de 2025 anunció la compra de Exact Sciences (diagnóstico de cáncer). Es la que menos se compara con las otras cuatro."
     }
    },
-   "motores": [
-    "tasa",
-    "dolar"
-   ],
-   "motores_nota": "El motor real son las patentes y aprobaciones, que no tienen una serie de datos: tasa y dólar son aproximaciones."
+   "motores_nota": "El motor real son las patentes y las aprobaciones de medicamentos, que no tienen una serie de datos."
   },
   {
    "id": "biotech",
@@ -1268,11 +1203,7 @@
      "HIMS": "Telemedicina y venta de tratamientos por internet (caída del pelo, disfunción eréctil, pérdida de peso). Creció muy rápido con versiones compuestas de medicamentos GLP-1, algo regulatoriamente discutido. Muy volátil.",
      "UNH": "La mayor aseguradora de salud de EE.UU., con un brazo de servicios médicos (Optum). En 2025 tuvo una crisis: el costo médico se disparó, retiró su guía, cambió de CEO y enfrentó una investigación del Departamento de Justicia. Sus márgenes son finos: la clave es el costo médico sobre primas."
     }
-   },
-   "motores": [
-    "tasa",
-    "credito"
-   ]
+   }
   },
   {
    "id": "defensivo",
@@ -1327,11 +1258,7 @@
      "WMT": "Walmart: el mayor supermercado del mundo, que creció en comercio electrónico y publicidad. El mercado lo paga como una tecnológica (P/E cerca de 45), mucho más que su historia. Su año fiscal cierra en enero.",
      "MCD": "McDonald's: la mayoría de los locales son franquicias, así que cobra alquileres y regalías con márgenes muy altos. En 2025 sufrió por la caída del consumo de las familias de menores ingresos. Patrimonio contable negativo por recompras."
     }
-   },
-   "motores": [
-    "tasa",
-    "dolar"
-   ]
+   }
   },
   {
    "id": "ciclico",
@@ -1396,12 +1323,7 @@
      "ANF": "Abercrombie & Fitch y Hollister. Tuvo una recuperación muy fuerte de la marca entre 2023 y 2024 y luego se desaceleró. Sin deuda y con recompras. Cotiza a P/E bajo.",
      "GT": "Goodyear: neumáticos. Tiene mucha deuda, pierde plata y está vendiendo negocios (como la marca Dunlop) para achicarla. Es la más riesgosa del bloque."
     }
-   },
-   "motores": [
-    "consumo",
-    "dolar",
-    "petroleo"
-   ]
+   }
   },
   {
    "id": "aero",
@@ -1473,12 +1395,7 @@
      "DAL": "Delta: la aerolínea de mejor reputación y con más ingresos de clientes premium y de su acuerdo con American Express."
     }
    },
-   "motores": [
-    "petroleo",
-    "consumo",
-    "credito"
-   ],
-   "motores_nota": "Bloque mixto: aerolíneas y defensa no se mueven por lo mismo."
+   "motores_nota": "Bloque mixto: aerolíneas y defensa no se mueven por lo mismo. Mirá cada empresa."
   },
   {
    "id": "espacio",
@@ -1539,11 +1456,7 @@
      "SATL": "Satellogic, fundada en Argentina: satélites de observación de la Tierra que venden imágenes. Empresa muy chica que todavía pierde plata."
     }
    },
-   "motores": [
-    "tasa",
-    "credito"
-   ],
-   "motores_nota": "Casi todas las empresas cotizan hace pocos años: solo se puede medir el tramo reciente."
+   "motores_nota": "Casi todas las empresas cotizan hace pocos años: todavía no se puede medir bien."
   },
   {
    "id": "industriales",
@@ -1590,12 +1503,7 @@
      "PCAR": "Paccar: camiones Kenworth, Peterbilt y DAF, más un negocio de repuestos y financiamiento muy estable. El ciclo de camiones viene en baja (ventas −16% el último año).",
      "ADGO": "Adecoagro: granos, leche, azúcar, etanol y energía en Argentina, Brasil y Uruguay. En 2025 Tether (la emisora de la stablecoin USDT) compró el control de la empresa."
     }
-   },
-   "motores": [
-    "cobre",
-    "tasa",
-    "dolar"
-   ]
+   }
   },
   {
    "id": "aparte",
@@ -1646,11 +1554,7 @@
      "BIOX": "Bioceres: biotecnología agrícola argentina (semillas resistentes a sequía, biológicos). Pasó por problemas de deuda en 2025 y la acción cayó más de 80% en el año. Se negocia en BYMA sobre todo por flujo local; conviene mirar el premio del CEDEAR y el volumen más que los números."
     }
    },
-   "motores": [
-    "tasa",
-    "consumo"
-   ],
-   "motores_nota": "No tienen un motor común: cada empresa se mueve por lo suyo."
+   "motores_nota": "No tienen un motor común: mirá cada empresa."
   }
  ]
 }
