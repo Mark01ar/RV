@@ -219,4 +219,5 @@ def main():
     print("\n".join(lin))
 
 
-main()
+if __name__ == "__main__":
+    main()
