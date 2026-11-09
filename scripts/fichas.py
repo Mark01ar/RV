@@ -512,9 +512,7 @@ def main():
                     p_ = s[s.index <= d]
                     if not len(p_) or (d - p_.index[-1]).days >= 10:
                         continue
-                    if x_.get("acciones") and info.get("country") == "United States":
-                        hist_pe.append({"anio": x_["anio"], "pe": float(p_.iloc[-1]) * x_["acciones"] / x_["neto"]})
-                    elif mcap and precio:
+                    if mcap and precio:
                         hist_pe.append({"anio": x_["anio"], "pe": float(p_.iloc[-1]) / precio * mcap / x_["neto"]})
                 ficha = {**{k_: v for k_, v in e.items()}, "descripcion": info.get("longBusinessSummary"), "web": info.get("website"),
                          "empleados": num(info.get("fullTimeEmployees")), "precio_bloque": pb, "anual": an, "trimestral": trimestral(k, conv),

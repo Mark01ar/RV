@@ -212,6 +212,8 @@ th{text-transform:uppercase;letter-spacing:.06em;font-size:11px;font-weight:600;
 .fh-kpis small span{display:inline;text-transform:none;letter-spacing:0;font-size:inherit;font-weight:600}
 .fh-kpis small{color:var(--muted);font-size:12.5px;line-height:1.4;display:block}
 @media (max-width:900px){.fh-top{grid-template-columns:auto 1fr}.fh-score{grid-column:1/-1;text-align:left}.fh-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.fh-logo{width:96px;height:64px}}
+.fh-tend{margin-top:8px;font-weight:600;font-size:15px}
+.alist{list-style:none;margin:0;padding:0}.alist li{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45}.alist li:last-child{border-bottom:0}.alist i{flex:none;width:8px;height:8px;border-radius:50%;transform:translateY(-1px)}
 </style>
 </head>
 <body>
@@ -490,8 +492,111 @@ function barras(an){
 
 function kv(pares){ return `<div class="kv">${pares.map(([k,v,c])=>`<div><span>${k}</span><b class="${c||""}">${v}</b></div>`).join("")}</div>`; }
 
-const FTABS = [["resumen","Resumen"],["numeros","Números"],["valuacion","Valuación"],["analistas","Analistas"],["posicion","Posicionamiento"]];
+const FTABS = [["resumen","Resumen"],["analisis","Análisis"],["numeros","Números"],["valuacion","Valuación"],["analistas","Analistas"],["posicion","Posicionamiento"]];
 const logoImg = (b, cls="logo") => `<img class="${cls}" src="data/logos/${encodeURIComponent(b)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} sinlogo',textContent:'${esc(b).slice(0,2)}'}))">`;
+
+function analizar(f){
+  const an = (f.anual||[]).filter(x=>x.ventas!=null), u = an[an.length-1]||{}, u1 = an[an.length-2]||{}, u3 = an[an.length-4];
+  const tr = f.trimestral||[], q = tr[tr.length-1], q4 = tr[tr.length-5];
+  const a = f.analistas||{}, v = f.val||{}, pr = f.pares||{}, nt = f.notas||{}, pb = f.precio_bloque||{}, p = f.posicion||{};
+  const banco = f.tipo==="banco";
+  const P = (x,d=0) => pct(x,d), M = (x,d=0) => pct(Math.abs(x),d).replace("+",""), X = x => nx(x)+"x";
+  const motivos = [], fort = [], ries = [];
+  let pts = 0;
+  const sumar = (c, txt) => { pts += c; motivos.push({c, txt}); };
+  const yoyQ = (i) => { const a_=tr[i], b_=tr[i-4]; return a_&&b_&&a_.ventas&&b_.ventas ? a_.ventas/b_.ventas-1 : null; };
+  const yl = yoyQ(tr.length-1);
+  const yp = [tr.length-2,tr.length-3,tr.length-4].map(yoyQ).filter(z=>z!=null);
+  const cagr = u3&&u3.ventas>0&&u.ventas>0 ? (u.ventas/u3.ventas)**(1/3)-1 : null;
+  const base = yp.length ? yp.reduce((s,z)=>s+z,0)/yp.length : (u1.ventas&&u.ventas ? u.ventas/u1.ventas-1 : cagr);
+  if (yl!=null && base!=null){
+    if (yl > base + 0.03) sumar(1, `Las ventas aceleran: ${P(yl)} en el último trimestre contra ${P(base)} antes.`);
+    else if (yl < base - 0.03) sumar(-1, `Las ventas desaceleran: ${P(yl)} en el último trimestre contra ${P(base)} antes.`);
+  }
+  if (!banco && q && q4 && q.m_ebit!=null && q4.m_ebit!=null){
+    const d = q.m_ebit - q4.m_ebit;
+    if (d > 0.01) sumar(1, `El margen EBIT sube a ${M(q.m_ebit)} (${M(q4.m_ebit)} un año antes).`);
+    else if (d < -0.01) sumar(-1, `El margen EBIT baja a ${M(q.m_ebit)} (${M(q4.m_ebit)} un año antes).`);
+  }
+  const r90 = a.rev_0y_90;
+  if (r90!=null){
+    if (r90 > 0.02) sumar(1, `Los analistas suben su estimación de ganancias (${P(r90,1)} en 90 días).`);
+    else if (r90 < -0.02) sumar(-1, `Los analistas bajan su estimación de ganancias (${P(r90,1)} en 90 días).`);
+  }
+  const ub = f.ultimo_balance;
+  if (ub && ub.sorpresa!=null){
+    if (ub.sorpresa > 0.02) sumar(1, `El último balance superó lo esperado por ${M(ub.sorpresa,1)}.`);
+    else if (ub.sorpresa < -0.02) sumar(-1, `El último balance no alcanzó lo esperado (${P(ub.sorpresa,1)}).`);
+  }
+  const lev = r => !banco && r.ebitda>0 && (r.deuda!=null||r.caja!=null) ? ((r.deuda||0)-(r.caja||0))/r.ebitda : null;
+  const l0 = lev(u), l1 = lev(u1);
+  if (l0!=null && l1!=null && Math.max(l0,l1) > 0.5){
+    if (l0 < l1 - 0.3) sumar(1, `Baja la deuda: de ${X(l1)} a ${X(l0)} EBITDA en el último año.`);
+    else if (l0 > l1 + 0.3) sumar(-1, `Sube la deuda: de ${X(l1)} a ${X(l0)} EBITDA en el último año.`);
+  }
+  const tend = pts >= 2 ? "Mejora" : pts <= -2 ? "Empeora" : "Estable";
+  const capital = (u.patrimonio||0)+(u.deuda||0)-(u.caja||0);
+  const roic = !banco && u.ebit!=null && capital>0 ? u.ebit*0.79/capital : null;
+  const roe = u.neto!=null && u.patrimonio>0 ? u.neto/u.patrimonio : null;
+  const cob = u.ebit!=null && u.intereses ? u.ebit/u.intereses : null;
+  const peh = (f.pe_historia||[]).filter(z=>z.pe>0&&z.pe<300).map(z=>z.pe).sort((a_,b_)=>a_-b_);
+  const peMed = peh.length>=3 ? peh[Math.floor(peh.length/2)] : null;
+  const add = (lst, peso, txt) => lst.push({peso, txt});
+  if (banco){
+    if (roe!=null && roe>=0.15) add(fort, roe, `Rentabilidad alta para un banco: ROE de ${M(roe)}.`);
+    if (roe!=null && roe<0.08) add(ries, 0.1-roe, `Rentabilidad baja: ROE de ${P(roe)}.`);
+  } else {
+    if (roic!=null && roic>=0.2) add(fort, roic, `Muy rentable: ROIC de ${M(roic)}.`);
+    if (u.m_ebit!=null && u.m_ebit>=0.25) add(fort, u.m_ebit, `Margen EBIT alto: ${M(u.m_ebit)}.`);
+    if (u.m_fcf!=null && u.m_fcf>=0.15) add(fort, u.m_fcf, `Genera mucha caja: flujo libre de ${M(u.m_fcf)} de las ventas.`);
+    if (l0!=null && l0<0) add(fort, 0.3, `Caja neta: tiene más efectivo que deuda.`);
+    if (l0!=null && l0>3) add(ries, l0/10, `Deuda alta: ${X(l0)} EBITDA.`);
+    if (cob!=null && cob<3 && u.ebit>0) add(ries, 0.4, `Cobertura de intereses ajustada: ${X(cob)}.`);
+    if (u.m_ebit!=null && u.m_ebit<0) add(ries, 0.6, `Pierde plata a nivel operativo (margen EBIT ${P(u.m_ebit)}).`);
+    if (u.fcf!=null && u.fcf<0) add(ries, 0.4, `Consume caja: flujo libre negativo (${big(u.fcf)}).`);
+  }
+  if (cagr!=null && cagr>=0.15) add(fort, cagr, `Crece rápido: ventas ${M(cagr)} por año en los últimos 3 años.`);
+  if (cagr!=null && cagr<0) add(ries, -cagr+0.1, `Ventas en baja: ${M(cagr)} por año en los últimos 3 años.`);
+  if (a.crec_eps_1y!=null && a.crec_eps_1y>=0.15) add(fort, a.crec_eps_1y/2, `Se espera que la ganancia crezca ${M(a.crec_eps_1y)} el próximo año.`);
+  if (a.crec_eps_1y!=null && a.crec_eps_1y<0) add(ries, 0.3, `Se espera que la ganancia caiga ${M(a.crec_eps_1y)} el próximo año.`);
+  const sp = (a.sorpresas||[]).filter(s=>s.sorpresa!=null);
+  if (sp.length>=4 && sp.every(s=>s.sorpresa>0)) add(fort, 0.25, `Superó lo esperado en los últimos ${sp.length} balances.`);
+  if (sp.length>=3 && sp.filter(s=>s.sorpresa<0).length>=2) add(ries, 0.3, `No alcanzó lo esperado en ${sp.filter(s=>s.sorpresa<0).length} de los últimos ${sp.length} balances.`);
+  if (f.tipo!=="cripto"){
+    if (nt.valuacion!=null && nt.valuacion>=7.5) add(fort, 0.3, `Barata contra su sector (nota de valuación ${nx(nt.valuacion)}).`);
+    if (nt.valuacion!=null && nt.valuacion<=3) add(ries, 0.3, `Cara contra su sector (nota de valuación ${nx(nt.valuacion)}).`);
+    if (v.pe && peMed){ const d=v.pe/peMed-1;
+      if (d<=-0.2) add(fort, -d, `Cotiza ${M(d)} por debajo de su P/E histórico (${X(v.pe)} contra ${X(peMed)}).`);
+      if (d>=0.3) add(ries, d/2, `Cotiza ${M(d)} por encima de su P/E histórico (${X(v.pe)} contra ${X(peMed)}).`); }
+    if (v.pe && pr.pe && v.pe > pr.pe*1.8) add(ries, 0.35, `P/E de ${X(v.pe)}, muy por encima de la mediana de su sector (${X(pr.pe)}).`);
+  }
+  if (v.div_yield!=null && v.div_yield>=0.03) add(fort, v.div_yield*5, `Paga un dividendo de ${M(v.div_yield,1)} anual.`);
+  if (nt.tendencia!=null && nt.tendencia>=8) add(fort, 0.2, `Tendencia de precio fuerte (nota ${nx(nt.tendencia)}).`);
+  if (pb.vs_ma200!=null && pb.vs_ma200<-0.1) add(ries, 0.25, `Precio ${M(pb.vs_ma200)} debajo de su media de 200 ruedas.`);
+  if (pb.vol1y!=null && pb.vol1y>0.55) add(ries, 0.2, `Muy volátil: volatilidad de ${M(pb.vol1y)} anual.`);
+  if (p.short_float!=null && p.short_float>0.1) add(ries, p.short_float, `Interés corto alto: ${M(p.short_float)} del flotante apuesta a la baja.`);
+  let dil = u.acciones && u3 && u3.acciones ? (u.acciones/u3.acciones)**(1/3)-1 : null;
+  if (dil!=null && Math.abs(dil)>0.25) dil = null;
+  if (dil!=null && dil>0.03) add(ries, dil, `Dilución: la cantidad de acciones crece ${M(dil,1)} por año.`);
+  if (dil!=null && dil<-0.02) add(fort, -dil, `Recompra acciones: la cantidad baja ${M(dil,1)} por año.`);
+  if (f.tipo==="cripto") add(ries, 0.9, `Depende sobre todo del precio del bitcoin.`);
+  if (f.pais && f.pais!=="United States") add(ries, 0.15, `Riesgo país: opera principalmente desde ${esc(PAIS[f.pais]||f.pais)}.`);
+  const top = l => l.sort((x,y)=>y.peso-x.peso).slice(0,5).map(z=>z.txt);
+  return {tend, pts, motivos, fort: top(fort), ries: top(ries)};
+}
+
+function panelAnalisis(f){
+  const A = analizar(f);
+  const col = A.tend==="Mejora" ? "var(--pos)" : A.tend==="Empeora" ? "var(--neg)" : "var(--accent)";
+  const li = (l, c, vacio) => l.length ? `<ul class="alist">${l.map(t=>`<li><i style="background:${c}"></i>${t}</li>`).join("")}</ul>` : `<p class="mut">${vacio}</p>`;
+  return `<section class="card"><h3>Tendencia del negocio</h3>
+    <div class="ver" style="color:${col};border-color:${col};font-size:15px;padding:5px 14px">${A.tend==="Mejora"?"▲ ":A.tend==="Empeora"?"▼ ":"= "}${A.tend}</div>
+    <p class="mut small" style="margin:8px 0 6px">Compara el último trimestre contra el mismo del año anterior, las revisiones de los analistas, el último balance y la deuda. Mejora o empeora cuando hay al menos dos señales netas en la misma dirección.</p>
+    ${A.motivos.length?`<ul class="alist">${A.motivos.map(m=>`<li><i style="background:${m.c>0?"var(--pos)":"var(--neg)"}"></i>${m.txt}</li>`).join("")}</ul>`:`<p class="mut">Sin cambios importantes respecto del año anterior.</p>`}</section>
+  <section class="fgrid"><div class="card"><h3>Fortalezas</h3>${li(A.fort,"var(--pos)","No se destacan fortalezas claras en los datos.")}</div>
+  <div class="card"><h3>Riesgos</h3>${li(A.ries,"var(--neg)","No se destacan riesgos claros en los datos.")}</div></section>
+  <p class="mut small">Análisis automático a partir de los números de la ficha; se actualiza cada semana. No reemplaza leer el balance ni las noticias.</p>`;
+}
 
 async function ficha(m, t){
   if (!FCACHE[t]){
@@ -517,12 +622,15 @@ async function ficha(m, t){
   const dn = (u_.deuda||0)-(u_.caja||0);
   const ub0 = f.ultimo_balance;
   const frase = (FR||{})[f.byma];
+  const AN = analizar(f);
+  const acol = AN.tend==="Mejora" ? "var(--pos)" : AN.tend==="Empeora" ? "var(--neg)" : "var(--accent)";
   const head = `<section class="fhead2">
     <div class="fh-top">
       <div class="fh-logo">${logoImg(f.byma,"")}</div>
       <div class="fh-info"><h2>${esc(f.nombre)}</h2>
         <div class="fh-sub">${esc(f.sector||"")} · ${esc(f.industria||"")} · ${esc(PAIS[f.pais]||f.pais||"")}</div>
         <div class="fh-tags"><span class="gold">CEDEAR ${esc(f.byma)}</span>${f.byma!==f.ticker?`<span>${esc(f.ticker)}</span>`:""}<span>Ratio ${esc(f.ratio)}</span><span>Liquidez ${esc(f.liquidez)}</span>${f.tipo!=="general"?`<span>${esc({banco:"Banco",cripto:"Ligada a bitcoin",inmobiliaria:"Inmobiliaria"}[f.tipo])}</span>`:""}</div>
+        <div class="fh-tend" style="color:${acol}">${AN.tend==="Mejora"?"▲ Mejora":AN.tend==="Empeora"?"▼ Empeora":"= Estable"}</div>
         ${frase?`<p class="frase">${esc(frase)}</p>`:""}
         ${tipoTxt?`<div class="aviso">${tipoTxt}</div>`:""}</div>
       <div class="fh-score"><div class="big" style="color:${ncol(nt.negocio)}">${nt.negocio==null?"—":nx(nt.negocio)}</div><div class="lbl">NOTA NEGOCIO</div>
@@ -565,6 +673,8 @@ async function ficha(m, t){
   let cuerpo = "";
   if (sub==="resumen"){
     cuerpo = `<section class="fgrid">${negocio}${balance}</section><section class="fgrid">${perfil}${precio}</section>`;
+  } else if (sub==="analisis"){
+    cuerpo = panelAnalisis(f);
   } else if (sub==="numeros"){
     const banco = f.tipo==="banco";
     const roic = r => { const cap=(r.patrimonio||0)+(r.deuda||0)-(r.caja||0); return r.ebit!=null && cap>0 ? r.ebit*0.79/cap : null; };
@@ -599,7 +709,7 @@ async function ficha(m, t){
       <table><thead><tr><th class="l">Múltiplo</th><th>${esc(f.byma)}</th><th>Mediana del sector</th></tr></thead><tbody>
       ${filaV("P/E (últimos 12 meses)","pe",xx)}${filaV("P/E esperado","pe_fwd",xx)}${filaV("EV/EBITDA","ev_ebitda",xx)}${filaV("Precio / ventas","ps",xx)}${filaV("Flujo libre / precio","fcf_yield",z=>pct(z))}
       </tbody></table><p class="mut small">Sector dentro de las 125: ${pr.n||0} empresas.${v.div_yield?` Dividendo: ${pct(v.div_yield)} anual.`:""}</p>
-      ${peh.length>=3?`<h4>P/E al cierre de cada año</h4><div class="peh">${peh.map(z=>`<span>${z.anio}<b>${nx(z.pe,0)}x</b></span>`).join("")}</div><p class="mut small">Mediana de ${peh.length} años: <b>${nx(peMed,0)}x</b> · hoy: <b>${xx(v.pe)}</b>${v.pe&&peMed?` (${pct(v.pe/peMed-1,0)} contra su historia)`:""}.${f.pais!=="United States"?" Para empresas extranjeras es aproximado: supone la misma cantidad de acciones que hoy.":""}</p>`:""}
+      ${peh.length>=3?`<h4>P/E al cierre de cada año</h4><div class="peh">${peh.map(z=>`<span>${z.anio}<b>${nx(z.pe,0)}x</b></span>`).join("")}</div><p class="mut small">Mediana de ${peh.length} años: <b>${nx(peMed,0)}x</b> · hoy: <b>${xx(v.pe)}</b>${v.pe&&peMed?` (${pct(v.pe/peMed-1,0)} contra su historia)`:""}. Es aproximado: supone la misma cantidad de acciones que hoy, así que recompras o emisiones lo distorsionan un poco.</p>`:""}
       ${f.tipo==="cripto"?`<p class="aviso">Valuación poco representativa: depende del bitcoin.</p>`:""}</div>
       <div class="card"><h3>Comparables <span class="mut">· mismo sector, por capitalización</span></h3>
       <div class="wrap" style="max-height:none"><table><thead><tr><th class="l">CEDEAR</th><th>Capitalización</th><th>P/E</th><th>P/E esp.</th><th>EV/EBITDA</th><th>FCF/precio</th><th>Valuación</th><th>12M</th></tr></thead><tbody>
