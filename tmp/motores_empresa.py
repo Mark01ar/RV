@@ -1,9 +1,12 @@
+import io
 import json
 import sys
+import zipfile
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+import requests
 import yfinance as yf
 
 R = Path(__file__).resolve().parent.parent
@@ -30,7 +33,31 @@ FAC = {
     "uranio": ("PURANUSDM", "FRED", "precio", "Uranio"),
     "acero": ("WPU101", "FRED", "precio", "Acero"),
     "jet": ("DJFUELUSGULF", "FRED", "precio", "Combustible aviones"),
+    "semis": ("IPG3344S", "FRED", "precio", "Producción de chips EE.UU."),
+    "pedidos": ("A34SNO", "FRED", "precio", "Pedidos de electrónica"),
+    "chicas": ("SMB", "French", "ret", "Chicas vs grandes"),
+    "valor": ("HML", "French", "ret", "Valor vs crecimiento"),
+    "calidad": ("RMW", "French", "ret", "Rentables vs no rentables"),
+    "inversion": ("CMA", "French", "ret", "Invierten poco vs mucho"),
+    "momentum": ("Mom", "French", "ret", "Momentum"),
 }
+FRENCH = "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/"
+
+
+def french(nombre):
+    z = zipfile.ZipFile(io.BytesIO(requests.get(FRENCH + nombre, timeout=120).content))
+    txt = z.read(z.namelist()[0]).decode("latin-1").splitlines()
+    i = next(n for n, l in enumerate(txt) if l.strip().startswith(","))
+    cols = [c.strip() for c in txt[i].split(",")]
+    filas = []
+    for l in txt[i + 1:]:
+        x = [c.strip() for c in l.split(",")]
+        if len(x[0]) != 6 or not x[0].isdigit():
+            break
+        filas.append(x)
+    df = pd.DataFrame(filas, columns=["f"] + cols[1:])
+    df.index = pd.PeriodIndex(pd.to_datetime(df.pop("f"), format="%Y%m"), freq="M")
+    return df.apply(pd.to_numeric, errors="coerce") / 100
 TRAMOS = {"a": ("2005-01", "2014-12"), "r": ("2015-01", None)}
 ROT = 999
 rng = np.random.default_rng(7)
@@ -51,9 +78,14 @@ def bajar(tk):
     px = px[px.index < hoy]
     r = np.log(px).diff().iloc[1:]
     fs = {}
+    ff = pd.concat([french("F-F_Research_Data_5_Factors_2x3_CSV.zip"), french("F-F_Momentum_Factor_CSV.zip")], axis=1)
+    ff.columns = [c.strip() for c in ff.columns]
     for k, (sid, fu, tipo, _) in FAC.items():
         try:
-            if fu == "FRED":
+            if fu == "French":
+                fs[k] = ff[sid]
+                fs[k] = fs[k][fs[k].index >= pd.Period("2004-12", "M")]
+            elif fu == "FRED":
                 s, _ = MA.fred(sid)
                 s = mensual(s[s.index >= "2004-11-01"])
                 s = s[s.index < hoy]
