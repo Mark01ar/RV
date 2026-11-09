@@ -217,6 +217,8 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .conv{margin-top:10px;border-left:3px solid var(--cc);padding:6px 10px;background:var(--panel2);border-radius:6px;font-size:12.5px}.conv b{color:var(--cc);margin-right:8px}
 @media(max-width:700px){.mam-c b{display:none}}
 .rsm-k em b{font-size:inherit!important}
+.como{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 26px}@media(max-width:900px){.como{grid-template-columns:1fr}}
+.como h4{margin:0 0 6px;font-size:13.5px;color:var(--accent)}.como p{margin:0 0 6px;font-size:13px;line-height:1.55;color:#d4d9ea}
 .inf{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:1px solid var(--muted);color:var(--muted);font-size:10px;font-style:normal;margin-left:6px;cursor:help;vertical-align:1px}
 .pil-rl{font-size:10.5px;color:var(--muted);margin-top:3px}
 .pil-l{font-size:12.5px;line-height:1.5;margin:8px 0 4px;color:var(--text)}.pil-e{font-size:11.5px;line-height:1.45;margin:0;color:var(--muted)}
@@ -1782,12 +1784,25 @@ function macro(m){
         ${M.crudo && M.crudo!==M.actual?`<div class="warn">Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b> (${Math.round(M.probs[M.crudo]*100)}%). Se confirma si se repite el mes que viene.</div>`:""}
         <div class="probs" style="margin-top:12px">${["CSI","REC","EST","DES"].map(k=>`<div style="border-color:${k===M.actual?QC[k]:"var(--line)"}">${esc(M.cuadrantes[k].nombre)}<b style="color:${QC[k]}">${Math.round(M.probs[k]*100)}%</b></div>`).join("")}</div>
         ${div.length?`<div class="warn">Datos y mercado no coinciden en ${div.map(g=>g==="inflacion"?"inflación":g).join(" e ")}: el mercado puede estar anticipando un cambio que los datos todavía no muestran.</div>`:""}
-        <details class="help" style="margin-top:12px"><summary>Cómo se calcula</summary>
-          <p>Cada indicador se mide como <b>dirección</b>: si se acelera o se frena en los últimos 3 meses, comparado con su propia historia. Se promedian los indicadores de cada eje: ${Math.round(M.peso_dato*100)}% datos oficiales (FRED) y ${Math.round((1-M.peso_dato)*100)}% señales de mercado, que reaccionan antes. Con el puntaje de cada eje sale la probabilidad de cada cuadrante.</p>
-          <p>Los datos oficiales salen con 1–2 meses de rezago: el mercado suele anticiparse, y por eso se marca cuando no coinciden.</p>
-          <p><b>Regla de confirmación:</b> el régimen solo cambia si el nuevo cuadrante se repite dos meses seguidos o si su probabilidad supera el ${Math.round((M.umbral||0.45)*100)}%.</p>
-        </details>`)}
+`)}
     </section>
+    ${sec("Cómo funciona el cálculo","",(()=>{ const H = (M.historial_rt||[]).slice(-4), cur = new Date().toISOString().slice(0,7), MS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"], nm = f => MS[+f.slice(5,7)-1]+" "+f.slice(0,4);
+      return `<div class="como">
+      <div><h4>1. Cada mes se mide hacia dónde van el crecimiento y la inflación</h4>
+        <p>No importa si la inflación es alta o baja, sino si se está <b>acelerando o frenando</b> en los últimos 3 meses, comparado con su propia historia. Lo mismo con el crecimiento. Con eso cada mes cae en uno de cuatro cuadrantes: crecimiento sin inflación, recalentamiento, estanflación o desinflación.</p>
+        <p>Se usan dos tipos de datos: <b>oficiales</b> (actividad, empleo, producción, inflación), que pesan ${Math.round(M.peso_dato*100)}%, y <b>de mercado</b> (spreads, cíclicas contra defensivas, cobre contra oro, inflación esperada, petróleo), que pesan ${Math.round((1-M.peso_dato)*100)}% y reaccionan antes.</p></div>
+      <div><h4>2. La probabilidad dice qué tan claro es el dato del mes</h4>
+        <p>Es como el resultado de un partido entre los cuatro regímenes. Este mes: ${["CSI","REC","EST","DES"].map(k=>`${esc(M.cuadrantes[k].nombre)} <b style="color:${QC[k]}">${Math.round(M.probs[k]*100)}%</b>`).join(", ")}. Si el primero gana por mucho, el régimen es claro; si gana por poco, como ahora, es poco definido.</p></div>
+      <div><h4>3. La confirmación evita cambiar de régimen por un solo mes</h4>
+        <p>Para que un régimen nuevo pase a ser el oficial tiene que ganar <b>dos meses seguidos</b> o ganar con más de ${Math.round((M.umbral||0.45)*100)}%. Si no, se mantiene el anterior. Por eso puede estar confirmado y a la vez poco definido: se repitió, pero ganando por poco.</p>
+        <table class="tb2" style="margin-top:8px"><thead><tr><th class="l">Mes</th><th class="l">Quién ganó ese mes</th><th class="l">Régimen oficial</th></tr></thead><tbody>${H.map(x=>`<tr><td class="l">${nm(x.f)}${x.f===cur?' <span class="mut">(en curso)</span>':""}</td><td class="l" style="color:${QC[x.q]}">${esc(M.cuadrantes[x.q].nombre)}</td><td class="l" style="color:${QC[x.qc]};font-weight:700">${esc(M.cuadrantes[x.qc].nombre)}</td></tr>`).join("")}</tbody></table></div>
+      <div><h4>4. El mes en curso es provisorio</h4>
+        <p>El dato del mes se calcula con lo que se sabe hasta ese día y se recalcula en cada actualización semanal. Recién cuando el mes termina queda el dato definitivo. Si la diferencia con el segundo es chica, todavía puede cambiar.</p></div>
+      <div><h4>5. Los datos oficiales llegan con atraso</h4>
+        <p>Actividad, empleo e inflación se publican 1 o 2 meses después. El régimen de un mes usa los datos oficiales publicados hasta ese momento, que en su mayoría son de 1 o 2 meses antes, más los datos de mercado del mismo mes. Cuando los datos de mercado y los oficiales no coinciden, se avisa: el mercado puede estar anticipando un cambio.</p></div>
+      <div><h4>6. Dos versiones del historial</h4>
+        <p>El cuadrante de esta pestaña usa los datos con sus correcciones posteriores. La grilla de Escenarios y los patrones por bloque usan los datos <b>tal como se conocían cada mes</b>, sin las correcciones, para no mirar el futuro. Por eso algunos meses viejos pueden diferir entre las dos.</p></div>
+      </div>`; })())}
     <details class="help" style="margin:0 0 14px"><summary>Ver los indicadores de crecimiento e inflación que definen el régimen</summary><div class="ejes" style="margin-top:12px">${tablaEje("crecimiento")}${tablaEje("inflacion")}</div></details>
     ${tileGDP?sec("Otro indicador de crecimiento","informativo",`<div class="pil-grid pg3">${tileGDP}</div>`):""}
     ${sec("Régimen mes a mes","",`${bandaSVG()}<div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div>`)}`;
