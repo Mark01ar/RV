@@ -197,7 +197,50 @@
     "AMZN",
     "AAPL"
    ],
-   "clave": "Flujo libre, recompras y cuánto gastan en IA."
+   "clave": "Flujo libre, recompras y cuánto gastan en IA.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "plataforma",
+    "ciclico": false,
+    "pesos": {
+     "calidad": 25,
+     "crecimiento": 20,
+     "valuacion": 20,
+     "solidez": 10,
+     "analistas": 15,
+     "tendencia": 10
+    },
+    "pesos_txt": "Calidad 25%, crecimiento 20%, valuación 20%, solidez 10%, analistas 15%, tendencia 10%. La solidez pesa poco porque las cinco tienen balances muy sólidos.",
+    "negocio": "Cinco empresas que dominan plataformas con miles de millones de usuarios: software de oficina y Windows (Microsoft), búsqueda y YouTube (Alphabet), redes sociales (Meta), comercio electrónico (Amazon) y el iPhone (Apple). Tres de ellas alquilan además capacidad de cómputo en la nube (Azure, Google Cloud y AWS), que es donde hoy se juega la IA. Son negocios con márgenes altos y mucha caja, que históricamente devolvían plata al accionista con recompras. Lo que cambió desde 2024 es la inversión: Microsoft, Alphabet, Meta y Amazon gastan cifras récord en centros de datos para IA, que ya se llevan buena parte de su flujo operativo. La pregunta del bloque es si esa inversión va a rendir. Apple es la excepción: casi no invierte en infraestructura y sigue devolviendo plata.",
+    "mirar": [
+     "Inversión sobre ventas y su tendencia: cuánto del negocio se está yendo en centros de datos.",
+     "Inversión sobre flujo operativo: cuánto de lo que generan se reinvierte en lugar de quedar para el accionista.",
+     "Crecimiento de la nube (Azure, Google Cloud, AWS): es la parte que cobra por la IA.",
+     "Flujo libre sobre precio: con la inversión récord, el flujo libre se achica.",
+     "Devolución al accionista: si recortan recompras para financiar la inversión, es una señal."
+    ],
+    "riesgos": [
+     "Que la inversión en IA no se traduzca en ventas y sobre capacidad.",
+     "Juicios antimonopolio: Google por búsqueda y publicidad, Apple por la App Store, también Meta y Amazon.",
+     "Que la IA cambie los hábitos, por ejemplo búsquedas que pasan de Google a los chatbots.",
+     "Concentración: son una parte muy grande del S&P 500, así que el índice depende de ellas.",
+     "Aranceles y dependencia de China en la cadena de suministro (sobre todo Apple)."
+    ],
+    "balance": [
+     "Crecimiento de la nube y su guía.",
+     "Guía de inversión para el año siguiente.",
+     "Margen operativo y amortización de los centros de datos, que va a empezar a pesar.",
+     "Recompras del trimestre.",
+     "Publicidad y usuarios (Meta, Alphabet); iPhone y servicios (Apple)."
+    ],
+    "empresas": {
+     "MSFT": "Software de oficina y para empresas, Windows, y Azure, la segunda nube del mundo. Es socio principal de OpenAI. Es la que más subió la inversión: ya se lleva más de un tercio de sus ventas. Su año fiscal cierra en junio.",
+     "GOOGL": "Búsqueda, YouTube y publicidad, más Google Cloud y sus propios chips de IA (los TPU) y su modelo de IA (Gemini). El mercado duda de que la IA le quite búsquedas, y enfrenta juicios antimonopolio en EE.UU. por búsqueda y por publicidad. Es la más barata del grupo por P/E.",
+     "META": "Facebook, Instagram y WhatsApp: vive de la publicidad, con el margen bruto más alto del grupo. Gasta fuerte en IA y en realidad virtual (Reality Labs), una división que pierde plata todos los años. Es la que más depende de un solo negocio.",
+     "AMZN": "Comercio electrónico (mucho volumen, poco margen) y AWS, la nube más grande, que genera la mayor parte de la ganancia operativa. Suma publicidad, que crece rápido. Invierte fuerte en centros de datos y en sus propios chips (Trainium), y no paga dividendos ni hace recompras relevantes.",
+     "AAPL": "El iPhone es cerca de la mitad de sus ventas; los servicios (App Store, iCloud, Apple Music) crecen y tienen mucho más margen. Casi no invierte en centros de datos: su apuesta en IA es más chica y con socios. Devuelve casi todo su flujo con recompras y dividendos. Crece poco y cotiza a P/E alto por su estabilidad."
+    }
+   }
   },
   {
    "id": "infraia",
@@ -208,7 +251,47 @@
     "NBIS",
     "IREN"
    ],
-   "clave": "Mucha deuda e inversión, contratos con pocos clientes."
+   "clave": "Mucha deuda e inversión, contratos con pocos clientes.",
+   "lente": {
+    "revisado": "nov 2026 (borrador)",
+    "tipo": "infra",
+    "ciclico": false,
+    "pesos": {
+     "crecimiento": 25,
+     "solidez": 30,
+     "analistas": 25,
+     "tendencia": 20
+    },
+    "pesos_txt": "Crecimiento 25%, solidez 30%, analistas 25%, tendencia 20%. No usa calidad ni valuación por ganancias: casi ninguna gana plata todavía, así que pesa más cuánta deuda tienen y cómo la financian.",
+    "negocio": "Empresas que construyen y alquilan centros de datos para IA. Oracle pasó de vender software de bases de datos a competir en la nube, con contratos gigantes (el más grande, con OpenAI). CoreWeave y Nebius son \"neoclouds\": compran chips de Nvidia, montan centros de datos y los alquilan por hora o con contratos de varios años. IREN viene de la minería de bitcoin y está reconvirtiendo su capacidad eléctrica a centros de datos de IA. Es un modelo muy intensivo en capital: gastan varias veces lo que venden en equipos y lo financian con deuda o emitiendo acciones. Si los contratos se cumplen, los ingresos crecen muy rápido; si la demanda se enfría o los chips quedan obsoletos antes de pagarse, el negocio sufre.",
+    "mirar": [
+     "Contratos firmados a futuro (backlog): es la venta asegurada de los próximos años.",
+     "Inversión sobre ventas y cómo se financia: deuda o acciones nuevas.",
+     "Deuda contra caja y contra EBITDA.",
+     "Concentración de clientes: OpenAI, Microsoft y Meta aparecen en varias.",
+     "Dilución: cuántas acciones nuevas emiten cada año."
+    ],
+    "riesgos": [
+     "Que un cliente grande no pague o renegocie; OpenAI es cliente de varias a la vez.",
+     "Obsolescencia: los chips se deprecian en pocos años, a veces antes de terminar de pagarse.",
+     "Costo de la deuda y acceso al financiamiento si el mercado se cierra.",
+     "Energía y permisos para los centros de datos.",
+     "Si la demanda de IA se frena, sobra capacidad."
+    ],
+    "balance": [
+     "Backlog y contratos nuevos.",
+     "Guía de ventas e inversión.",
+     "Deuda nueva o emisión de acciones.",
+     "Capacidad eléctrica contratada (megavatios).",
+     "Margen operativo: si empieza a ser positivo de forma sostenida."
+    ],
+    "empresas": {
+     "ORCL": "Base de datos y software para empresas que financian una apuesta grande en la nube para IA. En 2025 anunció contratos por cientos de miles de millones de dólares, el mayor con OpenAI. Para cumplirlos invierte más de lo que genera: flujo libre negativo y deuda en aumento. La acción cayó fuerte en el último año por las dudas sobre ese financiamiento.",
+     "CRWV": "La neocloud más grande: alquila capacidad de chips de Nvidia, con Microsoft y OpenAI como clientes principales. Salió a la bolsa en marzo de 2025. Invierte el doble de lo que vende y se financia con mucha deuda.",
+     "NBIS": "Es la ex Yandex internacional, separada de Rusia en 2024. Neocloud con centros de datos en Europa y EE.UU.; en 2025 firmó un contrato grande con Microsoft (cerca de US$ 17.000 millones) y otro con Meta. Su P/E no significa nada: gana casi cero y tuvo ganancias extraordinarias por venta de participaciones.",
+     "IREN": "Ex minera de bitcoin con energía barata en Canadá y Texas, que está reconvirtiendo su capacidad a centros de datos de IA. En 2025 firmó un contrato con Microsoft por cerca de US$ 9.700 millones. Depende de ejecutar esa reconversión a tiempo."
+    }
+   }
   },
   {
    "id": "software",
