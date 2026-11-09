@@ -6,19 +6,25 @@ import pandas as pd
 import yfinance as yf
 
 OUT = Path(__file__).resolve().parent
-EMP = ["XOM", "CVX", "SHEL", "PBR", "GPRK", "TEN"]
-FAC = {"petroleo": ("CL=F", 0.10), "gas": ("NG=F", 0.10), "real": ("BRL=X", 0.05)}
+EMP = ["JPM", "C", "BAC", "GS", "BBD", "ITUB", "NMR"]
+FAC = {"curva": ("T10Y2Y", 0.5), "credito": ("BAA10Y", 1.0), "tasa10": ("DGS10", 1.0), "real": ("BRL=X", 0.05)}
+FRED = {"T10Y2Y", "BAA10Y", "DGS10"}
 TRAMOS = {"2005-2014": ("2005-01", "2014-12"), "2015-2026": ("2015-01", None)}
 ROT = 999
 rng = np.random.default_rng(7)
 
 
 def bajar():
-    tk = EMP + ["SPY"] + [v[0] for v in FAC.values()]
+    tk = EMP + ["SPY"] + [v[0] for v in FAC.values() if v[0] not in FRED]
     px = yf.download(tk, start="2004-11-01", auto_adjust=True, progress=False, threads=True)["Close"]
     px = px.ffill().resample("ME").last()
     px.index = px.index.to_period("M")
     r = np.log(px).diff()
+    for sid in FRED:
+        f = pd.read_csv(f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={sid}", index_col=0, parse_dates=True, na_values=".").iloc[:, 0]
+        f = f.dropna().resample("ME").last()
+        f.index = f.index.to_period("M")
+        r[sid] = f.diff()
     return r.iloc[1:-1]
 
 
@@ -61,7 +67,7 @@ def main():
             for tn, (a, b) in TRAMOS.items():
                 z = prueba(tramo(y, a, b), tramo(r["SPY"], a, b), tramo(f, a, b))
                 if z:
-                    z["mov"] = round((np.exp(z["c"] * np.log(1 + mov)) - 1) * 100, 2)
+                    z["mov"] = round((np.exp(z["c"] * (mov if tf in FRED else np.log(1 + mov))) - 1) * 100, 2)
                 fila[tn] = z
             t1, t2 = fila["2005-2014"], fila["2015-2026"]
             fila["clara"] = bool(t1 and t2 and t1["p"] < 0.05 and t2["p"] < 0.05 and np.sign(t1["c"]) == np.sign(t2["c"]))
@@ -69,7 +75,7 @@ def main():
     (OUT / "resultado.json").write_text(json.dumps({"cobertura": cob, "res": res}, ensure_ascii=False, indent=1))
     lin = [f"cobertura {cob}"]
     for nom, (tf, mov) in FAC.items():
-        lin.append(f"\n== {nom} ({tf}) sube {int(mov*100)}% ==")
+        lin.append(f"\n== {nom} ({tf}) sube {mov} ==")
         for t, fila in res[nom].items():
             p = []
             for tn in TRAMOS:
