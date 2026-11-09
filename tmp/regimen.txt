@@ -1,0 +1,74 @@
+meses por régimen a: CSI=35, REC=29, EST=23, DES=33
+meses por régimen r: CSI=29, REC=41, EST=27, DES=46
+
+======== régimen al cierre del mes → cambio del factor en los 1 meses siguientes ========
+  Tasa 10a
+    Desinflación                +0.07σ  -0.38σ  indicio
+  Spread de crédito
+    Estanflación                +0.19σ  +0.49σ  reciente
+    Desinflación                +0.14σ  -0.25σ  indicio
+  Dólar global
+    Crecimiento sin inflación   -0.07σ  +0.33σ  indicio
+    Desinflación                +0.07σ  -0.27σ  indicio
+  Petróleo
+    Estanflación                +0.01σ  -0.58σ  reciente
+  Cobre
+    Estanflación                +0.05σ  -0.39σ  reciente
+  Bitcoin
+    Estanflación                   -    -0.34σ  indicio
+  Mineral de hierro
+    Estanflación                +0.08σ  -0.52σ  indicio
+  Acero
+    Recalentamiento             +0.34σ  +1.14σ  reciente
+    Desinflación                -0.21σ  -0.57σ  indicio
+  Producción de chips EE.UU.
+    Recalentamiento             +0.36σ  +0.26σ  indicio
+    Desinflación                -0.61σ  -0.23σ  indicio
+  Chicas vs grandes
+    Recalentamiento             -0.14σ  +0.33σ  indicio
+  Valor vs crecimiento
+    Desinflación                -0.22σ  -0.43σ  indicio
+  Momentum
+    Recalentamiento             +0.02σ  -0.27σ  indicio
+    Estanflación                -0.60σ  +0.45σ  indicio
+    Desinflación                +0.28σ  -0.25σ  indicio
+  Mercado (SPY)
+    Estanflación                -0.19σ  -0.40σ  indicio
+    Desinflación                -0.24σ  +0.29σ  indicio
+
+======== régimen al cierre del mes → cambio del factor en los 3 meses siguientes ========
+  Tasa 10a
+    Desinflación                +0.34σ  -0.49σ  indicio
+  Petróleo
+    Estanflación                -0.14σ  -0.74σ  reciente
+  Cobre
+    Estanflación                -0.40σ  -0.56σ  indicio
+  Oro
+    Desinflación                +0.25σ  +0.42σ  indicio
+  Bitcoin
+    Estanflación                   -    -0.74σ  reciente
+  Mineral de hierro
+    Estanflación                +0.12σ  -0.68σ  indicio
+    Desinflación                +0.37σ  +0.48σ  indicio
+  Uranio
+    Crecimiento sin inflación   +0.05σ  +0.60σ  indicio
+    Desinflación                +0.45σ  -0.42σ  indicio
+  Acero
+    Recalentamiento             +0.49σ  +1.73σ  reciente
+  Combustible aviones
+    Estanflación                -0.05σ  -0.72σ  indicio
+  Pedidos de electrónica
+    Crecimiento sin inflación   +0.28σ  +0.20σ  indicio
+  Chicas vs grandes
+    Recalentamiento             -0.28σ  +0.62σ  indicio
+  Valor vs crecimiento
+    Desinflación                -0.06σ  -0.80σ  indicio
+  Rentables vs no rentables
+    Estanflación                +0.33σ  +0.51σ  indicio
+  Invierten poco vs mucho
+    Estanflación                -0.07σ  +0.73σ  indicio
+  Momentum
+    Recalentamiento             +0.15σ  -0.41σ  indicio
+
+conteo: {'nada': 163, 'indicio': 30, 'reciente': 7}
+σ = movimientos típicos del factor en ese plazo (ej. +0,30σ en petróleo a 1 mes ≈ +3,4% más que en los demás meses)
