@@ -3,7 +3,7 @@ name: tmp
 on:
   push:
     branches: [prueba-factores]
-    paths: [scripts/factores.py, tmp/revision.py, .github/workflows/tmp.yml]
+    paths: [tmp/motores_empresa.py, .github/workflows/tmp.yml]
 
 permissions:
   contents: write
@@ -17,13 +17,12 @@ jobs:
         with:
           python-version: "3.12"
       - run: pip install -r requirements.txt
-      - run: python scripts/factores.py
+      - run: python tmp/motores_empresa.py
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-      - run: python tmp/revision.py
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
-          git add data/factores.json tmp/revision.txt
-          git commit -m "Resultado factores"
+          git add tmp/motores.json tmp/motores.txt
+          git commit -m "Resultado motores"
           git push
