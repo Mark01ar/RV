@@ -599,6 +599,9 @@ def main():
             p = px_ars * ratio[0] / ratio[1] / precio / ccl - 1
             premio = p if abs(p) <= 0.3 else None
         mcap = num(info.get("marketCap"))
+        if not mcap and precio:
+            sh_ = num(info.get("sharesOutstanding")) or num(info.get("impliedSharesOutstanding"))
+            mcap = sh_ * precio if sh_ else None
         fxc = None
         if info.get("currency") and info.get("currency") != "USD":
             fxc = fx_anual(info["currency"])(dt.date.today().year)
