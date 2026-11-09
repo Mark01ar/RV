@@ -1759,7 +1759,7 @@ function macro(m){
   if (PIL===null || ESC===null){ Promise.all([PIL===null?fetch("data/pilares.json?v="+Date.now()).then(r=>r.ok?r.json():{indicadores:[]}).catch(()=>({indicadores:[]})).then(j=>PIL=j):0, ESC===null?fetch("data/escenarios.json?v="+Date.now()).then(r=>r.json()).catch(()=>({fases:[],empresas:[]})).then(j=>ESC=j):0]).then(()=>{ if (tab==="macro") macro(m); }); m.innerHTML = `<p class="mut">Cargando…</p>`; return; }
   const q = M.cuadrantes[M.actual], p = M.probs[M.actual];
   const div = ["crecimiento","inflacion"].filter(g=>M.lectura[g].diverge);
-  const MT = [["resumen","Resumen"],["tasas","Tasas y Fed"],["credito","Crédito y amplitud"],["regimen","Régimen más probable"]];
+  const MT = [["resumen","Resumen"],["regimen","Régimen más probable"],["tasas","Tasas y Fed"],["credito","Crédito y amplitud"]];
   const mt = EST.mtab || "resumen";
   const I = M.informativos || {};
   const tileGDP = I.gdpnow ? `<div class="pil"><div class="pil-h"><span>GDPNow · Fed de Atlanta<i class="inf" title="Estimación en tiempo real que se actualiza con cada dato nuevo; el PBI oficial sale un mes después del trimestre. Más de 2% es crecimiento sólido; menos de 0%, contracción. Informativo: no entra en el cálculo del régimen.">i</i></span><b style="color:${I.gdpnow.valor>=2?"var(--pos)":I.gdpnow.valor>=0?"var(--accent)":"var(--neg)"}">${I.gdpnow.valor>=0?"+":""}${nx(I.gdpnow.valor,1)}%</b></div>
