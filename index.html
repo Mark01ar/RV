@@ -155,6 +155,33 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .bhoy{margin-top:14px;border-top:1px solid var(--line);padding-top:12px}
 .bhoy>span{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:700}
 .bhoy .lst{margin-top:6px}
+.dv-h,.dv{display:grid;grid-template-columns:minmax(150px,260px) 1fr 110px;gap:12px;align-items:center}
+.dv-h{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:0 6px 6px}
+.dv-h .dv-l,.dv-h .dv-r{display:none}
+.dv{padding:5px 6px;border-radius:8px;cursor:pointer;opacity:.55}
+.dv.cl{opacity:1}.dv:hover{background:var(--panel2);opacity:1}.dv.sel{background:#1b2a5e;opacity:1}
+.dv-n{display:flex;align-items:center;gap:8px;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dv.cl .dv-n{font-weight:600}
+.dv-bar{display:grid;grid-template-columns:1fr 1fr;height:22px;border-left:0}
+.dv-half{position:relative;height:100%}
+.dv-half:first-child{border-right:1px solid #3a4a86}
+.dv-fill{position:absolute;top:3px;bottom:3px;border-radius:4px}
+.dv-fill.neg{right:0;background:var(--neg)}.dv-fill.pos{left:0;background:var(--pos)}
+.dv:not(.cl) .dv-fill{opacity:.45}
+.dv-v{position:absolute;top:50%;transform:translateY(-50%);font-size:11.5px;font-weight:700;white-space:nowrap}
+.dv-v.l{left:4px;color:#ffb3b3}.dv-v.r{right:4px;color:#a8f0c6}
+.dv-c{font-size:12.5px;text-align:right}.dv-c span{display:block;font-size:10.5px;color:var(--muted)}
+.dv.cl .dv-c span{color:var(--accent)}
+.seg.sm{padding:5px 12px;font-size:12px}.seg.on2{background:#22336f;color:#fff;border-color:#3a4f9e}
+.bpt{position:absolute;transform:translate(-17px,-50%);display:flex;align-items:center;gap:6px;cursor:pointer;z-index:1}
+.bpt .bc-ic{flex:0 0 30px;height:30px;background:#0d1430;box-shadow:0 0 0 1px var(--fc);opacity:.75}
+.bpt.cl .bc-ic{flex-basis:36px;height:36px;opacity:1;box-shadow:0 0 0 2px var(--fc),0 0 12px var(--fc)}
+.bpt .bc-ic svg{width:17px;height:17px;fill:none;stroke:var(--fc);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.bpt .bl-n{font-size:11px;color:#c8d0ea;white-space:nowrap;text-shadow:0 0 4px #000;opacity:.8}
+.bpt.cl .bl-n{font-weight:700;color:var(--text);opacity:1}
+.bpt.sel .bc-ic{box-shadow:0 0 0 3px var(--accent)}
+.bpt:hover{z-index:5}.bpt:hover .ett{display:block}
+.bc-ic.sm{display:inline-grid;width:26px;height:26px;flex:none}.bc-ic.sm svg{width:15px;height:15px;fill:none;stroke:var(--fc);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .segs{display:flex;gap:6px;flex-wrap:wrap}
 .seg{background:var(--panel2);border:1px solid var(--line);color:var(--muted);border-radius:999px;padding:7px 14px;font:inherit;font-size:13px;cursor:pointer}
 .seg.on{background:var(--accent);color:#1a1405;border-color:var(--accent);font-weight:700}
@@ -725,17 +752,57 @@ const ICO = {
  aparte:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'};
 let ESC = null;
 const famDe = b => { const bl = BQDE(b); return FAM.find(fm=>bl&&fm.b.includes(bl.id)) || {c:"#8a94b8", n:""}; };
+function escCab(fz){
+  const v = EST.escV||"bloques";
+  return `<div class="segs" style="margin-top:14px">${ESC.fases.map(f=>`<button class="seg${f===fz?" on":""}" data-fz="${esc(f)}">${esc(f)}</button>`).join("")}</div>
+  <div class="segs vsel" style="margin-top:10px"><button class="seg sm${v==="bloques"?" on2":""}" data-ev="bloques">Por bloque</button><button class="seg sm${v==="empresas"?" on2":""}" data-ev="empresas">Por empresa</button></div>`;
+}
+function escNav(m){
+  m.querySelector("#ev").onclick = ()=>{EST.vista=null; window.scrollTo(0,0); render();};
+  m.querySelectorAll("[data-fz]").forEach(b=>b.onclick=()=>{EST.fase=b.dataset.fz; escenarios(m);});
+  m.querySelectorAll("[data-ev]").forEach(b=>b.onclick=()=>{EST.escV=b.dataset.ev; escenarios(m);});
+}
+function escBloques(m, fz){
+  const por = {}; ESC.empresas.forEach(e=>{ const bl = BQDE(e.b); if (bl && e.r[fz]) (por[bl.id] = por[bl.id] || []).push(e); });
+  const pts = BQ.bloques.filter(b=>b.id!=="aparte").map(bl=>{ const xs = por[bl.id]||[]; const n = xs.length; if (n<3) return {bl, n, pocos:true};
+    const md = medi(xs.map(e=>e.r[fz].dif)); const mismo = xs.filter(e=>Math.sign(e.r[fz].dif)===Math.sign(md)).length;
+    return {bl, n, md, mismo, sh: mismo/n, xs, fam: FAM.find(fm=>fm.b.includes(bl.id))||{c:"#8a94b8"}, ok: Math.abs(md)>=0.05 && mismo/n>=0.75}; });
+  const val = pts.filter(p=>!p.pocos), pocos = pts.filter(p=>p.pocos);
+  const XM = 0.8;
+  const sel = EST.escB && val.find(p=>p.bl.id===EST.escB);
+  m.innerHTML = `<button class="btn" id="ev">← Bloques</button>
+  <section class="fhead2 bhead"><div class="bh-top"><div><h2>Escenarios macro</h2><div class="fh-sub">Elegí una fase de la economía y mirá cómo les fue históricamente a los bloques en esa fase.</div></div></div>${escCab(fz)}</section>
+  ${sec(`${esc(fz)} · por bloque`, "ordenados de mejor a peor · tocá un bloque para ver sus empresas", `<div id="escbox"></div>
+    <div class="mut small" style="margin-top:12px">La barra es la mediana de las empresas del bloque: cuánto mejor o peor les fue en esta fase que en el resto de sus meses, contra el SPY, en puntos por año. A la derecha, cuántas fueron en esa misma dirección. Las barras llenas son patrones consistentes (3 de cada 4 o más y más de 5 puntos de diferencia); las tenues, mixtos. Solo cuentan empresas con al menos 12 meses en la fase; bloques con menos de 3 empresas así no aparecen${pocos.length?` (${pocos.map(p=>esc(p.bl.nombre)).join(", ")})`:""}. Es historia, no predicción.</div>`, "main")}
+  ${sel?sec(`${esc(sel.bl.nombre)} en ${esc(fz.toLowerCase())}`, `mediana ${sel.md>=0?"+":""}${Math.round(sel.md*100)} pts · ${sel.mismo} de ${sel.n} en la misma dirección`, `<table class="tb2"><thead><tr><th class="l">CEDEAR</th><th class="l">Empresa</th><th>vs su promedio</th><th>Dato</th><th>Meses</th></tr></thead><tbody>${[...sel.xs].sort((a,b)=>b.r[fz].dif-a.r[fz].dif).map(e=>`<tr data-e="${esc(e.ticker)}" style="cursor:pointer"><td class="tk l">${logoImg(e.b,"logo-s")}${esc(e.b)}</td><td class="nm l">${esc(e.nombre)}</td><td class="${cls(e.r[fz].dif)} big">${e.r[fz].dif>=0?"+":""}${Math.round(e.r[fz].dif*100)} pts</td><td class="mut">${Math.abs(e.r[fz].t)>=2?"claro":Math.abs(e.r[fz].t)>=1.5?"casi claro":"puede ser casualidad"}</td><td>${e.r[fz].meses}</td></tr>`).join("")}</tbody></table><button class="btn" data-irb="${sel.bl.id}" style="margin-top:10px">Ver el bloque completo →</button>`):""}
+  <section class="fgrid">${sec("Patrón consistente · mejor en esta fase","",blis(val.filter(p=>p.ok&&p.md>0).sort((a,b)=>b.md-a.md)))}${sec("Patrón consistente · peor en esta fase","",blis(val.filter(p=>p.ok&&p.md<0).sort((a,b)=>a.md-b.md)))}</section>`;
+  function blis(xs){ return xs.length ? `<table class="tb2"><tbody>${xs.map(p=>`<tr data-bs="${p.bl.id}" style="cursor:pointer"><td class="l"><span class="bc-ic sm" style="--fc:${p.fam.c}"><svg viewBox="0 0 24 24">${ICO[p.bl.id]||""}</svg></span></td><td class="nm l">${esc(p.bl.nombre)}</td><td class="mut">${p.mismo} de ${p.n}</td><td class="${cls(p.md)} big">${p.md>=0?"+":""}${Math.round(p.md*100)} pts</td></tr>`).join("")}</tbody></table>` : `<p class="mut">Ningún bloque tiene un patrón consistente en esta dirección.</p>`; }
+  const box = m.querySelector("#escbox");
+  const orden = [...val].sort((a,b)=>b.md-a.md), mx = Math.max(0.2, ...orden.map(p=>Math.min(XM, Math.abs(p.md))));
+  box.innerHTML = `<div class="dv-h"><span>Bloque</span><span style="display:flex;justify-content:space-between"><span>← Peor que su promedio</span><span>Mejor que su promedio →</span></span><span style="text-align:right">Misma dirección</span></div>` + orden.map(p=>{ const w = Math.min(XM, Math.abs(p.md))/mx*100;
+    return `<div class="dv${p.ok?" cl":""}${sel&&sel.bl.id===p.bl.id?" sel":""}" data-bs="${p.bl.id}" style="--fc:${p.fam.c}">
+      <div class="dv-n"><span class="bc-ic sm"><svg viewBox="0 0 24 24">${ICO[p.bl.id]||""}</svg></span>${esc(p.bl.nombre)}</div>
+      <div class="dv-bar"><div class="dv-half">${p.md<0?`<div class="dv-fill neg" style="width:${w}%"></div><span class="dv-v l">${Math.round(p.md*100)} pts</span>`:""}</div><div class="dv-half">${p.md>=0?`<div class="dv-fill pos" style="width:${w}%"></div><span class="dv-v r">+${Math.round(p.md*100)} pts</span>`:""}</div></div>
+      <div class="dv-c">${p.mismo} de ${p.n}<span>${p.ok?"consistente":"mixto"}</span></div></div>`; }).join("");
+  box.querySelectorAll("[data-bs]").forEach(d=>d.onclick=()=>{EST.escB = EST.escB===d.dataset.bs ? null : d.dataset.bs; escenarios(m);});
+  escNav(m);
+  m.querySelectorAll("tr[data-bs]").forEach(r=>r.onclick=()=>{EST.escB=r.dataset.bs; escenarios(m);});
+  m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
+  m.querySelectorAll("[data-irb]").forEach(b=>b.onclick=()=>{EST.bloque=b.dataset.irb; EST.vista=null; window.scrollTo(0,0); render();});
+}
 async function escenarios(m){
   if (!ESC){ m.innerHTML = `<p class="mut">Cargando…</p>`; try{ const r = await fetch("data/escenarios.json?v="+Date.now()); ESC = await r.json(); }catch(e){ m.innerHTML = `<p class="mut">No se pudieron cargar los escenarios.</p>`; return; } }
   const fz = EST.fase || "Estanflación";
+  if ((EST.escV||"bloques")==="bloques") return escBloques(m, fz);
   const famOff = EST.famOff || (EST.famOff = {});
   const pts = ESC.empresas.filter(e=>e.r[fz]).map(e=>({...e, ...e.r[fz], fam: famDe(e.b), bl: BQDE(e.b)}));
   const XM = 1.0, YM = 4;
   const cl = pts.filter(p=>Math.abs(p.t)>=2);
   m.innerHTML = `<button class="btn" id="ev">← Bloques</button>
   <section class="fhead2 bhead"><div class="bh-top"><div><h2>Escenarios macro</h2><div class="fh-sub">Elegí una fase de la economía y mirá dónde cae cada empresa según cómo le fue históricamente en esa fase.</div></div></div>
-  <div class="segs" style="margin-top:14px">${ESC.fases.map(f=>`<button class="seg${f===fz?" on":""}" data-fz="${esc(f)}">${esc(f)}</button>`).join("")}</div>
+  ${escCab(fz)}
   <div class="famf">${FAM.map((fm,i)=>`<button class="famc${famOff[i]?" off":""}" data-fi="${i}" style="--fc:${fm.c}"><span class="fam-dot"></span>${fm.n}</button>`).join("")}</div></section>
+  <div class="aviso">Ojo: con ${pts.length} empresas, unas <b>${Math.round(pts.length*0.0455)}</b> pueden quedar por encima de la línea solo por azar. En esta fase hay <b>${cl.length}</b>. ${cl.length<=Math.round(pts.length*0.0455)*1.3?"Es lo mismo que daría el azar: este mapa es casi todo ruido.":"Hay algo más que azar, pero no se puede saber cuáles son reales: confirmalo con el patrón de su bloque."}</div>
   ${sec(`Mapa de ${esc(fz.toLowerCase())}`, "cada logo es una empresa · tocalo para ver el detalle", `<div class="escbox" id="escbox"></div>
     <div class="mut small" style="margin-top:10px">Eje horizontal: cuánto mejor o peor le fue en esta fase que en el resto de sus meses, contra el SPY, en puntos por año. Eje vertical: qué tan claro es ese dato, según la volatilidad de la acción y los meses que estuvo en la fase. Por encima de la línea punteada la diferencia es clara; por debajo puede ser casualidad. Solo empresas con al menos 12 meses en la fase. Es historia, no predicción.</div>`, "main")}
   <section class="fgrid">${sec("Dato claro · mejor en esta fase","",lista(cl.filter(p=>p.t>0).sort((a,b)=>b.t-a.t)))}${sec("Dato claro · peor en esta fase","",lista(cl.filter(p=>p.t<0).sort((a,b)=>a.t-b.t)))}</section>`;
@@ -763,7 +830,7 @@ async function escenarios(m){
   dibujar();
   window.onresize = () => { if (document.body.contains(box)) dibujar(); };
   m.querySelector("#ev").onclick = ()=>{EST.vista=null; window.scrollTo(0,0); render();};
-  m.querySelectorAll("[data-fz]").forEach(b=>b.onclick=()=>{EST.fase=b.dataset.fz; escenarios(m);});
+  escNav(m);
   m.querySelectorAll("[data-fi]").forEach(b=>b.onclick=()=>{famOff[b.dataset.fi]=!famOff[b.dataset.fi]; escenarios(m);});
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
 }
