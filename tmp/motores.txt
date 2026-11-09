@@ -1,0 +1,194 @@
+
+##### Memorias y almacenamiento
+  MU     Cobre +4.1% (reciente)
+  SKHY   Cobre +3.8% (clara)
+  SNDK   sin historia suficiente
+  WDC    Cobre +2.9% (reciente)
+
+##### Diseño de chips
+  NVDA   Soja -2.5% (reciente*)
+  AMD    sin motor macro claro
+  AVGO   sin motor macro claro
+  QCOM   sin motor macro claro
+  MRVL   Dólar global +3.2% (clara)   [repetidos: Curva 10a-2a]
+  ALAB   sin historia suficiente
+  INTC   sin motor macro claro
+
+##### Fabricación y equipos de chips
+  TSM    Yuan débil -1.4% (reciente*)  ·  Petróleo -1.2% (reciente*)
+  ASML   Tasa 10a -1.6% (reciente*)
+  AMAT   sin motor macro claro
+  LRCX   sin motor macro claro
+
+##### Big tech
+  MSFT   Spread de crédito +1.4% (reciente*)
+  GOOGL  sin motor macro claro
+  META   sin motor macro claro
+  AMZN   Spread de crédito +2.1% (reciente*)  ·  Mineral de hierro -1.5% (reciente*)
+  AAPL   sin motor macro claro
+
+##### Infraestructura de IA
+  ORCL   sin motor macro claro
+  CRWV   sin historia suficiente
+  NBIS   sin historia suficiente
+  IREN   sin motor macro claro
+
+##### Software y ciberseguridad
+  CRM    sin motor macro claro
+  ADBE   Tasa 10a -1.6% (reciente*)
+  NOW    sin motor macro claro
+  TEAM   sin motor macro claro
+  SAP    Dólar global -1.6% (clara)  ·  Gas natural -1.9% (reciente*)
+  PLTR   Bitcoin +6.7% (reciente*)
+  PANW   sin motor macro claro
+  CRWD   sin motor macro claro
+  IBM    Bitcoin -1.5% (reciente*)
+  GLOB   Real débil +2.9% (reciente*)
+
+##### Hardware y equipos
+  CSCO   sin motor macro claro
+  DELL   sin motor macro claro
+  HPQ    Acero +1.3% (reciente*)
+  XROX   Real débil -2.2% (reciente*)
+  BB     sin motor macro claro
+  RGTI   Dólar global +15.0% (reciente*)   [repetidos: Tasa 10a]
+
+##### Medios, internet y telecom
+  NFLX   Gas natural -2.0% (reciente*)
+  SPOT   sin motor macro claro
+  DISN   Bitcoin +1.6% (reciente*)
+  YELP   Spread de crédito -5.6% (reciente*)  ·  Combustible aviones +3.7% (reciente*)   [repetidos: Tasa 10a]
+  TMUS   sin motor macro claro
+
+##### Comercio electrónico y plataformas
+  MELI   Dólar global -2.5% (reciente*)  ·  Real débil -2.3% (reciente*)
+  EBAY   Soja -1.9% (reciente*)
+  JMIA   sin motor macro claro
+  UBER   Uranio +2.7% (reciente*)
+
+##### China
+  BABA   Dólar global -3.3% (reciente)  ·  Yuan débil -2.8% (reciente)   [repetidos: Oro, Cobre]
+  JD     Yuan débil -2.9% (reciente)   [repetidos: Dólar global]
+  BIDU   Real débil -2.3% (clara)  ·  Dólar global -3.1% (reciente)  ·  Yuan débil -2.9% (reciente)   [repetidos: Cobre]
+  NIO    Yuan débil -5.6% (reciente)  ·  Spread de crédito -5.5% (reciente*)
+
+##### Bancos
+  JPM    Tasa 10a +1.8% (clara)  ·  Curva 10a-2a +1.6% (clara)  ·  Oro -1.8% (reciente*)
+  C      Tasa 10a +2.1% (reciente)  ·  Curva 10a-2a +1.7% (reciente)  ·  Petróleo +1.6% (reciente)   [repetidos: Oro]
+  BA.C   Tasa 10a +2.4% (reciente)  ·  Oro -2.2% (reciente*)   [repetidos: Curva 10a-2a]
+  GS     Spread de crédito -1.7% (clara)  ·  Tasa 10a +1.4% (clara)  ·  Curva 10a-2a +1.6% (reciente)   [repetidos: Petróleo]
+  BBD    Real débil -9.0% (clara)   [repetidos: Dólar global, Oro, Cobre, Combustible aviones, Spread de crédito, Soja]
+  ITUB   Real débil -8.1% (clara)   [repetidos: Dólar global, Combustible aviones, Petróleo, Spread de crédito, Soja]
+  NMR    sin motor macro claro
+
+##### Pagos
+  V      sin motor macro claro
+  MA     Petróleo +1.1% (reciente*)
+  AXP    Oro -1.3% (clara)  ·  Mineral de hierro +1.3% (reciente*)
+  PYPL   sin motor macro claro
+  HOOD   Bitcoin +10.1% (reciente)  ·  Yuan débil +2.9% (reciente*)
+
+##### Cripto
+  MSTR   Bitcoin +8.2% (reciente)
+  COIN   Bitcoin +19.1% (reciente)
+  RIOT   Bitcoin +15.2% (reciente)
+  HUT    Bitcoin +21.1% (reciente)
+
+##### Energía eléctrica
+  VST    sin motor macro claro
+  CEG    sin motor macro claro
+  GEV    sin historia suficiente
+  OKLO   Tasa 10a +9.2% (reciente*)   [repetidos: Dólar global]
+  FSLR   sin motor macro claro
+
+##### Petróleo y gas
+  XOM    Petróleo +3.5% (clara)   [repetidos: Combustible aviones, Spread de crédito]
+  CVX    Petróleo +3.1% (clara)  ·  Cobre +2.2% (reciente)   [repetidos: Combustible aviones, Spread de crédito]
+  SHEL   Petróleo +3.4% (clara)  ·  Real débil -2.4% (clara)   [repetidos: Combustible aviones, Soja, Spread de crédito, Tasa 10a]
+  PBR    Real débil -8.9% (clara)  ·  Spread de crédito -8.8% (clara)  ·  Petróleo +6.4% (clara)   [repetidos: Combustible aviones, Soja, Cobre, Dólar global, Tasa 10a]
+  GPRK   Spread de crédito -7.3% (clara)  ·  Petróleo +6.1% (clara)  ·  Combustible aviones +5.5% (clara)   [repetidos: Cobre, Tasa 10a]
+  TEN    Petróleo +4.1% (clara)  ·  Spread de crédito -3.9% (clara)  ·  Cobre +3.1% (clara)   [repetidos: Combustible aviones, Real débil, Soja, Tasa 10a]
+
+##### Minería y acero
+  VALE   Cobre +9.0% (clara)  ·  Real débil -6.6% (clara)  ·  Dólar global -6.2% (clara)   [repetidos: Soja, Mineral de hierro, Oro, Spread de crédito, Combustible aviones, Petróleo, Yuan débil]
+  FCX    Cobre +13.1% (clara)  ·  Dólar global -6.0% (clara)   [repetidos: Soja, Oro, Spread de crédito, Real débil, Petróleo, Combustible aviones, Mineral de hierro, Yuan débil]
+  B      Oro +10.5% (clara)  ·  Cobre +5.0% (clara)   [repetidos: Dólar global, Tasa 10a, Real débil]
+  HMY    Oro +16.5% (clara)  ·  Real débil -6.6% (clara)   [repetidos: Dólar global, Cobre, Tasa 10a]
+  HL     Oro +12.1% (clara)  ·  Cobre +8.5% (clara)   [repetidos: Dólar global, Real débil, Soja, Yuan débil]
+  MP     Real débil -7.7% (reciente)
+  TXR    Cobre +4.6% (clara)  ·  Real débil -3.6% (clara)  ·  Spread de crédito -3.3% (clara)   [repetidos: Soja, Petróleo, Combustible aviones]
+
+##### Farma grande
+  LLY    sin motor macro claro
+  NVO    sin motor macro claro
+  JNJ    sin motor macro claro
+  PFE    Confianza consumidor -1.6% (reciente*)
+  ABT    Dólar global -1.2% (clara)  ·  Combustible aviones -1.1% (reciente)
+
+##### Biotech y servicios de salud
+  MRNA   sin motor macro claro
+  VRTX   Spread de crédito +2.0% (reciente*)
+  NTRA   sin motor macro claro
+  TEM    sin historia suficiente
+  HIMS   Curva 10a-2a -5.5% (reciente*)
+  UNH    sin motor macro claro
+
+##### Consumo defensivo
+  KO     Dólar global -1.0% (clara)
+  PEP    Tasa 10a -0.8% (clara)
+  PG     Tasa 10a -0.8% (clara)  ·  Oro +1.1% (reciente)
+  MO     sin motor macro claro
+  WMT    Spread de crédito +1.0% (clara)
+  MCD    sin motor macro claro
+
+##### Consumo cíclico
+  NKE    Tasa 10a -1.3% (reciente*)
+  ANF    sin motor macro claro
+  GT     Spread de crédito -2.7% (reciente*)  ·  Tasa 10a +2.7% (reciente*)
+
+##### Aeroespacial, defensa y aerolíneas
+  BA     Gas natural -2.0% (reciente*)  ·  Petróleo +1.7% (reciente*)   [repetidos: Combustible aviones]
+  GE     sin motor macro claro
+  LMT    sin motor macro claro
+  UAL    Confianza consumidor +3.5% (clara)  ·  Dólar global +3.1% (clara)  ·  Tasa 10a +3.4% (reciente)   [repetidos: Oro]
+  AAL    Dólar global +2.1% (clara)  ·  Tasa 10a +3.1% (reciente)  ·  Confianza consumidor +2.7% (reciente)
+  DAL    Oro -2.8% (clara)  ·  Confianza consumidor +3.2% (reciente)  ·  Tasa 10a +2.5% (reciente)
+
+##### Espacio
+  SPCX   sin historia suficiente
+  RKLB   sin motor macro claro
+  ASTS   sin motor macro claro
+  SPCE   sin motor macro claro
+  SATL   sin motor macro claro
+
+##### Industriales y agro
+  CAT    Cobre +2.5% (clara)  ·  Confianza consumidor +1.6% (reciente*)
+  PCAR   sin motor macro claro
+  ADGO   Cobre +3.1% (clara)  ·  Real débil -2.4% (clara)  ·  Petróleo +4.9% (reciente)   [repetidos: Combustible aviones, Spread de crédito, Tasa 10a]
+
+##### Casos aparte
+  BRKB   sin motor macro claro
+  TSLA   sin motor macro claro
+  PLD    Tasa 10a -2.2% (clara)   [repetidos: Curva 10a-2a, Spread de crédito]
+  BIOX   sin motor macro claro
+
+Empresas con motor: 71 de 118
+
+Mes típico de cada factor (desvío mensual 2005-hoy):
+  Tasa 10a               0.25 pts
+  Curva 10a-2a           0.17 pts
+  Spread de crédito      0.23 pts
+  Dólar global           2.16 %
+  Petróleo               11.45 %
+  Gas natural            15.16 %
+  Cobre                  7.38 %
+  Oro                    4.98 %
+  Bitcoin                19.21 %
+  Yuan débil             1.07 %
+  Real débil             4.41 %
+  Confianza consumidor   4.37 pts
+  Mineral de hierro      9.69 %
+  Soja                   7.09 %
+  Uranio                 7.27 %
+  Acero                  3.17 %
+  Combustible aviones    12.17 %
