@@ -14,7 +14,7 @@ DOM = {"SKHY": "skhynix.com", "IREN": "iren.com", "HUT": "hut8.com", "GT": "good
        "DISN": "disney.com", "HIMS": "hims.com", "LMT": "lockheedmartin.com", "BB": "blackberry.com", "UNH": "unitedhealthgroup.com",
        "CEG": "constellationenergy.com", "BA": "boeing.com", "VRTX": "vrtx.com", "NOW": "servicenow.com", "SATL": "satellogic.com"}
 TICK = {"SKHY": "000660.KS", "DISN": "DIS", "BA.C": "BAC", "TEN": "TS"}
-SOLO_WEB = {"IREN", "TEN"}
+SOLO_WEB = {"IREN"}
 
 
 def bajar(url):
