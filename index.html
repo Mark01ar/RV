@@ -529,6 +529,29 @@ function portada(m){
   m.querySelectorAll("[data-b]").forEach(c=>c.onclick=()=>{EST.bloque=c.dataset.b; window.scrollTo(0,0); render();});
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
 }
+function sensBloque(fil){
+  const R = ["Crecimiento sin inflación","Recalentamiento","Estanflación","Desinflación"];
+  const ss = fil.map(r=>r.f?.sensibilidades).filter(z=>z&&z.regimen);
+  if (ss.length<2) return "";
+  const filas = R.map(fz=>{ const xs = ss.map(z=>{ const rg = z.regimen, d = rg[fz]; if (!d) return null; const o = Object.entries(rg).filter(([k])=>k!==fz); const om = o.reduce((a,[,v])=>a+v.exceso_anual*v.meses,0)/o.reduce((a,[,v])=>a+v.meses,0); return {ex:d.exceso_anual, dif:d.exceso_anual-om}; }).filter(Boolean);
+    if (!xs.length) return null;
+    const md = xs.reduce((a,x)=>a+x.dif,0)/xs.length, mx = xs.reduce((a,x)=>a+x.ex,0)/xs.length;
+    const mismo = xs.filter(x=>Math.sign(x.dif)===Math.sign(md)).length;
+    const lect = Math.abs(md)<0.05 ? "Sin diferencia" : mismo/xs.length>=0.75 ? (md<0?"Peor · consistente":"Mejor · consistente") : "Mixto";
+    return {fz, mx, md, mismo, n:xs.length, lect, ok: Math.abs(md)>=0.05 && mismo/xs.length>=0.75}; }).filter(Boolean);
+  const F = [["tasa","Tasa a 10 años","si la tasa sube 1 punto"],["dolar","Dólar global (DXY)","si el dólar se fortalece 5%"],["petroleo","Petróleo","si el petróleo sube 10%"],["bitcoin","Bitcoin","si el bitcoin sube 10%"]];
+  const ff = F.map(([k,t,e])=>{ const xs = ss.map(z=>z[k]).filter(Boolean); if (!xs.length) return null; const m = xs.reduce((a,x)=>a+x.impacto,0)/xs.length; const cl = xs.filter(x=>Math.abs(x.t)>=2&&Math.sign(x.impacto)===Math.sign(m)).length; return {t,e,m,cl,n:xs.length}; }).filter(Boolean);
+  const beta = ss.map(z=>z.beta).filter(v=>v!=null);
+  return `<section class="fgrid"><div class="card"><h3>Según el régimen macro <span class="mut">· promedio del bloque contra el SPY</span></h3>
+    <div class="wrap" style="max-height:none"><table><thead><tr><th class="l">Régimen</th><th>vs SPY</th><th>vs su promedio</th><th>Misma dirección</th><th class="l">Lectura</th></tr></thead><tbody>
+    ${filas.map(r=>`<tr><td class="l">${esc(r.fz)}</td><td class="${cls(r.mx)}">${pct(r.mx,0)}</td><td class="${cls(r.md)}">${r.md>=0?"+":""}${Math.round(r.md*100)} pts</td><td>${r.mismo} de ${r.n}</td><td class="l" style="${r.ok?"color:var(--accent);font-weight:600":"color:var(--muted)"}">${r.lect}</td></tr>`).join("")}</tbody></table></div>
+    <p class="mut small">"vs su promedio" compara cada fase con el resto de los meses de la misma empresa, así una acción que le ganó al SPY siempre no parece buena en todo. Un patrón es consistente si al menos 3 de cada 4 empresas van en la misma dirección. Es historia, no predicción.</p></div>
+    <div class="card"><h3>Sensibilidades <span class="mut">· promedio del bloque, últimos 3 años</span></h3>
+    ${beta.length?`<div class="kv"><div style="grid-column:span 2"><span>Beta promedio contra el S&P 500</span><b>${nx(beta.reduce((a,b)=>a+b,0)/beta.length,2)}</b></div></div>`:""}
+    <div class="wrap" style="max-height:none;margin-top:8px"><table><thead><tr><th class="l">Factor</th><th class="l">Escenario</th><th>Movimiento extra promedio</th><th>Relación clara</th></tr></thead><tbody>
+    ${ff.map(r=>`<tr><td class="l">${r.t}</td><td class="l mut">${r.e}</td><td class="${cls(r.m)}">${pct(r.m,1)}</td><td>${r.cl} de ${r.n}</td></tr>`).join("")}</tbody></table></div>
+    <p class="mut small">Movimiento de la acción más allá de lo que explica el S&P, promediado entre las empresas del bloque. "Relación clara" cuenta cuántas empresas tienen una relación consistente en esa dirección.</p></div></section>`;
+}
 async function bloquePag(m, id){
   const bl = BQ.bloques.find(b=>b.id===id); if (!bl){ EST.bloque=null; return portada(m); }
   const xs = bl.empresas.map(b=>E.empresas.find(z=>z.byma===b)).filter(Boolean);
@@ -547,6 +570,7 @@ async function bloquePag(m, id){
     <div class="card"><h3>Qué mirar</h3><ul class="lst">${L.mirar.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><h4>Riesgos del nicho</h4><ul class="lst">${L.riesgos.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><h4>En cada balance</h4><ul class="lst">${L.balance.map(t=>`<li>${esc(t)}</li>`).join("")}</ul></div></section>`
    :`<div class="aviso">La lectura de este bloque todavía no está armada. Por ahora el ranking usa la nota general.</div>`}
   ${L&&L.catalizadores?`<div class="card"><h3>Catalizadores macro <span class="mut">· patrones históricos, no predicción</span></h3>${L.catalizadores.map(k=>`<div class="bemp"><div class="tk">${esc(k.fase)}: <span style="color:${/peor/.test(k.efecto)?"var(--neg)":"var(--pos)"}">${esc(k.efecto)}</span></div><p>${esc(k.dato)}</p><p class="mut">Por qué podría pasar: ${esc(k.hipotesis)}</p><p class="mut small">Confianza: ${esc(k.confianza)}</p></div>`).join("")}</div>`:""}
+  ${sensBloque(fil)}
   <div class="card"><h3>Ranking del bloque</h3><div class="wrap" style="max-height:none"><table><thead><tr><th class="l">CEDEAR</th><th class="l">Empresa</th><th>${L?"Nota del bloque":"Nota general"}</th>${cols.map(c=>`<th>${c[0]}</th>`).join("")}</tr></thead>
   <tbody>${fil.map(r=>`<tr data-e="${esc(r.x.ticker)}" style="cursor:pointer"><td class="tk l">${logoImg(r.x.byma,"logo-s")}${esc(r.x.byma)}</td><td class="nm l">${esc(r.x.nombre)}</td><td>${chip(r.n)}</td>${cols.map(c=>`<td>${r.f?c[1](r.k):"—"}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
   <p class="mut small">${L?esc(L.pesos_txt):"Nota general: calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15%, tendencia 10%."} Sirve para ordenar dentro del bloque; no es una señal de compra.${L&&L.ciclico?" P/E del ciclo: precio dividido por la ganancia promedio de hasta 10 años.":""}</p></div>
