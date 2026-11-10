@@ -43,22 +43,6 @@
      "Inventario en días: si crece, la demanda se está enfriando.",
      "Participación en HBM y contratos firmados para el año siguiente."
     ],
-    "catalizadores": [
-     {
-      "fase": "Crecimiento sin inflación",
-      "efecto": "mejor que el mercado",
-      "dato": "Las 3 con historia suficiente rindieron mejor que en el resto de sus meses, contra el SPY (mediana +77 puntos por año): SK Hynix +84, Micron +77, Western Digital +43. SanDisk no entra por tener poca historia.",
-      "hipotesis": "Con la economía creciendo sin presión de tasas, sube la demanda de computadoras, celulares y centros de datos, y los precios de la memoria acompañan.",
-      "confianza": "Consistente, pero son solo 3 empresas."
-     },
-     {
-      "fase": "Desinflación",
-      "efecto": "peor que el mercado",
-      "dato": "Las 3 rindieron peor que en el resto de sus meses (mediana −80 puntos por año): Micron −91, SK Hynix −80, Western Digital −32.",
-      "hipotesis": "La desinflación suele coincidir con la economía frenando: baja la demanda de equipos y los precios de la memoria caen fuerte, porque la oferta tarda en ajustar.",
-      "confianza": "Consistente, pero son solo 3 empresas."
-     }
-    ],
     "empresas": {
      "MU": "El único fabricante grande de memoria de EE.UU.: DRAM (la mayor parte de sus ventas), HBM y NAND. Su año fiscal cierra entre agosto y septiembre, así que el último año de la tabla ya refleja buena parte del ciclo actual.",
      "SKHY": "Líder en HBM y principal proveedor de memoria para Nvidia. Cotiza en Corea: los números están convertidos a dólares. Tiene fábricas en China, lo que la expone a las restricciones de exportación.",
@@ -116,15 +100,6 @@
      "Ventas a China.",
      "Inventarios de los clientes (en Qualcomm, los de celulares)."
     ],
-    "catalizadores": [
-     {
-      "fase": "Recalentamiento",
-      "efecto": "peor que el mercado",
-      "dato": "En los meses de recalentamiento (inflación y crecimiento en alza), las 6 con historia suficiente rindieron peor que en el resto de sus meses, contra el SPY (mediana −30 puntos por año): Nvidia −7, Intel −13, Broadcom −21, AMD −38, Qualcomm −39, Marvell −40. Astera Labs no entra por tener poca historia.",
-      "hipotesis": "Con inflación y tasas subiendo, el mercado castiga a las acciones que valen por ganancias futuras, y este bloque es el más expuesto a eso.",
-      "confianza": "Patrón consistente en todo el bloque (6 de 6)."
-     }
-    ],
     "empresas": {
      "NVDA": "Líder en aceleradores para IA, con la mayor parte del mercado y un ecosistema de software (CUDA) que hace difícil cambiarse a otro proveedor. Los centros de datos son la gran mayoría de sus ventas. El riesgo es la concentración: pocos clientes muy grandes y la duda de cuánto dura el ritmo actual de inversión en IA. Su año fiscal cierra en enero.",
      "AMD": "Segunda en aceleradores para IA y fuerte en procesadores para servidores y PC, donde le viene ganando terreno a Intel. Su crecimiento en IA depende de cerrar contratos grandes con la nube y los laboratorios de IA. El P/E de los últimos 12 meses está inflado por la amortización de compras pasadas (Xilinx); el esperado es más representativo.",
@@ -181,22 +156,6 @@
      "Margen bruto y su guía.",
      "Comentarios de los clientes sobre la inversión del año siguiente."
     ],
-    "catalizadores": [
-     {
-      "fase": "Crecimiento sin inflación",
-      "efecto": "mejor que el mercado",
-      "dato": "Las 4 rindieron mejor que en el resto de los meses, contra el SPY: TSMC +30 puntos por año, Applied +30, ASML +35, Lam +51 (mediana +33).",
-      "hipotesis": "Con crecimiento firme y sin presión de tasas, los fabricantes se animan a construir plantas nuevas, y eso es la venta de este bloque.",
-      "confianza": "Patrón consistente en las 4 empresas; el bloque es chico."
-     },
-     {
-      "fase": "Estanflación",
-      "efecto": "peor que el mercado",
-      "dato": "Las 4 rindieron peor que en el resto de los meses: TSMC −36 puntos por año, Applied −35, ASML −28, Lam −20 (mediana −32).",
-      "hipotesis": "Con la economía frenando e inflación alta, los fabricantes recortan inversión y el mercado anticipa menos pedidos de equipos.",
-      "confianza": "Consistente en las 4, pero buena parte de esos meses son de 2022, así que pesa mucho un solo año."
-     }
-    ],
     "empresas": {
      "TSM": "La fundición dominante: fabrica casi todos los chips avanzados de IA, con margen y crecimiento muy altos para un fabricante. Reporta en dólares taiwaneses, convertidos a dólares, y la base tiene pocos años de historia. El riesgo principal es geopolítico (Taiwán y China).",
      "ASML": "Monopolio en litografía EUV, la máquina que imprime los circuitos más finos. Es holandesa: reporta en euros, convertidos a dólares. Sus pedidos anticipan el ciclo de inversión de toda la industria.",
@@ -250,15 +209,6 @@
      "Margen operativo y amortización de los centros de datos, que va a empezar a pesar.",
      "Recompras del trimestre.",
      "Publicidad y usuarios (Meta, Alphabet); iPhone y servicios (Apple)."
-    ],
-    "catalizadores": [
-     {
-      "fase": "Estanflación",
-      "efecto": "peor que el mercado",
-      "dato": "4 de las 5 rindieron peor que en el resto de sus meses, contra el SPY (mediana del bloque −17 puntos por año): Meta −80, Amazon −20, Alphabet −17, Microsoft −7. Apple es la excepción (+12).",
-      "hipotesis": "Con la economía frenando e inflación alta, las empresas recortan publicidad y gasto en tecnología, y las tasas altas castigan a las acciones valuadas por crecimiento. Apple, que vende un producto de consumo con mucha fidelidad, aguanta mejor.",
-      "confianza": "Mayoría clara, pero Meta en 2022 explica buena parte del número."
-     }
     ],
     "empresas": {
      "MSFT": "Software de oficina y para empresas, Windows, y Azure, la segunda nube del mundo. Es socio principal de OpenAI. Es la que más subió la inversión: ya se lleva más de un tercio de sus ventas. Su año fiscal cierra en junio.",
@@ -372,15 +322,6 @@
      "Si los productos de IA ya generan ingresos.",
      "En ciberseguridad: clientes nuevos y ventas anuales recurrentes (ARR)."
     ],
-    "catalizadores": [
-     {
-      "fase": "Estanflación",
-      "efecto": "peor que el mercado",
-      "dato": "8 de las 10 rindieron peor que en el resto de sus meses, contra el SPY (mediana del bloque −15 puntos por año): Palantir −132, CrowdStrike −46, Globant −42, Salesforce −32. Las excepciones son Palo Alto (+34) e IBM (+18).",
-      "hipotesis": "Con crecimiento frenando e inflación alta, las empresas recortan gasto en software y suben las tasas, que castigan a las acciones valuadas por crecimiento futuro.",
-      "confianza": "Consistente en el bloque, pero buena parte de esos meses son de 2022."
-     }
-    ],
     "empresas": {
      "CRM": "Líder en software de gestión de clientes. Crece cerca del 10% anual, mucho menos que antes, y lo compensa con márgenes y recompras grandes. Apuesta a los agentes de IA (Agentforce) y en 2025 compró Informatica. Cotiza barata para el sector porque el mercado duda de su crecimiento.",
      "ADBE": "Photoshop, Illustrator y Acrobat: dominante en herramientas creativas y documentos. El mercado teme que la IA generativa de imágenes y video le quite clientes; por eso cotiza a un P/E muy bajo para su historia, pese a márgenes altísimos y recompras fuertes.",
@@ -448,15 +389,6 @@
      "Ventas de PC.",
      "Recompras y dividendos."
     ],
-    "catalizadores": [
-     {
-      "fase": "Desinflación",
-      "efecto": "peor que el mercado",
-      "dato": "5 de las 6 rindieron peor que en el resto de sus meses, contra el SPY (mediana del bloque −14 puntos por año): Dell −42, Xerox −36, HP −20, Cisco −7, BlackBerry −7. Rigetti es la excepción, con pocos datos útiles.",
-      "hipotesis": "Con crecimiento e inflación bajando, las empresas posponen la renovación de equipos, y el mercado prefiere crecimiento puro a fabricantes de hardware.",
-      "confianza": "Mayoría clara, pero bloque heterogéneo y con pocas empresas."
-     }
-    ],
     "empresas": {
      "CSCO": "Equipos de red, seguridad (compró Splunk en 2024) y software. Crece poco, pero los pedidos de redes para centros de datos de IA lo reactivaron. Paga dividendo y recompra acciones.",
      "DELL": "Servidores, almacenamiento y PC. Es de los principales vendedores de servidores con chips de Nvidia, lo que explica la suba fuerte de la acción. El margen es bajo y el negocio de PC depende del ciclo de renovación.",
@@ -512,15 +444,6 @@
      "Ventas de publicidad.",
      "En Disney, resultados de parques; en T-Mobile, clientes nuevos de telefonía."
     ],
-    "catalizadores": [
-     {
-      "fase": "Estanflación",
-      "efecto": "peor que el mercado",
-      "dato": "4 de las 5 rindieron peor que en el resto de sus meses, contra el SPY (mediana −35 puntos por año): Spotify −60, Disney −42, Yelp −35, Netflix −18. T-Mobile es la excepción (+10), por ser un servicio que la gente no corta.",
-      "hipotesis": "Con inflación alta y la economía frenando, la gente recorta suscripciones y salidas, y las empresas recortan publicidad.",
-      "confianza": "Mayoría clara, pero buena parte de esos meses son de 2022."
-     }
-    ],
     "empresas": {
      "NFLX": "El mayor servicio de streaming del mundo. Ya es rentable y genera flujo libre; crece subiendo precios, con el plan con publicidad y cobrando por cuentas compartidas. En diciembre de 2025 anunció un acuerdo para comprar los estudios y el streaming de Warner Bros. Discovery, con una oferta competidora de Paramount. Conviene revisar en qué quedó, porque cambia la deuda y el riesgo. Hizo un desdoblamiento de acciones de 10 a 1 en 2025.",
      "SPOT": "Streaming de música y podcasts. Después de años perdiendo plata, desde 2024 gana dinero gracias a subas de precio y control de costos. Le paga a las discográficas la mayor parte de lo que cobra, por eso su margen bruto es bajo. Tiene mucha caja y casi nada de deuda.",
@@ -573,22 +496,6 @@
      "Margen operativo y su guía.",
      "Cartera de crédito y morosidad.",
      "Ingresos por publicidad."
-    ],
-    "catalizadores": [
-     {
-      "fase": "Estanflación",
-      "efecto": "peor que el mercado",
-      "dato": "Las 4 rindieron peor que en el resto de sus meses, contra el SPY (mediana −60 puntos por año): MercadoLibre −75, Jumia −63, Uber −56, eBay −46.",
-      "hipotesis": "Con inflación alta y la economía frenando, el consumo cae y las tasas altas castigan a las plataformas valuadas por crecimiento.",
-      "confianza": "Consistente en las 4, pero buena parte de esos meses son de 2022."
-     },
-     {
-      "fase": "Recalentamiento",
-      "efecto": "mejor que el mercado",
-      "dato": "Las 4 rindieron mejor que en el resto de sus meses (mediana +35 puntos por año): Jumia +60, MercadoLibre +41, eBay +28, Uber +11.",
-      "hipotesis": "Con la economía creciendo fuerte, el consumo acompaña y el volumen de las plataformas sube.",
-      "confianza": "Consistente en las 4; bloque chico."
-     }
     ],
     "empresas": {
      "MELI": "El mayor comercio electrónico y la mayor billetera digital de América Latina (Mercado Pago). Crece cerca de 40% por año, pero en 2025 bajó el margen por envíos gratis en Brasil y por la expansión del crédito. Depende del consumo y las monedas de Brasil, México y Argentina.",
@@ -648,22 +555,6 @@
      "Recompras y dividendos.",
      "En NIO, entregas mensuales de autos y caja."
     ],
-    "catalizadores": [
-     {
-      "fase": "Crecimiento sin inflación",
-      "efecto": "peor que el mercado",
-      "dato": "Las 4 rindieron peor que en el resto de sus meses, contra el SPY (mediana −55 puntos por año): NIO −175, JD −78, Alibaba −31, Baidu −29.",
-      "hipotesis": "Cuando a EE.UU. le va bien sin inflación, la plata se queda en las acciones estadounidenses y el dólar se mantiene firme, lo que perjudica a los emergentes.",
-      "confianza": "Consistente en las 4. Las fases son de la economía de EE.UU., no de la china: es un efecto indirecto."
-     },
-     {
-      "fase": "Desinflación",
-      "efecto": "mejor que el mercado",
-      "dato": "Las 4 rindieron mejor que en el resto de sus meses (mediana +43 puntos por año): NIO +195, JD +53, Alibaba +32, Baidu +13.",
-      "hipotesis": "Con inflación y crecimiento bajando en EE.UU., la Reserva Federal tiende a bajar tasas, el dólar se debilita y la plata busca emergentes.",
-      "confianza": "Consistente en las 4, efecto indirecto."
-     }
-    ],
     "empresas": {
      "BABA": "El mayor comercio electrónico de China (Taobao, Tmall) y la mayor nube del país, con su propio modelo de IA (Qwen). En 2025 entró en una guerra de subsidios en reparto rápido que le bajó el margen y el flujo libre. Su año fiscal cierra en marzo.",
      "JD": "Comercio electrónico con logística propia, fuerte en electrónica. En 2025 entró al reparto de comida para competir con Meituan, lo que le llevó el margen casi a cero. Cotiza muy barata y tiene más caja que deuda.",
@@ -719,22 +610,6 @@
      "Ingresos de banca de inversión y trading.",
      "ROE del trimestre.",
      "Capital y recompras anunciadas."
-    ],
-    "catalizadores": [
-     {
-      "fase": "Crecimiento en alza (recalentamiento y crecimiento sin inflación)",
-      "efecto": "mejor que el mercado",
-      "dato": "Los 7 rindieron mejor que en el resto de sus meses en ambas fases, contra el SPY. Recalentamiento: mediana +18 puntos por año (Bradesco +38, Itaú +37, Bank of America +24, Citi +18, JPMorgan +13). Crecimiento sin inflación: mediana +13.",
-      "hipotesis": "Con la economía creciendo, los bancos prestan más, la morosidad baja y, si hay inflación, las tasas suben y mejora el margen.",
-      "confianza": "El patrón más consistente de todo el sitio: 7 de 7 en las cuatro fases."
-     },
-     {
-      "fase": "Crecimiento en baja (estanflación y desinflación)",
-      "efecto": "peor que el mercado",
-      "dato": "Los 7 rindieron peor que en el resto de sus meses en ambas fases. Estanflación: mediana −13 puntos por año (Bradesco −62, Citi −41, Itaú −36). Desinflación: mediana −14.",
-      "hipotesis": "Con la economía frenando, sube la morosidad y caen los préstamos; en desinflación, además, bajan las tasas y se achica el margen.",
-      "confianza": "7 de 7 en ambas fases."
-     }
     ],
     "empresas": {
      "JPM": "El mayor banco de EE.UU. y el de mejor ROE entre los grandes. Fuerte en todo: banca minorista, tarjetas, banca de inversión y gestión de patrimonio. Por eso cotiza a 2,5 veces su valor libro, mucho más que el resto.",
@@ -792,22 +667,6 @@
      "Morosidad (American Express).",
      "Cuentas activas y activos en custodia (Robinhood)."
     ],
-    "catalizadores": [
-     {
-      "fase": "Estanflación",
-      "efecto": "peor que el mercado",
-      "dato": "Las 5 rindieron peor que en el resto de sus meses, contra el SPY (mediana −40 puntos por año): PayPal −84, Robinhood −55, Mastercard −40, American Express −40, Visa −28.",
-      "hipotesis": "Con inflación alta y la economía frenando, el consumo real cae y las tasas altas castigan a las valuaciones de crecimiento.",
-      "confianza": "Consistente en las 5, pero buena parte de esos meses son de 2022."
-     },
-     {
-      "fase": "Desinflación",
-      "efecto": "mejor que el mercado",
-      "dato": "Las 5 rindieron mejor que en el resto de sus meses (mediana +22 puntos por año): PayPal +55, Robinhood +50, Mastercard +22, Visa +11, American Express +6.",
-      "hipotesis": "Con inflación y tasas bajando, el mercado vuelve a pagar por crecimiento estable.",
-      "confianza": "Consistente en las 5."
-     }
-    ],
     "empresas": {
      "V": "La mayor red de pagos con tarjeta del mundo. No presta plata: cobra por cada operación. Márgenes altísimos y crecimiento constante; devuelve plata con recompras. Su año fiscal cierra en septiembre.",
      "MA": "La segunda red de pagos del mundo, mismo modelo que Visa, con algo más de peso internacional. Su ROE parece enorme porque las recompras achicaron mucho su patrimonio contable.",
@@ -857,22 +716,6 @@
      "Volumen operado e ingresos por suscripciones y servicios (Coinbase).",
      "Bitcoins minados, costo por bitcoin y contratos de IA (mineras).",
      "Acciones nuevas emitidas en el trimestre."
-    ],
-    "catalizadores": [
-     {
-      "fase": "Estanflación",
-      "efecto": "peor que el mercado",
-      "dato": "Las 4 rindieron peor que en el resto de sus meses, contra el SPY (mediana −47 puntos por año): Coinbase −81, Riot −52, Hut 8 −42, Strategy −34.",
-      "hipotesis": "Con inflación alta y tasas subiendo, se retira la liquidez y los activos más especulativos son los primeros en caer.",
-      "confianza": "Consistente en las 4, pero buena parte de esos meses son de 2022."
-     },
-     {
-      "fase": "Desinflación",
-      "efecto": "mejor que el mercado",
-      "dato": "Las 4 rindieron mejor que en el resto de sus meses (mediana +52 puntos por año): Coinbase +90, Riot +68, Hut 8 +35, Strategy +21.",
-      "hipotesis": "Con inflación y tasas bajando, vuelve la liquidez y sube el apetito por riesgo.",
-      "confianza": "Consistente en las 4."
-     }
     ],
     "empresas": {
      "MSTR": "Strategy: su negocio de software es chico; la empresa es básicamente una tenencia de bitcoins financiada con deuda, acciones preferidas y emisión de acciones comunes. La ganancia contable sube y baja con el precio del bitcoin, así que no sirve para valuarla.",
@@ -984,22 +827,6 @@
      "Flujo libre, dividendos y recompras.",
      "Plan de inversión del año."
     ],
-    "catalizadores": [
-     {
-      "fase": "Recalentamiento",
-      "efecto": "mejor que el mercado",
-      "dato": "5 de las 6 rindieron mejor que en el resto de sus meses, contra el SPY (mediana +19 puntos por año): GeoPark +60, Shell +25, Tenaris +23, Exxon +15, Chevron +2. Petrobras es la excepción (−9).",
-      "hipotesis": "Con la economía creciendo e inflación en alza, sube la demanda de energía y el precio del crudo, que además es parte de la inflación.",
-      "confianza": "Mayoría clara y lógica económica directa."
-     },
-     {
-      "fase": "Desinflación",
-      "efecto": "peor que el mercado",
-      "dato": "5 de las 6 rindieron peor que en el resto de sus meses (mediana −13 puntos por año): GeoPark −30, Shell −25, Exxon −13, Tenaris −12, Chevron −1. Petrobras es la excepción (+11).",
-      "hipotesis": "Con inflación y crecimiento bajando, cae la demanda de energía y el precio del crudo.",
-      "confianza": "Mayoría clara, aunque Chevron casi no se mueve."
-     }
-    ],
     "empresas": {
      "XOM": "La mayor petrolera de EE.UU. Compró Pioneer en 2024 y es la mayor productora de la cuenca Permian. Integrada (producción, refinación y química), con poca deuda y recompras grandes.",
      "CVX": "Segunda petrolera de EE.UU., integrada. Compró Hess en 2025, lo que le dio participación en el gran yacimiento de Guyana. Dividendo alto y recompras.",
@@ -1056,22 +883,6 @@
      "Precio realizado del metal.",
      "Guía de producción del año.",
      "Dividendos y recompras."
-    ],
-    "catalizadores": [
-     {
-      "fase": "Estanflación",
-      "efecto": "peor que el mercado",
-      "dato": "Las 7 rindieron peor que en el resto de sus meses, contra el SPY (mediana −46 puntos por año): Ternium −62, Harmony −53, Hecla −47, Vale −46, Freeport −38, Barrick −21, MP −19.",
-      "hipotesis": "Con la economía frenando, cae la demanda de metales industriales; y con tasas reales en alza, sufren también el oro y la plata.",
-      "confianza": "Consistente en las 7, pero buena parte de esos meses son de 2022."
-     },
-     {
-      "fase": "Desinflación",
-      "efecto": "mejor que el mercado",
-      "dato": "5 de las 7 rindieron mejor que en el resto de sus meses (mediana +61 puntos por año): Harmony +104, Hecla +73, MP +73, Barrick +61, Freeport +28. Vale y Ternium, más ligadas al acero, van al revés (−7).",
-      "hipotesis": "Con inflación y tasas bajando, suben el oro y la plata, que no pagan interés y ganan atractivo.",
-      "confianza": "El cuadro lo marca como mixto (5 de 7): vale para las mineras de oro, plata y tierras raras, no para Vale ni Ternium."
-     }
     ],
     "empresas": {
      "VALE": "Brasileña, una de las mayores productoras de mineral de hierro del mundo, que vende sobre todo a las acerías chinas. También níquel y cobre. Su P/E de los últimos 12 meses está inflado por un cargo contable a fines de 2025; el esperado es más representativo. Dividendo alto.",
@@ -1130,15 +941,6 @@
      "Guía de ventas y ganancia del año.",
      "Resultados de estudios en fase 3 y aprobaciones de la FDA.",
      "Comentarios sobre precios y descuentos en EE.UU."
-    ],
-    "catalizadores": [
-     {
-      "fase": "Desinflación",
-      "efecto": "peor que el mercado",
-      "dato": "En los meses de desinflación (2015–2026), 4 de las 5 rindieron peor que en el resto de los meses, contra el SPY: Lilly −42 puntos por año, Pfizer −23, J&J −13, Novo −10. Abbott, que no depende de patentes, +4. En consumo defensivo el patrón no aparece.",
-      "hipotesis": "Con inflación y crecimiento bajando, el mercado espera recortes de tasa y la plata va a tecnología y crecimiento; la farma, que se compra por estabilidad, queda atrás.",
-      "confianza": "Patrón consistente en el bloque; en cada empresa por separado, al borde de lo que se considera real."
-     }
     ],
     "empresas": {
      "LLY": "Crece por la tirzepatida (Mounjaro para diabetes y Zepbound para obesidad), que ya es su producto más vendido, con patentes hasta mediados de la década de 2030. Su próxima apuesta es orforglipron, un GLP-1 en pastilla. El riesgo es la concentración y el precio: cotiza muy por encima del grupo porque el mercado descuenta años de crecimiento.",
@@ -1302,22 +1104,6 @@
      "Inventarios.",
      "Guía del año."
     ],
-    "catalizadores": [
-     {
-      "fase": "Estanflación",
-      "efecto": "peor que el mercado",
-      "dato": "Las 3 rindieron peor que en el resto de sus meses, contra el SPY (mediana −30 puntos por año): Abercrombie −64, Nike −30, Goodyear −10.",
-      "hipotesis": "Con inflación alta y la economía frenando, el consumo discrecional es lo primero que se recorta.",
-      "confianza": "Consistente, pero son solo 3 empresas y buena parte de esos meses son de 2022."
-     },
-     {
-      "fase": "Recalentamiento",
-      "efecto": "mejor que el mercado",
-      "dato": "Las 3 rindieron mejor que en el resto de sus meses (mediana +22 puntos por año): Goodyear +66, Abercrombie +22, Nike +14.",
-      "hipotesis": "Con la economía creciendo fuerte, la gente gasta más en lo que no es imprescindible.",
-      "confianza": "Consistente, pero son solo 3 empresas."
-     }
-    ],
     "empresas": {
      "NKE": "Nike: la mayor marca deportiva del mundo, en plena recuperación. Perdió terreno frente a marcas nuevas (On, Hoka) y por depender demasiado de la venta directa; desde fines de 2024 tiene nuevo CEO que volvió a apostar a las tiendas y al deporte. Los aranceles le pegan fuerte. Su año fiscal cierra en mayo.",
      "ANF": "Abercrombie & Fitch y Hollister. Tuvo una recuperación muy fuerte de la marca entre 2023 y 2024 y luego se desaceleró. Sin deuda y con recompras. Cotiza a P/E bajo.",
@@ -1369,22 +1155,6 @@
      "Pedidos y servicios de mantenimiento (GE).",
      "Ingreso por asiento, ocupación y costo de combustible (aerolíneas).",
      "Contratos y cargos por sobrecostos (Lockheed)."
-    ],
-    "catalizadores": [
-     {
-      "fase": "Estanflación",
-      "efecto": "peor que el mercado",
-      "dato": "5 de las 6 rindieron peor que en el resto de sus meses, contra el SPY (mediana −26 puntos por año): Delta −43, Boeing −41, United −28, American −23, GE −22. Lockheed es la excepción (+11): la defensa no depende del ciclo.",
-      "hipotesis": "Con la economía frenando, se recortan los viajes; con inflación alta, sube el combustible.",
-      "confianza": "Mayoría clara, aunque buena parte de esos meses son de 2022."
-     },
-     {
-      "fase": "Recalentamiento",
-      "efecto": "mejor que el mercado",
-      "dato": "5 de las 6 rindieron mejor que en el resto de sus meses (mediana +14 puntos por año): Boeing +32, GE +24, United +16, American +12, Delta +1. Lockheed es la excepción (−8).",
-      "hipotesis": "Con la economía creciendo fuerte, sube la demanda de viajes y de aviones.",
-      "confianza": "Mayoría clara; Delta casi no se mueve."
-     }
     ],
     "empresas": {
      "BA": "Boeing: aviones comerciales (737, 787, 777) y defensa. Viene de años de problemas de calidad y del accidente del 737 MAX; en 2025 la FAA le permitió subir la producción del 737. Tiene mucha deuda y su flujo libre todavía es negativo. Su patrimonio es casi nulo, así que el P/VL no sirve.",
@@ -1438,15 +1208,6 @@
      "Caja y gasto del trimestre.",
      "Calendario de lanzamientos y avances técnicos.",
      "Acciones nuevas emitidas."
-    ],
-    "catalizadores": [
-     {
-      "fase": "Recalentamiento",
-      "efecto": "peor que el mercado",
-      "dato": "Las 4 con historia suficiente rindieron peor que en el resto de sus meses, contra el SPY (mediana −112 puntos por año): Rocket Lab −121, Satellogic −113, AST −111, Virgin Galactic −17.",
-      "hipotesis": "Con inflación y tasas en alza, las acciones más especulativas, que valen por ganancias muy lejanas, son las más castigadas.",
-      "confianza": "Consistente, pero son acciones muy volátiles y con poca historia: tomarlo con cuidado."
-     }
     ],
     "empresas": {
      "SPCX": "SpaceX: domina los lanzamientos de cohetes en el mundo y opera Starlink, el mayor servicio de internet satelital. Cotiza hace menos de un año, así que tiene poca historia de precio. Es por lejos la más grande del bloque y vale muchas veces sus ventas.",
