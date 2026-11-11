@@ -213,6 +213,10 @@ td.lm{font-size:12px;white-space:normal;max-width:230px;min-width:170px;line-hei
 .ctile b{font-size:20px;font-weight:700;line-height:1.2}.ctile em{font-style:normal;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
 .ctile small{font-size:11.5px;color:#c8d0ea;line-height:1.35}.ctile small.mut{color:var(--muted);font-size:10.5px}
 .spk{width:100%;height:34px;margin:4px 0 2px;display:block}
+.ctile{position:relative}.vd{position:absolute;top:8px;right:9px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;border:1px solid;cursor:help;letter-spacing:.03em}
+.vd.bull{color:#7ad19a;border-color:#7ad19a66;background:#7ad19a1a}.vd.bear{color:#ef7b7b;border-color:#ef7b7b66;background:#ef7b7b1a}.vd.neu{color:#9aa5c8;border-color:#9aa5c855}
+.ctile small.vdr{font-style:italic;color:#aab3d1;font-size:11px}
+@media (max-width:640px){.vd{position:static;align-self:flex-start;margin-bottom:2px}}
 @media (max-width:640px){.ctiles{grid-template-columns:1fr 1fr;gap:8px}.ctile{padding:8px 9px}.ctile b{font-size:16px}.ctile small{font-size:10.5px}.spk{height:26px}}
 .mot{padding:10px 0 12px;border-bottom:1px solid var(--line)}.mot:last-of-type{border-bottom:0}
 .mot-h{display:flex;align-items:center;font-size:14px}.mot-t{margin:6px 0 8px;font-size:13px;line-height:1.5;color:#c8d0ea}
@@ -813,20 +817,26 @@ function pronosSerie(bid, solo){
   const k = solo==="nand" ? [4,5] : [2,3];
   return {P, nom: solo==="nand" ? "NAND" : "DRAM", xs: P.serie.map(r=>({q:r[0], pub:r[1], a:r[k[0]], b:r[k[1]], m:r[k[0]]!=null&&r[k[1]]!=null?(r[k[0]]+r[k[1]])/2:null}))};
 }
+const vdTag = v => v ? `<span class="vd ${v[0]}" title="${esc(v[1])}">${{bull:"Bullish",bear:"Bearish",neu:"Neutral"}[v[0]]}</span>` : "";
 function tiles(cf, bid){
   const out = [];
   cf.indicadores.forEach(k=>{ const v = CI.indicadores[k], c = colI(k), s = v.serie.map(p=>p[1]);
-    let big, sub, est;
+    let big, sub, est, vd;
     if (k==="mu_inv"){ const u = s[s.length-1], p = s[s.length-2], avg = s.reduce((a,b)=>a+b,0)/s.length;
-      big = `${nx(u,0)} días`; sub = `antes ${nx(p,0)} · promedio ${nx(avg,0)}`; est = u>p*1.03 ? ["Sube","neg"] : u<p*0.97 ? ["Baja","pos"] : ["Estable",""]; }
-    else if (v.frec==="mensual"){ big = pct(v.anual,0); sub = `vs. hace un año · 3 meses: ${pct(v.trim,0)}`; est = v.trim>0.05 ? ["Sube","pos"] : v.trim<-0.05 ? ["Baja","neg"] : ["Estable",""]; }
-    else { big = `US$ ${nx(v.valor,1)} mil M`; sub = `en 12 meses · ${pct(v.anual,0)} en un año`; est = v.anual>0.05 ? ["Sube", k==="mu_capex"?"":"pos"] : v.anual<-0.05 ? ["Baja", k==="mu_capex"?"":"neg"] : ["Estable",""]; }
-    out.push(`<div class="ctile" style="--tc:${c}"><span class="ct-n">${esc(v.corto)}</span><b>${big}</b><em class="${est[1]}">${est[0]}</em><small>${sub}</small>${spk2(s.slice(k==="nanya"?-48:-16), c)}<small class="mut">${v.frec==="mensual"?mesTxt(v.ultimo):trimTxt(v.ultimo)}</small></div>`); });
+      big = `${nx(u,0)} días`; sub = `antes ${nx(p,0)} · promedio ${nx(avg,0)}`; est = u>p*1.03 ? ["Sube","neg"] : u<p*0.97 ? ["Baja","pos"] : ["Estable",""];
+      vd = u>p*1.03 ? ["bear","El stock se acumula: suele anticipar precios más bajos."] : u<p*0.97 ? ["bull","El stock baja: la memoria se vende sola."] : ["neu","Stock estable."]; }
+    else if (v.frec==="mensual"){ big = pct(v.anual,0); sub = `vs. hace un año · 3 meses: ${pct(v.trim,0)}`; est = v.trim>0.05 ? ["Sube","pos"] : v.trim<-0.05 ? ["Baja","neg"] : ["Estable",""];
+      vd = v.trim>0.05 ? ["bull","Las ventas siguen creciendo."] : v.trim<-0.05 ? ["bear","Las ventas caen: en 2018 y 2021 la primera caída marcó el pico."] : ["neu","Ventas planas."]; }
+    else { big = `US$ ${nx(v.valor,1)} mil M`; sub = `en 12 meses · ${pct(v.anual,0)} en un año`; est = v.anual>0.05 ? ["Sube", k==="mu_capex"?"":"pos"] : v.anual<-0.05 ? ["Baja", k==="mu_capex"?"":"neg"] : ["Estable",""];
+      vd = k==="mu_capex" ? (v.anual>0.3 ? ["bear","Los fabricantes invierten fuerte: en uno o dos años puede sobrar memoria."] : v.anual<0 ? ["bull","Recortan inversión: menos oferta a futuro."] : ["neu","Inversión moderada."])
+        : (v.anual>0.05 ? ["bull","Los clientes siguen invirtiendo: hay demanda."] : v.anual<-0.05 ? ["bear","Los clientes recortan: menos demanda."] : ["neu","Demanda estable."]); }
+    out.push(`<div class="ctile" style="--tc:${c}"><span class="ct-n">${esc(v.corto)}</span>${vdTag(vd)}<b>${big}</b><em class="${est[1]}">${est[0]}</em><small>${sub}</small>${spk2(s.slice(k==="nanya"?-48:-16), c)}<small class="vdr">${esc(vd[1])}</small><small class="mut">${v.frec==="mensual"?mesTxt(v.ultimo):trimTxt(v.ultimo)}</small></div>`); });
   const ps = pronosSerie(cf.pronos_de || (cf.pronos ? bid : ""), cf.solo);
   if (ps){ const xs = ps.xs, u = xs[xs.length-1], pv = xs.slice(-5,-1).filter(x=>x.m!=null), mx = pv.length ? pv.reduce((a,b)=>b.m>a.m?b:a) : null;
     const fr = mx && u.m!=null && mx.m>15 && u.m<mx.m/2;
-    out.push(`<div class="ctile" style="--tc:#e0c26a"><span class="ct-n">Precio ${ps.nom} esperado</span><b>${rngT(u.a,u.b)}</b><em class="${fr?"neg":u.m>0?"pos":"neg"}">${fr?"Se frena":u.m>0?"Sube":"Baja"}</em><small>${fr?`venía de ${rngT(mx.a,mx.b)} (${qtxt(mx.q)})`:"contra el trimestre anterior"}</small>${spk2(xs.slice(-12).map(x=>x.m), "#e0c26a", true)}<small class="mut">${qtxt(u.q)} · TrendForce</small></div>`); }
-  return `<div class="ctiles">${tiles.length?"":""}${out.join("")}</div>`;
+    const vd = fr ? ["bear","La suba de precios se frena: en los ciclos de memoria pesa más que se frene que el nivel."] : u.m>5 ? ["bull","Se esperan precios más altos."] : u.m<0 ? ["bear","Se esperan precios más bajos."] : ["neu","Precios casi estables."];
+    out.push(`<div class="ctile" style="--tc:#e0c26a"><span class="ct-n">Precio ${ps.nom} esperado</span>${vdTag(vd)}<b>${rngT(u.a,u.b)}</b><em class="${fr?"neg":u.m>0?"pos":"neg"}">${fr?"Se frena":u.m>0?"Sube":"Baja"}</em><small>${fr?`venía de ${rngT(mx.a,mx.b)} (${qtxt(mx.q)})`:"contra el trimestre anterior"}</small>${spk2(xs.slice(-12).map(x=>x.m), "#e0c26a", true)}<small class="vdr">${esc(vd[1])}</small><small class="mut">${qtxt(u.q)} · TrendForce</small></div>`); }
+  return `<div class="ctiles">${out.join("")}</div><p class="mut small" style="margin:6px 0 0">Bullish / Bearish: si el dato hoy es viento a favor o en contra para la acción según cómo funciona el ciclo. No es una señal de compra o venta: la acción suele moverse antes que estos datos.</p>`;
 }
 function cicloCard(f){
   const bl = BQDE(f.byma), cb = bl && CI?.bloques?.[bl.id], ce = CI?.empresas?.[f.byma];
