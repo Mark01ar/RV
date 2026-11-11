@@ -1280,7 +1280,9 @@ function barras(an){
 
 function kv(pares){ return `<div class="kv">${pares.map(([k,v,c])=>`<div><span>${k}</span><b class="${c||""}">${v}</b></div>`).join("")}</div>`; }
 
-const FTABS = [["resumen","Resumen"],["sensib","Qué la mueve"],["analisis","Análisis"],["numeros","Números"],["valuacion","Valuación"],["analistas","Analistas"],["cedear","CEDEAR"],["posicion","Posicionamiento"],["vigilar","Qué vigilar"]];
+const FTABS = [["resumen","Resumen"],["sensib","Qué la mueve"],["analisis","Análisis"],["numeros","Números y valuación"],["mercado","Analistas y mercado"]];
+const FGRUPO = {resumen:["resumen"], sensib:["sensib"], analisis:["nicho","analisis","vigilar"], numeros:["numeros","valuacion"], mercado:["analistas","posicion","cedear"]};
+const FVIEJA = {nicho:"analisis", vigilar:"analisis", valuacion:"numeros", analistas:"mercado", cedear:"mercado", posicion:"mercado"};
 const logoImg = (b, cls="logo") => `<img class="${cls}${(LM||{})[b]?" osc":""}" src="data/logos/${encodeURIComponent(b)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} sinlogo',textContent:'${esc(b).slice(0,2)}'}))">`;
 
 function analizar(f){
@@ -1496,7 +1498,8 @@ async function ficha(m, t){
   const f = FCACHE[t], x = E.empresas.find(z=>z.ticker===t) || {};
   const volver = `<button class="btn" id="fv">${EST.bloque?"← Volver al bloque":"← Volver"}</button>`;
   const BQF = BQDE(f.byma||x.byma);
-  const TABS = BQF?.lente ? [FTABS[0],FTABS[1],["nicho","Lectura del nicho"],...FTABS.slice(2)] : FTABS;
+  const TABS = FTABS;
+  if (FVIEJA[EST.ftab]) EST.ftab = FVIEJA[EST.ftab];
   if (f.sin){
     m.innerHTML = `${volver}<div class="soon"><h2>${esc(x.nombre||t)}</h2>La ficha completa de esta empresa todavía no está generada. Se arma en las próximas tandas.</div>`;
     m.querySelector("#fv").onclick = ()=>{EST.sel=null; render();};
@@ -1520,8 +1523,8 @@ async function ficha(m, t){
     <div class="fh-top">
       <div class="fh-logo">${logoImg(f.byma,"")}</div>
       <div class="fh-info"><h2>${esc(f.nombre)}</h2>
-        <div class="fh-sub">${esc(f.sector||"")} · ${esc(f.industria||"")} · ${esc(PAIS[f.pais]||f.pais||"")}</div>
-        <div class="fh-tags"><span class="gold">CEDEAR ${esc(f.byma)}</span>${f.byma!==f.ticker?`<span>${esc(f.ticker)}</span>`:""}<span>Ratio ${esc(f.ratio)}</span><span>Liquidez ${esc(f.liquidez)}</span>${BQF?`<span class="bqtag" data-irb="${BQF.id}">${esc(BQF.nombre)}</span>`:""}${(FX?.empresas?.[f.byma]?.motores||[]).length?`<span class="bqtag" data-ft="sensib">Lo mueve: ${FX.empresas[f.byma].motores.map(z=>esc(FX.F[z.f]?.nombre||z.f)).join(" · ")}</span>`:""}${f.tipo!=="general"?`<span>${esc({banco:"Banco",cripto:"Ligada a bitcoin",inmobiliaria:"Inmobiliaria"}[f.tipo])}</span>`:""}</div>
+        <div class="fh-sub">${esc(f.sector||"")} · ${esc(f.industria||"")} · ${esc(PAIS[f.pais]||f.pais||"")} · CEDEAR ${esc(f.byma)}${f.byma!==f.ticker?` (${esc(f.ticker)})`:""} · ratio ${esc(f.ratio)} · liquidez ${esc((f.liquidez||"").toLowerCase())}</div>
+        <div class="fh-tags">${BQF?`<span class="bqtag" data-irb="${BQF.id}">${esc(BQF.nombre)} →</span>`:""}${f.tipo!=="general"?`<span>${esc({banco:"Banco",cripto:"Ligada a bitcoin",inmobiliaria:"Inmobiliaria"}[f.tipo])}</span>`:""}</div>
         <div class="fh-tend" style="color:${acol}">${AN.tend==="Mejora"?"▲ Mejora":AN.tend==="Empeora"?"▼ Empeora":"= Estable"}</div>
         ${frase?`<p class="frase">${esc(frase)}</p>`:""}
         ${tipoTxt?`<div class="aviso">${tipoTxt}</div>`:""}</div>
@@ -1562,7 +1565,7 @@ async function ficha(m, t){
   const negocio = `<div class="card"><h3>A qué se dedica</h3>${f.descripcion?`<p class="desc">${esc(f.descripcion)}</p><p class="mut small">Texto de Yahoo Finance, en inglés. El resumen en castellano se suma más adelante.</p>`:`<p class="mut">Sin descripción disponible.</p>`}
     ${kv([["Empleados", f.empleados?num(f.empleados,0):"—"],["Sitio web", f.web?`<a href="${esc(f.web)}" target="_blank" rel="noopener">${esc(f.web.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))}</a>`:"—"],["Reporta en", esc(f.moneda_reporte||"USD")]])}</div>`;
 
-  let cuerpo = "";
+  const parte = sub => { let cuerpo = "";
   if (sub==="resumen"){
     cuerpo = `<section class="fgrid">${negocio}${balance}</section><section class="fgrid">${perfil}${precio}</section>`;
   } else if (sub==="analisis"){
@@ -1618,7 +1621,7 @@ async function ficha(m, t){
       <div class="card"><h3>P/E en los últimos años</h3>${bd?bandaPE(bd, v.pe):`<p class="mut">Sin historia suficiente de ganancias positivas.</p>`}</div></section>
     <section class="fgrid"><div class="card"><h3>Devolución al accionista</h3>
       ${kv([["Rendimiento total", pc(v.rend_accionista), v.rend_accionista>0.03?"pos":""],["Dividendo", pc(v.div_yield)],["Recompras netas", pc(v.recompra_yield)]])}
-      <p class="mut small">Lo que la empresa devuelve por año, como porcentaje de su valor: dividendos más recompras, menos acciones emitidas. Muchas tecnológicas devuelven más por recompras que por dividendos.</p>${devol}</div>
+      <details class="help" style="margin-top:10px"><summary>Cómo se lee</summary><p class="mut small">Lo que la empresa devuelve por año, como porcentaje de su valor: dividendos más recompras, menos acciones emitidas. Muchas tecnológicas devuelven más por recompras que por dividendos.</p></details>${devol}</div>
       <div class="card"><h3>Dividendos</h3>
       ${dv.tasa_anual||dv.pagos_12m?`${kv([["Por acción, anual", dv.tasa_anual==null?"—":"US$ "+nx(dv.tasa_anual,2)],["Rendimiento", pc(v.div_yield)],["Promedio 5 años", pc(dv.prom_5a)],["Parte de la ganancia que reparte", pc(dv.payout)],
         ["Pagos en 12 meses", dv.pagos_12m??"—"],["Próximo corte", fch2(dv.fecha_corte)],["Próximo pago", fch2(dv.fecha_pago)]])}
@@ -1635,9 +1638,9 @@ async function ficha(m, t){
     cuerpo = `<section class="card"><h3>El CEDEAR en BYMA <span class="mut">· último año, semanal</span></h3>
       ${kv([["Premio hoy", pct(f.premio), f.premio>0.03?"neg":f.premio<-0.03?"pos":""],["Precio CEDEAR $", f.px_ars?num(f.px_ars,0):"—"],["Ratio", esc(f.ratio)],["Volumen típico", usd(f.monto_usd)+"/día"],["Liquidez", esc(f.liquidez)]])}
       ${ch?premioCh(ch):`<p class="mut" style="margin-top:10px">Sin historia de precios del CEDEAR disponible.</p>`}
-      <p class="mut small">El premio compara el dólar implícito en este CEDEAR contra el de una canasta de los más líquidos (Apple, Microsoft, Alphabet, Amazon, Nvidia, Coca-Cola, MercadoLibre y SPY). Positivo es que está caro contra su precio en EE.UU.; negativo, que está barato. Conviene comprar con premio bajo o negativo y vender con premio alto.</p></section>`;
+      <details class="help" style="margin-top:10px"><summary>Cómo se lee</summary><p class="mut small">El premio compara el dólar implícito en este CEDEAR contra el de una canasta de los más líquidos (Apple, Microsoft, Alphabet, Amazon, Nvidia, Coca-Cola, MercadoLibre y SPY). Positivo es que está caro contra su precio en EE.UU.; negativo, que está barato. Conviene comprar con premio bajo o negativo y vender con premio alto.</p></details></section>`;
   } else if (sub==="nicho"){
-    cuerpo = panelNicho(f);
+    cuerpo = BQF?.lente ? panelNicho(f) : "";
   } else if (sub==="vigilar"){
     cuerpo = panelVigilar(f);
   } else if (sub==="analistas"){
@@ -1656,16 +1659,18 @@ async function ficha(m, t){
       ${[["Este año","0y"],["Próximo año","+1y"]].map(([t_,p])=>`<tr><td class="l">${t_}</td><td>${a["eps_"+p]==null?"—":nx(a["eps_"+p],2)}</td>${["7","30","90"].map(d=>`<td class="${cls(a[`rev_${p}_${d}`])}">${pct(a[`rev_${p}_${d}`])}</td>`).join("")}</tr>`).join("")}
       </tbody></table><p class="mut small">Revisiones en los últimos 30 días: ${a.suben_30d??0} suben, ${a.bajan_30d??0} bajan. Crecimiento esperado próximo año: ventas ${pct(a.crec_ventas_1y,0)}, ganancias ${pct(a.crec_eps_1y,0)}.</p></div>
       <div class="card"><h3>Últimos balances</h3>${sorp}</div></section>`;
-  } else {
+  } else if (sub==="posicion"){
     const p = f.posicion || {};
     cuerpo = `<section class="fgrid"><div class="card"><h3>Venta en corto</h3>
       ${kv([["Interés corto (% del flotante)", pct(p.short_float,1).replace("+","")],["Días para cubrir", p.short_ratio==null?"—":nx(p.short_ratio,1)],["Cambio en el último mes", pct(p.short_cambio,0), p.short_cambio>0?"neg":"pos"]])}
-      <p class="mut small">El interés corto es la parte de las acciones apostadas a la baja. Por encima de 10% es alto: suele indicar dudas sobre la empresa, pero también puede generar subas bruscas si los que venden en corto tienen que recomprar. "Días para cubrir" es cuántos días de volumen normal harían falta para recomprarlas todas.</p></div>
+      <details class="help" style="margin-top:10px"><summary>Cómo se lee</summary><p class="mut small">El interés corto es la parte de las acciones apostadas a la baja. Por encima de 10% es alto: suele indicar dudas sobre la empresa, pero también puede generar subas bruscas si los que venden en corto tienen que recomprar. "Días para cubrir" es cuántos días de volumen normal harían falta para recomprarlas todas.</p></details></div>
       <div class="card"><h3>Quiénes tienen la acción</h3>
       ${kv([["Institucionales", pct(p.institucionales,0).replace("+","")],["Directivos", pct(p.insiders,1).replace("+","")],
         ["Directivos, últimos 6 meses", p.dir_compras==null&&p.dir_ventas==null?"—":`${p.dir_compras??0} compras · ${p.dir_ventas??0} ventas`],["Neto de directivos", pct(p.dir_neto_pct,1), cls(p.dir_neto_pct)]])}
-      <p class="mut small">Las ventas de directivos son habituales (pagos en acciones, impuestos) y dicen poco. Las compras con su propio dinero son más informativas, aunque en nuestro backtest no alcanzaron para usarlas como señal.</p></div></section>`;
+      <details class="help" style="margin-top:10px"><summary>Cómo se lee</summary><p class="mut small">Las ventas de directivos son habituales (pagos en acciones, impuestos) y dicen poco. Las compras con su propio dinero son más informativas, aunque en nuestro backtest no alcanzaron para usarlas como señal.</p></details></div></section>`;
   }
+  return cuerpo; };
+  const cuerpo = (FGRUPO[sub]||[sub]).map(parte).join("");
   m.innerHTML = `${volver}${head}${cuerpo}<p class="mut small">Ficha actualizada ${f.actualizado?new Date(f.actualizado).toLocaleDateString("es-AR"):"—"}. Datos de Yahoo Finance, SEC y data912.</p>`;
   m.querySelector("#fv").onclick = ()=>{EST.sel=null; EST.ftab="resumen"; render();};
   m.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{EST.ftab=b.dataset.ft; ficha(m,t);});
