@@ -19,6 +19,7 @@ FRENCH = "https://mba.tuck.dartmouth.edu/pages/faculty/ken.french/ftp/"
 FACTORES = [
     {"id": "tasa", "nombre": "Tasa a 10 años", "grupo": "Tasas y crédito", "serie": "DGS10", "fuente": "FRED", "tipo": "nivel", "sube": "sube la tasa a 10 años", "baja": "baja la tasa a 10 años"},
     {"id": "curva", "nombre": "Pendiente de la curva", "grupo": "Tasas y crédito", "serie": "T10Y2Y", "fuente": "FRED", "tipo": "nivel", "sube": "se empina la curva (10 años menos 2 años)", "baja": "se aplana la curva (10 años menos 2 años)"},
+    {"id": "inflacion", "nombre": "Inflación esperada", "grupo": "Tasas y crédito", "serie": "T5YIE", "fuente": "FRED", "tipo": "nivel", "sube": "sube la inflación esperada a 5 años", "baja": "baja la inflación esperada a 5 años"},
     {"id": "credito", "nombre": "Spread de crédito", "grupo": "Tasas y crédito", "serie": "BAA10Y", "fuente": "FRED", "tipo": "nivel", "sube": "sube el spread de crédito corporativo", "baja": "baja el spread de crédito corporativo"},
     {"id": "dolar", "nombre": "Dólar global", "grupo": "Monedas", "serie": "DX-Y.NYB", "fuente": "Yahoo", "tipo": "precio", "sube": "se fortalece el dólar global (DXY)", "baja": "se debilita el dólar global (DXY)"},
     {"id": "yuan", "nombre": "Yuan", "grupo": "Monedas", "serie": "CNY=X", "fuente": "Yahoo", "tipo": "precio", "sube": "se debilita el yuan", "baja": "se fortalece el yuan"},
@@ -45,7 +46,7 @@ FACTORES = [
 F = {f["id"]: f for f in FACTORES}
 TRAMOS = {"a": ("2005-01", "2014-12"), "r": ("2015-01", None)}
 COD = ["CSI", "REC", "EST", "DES"]
-FAMILIA = {"dolar": "Dólar y metales", "cobre": "Dólar y metales", "oro": "Dólar y metales", "hierro": "Dólar y metales", "real": "Dólar y metales", "petroleo": "Energía", "jet": "Energía", "gas": "Energía", "tasa": "Tasas", "curva": "Tasas"}
+FAMILIA = {"dolar": "Dólar y metales", "cobre": "Dólar y metales", "oro": "Dólar y metales", "hierro": "Dólar y metales", "real": "Dólar y metales", "petroleo": "Energía", "jet": "Energía", "gas": "Energía", "inflacion": "Energía", "tasa": "Tasas", "curva": "Tasas"}
 ENT = {"a": ("2005-01", "2014-12"), "r": ("2015-01", "2022-12")}
 TEST = ("2023-01", None)
 MIN_OTROS = 3
