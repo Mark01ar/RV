@@ -196,7 +196,7 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .rsm-k b{font-size:22px;font-weight:700}.rsm-k em{display:block;font-style:normal;font-size:12.5px;color:var(--muted);margin-top:2px}
 .rsm-c div{display:grid;grid-template-columns:1fr auto 80px;gap:8px;font-size:12.5px;padding:4px 0;border-bottom:1px solid var(--line)}
 .rsm-c em{font-style:normal;color:#c8d0ea}.rsm-c i{font-style:normal;text-align:right;font-weight:600}
-.rsm-t{color:var(--accent)!important;font-weight:700}
+.rsm-t{color:var(--text)!important;font-weight:600;font-size:15px!important;letter-spacing:0!important;text-transform:none!important;margin-bottom:8px!important}
 .vb{display:inline-block;font-size:10.5px;font-weight:700;color:var(--ec);margin-left:8px;vertical-align:middle;white-space:nowrap}
 .okm{color:var(--pos);font-size:10px;font-weight:700;margin-left:3px}
 .cxf th{white-space:normal;min-width:72px;vertical-align:bottom}.cxf th small{display:block;font-size:9.5px;color:var(--accent);font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
@@ -212,12 +212,12 @@ td.lm{font-size:12px;white-space:normal;max-width:230px;min-width:170px;line-hei
 .ctile .ct-n{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tc);font-weight:600}
 .ctile b{font-size:20px;font-weight:700;line-height:1.2}.ctile em{font-style:normal;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
 .ctile small{font-size:11.5px;color:#c8d0ea;line-height:1.35}.ctile small.mut{color:var(--muted);font-size:10.5px}
-.spk{width:100%;height:34px;margin:4px 0 2px;display:block}
+.cspk{width:100%;height:34px;margin:4px 0 2px;display:block}
 .ctile{position:relative}.vd{position:absolute;top:8px;right:9px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;border:1px solid;cursor:help;letter-spacing:.03em}
 .vd.bull{color:#7ad19a;border-color:#7ad19a66;background:#7ad19a1a}.vd.bear{color:#ef7b7b;border-color:#ef7b7b66;background:#ef7b7b1a}.vd.neu{color:#9aa5c8;border-color:#9aa5c855}
 .ctile small.vdr{font-style:italic;color:#aab3d1;font-size:11px}
 @media (max-width:640px){.vd{position:static;align-self:flex-start;margin-bottom:2px}}
-@media (max-width:640px){.ctiles{grid-template-columns:1fr 1fr;gap:8px}.ctile{padding:8px 9px}.ctile b{font-size:16px}.ctile small{font-size:10.5px}.spk{height:26px}}
+@media (max-width:640px){.ctiles{grid-template-columns:1fr 1fr;gap:8px}.ctile{padding:8px 9px}.ctile b{font-size:16px}.ctile small{font-size:10.5px}.cspk{height:26px}}
 .mot{padding:10px 0 12px;border-bottom:1px solid var(--line)}.mot:last-of-type{border-bottom:0}
 .mot-h{display:flex;align-items:center;font-size:14px}.mot-t{margin:6px 0 8px;font-size:13px;line-height:1.5;color:#c8d0ea}
 .hbs{display:grid;gap:2px;max-width:820px}
@@ -434,7 +434,9 @@ details.help>summary{font-size:13px;color:var(--muted)}
 .ctile b{font-size:21px;margin-top:2px}
 .ctile small.vdr{font-style:normal;color:#b8c0d8}
 .rbl{border-left-color:var(--line)!important}
-.fmes{border-color:var(--line)}
+.fmes{border-color:var(--line);padding:12px 0}
+.rtx{font-size:13px;color:var(--muted);margin-left:4px}.rtx a{color:var(--text);text-decoration:none}.rtx a:hover{text-decoration:underline}
+.rbl .bc-ic{display:none}.rbl{padding:3px 10px;background:transparent}
 .fams{display:block}.fam{margin-bottom:22px}
 .fam .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
 .fam .bcard{width:auto}
@@ -852,8 +854,8 @@ const rngT = (a,b) => a==null ? "—" : `${a>0?"+":""}${a}% a ${b>0?"+":""}${b}%
 function spk2(vals, c, bars){
   const v = vals.filter(x=>x!=null); if (v.length<2) return "";
   const W=150, H=34, lo = Math.min(...v, bars?0:Infinity), hi = Math.max(...v, bars?0:-Infinity), Y = x => 2 + (hi-x)/(hi-lo||1)*(H-4), X = i => i/(vals.length-1)*W;
-  if (bars){ const bw = W/vals.length; return `<svg viewBox="0 0 ${W} ${H}" class="spk">${vals.map((x,i)=>x==null?"":`<rect x="${(i*bw+bw*0.15).toFixed(1)}" y="${Math.min(Y(x),Y(0)).toFixed(1)}" width="${(bw*0.7).toFixed(1)}" height="${Math.max(1,Math.abs(Y(x)-Y(0))).toFixed(1)}" fill="${c}" opacity="${x<0?0.5:0.9}"/>`).join("")}</svg>`; }
-  return `<svg viewBox="0 0 ${W} ${H}" class="spk"><path d="${vals.map((x,i)=>x==null?"":`${i?"L":"M"}${X(i).toFixed(1)} ${Y(x).toFixed(1)}`).join("")}" fill="none" stroke="${c}" stroke-width="1.8"/><circle cx="${X(vals.length-1)}" cy="${Y(vals[vals.length-1])}" r="2.6" fill="${c}"/></svg>`;
+  if (bars){ const bw = W/vals.length; return `<svg viewBox="0 0 ${W} ${H}" class="cspk">${vals.map((x,i)=>x==null?"":`<rect x="${(i*bw+bw*0.15).toFixed(1)}" y="${Math.min(Y(x),Y(0)).toFixed(1)}" width="${(bw*0.7).toFixed(1)}" height="${Math.max(1,Math.abs(Y(x)-Y(0))).toFixed(1)}" fill="${c}" opacity="${x<0?0.5:0.9}"/>`).join("")}</svg>`; }
+  return `<svg viewBox="0 0 ${W} ${H}" class="cspk"><path d="${vals.map((x,i)=>x==null?"":`${i?"L":"M"}${X(i).toFixed(1)} ${Y(x).toFixed(1)}`).join("")}" fill="none" stroke="${c}" stroke-width="1.8"/><circle cx="${X(vals.length-1)}" cy="${Y(vals[vals.length-1])}" r="2.6" fill="${c}"/></svg>`;
 }
 function pronosSerie(bid, solo){
   const P = CI?.pronos?.[bid]; if (!P?.serie?.length) return null;
@@ -1132,15 +1134,15 @@ function factoresMes(){
   if (!FX?.factores?.length) return `<p class="mut">Cargando factores…</p>`;
   const d0 = new Date(new Date().getFullYear(), new Date().getMonth()-1, 1), lim = `${d0.getFullYear()}-${String(d0.getMonth()+1).padStart(2,"0")}`;
   const MS = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"], mtx = u => `${MS[+u.mes.slice(5,7)-1]}${u.en_curso?" (en curso)":""}`;
-  const xs = FX.factores.map(f=>{ const u = (f.ultimos||[]).slice(-1)[0]; return u && u.z!=null && u.mes>=lim ? {f,u} : null; }).filter(Boolean).sort((a,b)=>Math.abs(b.u.z)-Math.abs(a.u.z)).slice(0,4);
+  const xs = FX.factores.map(f=>{ const u = (f.ultimos||[]).slice(-1)[0]; return u && u.z!=null && u.mes>=lim ? {f,u} : null; }).filter(Boolean).sort((a,b)=>Math.abs(b.u.z)-Math.abs(a.u.z)).slice(0,3);
   if (!xs.length) return `<p class="mut">Sin datos de este mes.</p>`;
   return xs.map(({f,u})=>{ const s_ = Math.sign(u.z);
-    const bls = BQ.bloques.map(bl=>{ const z = FX.bloques[bl.id]?.f?.[f.id]; return z?.r && solido(z.e) ? {bl, v:z.r.ef*u.z} : null; }).filter(p=>p && Math.abs(p.v)>=0.5).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v)).slice(0,4).sort((a,b)=>b.v-a.v);
-    const emp = Object.entries(FX.empresas).map(([b,x])=>{ const e = etqEmp(b, f.id), z = x.f?.[f.id]; return z?.r && solido(e) ? {b, v:z.r.ef*u.z} : null; }).filter(p=>p && Math.abs(p.v)>=1).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v)).slice(0,4);
+    const bls = BQ.bloques.map(bl=>{ const z = FX.bloques[bl.id]?.f?.[f.id]; return z?.r && solido(z.e) ? {bl, v:z.r.ef*u.z} : null; }).filter(p=>p && Math.abs(p.v)>=0.5).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v)).slice(0,3).sort((a,b)=>b.v-a.v);
+    const emp = Object.entries(FX.empresas).map(([b,x])=>{ const e = etqEmp(b, f.id), z = x.f?.[f.id]; return z?.r && solido(e) ? {b, v:z.r.ef*u.z} : null; }).filter(p=>p && Math.abs(p.v)>=1).sort((a,b)=>Math.abs(b.v)-Math.abs(a.v)).slice(0,3);
     const chB = p => { const fm = FAM.find(q=>q.b.includes(p.bl.id)) || {c:"#8a94b8"}; return `<span class="rbl" data-irb2="${p.bl.id}" style="--fc:${fm.c}"><span class="bc-ic sm"><svg viewBox="0 0 24 24">${ICO[p.bl.id]||""}</svg></span>${esc(p.bl.nombre)} <b class="${cls(p.v)}">${efTxt(p.v)}</b></span>`; };
     return `<div class="fmes"><div class="fmes-h"><b>${esc(f.nombre)}</b><span class="${s_>0?"pos":"neg"}">${u.cambio>0?"+":""}${nx(u.cambio, f.unidad==="pts"?2:1)}${f.unidad==="pts"?" pts":"%"}</span><em>${mtx(u)} · ${nx(Math.abs(u.z),1)} veces un mes típico</em></div>
       <p class="mut small" style="margin:2px 0 6px">${esc(capit(s_>0?f.sube:f.baja))}${f.proxy?` (medido con ETFs: ${esc(f.proxy.replace("/"," contra "))})`:""}.</p>
-      ${bls.length||emp.length?`<div class="rsm-l">${bls.map(chB).join("")}${emp.map(p=>`<span class="rbl" data-e2="${esc(E.empresas.find(q=>q.byma===p.b)?.ticker||p.b)}" style="--fc:#8a94b8">${logoImg(p.b,"logo-s")}${esc(p.b)} <b class="${cls(p.v)}">${efTxt(p.v)}</b></span>`).join("")}</div>`:`<p class="mut small">Ningún bloque ni empresa tiene una relación sólida con este factor.</p>`}</div>`; }).join("")
+      ${bls.length||emp.length?`<div class="rsm-l">${bls.map(chB).join("")}${emp.length?`<span class="rtx">${emp.map(p=>`<a href="#" data-e2="${esc(E.empresas.find(q=>q.byma===p.b)?.ticker||p.b)}">${esc(p.b)} <b class="${cls(p.v)}">${efTxt(p.v)}</b></a>`).join(" · ")}</span>`:""}</div>`:`<p class="mut small">Ningún bloque ni empresa tiene una relación sólida con este factor.</p>`}</div>`; }).join("")
     + `<details class="help" style="margin-top:10px"><summary>Cómo se lee</summary><p class="mut small">Al lado de cada bloque o empresa: cuánto se movió históricamente contra el SPY en un mes con un movimiento de este tamaño. No es lo que pasó este mes ni lo que va a pasar: es a quién le pega más este tipo de movimiento. <a href="#" id="iresc">Ver todo en Factores →</a></p></details>`;
 }
 function regimenCaja(){
@@ -1875,7 +1877,7 @@ function resumenMacro(){
       <div class="rsm-k"><span>Régimen</span><b style="color:${QC[M.actual]}">${esc(q.nombre)}</b><em>${Math.round(M.probs[M.actual]*100)}% de probabilidad · ${M.duracion} ${M.duracion===1?"mes":"meses"} · dato provisorio del mes en curso · <b style="color:${conviccion().c}">${conviccion().n}</b></em>${M.crudo&&M.crudo!==M.actual?`<em>Posible cambio a <b style="color:${QC[M.crudo]}">${esc(M.cuadrantes[M.crudo].nombre)}</b></em>`:""}</div>
       ${regimenCaja()}
     </div>
-    <div class="rsm-b"><span class="rsm-t">Los factores que más se movieron este mes · y a quién les pega</span>
+    <div class="rsm-b"><span class="rsm-t">Los factores que más se movieron este mes <span class="mut" style="font-weight:400;font-size:13px">· y a quién les pega</span></span>
       ${factoresMes()}</div></div>`, "main");
 }
 function macro(m){
@@ -1907,7 +1909,7 @@ function macro(m){
         ${div.length?`<div class="warn">Datos y mercado no coinciden en ${div.map(g=>g==="inflacion"?"inflación":g).join(" e ")}: el mercado puede estar anticipando un cambio que los datos todavía no muestran.</div>`:""}
 `)}
     </section>
-    ${sec("Cómo funciona el cálculo","",(()=>{ const H = (M.historial_rt||[]).slice(-4), cur = new Date().toISOString().slice(0,7), MS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"], nm = f => MS[+f.slice(5,7)-1]+" "+f.slice(0,4);
+    <details class="help" style="margin-bottom:16px"><summary>Cómo funciona el cálculo del régimen</summary>${sec("Cómo funciona el cálculo","",(()=>{ const H = (M.historial_rt||[]).slice(-4), cur = new Date().toISOString().slice(0,7), MS = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"], nm = f => MS[+f.slice(5,7)-1]+" "+f.slice(0,4);
       return `<div class="como">
       <div><h4>1. Cada mes se mide hacia dónde van el crecimiento y la inflación</h4>
         <p>No importa si la inflación es alta o baja, sino si se está <b>acelerando o frenando</b> en los últimos 3 meses, comparado con su propia historia. Lo mismo con el crecimiento. Con eso cada mes cae en uno de cuatro cuadrantes: crecimiento sin inflación, recalentamiento, estanflación o desinflación.</p>
@@ -1923,14 +1925,14 @@ function macro(m){
         <p>Actividad, empleo e inflación se publican 1 o 2 meses después. El régimen de un mes usa los datos oficiales publicados hasta ese momento, que en su mayoría son de 1 o 2 meses antes, más los datos de mercado del mismo mes. Cuando los datos de mercado y los oficiales no coinciden, se avisa: el mercado puede estar anticipando un cambio.</p></div>
       <div><h4>6. Dos versiones del historial</h4>
         <p>El cuadrante de esta pestaña usa los datos con sus correcciones posteriores. La caja de "qué pasó después" del Resumen usa los datos <b>tal como se conocían cada mes</b>, sin las correcciones, para no mirar el futuro. Por eso algunos meses viejos pueden diferir entre las dos.</p></div>
-      </div>`; })())}
+      </div>`; })())}</details>
     <details class="help" style="margin:0 0 14px"><summary>Ver los indicadores de crecimiento e inflación que definen el régimen</summary><div class="ejes" style="margin-top:12px">${tablaEje("crecimiento")}${tablaEje("inflacion")}</div></details>
     ${tileGDP?sec("Otro indicador de crecimiento","informativo",`<div class="pil-grid pg3">${tileGDP}</div>`):""}
     ${sec("Régimen mes a mes","",`${bandaSVG()}<div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div>`)}`;
   m.innerHTML = `<div class="ftabs mtabs">${MT.map(([k,t])=>`<button class="${k===mt?"on":""}" data-mt="${k}">${t}</button>`).join("")}</div>${cuerpo}`;
   m.querySelectorAll("[data-mt]").forEach(b=>b.onclick=()=>{ EST.mtab=b.dataset.mt; window.scrollTo(0,0); macro(m); });
   const ie = document.getElementById("iresc"); if (ie) ie.onclick = e => { e.preventDefault(); EST.fvista="si"; tab="factores"; navegar(); window.scrollTo(0,0); render(); };
-  m.querySelectorAll("[data-e2]").forEach(b=>b.onclick=()=>{ EST.sel=b.dataset.e2; EST.ftab="sensib"; EST.bloque=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
+  m.querySelectorAll("[data-e2]").forEach(b=>b.onclick=(ev)=>{ ev.preventDefault(); EST.sel=b.dataset.e2; EST.ftab="sensib"; EST.bloque=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
   m.querySelectorAll("[data-irb2]").forEach(b=>b.onclick=()=>{ EST.bloque=b.dataset.irb2; EST.sel=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
 }
 
