@@ -775,7 +775,48 @@ async function cargarFX(){
   try{ const r = await fetch("data/factores.json?v="+Date.now()); FX = r.ok ? await r.json() : null; }catch(e){ FX = null; }
   if (!FX) FX = {factores:[], bloques:{}, empresas:{}, regimen:{}};
   FX.F = Object.fromEntries((FX.factores||[]).map(f=>[f.id,f]));
+  try{ const r = await fetch("data/ciclos.json?v="+Date.now()); CI = r.ok ? await r.json() : null; }catch(e){ CI = null; }
   return FX;
+}
+let CI = null;
+const CICOL = ["#6ea8ff","#5fb3a1","#c792ea"];
+const mesTxt = k => { const [y,m] = k.split("-"); return ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"][+m-1]+" "+y; };
+const trimTxt = k => { const [y,q] = k.split("Q"); return `${q}.º trim. ${y}`; };
+function cicloCard(f){
+  const bl = BQDE(f.byma), cf = bl && CI?.bloques?.[bl.id];
+  if (!cf || !cf.indicadores.length) return "";
+  const px = CI.precios?.[f.ticker] || [], ids = cf.indicadores, on = ids.filter(k=>(EST.cis||ids).includes(k));
+  const per = EST.cper || "todo", desde = {"3y":36,"5y":60,"todo":999}[per];
+  const fin = px.length ? px[px.length-1][0] : null;
+  const ini = fin ? (()=>{ const [y,m] = fin.split("-").map(Number), t = y*12+m-1-desde; return desde>900 ? "2015-01" : `${Math.floor(t/12)}-${String(t%12+1).padStart(2,"0")}`; })() : "2015-01";
+  const ser = [];
+  if (px.length) ser.push({t:f.byma, c:"var(--accent)", w:2.2, d:px.filter(p=>p[0]>=ini)});
+  on.forEach(k=>{ const v = CI.indicadores[k]; ser.push({t:v.corto, c:CICOL[ids.indexOf(k)], w:1.6, d:v.serie.filter(p=>p[0]>=ini)}); });
+  const meses = []; { let [y,m] = ini.split("-").map(Number); const [yf,mf] = (fin||ini).split("-").map(Number); while (y*12+m <= yf*12+mf){ meses.push(`${y}-${String(m).padStart(2,"0")}`); m++; if (m>12){m=1;y++;} } }
+  const ix = Object.fromEntries(meses.map((k,i)=>[k,i]));
+  const norm = ser.filter(s=>s.d.length>1).map(s=>{ const b = s.d[0][1]; return {...s, p:s.d.filter(q=>q[0] in ix && q[1]>0).map(q=>[ix[q[0]], Math.log(q[1]/b*100)]), u:s.d[s.d.length-1][1]/b}; });
+  let chart = `<p class="mut">Sin datos para graficar.</p>`;
+  if (norm.length && meses.length>2){
+    const all = norm.flatMap(s=>s.p.map(q=>q[1])), lo = Math.min(...all), hi = Math.max(...all), W=620, H=260, pl=44, pb=22;
+    const X = i => pl + i/(meses.length-1)*(W-pl-8), Y = v => 8 + (hi-v)/(hi-lo||1)*(H-pb-8);
+    const mk = [10,25,50,100,200,500,1000,2000,5000,10000,20000].map(Math.log).filter(v=>v>=lo-0.01 && v<=hi+0.01);
+    const ticks = mk.map(v=>`<line x1="${pl}" x2="${W-8}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"${Math.abs(v-Math.log(100))<1e-9?' stroke-dasharray="3 3"':""}/><text x="${pl-6}" y="${Y(v)+4}" text-anchor="end">${Math.round(Math.exp(v))}</text>`).join("");
+    const xt = [0, Math.floor((meses.length-1)/2), meses.length-1].map((i,j)=>`<text x="${X(i)}" y="${H-6}" text-anchor="${["start","middle","end"][j]}">${mesTxt(meses[i])}</text>`).join("");
+    const paths = norm.map(s=>`<path d="${s.p.map((q,i)=>(i?"L":"M")+X(q[0]).toFixed(1)+" "+Y(q[1]).toFixed(1)).join("")}" fill="none" stroke="${s.c}" stroke-width="${s.w}"/>`).join("");
+    chart = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Precio y ciclo del sector">${ticks}${paths}${xt}</svg>
+      <div class="leg">${norm.map(s=>`<span style="color:${s.c}">■ ${esc(s.t)} ×${nx(s.u, s.u<10?1:0)}</span>`).join(" ")} <span class="mut">· base 100 al inicio, escala logarítmica</span></div>
+      <p class="mut small">Las líneas no tienen que coincidir. Muestran si el precio de la acción y el negocio del sector van para el mismo lado, y cuánto se adelantó o se atrasó el precio. ×25 quiere decir que se multiplicó por 25 en el período.</p>`;
+  }
+  const lect = ids.map(k=>{ const v = CI.indicadores[k], c = CICOL[ids.indexOf(k)], tr = v.frec==="mensual";
+    const det = v.detalle && Object.keys(v.detalle).length>1 ? ` <span class="mut">(último trimestre: ${Object.entries(v.detalle).map(([a,b])=>`${esc(a)} ${nx(b,1)}`).join(" · ")} mil millones)</span>` : "";
+    return `<div class="mot"><div class="mot-h"><b style="color:${c}">${esc(v.nombre)}</b><span class="mut small" style="margin-left:8px">último dato: ${tr?mesTxt(v.ultimo):trimTxt(v.ultimo)}</span></div>
+      <p class="mot-t">${esc(v.que)}${v.valor!=null?` Hoy: <b>${nx(v.valor,1)} mil millones de USD</b> en 12 meses.`:""} Contra hace un año: <b class="${cls(v.anual)}">${pct(v.anual,0)}</b>. ${tr?"Últimos 3 meses contra los 3 anteriores":"Último trimestre contra el mismo de hace un año"}: <b class="${cls(v.trim)}">${pct(v.trim,0)}</b>.${det}</p>
+      <p class="mut small" style="margin:-4px 0 2px">Fuente: ${esc(v.fuente)}</p></div>`; }).join("");
+  return `<section class="card" style="margin-top:14px"><h3>El ciclo de su sector <span class="mut">· contexto, no motor medido</span></h3>
+    <div class="aviso">${esc(cf.nota)}</div>
+    <div class="bar" style="margin:10px 0;gap:8px;flex-wrap:wrap"><div class="segs">${ids.map(k=>`<button class="seg sm${on.includes(k)?" on2":""}" data-ci="${k}">${esc(CI.indicadores[k].corto)}</button>`).join("")}</div>
+      <div class="seg">${[["3y","3 años"],["5y","5 años"],["todo","Desde 2015"]].map(([p,t])=>`<button data-cper="${p}" class="${per===p?"on":""}">${t}</button>`).join("")}</div></div>
+    ${chart}${lect}</section>`;
 }
 const ETQ = {clara:["Clara","var(--pos)"], reciente:["Incluida a mano","var(--accent)"], indicio:["Puede ser casualidad","var(--muted)"], vuelta:["Se dio vuelta","var(--neg)"], antigua:["Solo antes de 2015","var(--muted)"], "":["Sin relación","var(--muted)"]};
 const etq = e => { const q = ETQ[e]||ETQ[""]; return `<span class="etq" style="--ec:${q[1]}">${q[0]}</span>`; };
@@ -1471,7 +1512,7 @@ async function ficha(m, t){
       ${pares.map(z=>`<tr data-e="${esc(z.ticker)}" style="cursor:pointer${z.ticker===f.ticker?";background:var(--panel2)":""}"><td class="tk l">${logoImg(z.byma,"logo-s")}${esc(z.byma)}</td><td>${big(z.mcap)}</td><td>${xx(z.val?.pe)}</td><td>${xx(z.val?.pe_fwd)}</td><td>${z.val?.peg==null?"—":nx(z.val.peg,2)}</td><td>${xx(z.val?.ev_ebitda)}</td><td>${pc(z.val?.fcf_yield)}</td><td>${pc(z.val?.rend_accionista)}</td><td>${chip(z.notas?.valuacion)}</td><td class="${cls(z.r12m)}">${pct(z.r12m,0)}</td></tr>`).join("")}
       </tbody></table></div><p class="mut small">Hacé clic en una para abrir su ficha.</p></section>`;
   } else if (sub==="sensib"){
-    cuerpo = queMueve(f);
+    cuerpo = queMueve(f) + cicloCard(f);
   } else if (sub==="cedear"){
     const ch = f.cedear_hist;
     cuerpo = `<section class="card"><h3>El CEDEAR en BYMA <span class="mut">· último año, semanal</span></h3>
@@ -1513,6 +1554,8 @@ async function ficha(m, t){
   m.querySelectorAll("[data-ft]").forEach(b=>b.onclick=()=>{EST.ftab=b.dataset.ft; ficha(m,t);});
   m.querySelectorAll("[data-irb]").forEach(b=>b.onclick=()=>{EST.bloque=b.dataset.irb; EST.sel=null; EST.vista=null; EST.ftab="resumen"; tab="empresas"; navegar(); window.scrollTo(0,0); render();});
   m.querySelectorAll("[data-per]").forEach(b=>b.onclick=()=>{EST.per=b.dataset.per; ficha(m,t);});
+  m.querySelectorAll("[data-cper]").forEach(b=>b.onclick=()=>{EST.cper=b.dataset.cper; ficha(m,t);});
+  m.querySelectorAll("[data-ci]").forEach(b=>b.onclick=()=>{ const ids = CI.bloques[BQDE(FCACHE[t].byma).id].indicadores; let a = EST.cis || [...ids]; a = a.includes(b.dataset.ci) ? a.filter(k=>k!==b.dataset.ci) : [...a, b.dataset.ci]; EST.cis = a; ficha(m,t);});
   const ta = m.querySelector("#nota");
   if (ta) ta.oninput = ()=>{ try{ localStorage.setItem("rvnota:"+f.ticker, ta.value); m.querySelector("#notamsg").textContent = "Guardado en este navegador."; }catch(e){ m.querySelector("#notamsg").textContent = "Este navegador no permite guardar notas."; } };
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); ficha(m, r.dataset.e);});

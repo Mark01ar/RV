@@ -1,0 +1,176 @@
+import re
+import sys
+import json
+import datetime as dt
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+import requests
+import yfinance as yf
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import macro as MA
+
+D = MA.ROOT / "data"
+SALIDA = D / "ciclos.json"
+UA = {"User-Agent": "MaQ RV research marcosracimo@gmail.com"}
+MESES = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+HYPER = {"MSFT": 789019, "GOOGL": 1652044, "AMZN": 1018724, "META": 1326801}
+CAPEX = ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"]
+BLOQUES = {
+    "memorias": {
+        "indicadores": ["nanya", "hyper", "mu_capex"],
+        "nota": "Datos del ciclo de la memoria. No son motores medidos: la acción suele moverse antes que estos datos, que confirman en qué parte del ciclo estamos.",
+    }
+}
+
+
+def nanya():
+    f = D / "nanya.csv"
+    s = pd.read_csv(f, index_col=0)["ventas"]
+    s.index = pd.PeriodIndex(s.index, freq="M")
+    hoy = dt.date.today()
+    nuevos = {}
+    for y in sorted({hoy.year - 1, hoy.year}):
+        try:
+            h = requests.get(f"https://www.nanya.com/en/IR/36/Monthly%20Revenue?Year={y}", headers={"User-Agent": "Mozilla/5.0"}, timeout=30).text
+        except Exception as e:
+            print(f"nanya {y}: {e}", file=sys.stderr)
+            continue
+        txt = re.sub(r"<[^>]+>", " ", h)
+        txt = re.sub(r"\s+", " ", txt).lower()
+        for i, m in enumerate(MESES):
+            g = re.search(rf"\b{m}\s+([\d,]{{7,}})\s", txt)
+            if g:
+                nuevos[pd.Period(f"{y}-{i + 1:02d}", "M")] = int(g.group(1).replace(",", ""))
+    print(f"nanya web: {len(nuevos)} meses, último {max(nuevos) if nuevos else None}")
+    if nuevos:
+        n = pd.Series(nuevos)
+        ok = all(abs(n[k] / s[k] - 1) < 0.01 for k in n.index if k in s.index)
+        if ok:
+            s = pd.concat([s, n[~n.index.isin(s.index)]]).sort_index()
+            pd.DataFrame({"mes": s.index.astype(str), "ventas": s.values}).to_csv(f, index=False)
+        else:
+            print("nanya web no coincide con la historia: no se actualiza", file=sys.stderr)
+    t3 = s.rolling(3).sum().dropna()
+    a = s.iloc[-3:].sum() / s.iloc[-15:-12].sum() - 1 if len(s) >= 15 else None
+    p = s.iloc[-3:].sum() / s.iloc[-6:-3].sum() - 1 if len(s) >= 6 else None
+    return {
+        "nombre": "Ventas de memoria DRAM (Nanya)",
+        "corto": "Ventas DRAM",
+        "frec": "mensual",
+        "fuente": "Nanya Technology (Taiwán), fabricante de DRAM pura. Publica sus ventas cerca del día 10 del mes siguiente.",
+        "que": "Suma de los últimos 3 meses, para sacar el ruido de cada mes. Es lo más cercano gratis al precio de la memoria: si suben, la DRAM se vende más o más cara.",
+        "ultimo": str(s.index[-1]),
+        "anual": a, "trim": p,
+        "serie": [[str(k), float(v)] for k, v in t3.items() if k >= pd.Period("2015-01", "M")],
+    }
+
+
+def trimestres(cik):
+    f = requests.get(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json", headers=UA, timeout=60).json()
+    g = f.get("facts", {}).get("us-gaap", {})
+    d = {}
+    for pri, n in enumerate(CAPEX):
+        for e in g.get(n, {}).get("units", {}).get("USD", []):
+            if "start" not in e or e.get("form") not in ("10-Q", "10-K", "10-Q/A", "10-K/A"):
+                continue
+            k = (e["start"], e["end"])
+            if k not in d or (pri, e["filed"]) < (d[k][2], "") or (pri == d[k][2] and e["filed"] > d[k][1]):
+                d[k] = (float(e["val"]), e["filed"], pri)
+    q = {}
+    por = {}
+    for (a, b), (v, _, _) in d.items():
+        por.setdefault(a, []).append((b, v))
+    for a, xs in por.items():
+        xs.sort()
+        prev_end, prev_v = a, 0.0
+        for b, v in xs:
+            dias = (pd.Timestamp(b) - pd.Timestamp(prev_end)).days
+            if 80 <= dias <= 100:
+                per = pd.Period(pd.Timestamp(b) - pd.Timedelta(days=10), "Q")
+                q.setdefault(per, v - prev_v)
+            prev_end, prev_v = b, v
+    return pd.Series(q).sort_index()
+
+
+def capex(ciks):
+    out = {}
+    for t, c in ciks.items():
+        try:
+            out[t] = trimestres(c)
+        except Exception as e:
+            print(f"capex {t}: {e}", file=sys.stderr)
+    df = pd.DataFrame(out).sort_index()
+    df = df[df.index >= pd.Period("2013Q1", "Q")]
+    return df
+
+
+def capex_ind(df, nombre, corto, que, fuente):
+    df = df.dropna()
+    tot = df.sum(axis=1)
+    ttm = tot.rolling(4).sum().dropna()
+    a = ttm.iloc[-1] / ttm.iloc[-5] - 1 if len(ttm) >= 5 else None
+    p = tot.iloc[-1] / tot.iloc[-5] - 1 if len(tot) >= 5 else None
+    serie = [[str(k.asfreq("M", "end")), float(v) / 1e9] for k, v in ttm.items() if k >= pd.Period("2015Q1", "Q")]
+    ult = df.iloc[-1]
+    return {
+        "nombre": nombre, "corto": corto, "frec": "trimestral", "fuente": fuente, "que": que,
+        "ultimo": str(df.index[-1]), "anual": a, "trim": p, "unidad": "miles de millones de USD (últimos 12 meses)",
+        "detalle": {k: round(float(v) / 1e9, 1) for k, v in ult.items()},
+        "valor": round(float(ttm.iloc[-1]) / 1e9, 1),
+        "serie": serie,
+    }
+
+
+def precios(tks):
+    px = yf.download(sorted(set(tks)), start="2014-10-01", auto_adjust=True, progress=False, threads=True)["Close"]
+    px = px.ffill().resample("ME").last()
+    px.index = px.index.to_period("M")
+    return {t: [[str(k), round(float(v), 4)] for k, v in px[t].dropna().items() if k >= pd.Period("2015-01", "M")] for t in px.columns}
+
+
+def main():
+    ind = {}
+    try:
+        ind["nanya"] = nanya()
+    except Exception as e:
+        print(f"nanya: {e}", file=sys.stderr)
+    try:
+        h = capex(HYPER)
+        print(h.tail(6).div(1e9).round(1).to_string(), file=sys.stderr)
+        ind["hyper"] = capex_ind(h, "Inversión de Microsoft, Google, Amazon y Meta", "Inversión big tech",
+                                 "Suma de lo que invierten las cuatro en centros de datos, servidores y chips, en los últimos 12 meses. Es la demanda: de acá sale la compra de memoria HBM y de chips para IA.",
+                                 "Balances trimestrales presentados a la SEC (compras de propiedad y equipo).")
+    except Exception as e:
+        print(f"hyper: {e}", file=sys.stderr)
+    try:
+        m = capex({"MU": 723125})
+        print(m.tail(6).div(1e9).round(2).to_string(), file=sys.stderr)
+        ind["mu_capex"] = capex_ind(m, "Inversión de Micron", "Inversión Micron",
+                                    "Lo que invierte Micron en fábricas, en los últimos 12 meses. Es la oferta futura: cuando los fabricantes invierten fuerte a la vez, uno o dos años después suele sobrar memoria y los precios caen.",
+                                    "Balances trimestrales de Micron presentados a la SEC.")
+    except Exception as e:
+        print(f"mu_capex: {e}", file=sys.stderr)
+    em = {x["byma"]: x["ticker"] for x in json.loads((D / "empresas.json").read_text())["empresas"]}
+    bl = {b["id"]: b for b in json.loads((D / "bloques.json").read_text())["bloques"]}
+    tks = {b: [em[e] for e in bl[b]["empresas"] if e in em] for b in BLOQUES if b in bl}
+    try:
+        px = precios([t for v in tks.values() for t in v] + ["SPY"])
+    except Exception as e:
+        print(f"precios: {e}", file=sys.stderr)
+        px = {}
+    out = {
+        "actualizado": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
+        "indicadores": ind,
+        "bloques": {b: {**v, "indicadores": [i for i in v["indicadores"] if i in ind]} for b, v in BLOQUES.items()},
+        "precios": {t: px[t] for t in px},
+    }
+    SALIDA.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
+    for k, v in ind.items():
+        print(k, v["ultimo"], v.get("anual"), v.get("trim"), v.get("valor"), v.get("detalle"))
+
+
+if __name__ == "__main__":
+    main()
