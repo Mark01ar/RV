@@ -45,6 +45,10 @@ FACTORES = [
 F = {f["id"]: f for f in FACTORES}
 TRAMOS = {"a": ("2005-01", "2014-12"), "r": ("2015-01", None)}
 COD = ["CSI", "REC", "EST", "DES"]
+FAMILIA = {"dolar": "Dólar y metales", "cobre": "Dólar y metales", "oro": "Dólar y metales", "hierro": "Dólar y metales", "real": "Dólar y metales", "petroleo": "Energía", "jet": "Energía", "gas": "Energía", "tasa": "Tasas", "curva": "Tasas"}
+ENT = {"a": ("2005-01", "2014-12"), "r": ("2015-01", "2022-12")}
+TEST = ("2023-01", None)
+MIN_OTROS = 3
 MIN_MESES = 36
 MIN_RECIENTE = 60
 ROT = 999
@@ -175,7 +179,7 @@ def motores(nom, base, serie, spy, fs, tip, confirma, rescate):
         cand.append((orden[e], -abs(ef), k, e))
     cand.sort()
     kept = []
-    for c in cand[:4]:
+    for c in cand:
         if not kept:
             kept.append(c)
             continue
@@ -186,6 +190,18 @@ def motores(nom, base, serie, spy, fs, tip, confirma, rescate):
         if len(kept) == 3:
             break
     return [{"f": c[2], "e": c[3]} for c in kept], [c[2] for c in cand if c not in kept]
+
+
+def validacion(y, spy, f):
+    z = {t: prueba(tramo(y, a, b), tramo(spy, a, b), [tramo(f, a, b)]) for t, (a, b) in ENT.items()}
+    e = etiqueta(z)
+    zt = prueba(tramo(y, *TEST), tramo(spy, *TEST), [tramo(f, *TEST)])
+    ref = z["r"] or z["a"]
+    if e not in ("clara", "reciente") or zt is None or ref is None:
+        return {"v": "", "e_ent": e}
+    mismo = np.sign(zt["c"]) == np.sign(ref["c"])
+    v = "confirmada" if mismo and zt["p"] < 0.10 else "fallo" if not mismo and zt["p"] < 0.10 else "sin_definir"
+    return {"v": v, "e_ent": e, "n_test": zt["n"]}
 
 
 def regimen(fs, tip):
@@ -254,18 +270,40 @@ def main():
         bid = "@" + b["id"]
         if bid in base:
             mot, sol = motores(bid, base, serie[bid], spy, fs, tip, lambda k, z: True, set())
-            out_b[b["id"]] = {"f": {k: compacto(z, tip[k]) for k, z in base[bid].items()}, "motores": mot, "solapados": sol, "n": len([e for e in b["empresas"] if e in serie])}
+            fb = {k: compacto(z, tip[k]) for k, z in base[bid].items()}
+            for k, z in base[bid].items():
+                if z["e"] in ("clara", "reciente"):
+                    fb[k].update(validacion(serie[bid], spy, fs[k]))
+            emps_b = [e for e in b["empresas"] if e in serie]
+            comp = {k: sum(1 for e in emps_b if base[e][k]["e"] in ("clara", "reciente") and base[e][k]["r"] and fb[k]["r"] and np.sign(base[e][k]["r"]["c"]) == np.sign(fb[k]["r"]["ef"])) for k in fb}
+            mot = [m_ for m_ in mot if comp[m_["f"]] * 2 >= len(emps_b)]
+            out_b[b["id"]] = {"f": fb, "motores": mot, "solapados": sol, "n": len(emps_b), "comparten": comp}
         for e in b["empresas"]:
             if e not in serie:
                 out_e[e] = {"sin": "historia"}
                 continue
-            zb = base.get(bid, {})
+            otros = [o for o in b["empresas"] if o in serie and o != e]
+            excl = pd.concat([serie[o] for o in otros], axis=1).mean(axis=1, skipna=True) if len(otros) >= MIN_OTROS else None
+            cache = {}
 
-            def confirma(k, z, zb=zb):
-                q = zb.get(k)
-                return bool(q and q["e"] in ("clara", "reciente") and q["r"] and np.sign(q["r"]["c"]) == np.sign(z["r"]["c"]))
+            def confirma(k, z, excl=excl, cache=cache):
+                if excl is None:
+                    return False
+                if k not in cache:
+                    q = dos_tramos(excl, spy, [fs[k]])
+                    q["e"] = etiqueta(q)
+                    cache[k] = q
+                q = cache[k]
+                return bool(q["e"] in ("clara", "reciente") and q["r"] and np.sign(q["r"]["c"]) == np.sign(z["r"]["c"]))
             mot, sol = motores(e, base, serie[e], spy, fs, tip, confirma, rescates.get(e, set()))
-            out_e[e] = {"f": {k: compacto(z, tip[k]) for k, z in base[e].items()}, "motores": mot, "solapados": sol}
+            fx = {k: compacto(z, tip[k]) for k, z in base[e].items()}
+            for k, z in base[e].items():
+                if z["e"] in ("clara", "reciente"):
+                    fx[k].update(validacion(serie[e], spy, fs[k]))
+            for m_ in mot:
+                if m_["f"] in rescates.get(e, set()):
+                    m_["rescate"] = True
+            out_e[e] = {"f": fx, "motores": mot, "solapados": sol}
     facs = []
     hoy = pd.Period(dt.date.today(), "M")
     for f in FACTORES:
@@ -276,7 +314,7 @@ def main():
         sd_act = float(a[a.index < hoy].tail(120).std()) if f.get("proxy") else tip[k]
         ult = [{"mes": str(i), "cambio": round(float(v) * (1 if f["tipo"] == "nivel" else 100), 2), "z": round(float(v) / sd_act, 2) if sd_act else None, "en_curso": i == hoy} for i, v in a.tail(3).items()]
         tipico = tip[k] * (1 if f["tipo"] == "nivel" else 100)
-        facs.append({**{x: y for x, y in f.items() if x != "proxy"}, "tipico": round(tipico, 2), "unidad": "pts" if f["tipo"] == "nivel" else "%", "desde": str(fs[k].index[0]), "ultimos": ult, "proxy": "/".join(f["proxy"]) if f.get("proxy") else None})
+        facs.append({**{x: y for x, y in f.items() if x != "proxy"}, "familia": FAMILIA.get(k), "tipico": round(tipico, 2), "unidad": "pts" if f["tipo"] == "nivel" else "%", "desde": str(fs[k].index[0]), "ultimos": ult, "proxy": "/".join(f["proxy"]) if f.get("proxy") else None})
     salida = {
         "actualizado": dt.date.today().isoformat(),
         "tramos": {k: {"desde": a, "hasta": b} for k, (a, b) in TRAMOS.items()},
@@ -291,4 +329,5 @@ def main():
     print(f"factores.json {SALIDA.stat().st_size // 1024} KB · {con} de {len(out_e)} empresas con motor", file=sys.stderr)
 
 
-main()
+if __name__ == "__main__":
+    main()

@@ -190,6 +190,15 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .rsm-c div{display:grid;grid-template-columns:1fr auto 80px;gap:8px;font-size:12.5px;padding:4px 0;border-bottom:1px solid var(--line)}
 .rsm-c em{font-style:normal;color:#c8d0ea}.rsm-c i{font-style:normal;text-align:right;font-weight:600}
 .rsm-t{color:var(--accent)!important;font-weight:700}
+.vb{display:inline-block;font-size:10.5px;font-weight:700;color:var(--ec);margin-left:8px;vertical-align:middle;white-space:nowrap}
+.okm{color:var(--pos);font-size:10px;font-weight:700;margin-left:3px}
+.cxf th{white-space:normal;min-width:72px;vertical-align:bottom}.cxf th small{display:block;font-size:9.5px;color:var(--accent);font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-top:2px}
+.cxf td sup.ok{color:var(--pos);font-size:9px;margin-left:2px}.cxf tbody tr:hover{background:var(--panel2)}
+.fams2{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:0 14px;align-items:start}
+.fams2 h4{margin:4px 0 6px;font-size:12px;color:var(--muted);font-weight:600}
+td.lm{font-size:12px;white-space:nowrap}
+.oos{margin:8px 0 4px}.oos td,.oos th{padding:4px 8px}
+@media(max-width:640px){.fams2{grid-template-columns:1fr}}
 .etq{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;color:var(--ec);border:1px solid var(--ec);border-radius:20px;padding:1px 8px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
 .mot{padding:10px 0 12px;border-bottom:1px solid var(--line)}.mot:last-of-type{border-bottom:0}
 .mot-h{display:flex;align-items:center;font-size:14px}.mot-t{margin:6px 0 8px;font-size:13px;line-height:1.5;color:#c8d0ea}
@@ -385,7 +394,7 @@ th{text-transform:uppercase;letter-spacing:.06em;font-size:11px;font-weight:600;
 <header>
   <div class="brand" style="display:inline-flex;align-items:center;gap:12px">MaQ Renta <em>Variable</em><img class="hfoto" src="img/header.jpg" alt=""></div>
   <div class="kpis" id="kpis"></div>
-  <div class="vivo"><span id="vivoMsg"></span><button id="vivoBtn" type="button" title="Trae los precios del momento de BYMA y EE.UU. (data912). No cambia la cartera ni los puntajes: solo precios, CCL, premio, distancia a la MA200 y rendimiento desde que se armó.">ACTUALIZAR PRECIOS</button></div>
+  <div class="vivo"><span id="vivoMsg"></span><button id="vivoBtn" type="button" title="Trae los precios del momento de BYMA y EE.UU. (data912): precios, CCL implícito, premio de cada CEDEAR y distancia a la MA200.">ACTUALIZAR PRECIOS</button></div>
 </header>
 <nav id="nav"></nav>
 <main id="main"></main>
@@ -393,17 +402,12 @@ th{text-transform:uppercase;letter-spacing:.06em;font-size:11px;font-weight:600;
 <script>
 const HASH = "3a892eea646c4e4fc44df3a264545ce2e51f4bdc752cbd996dae588e5c839602";
 const TABS = [
-  {id:"empresas", t:"Empresas", ok:true},
-  {id:"lista", t:"Lista", ok:true},
-  {id:"escenarios", t:"Escenarios", ok:true},
-  {id:"cartera", t:"Cartera del mes", ok:true},
-  {id:"universo", t:"Universo", ok:true},
   {id:"macro", t:"Macro", ok:true},
-  {id:"fund", t:"Fundamentals", ok:true},
-  {id:"revisor", t:"Revisor", d:"Pegás los CEDEARs de un cliente y ves qué posiciones están flojas, la concentración y por cuál conviene rotar cada una."}
+  {id:"factores", t:"Factores", ok:true},
+  {id:"empresas", t:"Empresas", ok:true},
+  {id:"lista", t:"Lista", ok:true}
 ];
-let D = null, M = null, F = null, C = null, E = null, FR = null, LM = null, BQ = null, tab = "empresas", sortK = "monto_usd", sortDir = -1;
-const st = {q:"", sector:"", liq:"", datos:true};
+let D = null, M = null, E = null, FR = null, LM = null, BQ = null, tab = "macro";
 
 async function sha(s){
   const b = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
@@ -428,14 +432,6 @@ async function abrir(){
     if (r.ok) M = await r.json();
   }catch(e){}
   try{
-    const r = await fetch("data/fundamentales.json?v=" + Date.now());
-    if (r.ok) F = await r.json();
-  }catch(e){}
-  try{
-    const r = await fetch("data/cartera.json?v=" + Date.now());
-    if (r.ok) C = await r.json();
-  }catch(e){}
-  try{
     const r = await fetch("data/empresas.json?v=" + Date.now());
     if (r.ok) E = await r.json();
   }catch(e){}
@@ -451,6 +447,7 @@ async function abrir(){
     const r = await fetch("data/bloques.json?v=" + Date.now());
     if (r.ok) BQ = await r.json();
   }catch(e){}
+  (E?.empresas||[]).forEach(x=>{ if (x.notas) x.notas.general = general(x.notas); });
   kpis(); navegar(); render();
 }
 
@@ -468,7 +465,6 @@ async function vivo(){
     (await ru.json()).forEach(x=>{ if (x && x.symbol && x.c) us[x.symbol] = +x.c; });
     (await ra.json()).forEach(x=>{ if (x && x.symbol){ const p = x.c || x.px_ask || x.px_bid; if (p) ar[x.symbol] = +p; } });
     const pxUS = t => us[t] ?? us[t.replace("-",".")] ?? us[t.replace("-","")];
-    const spyArm = C && D.spy?.precio && C.spy_desde!=null ? D.spy.precio/(1+C.spy_desde) : null;
     let nu = 0, na = 0;
     D.tickers.forEach(x=>{
       const pu = x.ticker.endsWith(".KS") ? null : pxUS(x.ticker);
@@ -486,24 +482,8 @@ async function vivo(){
       D.tickers.forEach(x=>{ const p = x.ccl_impl ? x.ccl_impl/ccl - 1 : null; x.premio = p!=null && Math.abs(p) <= 0.3 ? p : null; });
     }
     if (us.SPY && D.spy) D.spy.precio = us.SPY;
-    if (C){
-      const by = {}; D.tickers.forEach(x=>by[x.ticker]=x);
-      const n = C.parametros.n, trk = C.track||[], ult = trk[trk.length-1];
-      let delta = 0;
-      [...C.posiciones, ...(C.suplentes||[])].forEach(p=>{
-        const x = by[p.ticker]; if (!x) return;
-        const antes = p.desde_armado;
-        p.precio_hoy = x.precio; p.desde_armado = x.precio && p.precio ? x.precio/p.precio - 1 : null;
-        p.px_ars_hoy = x.px_ars; p.premio = x.premio; p.vs_ma200_hoy = x.vs_ma200;
-        if (p.en_cartera && p.puesto <= n && antes!=null && p.desde_armado!=null) delta += (p.desde_armado - antes)/n;
-      });
-      if (spyArm && us.SPY) C.spy_desde = us.SPY/spyArm - 1;
-      if (ult && ult.parcial){
-        const baseC = (1+ult.acum_cartera)/(1+ult.cartera), baseS = (1+ult.acum_spy)/(1+ult.spy);
-        ult.cartera += delta; ult.spy = C.spy_desde; ult.dif = ult.cartera - ult.spy;
-        ult.acum_cartera = baseC*(1+ult.cartera) - 1; ult.acum_spy = baseS*(1+ult.spy) - 1;
-      }
-    }
+    const byB = {}; D.tickers.forEach(x=>byB[x.byma]=x);
+    (E?.empresas||[]).forEach(x=>{ const d = byB[x.byma]; if (d){ x.precio = d.precio; x.px_ars = d.px_ars; x.premio = d.premio; x.vs_ma200 = d.vs_ma200; } });
     const h = new Date().toLocaleTimeString("es-AR",{hour:"2-digit",minute:"2-digit"});
     msg.innerHTML = `Precios en vivo <b style="color:var(--text)">${h}</b> · ${nu} en EE.UU., ${na} en BYMA`;
     kpis(); render();
@@ -513,6 +493,7 @@ async function vivo(){
   btn.disabled = false;
 }
 document.getElementById("vivoBtn").addEventListener("click", vivo);
+document.addEventListener("click", e=>{ const a = e.target.closest("[data-como]"); if (!a) return; e.preventDefault(); tab="factores"; EST.fvista="como"; EST.sel=null; navegar(); window.scrollTo(0,0); render(); });
 
 const pct = (x,d=1) => x==null ? "—" : (x>0?"+":"") + (x*100).toFixed(d).replace(".",",") + "%";
 const cls = x => x==null ? "mut" : x>0 ? "pos" : x<0 ? "neg" : "";
@@ -525,46 +506,22 @@ function kpis(){
   if (!D){ k.innerHTML = "<span>Sin datos todavía</span>"; return; }
   const f = new Date(D.actualizado).toLocaleString("es-AR",{dateStyle:"short",timeStyle:"short"});
   k.innerHTML = `<span>Actualizado <b>${f}</b></span><span>CCL implícito <b>${num(D.ccl,0)}</b></span>
-  <span>S&P 500 3M <b class="${cls(D.spy?.r3m)}">${pct(D.spy?.r3m)}</b></span><span>Universo <b>${D.n}</b></span>`;
+  <span>S&P 500 3M <b class="${cls(D.spy?.r3m)}">${pct(D.spy?.r3m)}</b></span>`;
 }
 
 function navegar(){
   document.getElementById("nav").innerHTML = TABS.map(x=>
     `<button class="${x.id===tab?"on":""}" data-t="${x.id}">${x.t}${x.ok?"":'<span class="pr">·</span>'}</button>`).join("");
-  document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t; if (["empresas","lista","escenarios"].includes(tab)){ EST.sel=null; EST.bloque=null; EST.vista=null; } window.scrollTo(0,0); navegar(); render()});
+  document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{tab=b.dataset.t; if (["empresas","lista","factores"].includes(tab)){ EST.sel=null; EST.bloque=null; EST.vista=null; } window.scrollTo(0,0); navegar(); render()});
 }
 
 function render(){
   const m = document.getElementById("main");
-  const t = TABS.find(x=>x.id===tab);
-  if (!t.ok){ m.innerHTML = `<div class="soon"><h2>${t.t} · en construcción</h2>${t.d}</div>`; return; }
   if (tab==="macro") return macro(m);
-  if (tab==="fund") return fundamentals(m);
-  if (tab==="cartera") return cartera(m);
-  if (tab==="empresas"){ if (EST.vista==="lista"||EST.vista==="esc") EST.vista=null; return empresas(m); }
-  if (tab==="lista"){ if (EST.vista!=="cmp") EST.vista="lista"; EST.bloque=null; return empresas(m); }
-  if (tab==="escenarios"){ EST.vista="esc"; return empresas(m); }
-  universo(m);
+  if (tab==="factores"){ if (EST.sel) return ficha(m, EST.sel); return factoresTab(m); }
+  if (tab==="lista"){ if (EST.vista==="cmp" && CMP.length) return comparador(m); if (EST.sel) return ficha(m, EST.sel); return lista(m); }
+  return empresas(m);
 }
-
-const COLS = [
-  {k:"byma", t:"Ticker", l:1, h:"Código en BYMA. Si el ticker de EE.UU. es distinto, aparece al lado."},
-  {k:"nombre", t:"Empresa", l:1},
-  {k:"sector", t:"Sector", l:1},
-  {k:"precio", t:"Precio USD", h:"Último cierre de la acción en EE.UU."},
-  {k:"r1m", t:"1M", h:"Variación del último mes (21 ruedas)."},
-  {k:"r3m", t:"3M", h:"Variación de los últimos 3 meses."},
-  {k:"r12m", t:"12M", h:"Variación del último año."},
-  {k:"mom12_1", t:"Mom 12-1", h:"Retorno de 12 meses sin el último mes. Es la medida estándar de momentum."},
-  {k:"vs_ma200", t:"vs MA200", h:"Distancia al promedio de las últimas 200 ruedas. Positivo: tendencia alcista."},
-  {k:"vol", t:"Vol", h:"Volatilidad anualizada del último año."},
-  {k:"beta", t:"Beta", h:"Cuánto se mueve frente al S&P 500 (2 años, semanal). 1,5 = se mueve 50% más que el índice."},
-  {k:"dd12m", t:"Caída máx", h:"Peor caída desde un máximo en los últimos 12 meses."},
-  {k:"px_ars", t:"Precio ARS", h:"Último cierre del CEDEAR en BYMA, en pesos. Sirve para chequear contra tu pantalla."},
-  {k:"monto_usd", t:"Operado/día", h:"Monto típico operado por día en BYMA (mediana de las últimas 20 ruedas), en USD al CCL implícito."},
-  {k:"liquidez", t:"Liquidez", l:1, h:"Alta ≥ USD 1M/día · Media ≥ 200k · Baja ≥ 30k · Muy baja < 30k."},
-  {k:"premio", t:"Premio CCL", h:"Cuánto más caro (+) o barato (−) cotiza el CEDEAR frente al CCL implícito de todo el mercado."}
-];
 
 const EST = {q:"", sector:"", pais:"", liq:"", fichas:false, sort:"general", dir:-1, sel:null, per:"5y", ftab:"resumen"};
 const FCACHE = {};
@@ -580,6 +537,7 @@ const nx = (x,d=1) => x==null ? "—" : x.toFixed(d).replace(".",",");
 const ncol = v => v==null ? "var(--line)" : v>=7 ? "var(--pos)" : v>=4.5 ? "var(--accent)" : "var(--neg)";
 const chip = v => `<span class="nchip" style="background:${v==null?"var(--panel2)":ncol(v)};${v==null?"color:var(--muted)!important":""}">${v==null?"—":nx(v)}</span>`;
 const fch2 = f => f ? new Date(f+"T12:00").toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"2-digit"}) : "—";
+const dias = s => s ? Math.round((new Date(s) - new Date())/864e5) : null;
 const PAIS = {"United States":"EE.UU.","Taiwan":"Taiwán","Brazil":"Brasil","China":"China","South Korea":"Corea","Netherlands":"Países Bajos","Japan":"Japón","United Kingdom":"Reino Unido","Germany":"Alemania","Switzerland":"Suiza","Argentina":"Argentina","Uruguay":"Uruguay","Luxembourg":"Luxemburgo","Canada":"Canadá","Israel":"Israel","Colombia":"Colombia","South Africa":"Sudáfrica","Denmark":"Dinamarca","Ireland":"Irlanda","Australia":"Australia","Nigeria":"Nigeria","Bermuda":"Bermudas","Singapore":"Singapur"};
 
 const PESOS = {calidad:25, crecimiento:20, solidez:15, valuacion:15, analistas:15, tendencia:10};
@@ -840,71 +798,178 @@ function hbarras(xs, attr){
       <div class="hb-h">${p.v<0?`<div class="hb-f neg" style="width:${w}%"></div>`:`<span class="hb-v l">${efTxt(p.v)}</span>`}</div>
       <div class="hb-h">${p.v>=0?`<div class="hb-f pos" style="width:${w}%"></div>`:`<span class="hb-v r">${efTxt(p.v)}</span>`}</div></div></div>`; }).join("")}</div>`;
 }
-const LEYENDA = `<p class="mut small">Cada número es cuánto se movió la acción contra el SPY en los meses en que el factor tuvo un movimiento típico, con datos mensuales desde 2015 (y aparte 2005–2014). <b style="color:var(--pos)">Clara</b>: la relación se repitió en los dos períodos y le gana al azar en ambos. <b style="color:var(--accent)">Solo reciente</b>: aparece con fuerza desde 2015, su bloque la confirma, pero antes no. Las barras tenues pueden ser casualidad. Es historia, no predicción.</p>`;
-function motoresBloque(bl){
-  const xb = FX?.bloques?.[bl.id];
-  const emps = bl.empresas.filter(b=>FX?.empresas?.[b] && !FX.empresas[b].sin);
-  const nota = bl.motores_nota ? `<div class="aviso">${esc(bl.motores_nota)}</div>` : "";
-  if (!xb) return sec("Motores del bloque","",`<p class="mut">Sin historia suficiente para medirlo.</p>${nota}`);
-  const mot = xb.motores || [];
-  let body = nota;
-  if (mot.length){
-    body += mot.map(mo=>{ const f = FX.F[mo.f], z = xb.f[mo.f];
-      const xs = emps.map(b=>({b, z: FX.empresas[b].f?.[mo.f], e: etqEmp(b, mo.f)})).filter(p=>p.z?.r).sort((a,b)=>b.z.r.ef-a.z.r.ef);
-      return `<div class="mot"><div class="mot-h"><b>${esc(f.nombre)}</b>${etq(mo.e)}</div>
-        <p class="mot-t">Cuando ${esc(f.sube)} en un mes típico (${tipTxt(f)}), el bloque se movió <b class="${cls(z.r.ef)}">${efTxt(z.r.ef)}</b> contra el SPY desde 2015${z.a?`; entre 2005 y 2014, ${efTxt(z.a.ef)}`:""}.</p>
-        ${hbarras(xs.map(p=>({n:`${logoImg(p.b,"logo-s")}${esc(p.b)}`, v:p.z.r.ef, cl:solido(p.e), k:E.empresas.find(z=>z.byma===p.b)?.ticker, t:`${p.b}: ${ETQ[p.e]?.[0]||""}`})), "data-e")}</div>`; }).join("");
-  } else body += `<p class="lect">Este bloque no tiene un motor común: sus empresas se mueven por cosas distintas.</p>`;
-  const propios = emps.map(b=>({b, ms:(FX.empresas[b].motores||[]).filter(m_=>!mot.some(z=>z.f===m_.f))})).filter(p=>p.ms.length);
-  if (propios.length) body += `<h4>${mot.length?"Además, motores propios de algunas empresas":"Lo que mueve a cada empresa"}</h4><ul class="lst">${propios.map(p=>`<li><b>${esc(p.b)}</b>: ${p.ms.map(m_=>{ const z = FX.empresas[p.b].f[m_.f]; return `${esc(FX.F[m_.f].nombre)} <b class="${cls(z.r.ef)}">${efTxt(z.r.ef)}</b> <span class="mut">(${ETQ[m_.e][0].toLowerCase()})</span>`; }).join(" · ")}</li>`).join("")}</ul>`;
-  const sinM = emps.filter(b=>!(FX.empresas[b].motores||[]).length);
-  if (sinM.length) body += `<p class="mut small">Sin motor claro: ${sinM.map(esc).join(", ")}. Se mueven por su propio negocio.</p>`;
-  return sec("Motores del bloque","qué lo mueve, descontado el mercado · historia, no predicción", body + LEYENDA, "main");
-}
+const VAL = {confirmada:["✔ 2023+","var(--pos)","Se sostuvo con datos de 2023 en adelante, que el cálculo no había usado."], sin_definir:["~ 2023+","var(--muted)","Con los datos de 2023 en adelante todavía no alcanza para confirmarla ni descartarla."], fallo:["✘ 2023+","var(--neg)","Con los datos de 2023 en adelante fue en sentido contrario: tomala con cuidado."]};
+const valB = v => VAL[v] ? `<span class="vb" style="--ec:${VAL[v][1]}" title="${VAL[v][2]}">${VAL[v][0]}</span>` : "";
+const okm = v => v==="confirmada" ? '<span class="okm" title="Confirmada con datos de 2023 en adelante">✔</span>' : "";
+const yjoin = xs => xs.length<2 ? xs.join("") : xs.slice(0,-1).join(", ")+" y "+xs[xs.length-1];
+const tkDe = b => E.empresas.find(z=>z.byma===b)?.ticker || b;
+const parientes = k => { const fa = FX?.F?.[k]?.familia; return fa ? FX.factores.filter(x=>x.familia===fa && x.id!==k) : []; };
+const parTxt = k => { const ps = parientes(k); return ps.length ? `Se mueve bastante junto con ${yjoin(ps.map(x=>x.nombre.toLowerCase()))}: si una empresa aparece con varios de ellos, es en buena parte una sola exposición.` : ""; };
+const LEYENDA = `<p class="mut small">Cada número es cuánto se movió la acción contra el SPY en los meses en que el factor tuvo un movimiento típico (datos mensuales desde 2015; aparte, 2005–2014). <b style="color:var(--pos)">Clara</b>: se repitió en los dos períodos y le gana al azar en ambos. <b style="color:var(--accent)">Solo reciente</b>: aparece con fuerza desde 2015 y lo confirman otras empresas de su bloque. <b style="color:var(--pos)">✔ 2023+</b>: además se sostuvo con datos de 2023 en adelante que el cálculo no había usado. Dice a quién le pega un movimiento, no si va a pasar. <a href="#" data-como="1">Cómo se mide →</a></p>`;
 function queMueve(f){
-  const x = FX?.empresas?.[f.byma], be = f.sensibilidades?.beta;
+  const x = FX?.empresas?.[f.byma], be = f.sensibilidades?.beta, bl = BQDE(f.byma), xb = bl ? FX?.bloques?.[bl.id] : null;
   const bt = be!=null ? `<div class="bkpi" style="margin-bottom:10px"><div><span>Beta contra el S&P 500</span><b>${nx(be,2)}</b></div></div><p class="mut small" style="margin:-4px 0 12px">Beta 1,2: cuando el S&P sube 10%, esta acción sube en promedio 12%. Lo de abajo es lo que la mueve más allá del mercado.</p>` : "";
   if (!x || x.sin) return `<div class="card">${bt}<p class="mut">Sin historia suficiente para medir qué la mueve (hacen falta al menos 3 años de datos mensuales).</p></div>`;
-  const mo = x.motores || [];
-  const fila = m_ => { const f = FX.F[m_.f], z = x.f[m_.f];
-    return `<div class="mot"><div class="mot-h"><b>${esc(f.nombre)}</b>${etq(m_.e)}</div><p class="mot-t">Cuando ${esc(f.sube)} en un mes típico (${tipTxt(f)}), la acción se movió <b class="${cls(z.r.ef)}">${efTxt(z.r.ef)}</b> contra el SPY desde 2015${z.a?`; entre 2005 y 2014, ${efTxt(z.a.ef)}`:""}. Si ${esc(f.baja)}, el efecto suele ser el inverso.</p></div>`; };
+  const mo = x.motores || [], mk = mo.map(z=>z.f), nm = k => (FX.F[k]?.nombre||k).toLowerCase();
+  let ctx = "";
+  if (bl && xb){ const bm = (xb.motores||[]).map(z=>z.f), com = bm.filter(k=>mk.includes(k));
+    ctx = !bm.length ? `Su bloque, <b>${esc(bl.nombre)}</b>, no tiene un motor común: cada empresa va por su lado.`
+      : `Su bloque, <b>${esc(bl.nombre)}</b>, se mueve sobre todo con ${yjoin(bm.map(nm))}. ${com.length===bm.length?"Esta empresa también.":com.length?`Esta empresa comparte ${yjoin(com.map(nm))}.`:"Esta empresa no: se mueve por otras cosas."}`; }
+  const fila = m_ => { const ff = FX.F[m_.f], z = x.f[m_.f], pt = parTxt(m_.f);
+    return `<div class="mot"><div class="mot-h"><b>${esc(ff.nombre)}</b>${etq(m_.e)}${valB(z.v)}</div><p class="mot-t">Cuando ${esc(ff.sube)} en un mes típico (${tipTxt(ff)}), la acción se movió <b class="${cls(z.r.ef)}">${efTxt(z.r.ef)}</b> contra el SPY desde 2015${z.a?`; entre 2005 y 2014, ${efTxt(z.a.ef)}`:""}. Si ${esc(ff.baja)}, el efecto fue el inverso.${m_.rescate?" <i>Incluida a mano por lógica económica: los datos solos no alcanzaban.</i>":""}</p>${pt?`<p class="mut small" style="margin:-4px 0 2px">${esc(pt)}</p>`:""}</div>`; };
   const sol = (x.solapados||[]).map(k=>FX.F[k]?.nombre).filter(Boolean);
   const card1 = `<div class="card"><h3>Qué la mueve <span class="mut">· más allá del mercado</span></h3>${bt}
+    ${ctx?`<p class="lect" style="margin:0 0 6px">${ctx}</p>`:""}
     ${mo.length ? mo.map(fila).join("") : `<p class="lect">Sin motor macro claro: se mueve sobre todo por su propio negocio.</p>`}
-    ${sol.length?`<p class="mut small">También aparece relacionada con ${sol.slice(0,4).map(z=>esc(z.toLowerCase())).join(", ")}${sol.length>4?" y otros":""}, que suelen moverse junto con lo de arriba: no agregan información propia.</p>`:""}
+    ${sol.length?`<p class="mut small">También aparece relacionada con ${sol.slice(0,4).map(z=>esc(z.toLowerCase())).join(", ")}${sol.length>4?" y otros":""}, que se mueven junto con lo de arriba: cuando se miran juntos, cuesta separar cuál la mueve.</p>`:""}
     ${LEYENDA}</div>`;
-  const by = f.byma, filas = FX.factores.map(ff=>({f:ff, z:x.f?.[ff.id], e:etqEmp(by, ff.id)})).filter(p=>p.z);
+  const filas = FX.factores.map(ff=>({f:ff, z:x.f?.[ff.id], e:etqEmp(f.byma, ff.id)})).filter(p=>p.z);
   filas.sort((a,b)=>(solido(b.e)-solido(a.e)) || Math.abs(b.z.r?.ef||0)-Math.abs(a.z.r?.ef||0));
-  const card2 = `<div class="card"><h3>Todos los factores <span class="mut">· un mes típico de cada uno</span></h3><div class="wrap" style="max-height:none"><table class="tb2 tbf"><thead><tr><th class="l">Factor</th><th>Desde 2015</th><th class="c-a">2005–2014</th><th class="l">Relación</th></tr></thead><tbody>
-    ${filas.map(p=>`<tr${solido(p.e)?"":` style="opacity:.6"`}><td class="l">${esc(p.f.nombre)}<span class="mut small c-t"> ${tipTxt(p.f)}</span></td><td class="${solido(p.e)?cls(p.z.r?.ef):""}">${efTxt(p.z.r?.ef)}</td><td class="mut c-a">${efTxt(p.z.a?.ef)}</td><td class="l">${etqc(p.e)}</td></tr>`).join("")}</tbody></table></div>
-    <p class="mut small">Cada factor por separado. Reciente: solo desde 2015. Dudosa: puede ser casualidad. Invertida: fuerte en los dos períodos pero en sentido contrario, así que no sirve como guía. Vieja: solo antes de 2015. No: sin relación.</p></div>`;
+  const card2 = `<div class="card"><h3>Todos los factores <span class="mut">· un mes típico de cada uno</span></h3><div class="wrap" style="max-height:none"><table class="tb2 tbf"><thead><tr><th class="l">Factor</th><th>Desde 2015</th><th class="c-a">2005–2014</th><th class="l">Relación</th><th class="l">2023+</th></tr></thead><tbody>
+    ${filas.map(p=>`<tr${solido(p.e)?"":` style="opacity:.6"`}><td class="l">${esc(p.f.nombre)}<span class="mut small c-t"> ${tipTxt(p.f)}</span></td><td class="${solido(p.e)?cls(p.z.r?.ef):""}">${efTxt(p.z.r?.ef)}</td><td class="mut c-a">${efTxt(p.z.a?.ef)}</td><td class="l">${etqc(p.e)}</td><td class="l">${solido(p.e)&&VAL[p.z.v]?`<span style="color:${VAL[p.z.v][1]};font-weight:700" title="${VAL[p.z.v][2]}">${VAL[p.z.v][0].split(" ")[0]}</span>`:""}</td></tr>`).join("")}</tbody></table></div>
+    <p class="mut small">Cada factor por separado. Reciente: solo desde 2015. Dudosa: puede ser casualidad. Invertida: fuerte en los dos períodos pero en sentido contrario, así que no sirve como guía. Vieja: solo antes de 2015. No: sin relación. 2023+: ✔ se confirmó con datos nuevos, ~ todavía no alcanza para decir.</p></div>`;
   return `<section class="fgrid" style="align-items:start">${card1}${card2}</section>`;
 }
-async function escenarios(m){
-  if (!FX){ m.innerHTML = `<p class="mut">Cargando…</p>`; await cargarFX(); }
-  if (!FX.factores.length){ m.innerHTML = `<p class="mut">No se pudieron cargar los factores.</p>`; return; }
-  const fid = FX.F[EST.efac] ? EST.efac : "petroleo", dir = EST.edir || 1, v = EST.escV==="empresas" ? "empresas" : "bloques", todo = !!EST.etodo;
+function cuadroBloque(bl){
+  const xb = FX?.bloques?.[bl.id], nota = bl.motores_nota ? `<div class="aviso">${esc(bl.motores_nota)}</div>` : "";
+  const emps = bl.empresas.filter(b=>FX?.empresas?.[b] && !FX.empresas[b].sin), sinH = bl.empresas.filter(b=>!emps.includes(b));
+  if (!emps.length) return sec("Qué mueve a cada empresa","",`${nota}<p class="mut">Sin historia suficiente para medirlo.</p>`);
+  const bm = (xb?.motores||[]).map(z=>z.f), cnt = {};
+  emps.forEach(b=>(FX.empresas[b].motores||[]).forEach(z=>cnt[z.f]=(cnt[z.f]||0)+1));
+  const cols = [...bm.filter(k=>cnt[k]), ...Object.keys(cnt).filter(k=>!bm.includes(k)).sort((a,b)=>cnt[b]-cnt[a])].slice(0,7);
+  const resto = Object.keys(cnt).filter(k=>!cols.includes(k));
+  const comun = bm.length ? `<p class="lect">Motor común del bloque: ${bm.map(k=>`<b>${esc(FX.F[k].nombre)}</b> <span class="mut">(lo comparten ${xb.comparten?.[k]??cnt[k]??0} de ${xb.n})</span>`).join(" · ")}.</p>`
+    : `<p class="lect">Este bloque no tiene un motor común: sus empresas se mueven por cosas distintas.</p>`;
+  const celda = (b,k) => { const x = FX.empresas[b], mo = (x.motores||[]).find(z=>z.f===k); if (!mo) return `<td class="mut">·</td>`; const z = x.f[k];
+    return `<td class="${cls(z.r.ef)}" title="${esc(ETQ[mo.e]?.[0]||"")}${z.v==="confirmada"?" · confirmada con datos de 2023+":""}">${efTxt(z.r.ef)}${z.v==="confirmada"?'<sup class="ok">✔</sup>':""}</td>`; };
+  const tabla = cols.length ? `<div class="wrap" style="max-height:none"><table class="tb2 cxf"><thead><tr><th class="l">Empresa</th>${cols.map(k=>`<th title="${esc(FX.F[k].nombre)}: mes típico ${tipTxt(FX.F[k])}">${esc(FX.F[k].nombre)}${bm.includes(k)?"<small>común</small>":""}</th>`).join("")}</tr></thead>
+    <tbody>${emps.map(b=>`<tr data-em="${esc(tkDe(b))}" style="cursor:pointer"><td class="tk l">${logoImg(b,"logo-s")}${esc(b)}</td>${cols.map(k=>celda(b,k)).join("")}</tr>`).join("")}</tbody></table></div>` : "";
+  const sinM = emps.filter(b=>!(FX.empresas[b].motores||[]).length);
+  return sec("Qué mueve a cada empresa","descontado el mercado · historia, no predicción", `${nota}${comun}${tabla}
+    ${resto.length?`<p class="mut small">Otros motores de alguna empresa: ${resto.map(k=>esc(FX.F[k].nombre)).join(", ")}. Están en la ficha de cada una.</p>`:""}
+    ${sinM.length?`<p class="mut small">Sin motor claro: ${sinM.map(esc).join(", ")}. Se mueven por su propio negocio.</p>`:""}
+    ${sinH.length?`<p class="mut small">Sin historia suficiente para medir: ${sinH.map(esc).join(", ")}.</p>`:""}
+    <p class="mut small">Cada celda es cuánto se movió la empresa contra el SPY en un mes típico de ese factor; solo aparecen las relaciones sólidas (un punto: no se mueve con ese factor). ✔: confirmada con datos de 2023 en adelante. Tocá una empresa para ver el detalle. <a href="#" data-como="1">Cómo se mide →</a></p>`, "main");
+}
+function siPasaHTML(){
+  const fid = FX.F[EST.efac] ? EST.efac : "petroleo", dir = EST.edir || 1, v = EST.escV==="bloques" ? "bloques" : "empresas", todo = !!EST.etodo, fb = EST.fbl || "";
   const f = FX.F[fid], grupos = [...new Set(FX.factores.map(x=>x.grupo))];
   let xs;
   if (v==="bloques") xs = BQ.bloques.map(bl=>{ const z = FX.bloques[bl.id]?.f?.[fid]; if (!z?.r) return null; const fm = FAM.find(q=>q.b.includes(bl.id)) || {c:"#8a94b8"};
-    return {n:`<span class="bc-ic sm" style="--fc:${fm.c}"><svg viewBox="0 0 24 24">${ICO[bl.id]||""}</svg></span>${esc(bl.nombre)}`, v:z.r.ef*dir, cl:solido(z.e), k:bl.id, t:`${bl.nombre}: ${ETQ[z.e]?.[0]||""}`}; }).filter(Boolean);
-  else xs = Object.entries(FX.empresas).map(([b,x])=>{ const z = x.f?.[fid]; if (!z?.r) return null; const e = etqEmp(b, fid), t = E.empresas.find(q=>q.byma===b);
-    return {n:`${logoImg(b,"logo-s")}${esc(b)}`, v:z.r.ef*dir, cl:solido(e), k:t?.ticker||b, t:`${t?.nombre||b}: ${ETQ[e]?.[0]||""}`}; }).filter(Boolean);
+    return {n:`<span class="bc-ic sm" style="--fc:${fm.c}"><svg viewBox="0 0 24 24">${ICO[bl.id]||""}</svg></span>${esc(bl.nombre)}${solido(z.e)?okm(z.v):""}`, v:z.r.ef*dir, cl:solido(z.e), k:bl.id, t:`${bl.nombre}: ${ETQ[z.e]?.[0]||""}`}; }).filter(Boolean);
+  else xs = Object.entries(FX.empresas).filter(([b])=>!fb || BQDE(b)?.id===fb).map(([b,x])=>{ const z = x.f?.[fid]; if (!z?.r) return null; const e = etqEmp(b, fid);
+    return {n:`${logoImg(b,"logo-s")}${esc(b)}${solido(e)?okm(z.v):""}`, v:z.r.ef*dir, cl:solido(e), k:tkDe(b), t:`${E.empresas.find(q=>q.byma===b)?.nombre||b}: ${ETQ[e]?.[0]||""}`}; }).filter(Boolean);
   xs.sort((a,b)=>b.v-a.v);
-  const nOk = xs.filter(p=>p.cl).length, vis = todo ? xs : xs.filter(p=>p.cl);
-  m.innerHTML = `<section class="fhead2 bhead"><div class="bh-top"><div><h2>Escenarios</h2><div class="fh-sub">Elegí un factor y una dirección: cómo se movieron históricamente los bloques y las empresas contra el SPY en un mes típico de ese factor.</div></div></div>
-    <div class="fgrs">${grupos.map(g=>`<div class="fgr"><span>${esc(g)}</span><div class="segs">${FX.factores.filter(x=>x.grupo===g).map(x=>`<button class="seg sm${x.id===fid?" on2":""}" data-ef="${x.id}">${esc(x.nombre)}</button>`).join("")}</div></div>`).join("")}</div>
+  const nOk = xs.filter(p=>p.cl).length, vis = todo ? xs : xs.filter(p=>p.cl), pt = parTxt(fid);
+  return `<section class="fhead2 bhead"><div class="fgrs" style="margin-top:0">${grupos.map(g=>`<div class="fgr"><span>${esc(g)}</span><div class="segs">${FX.factores.filter(x=>x.grupo===g).map(x=>`<button class="seg sm${x.id===fid?" on2":""}" data-ef="${x.id}">${esc(x.nombre)}</button>`).join("")}</div></div>`).join("")}</div>
     <div class="segs vsel" style="margin-top:12px"><button class="seg sm${dir>0?" on2":""}" data-ed="1">${esc(capit(f.sube))}</button><button class="seg sm${dir<0?" on2":""}" data-ed="-1">${esc(capit(f.baja))}</button></div>
-    <div class="segs vsel" style="margin-top:8px"><button class="seg sm${v==="bloques"?" on2":""}" data-ev="bloques">Por bloque</button><button class="seg sm${v==="empresas"?" on2":""}" data-ev="empresas">Por empresa</button></div></section>
-  ${sec(`Si ${esc(dir>0?f.sube:f.baja)}`, `un mes típico: ${tipTxt(f)} · ${nOk} de ${xs.length} con relación sólida`, `${vis.length?hbarras(vis, v==="bloques"?"data-bs":"data-e"):`<p class="lect">Ningún ${v==="bloques"?"bloque":"empresa"} tiene una relación sólida con este factor.</p>`}
+    <div class="segs vsel" style="margin-top:8px"><button class="seg sm${v==="empresas"?" on2":""}" data-ev="empresas">Por empresa</button><button class="seg sm${v==="bloques"?" on2":""}" data-ev="bloques">Por bloque</button></div>
+    ${v==="empresas"?`<div class="bar" style="margin:10px 0 0"><select id="fbl"><option value="">Todos los bloques</option>${BQ.bloques.map(b=>`<option value="${b.id}" ${b.id===fb?"selected":""}>${esc(b.nombre)}</option>`).join("")}</select></div>`:""}</section>
+  ${sec(`Si ${esc(dir>0?f.sube:f.baja)}`, `un mes típico: ${tipTxt(f)} · ${nOk} de ${xs.length} con relación sólida`, `${pt?`<p class="mut small" style="margin-top:0">${esc(pt)}</p>`:""}${vis.length?hbarras(vis, v==="bloques"?"data-bs":"data-e"):`<p class="lect">${v==="bloques"?"Ningún bloque":"Ninguna empresa"} tiene una relación sólida con este factor.</p>`}
     ${nOk<xs.length?`<button class="btn" id="etodo" style="margin-top:10px">${todo?"Mostrar solo las relaciones sólidas":`Ver también las que pueden ser casualidad (${xs.length-nOk})`}</button>`:""}
-    <p class="mut small" style="margin-top:10px">Contra el SPY, en un mes con un movimiento típico del factor, con datos desde 2015. Si el movimiento es el doble, el efecto suele ser aproximadamente el doble. Factor medido desde ${esc(f.desde)}${f.fuente==="French"?" (factores de estilo de la biblioteca académica de Kenneth French)":""}.</p>${LEYENDA}`, "main")}`;
-  m.querySelectorAll("[data-ef]").forEach(b=>b.onclick=()=>{EST.efac=b.dataset.ef; escenarios(m);});
-  m.querySelectorAll("[data-ed]").forEach(b=>b.onclick=()=>{EST.edir=+b.dataset.ed; escenarios(m);});
-  m.querySelectorAll("[data-ev]").forEach(b=>b.onclick=()=>{EST.escV=b.dataset.ev; escenarios(m);});
-  const et = m.querySelector("#etodo"); if (et) et.onclick = ()=>{EST.etodo=!EST.etodo; escenarios(m);};
-  m.querySelectorAll("[data-bs]").forEach(d=>d.onclick=()=>{EST.bloque=d.dataset.bs; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render();});
+    <p class="mut small" style="margin-top:10px">Contra el SPY, en un mes con un movimiento típico del factor, con datos desde 2015. ✔: confirmada con datos de 2023 en adelante. Factor medido desde ${esc(f.desde)}${f.fuente==="French"?" (biblioteca académica de Kenneth French)":""}.</p>${LEYENDA}`, "main")}`;
+}
+function familiasHTML(){
+  const ent = FX.factores.map(f=>({f, xs:Object.entries(FX.empresas).map(([b,x])=>{ const mo = (x.motores||[]).find(z=>z.f===f.id); return mo ? {b, ef:x.f[f.id].r.ef, v:x.f[f.id].v} : null; }).filter(Boolean)})).filter(p=>p.xs.length).sort((a,b)=>b.xs.length-a.xs.length);
+  const chipE = p => `<span class="rbl" data-e="${esc(tkDe(p.b))}" style="--fc:#8a94b8;cursor:pointer">${logoImg(p.b,"logo-s")}${esc(p.b)} <b class="${cls(p.ef)}">${efTxt(p.ef)}</b>${okm(p.v)}</span>`;
+  const sinU = FX.factores.filter(f=>!ent.some(p=>p.f.id===f.id));
+  return `<p class="mut small" style="margin:0 0 12px">Empresas que comparten un motor, sin importar el bloque. Cada número es cuánto se movieron contra el SPY cuando el factor subió en un mes típico. ✔: confirmada con datos de 2023 en adelante. Tocá una empresa para ver su ficha.</p>
+  <div class="fams2">${ent.map(({f,xs})=>{ const a = xs.filter(p=>p.ef>0).sort((p,q)=>q.ef-p.ef), c = xs.filter(p=>p.ef<0).sort((p,q)=>p.ef-q.ef), pt = parTxt(f.id);
+    return sec(esc(f.nombre), `${xs.length} ${xs.length===1?"empresa":"empresas"} · mes típico ${tipTxt(f)}`,
+      `${a.length?`<h4>Le ganan al mercado cuando ${esc(f.sube)}</h4><div class="rsm-l">${a.map(chipE).join("")}</div>`:""}
+      ${c.length?`<h4>Le pierden al mercado cuando ${esc(f.sube)}</h4><div class="rsm-l">${c.map(chipE).join("")}</div>`:""}
+      ${pt?`<p class="mut small">${esc(pt)}</p>`:""}`); }).join("")}</div>
+  ${sinU.length?`<p class="mut small">${sinU.map(f=>esc(f.nombre)).join(", ")}: ninguna empresa los tiene como motor sólido.</p>`:""}`;
+}
+function comoHTML(){
+  const FU = {FRED:"FRED · Fed de St. Louis", Yahoo:"Yahoo Finance", French:"Kenneth French · Dartmouth"};
+  return sec("Qué se mide","",`<ul class="lst">
+    <li><b>Contra el mercado.</b> Para cada empresa se mide cuánto le ganó o le perdió al SPY en los meses en que un factor se movió, descontado lo que se mueve con el mercado en general (su beta). Si un mes sube el petróleo y el mercado cae, una petrolera puede bajar y la relación igual se cumple: le fue mejor que al resto.</li>
+    <li><b>En un mes típico.</b> Cada factor se mide en su movimiento normal de un mes (por ejemplo, ±11% el petróleo o ±0,25 puntos la tasa), así se pueden comparar entre sí. Lo probamos: si el factor baja, el efecto es el inverso, y si el movimiento es más grande, el efecto crece más o menos en proporción.</li>
+    <li><b>Mismo mes.</b> Es una relación del mismo mes: dice a quién le pega un movimiento, no anticipa el movimiento.</li></ul>`)
+  + sec("Cómo se evita engañarse","",`<ul class="lst">
+    <li><b>Dos períodos.</b> La historia se parte en 2005–2014 y 2015 en adelante. "Clara" exige que la relación aparezca en los dos y en el mismo sentido.</li>
+    <li><b>Prueba contra el azar.</b> En cada período, la relación real se compara contra cientos de versiones con el factor corrido en el tiempo. Si no les gana, no cuenta.</li>
+    <li><b>Solo reciente.</b> Aparece con fuerza desde 2015, con un filtro más exigente, y la confirman otras empresas del mismo bloque sin contar a la propia. Antes de 2015 no aparecía o no había datos.</li>
+    <li><b>Prueba con datos que no vio.</b> Se recalculó todo con datos hasta 2022 y se miró qué pasó en 2023–2026:
+      <table class="tb2 oos"><thead><tr><th class="l">Etiqueta</th><th>Mantuvo el sentido</th><th>Además, con fuerza</th></tr></thead><tbody>
+      <tr><td class="l">Clara</td><td class="pos">84%</td><td>43%</td></tr>
+      <tr><td class="l">Solo reciente, confirmada por su bloque</td><td class="pos">76%</td><td>28%</td></tr>
+      <tr><td class="l">Sin relación (lo que da el azar)</td><td>52%</td><td>8%</td></tr></tbody></table>
+      Ningún motor de los que muestra el sitio fue en sentido contrario con fuerza. Prueba de noviembre de 2026.</li>
+    <li><b>Factores que se mueven juntos.</b> Dólar, cobre, oro, hierro y real; petróleo, gas y combustible; tasa y curva. Cuando una empresa aparece con varios de la misma familia, es en buena parte una sola exposición.</li></ul>`)
+  + sec("Lo que no hace","",`<ul class="lst">
+    <li>No dice si un factor se va a mover. Eso lo pone tu tesis.</li>
+    <li>No dice si la acción va a subir: dice si le va mejor o peor que al mercado.</li>
+    <li>En una acción sola y en un mes pesan mucho su balance y sus noticias. Funciona mejor mirando varias empresas con el mismo motor.</li>
+    <li>Lo que mueve el precio es la sorpresa: si el mercado ya espera que suba el petróleo, eso ya está en el precio.</li>
+    <li>Los factores de estilo (valor contra crecimiento, rentables, chicas contra grandes, momentum, inversión) describen qué tipo de acción es, más que un catalizador de afuera.</li>
+    <li>Son las empresas que hoy cotizan, y las que salieron a la bolsa hace poco todavía no se pueden medir bien.</li>
+    <li>Unos pocos motores se incluyeron a mano por lógica económica; están marcados en la ficha.</li></ul>`)
+  + sec("Los factores","fuentes gratuitas · se actualizan solos cada sábado",`<div class="wrap" style="max-height:none"><table class="tb2"><thead><tr><th class="l">Factor</th><th class="l">Grupo</th><th>Mes típico</th><th>Desde</th><th class="l">Fuente</th></tr></thead><tbody>
+    ${FX.factores.map(f=>`<tr><td class="l">${esc(f.nombre)}</td><td class="l mut">${esc(f.grupo)}</td><td>${tipTxt(f)}</td><td>${esc(f.desde)}</td><td class="l mut">${esc(FU[f.fuente]||f.fuente)}${f.proxy?` <span title="El mes en curso se aproxima con ${esc(f.proxy)}">*</span>`:""}</td></tr>`).join("")}</tbody></table></div>
+    <p class="mut small">* Los factores de estilo se publican con un mes de atraso; el mes en curso se aproxima con ETFs.</p>`);
+}
+async function factoresTab(m){
+  if (!FX){ m.innerHTML = `<p class="mut">Cargando…</p>`; await cargarFX(); }
+  if (!FX.factores.length){ m.innerHTML = `<p class="mut">No se pudieron cargar los factores.</p>`; return; }
+  const fv = EST.fvista || "si", VT = [["si","Si pasa…"],["familias","Familias"],["como","Cómo se mide"]];
+  m.innerHTML = `<section class="fhead2 bhead"><div class="bh-top"><div><h2>Factores</h2><div class="fh-sub">Qué mueve a cada empresa más allá del mercado: tasas, monedas, materias primas, actividad y el estilo del mercado. Es historia medida y probada; qué factor se va a mover lo ponés vos.</div></div></div></section>
+    <div class="ftabs mtabs">${VT.map(([k,t])=>`<button class="${k===fv?"on":""}" data-fv="${k}">${t}</button>`).join("")}</div>
+    ${fv==="familias" ? familiasHTML() : fv==="como" ? comoHTML() : siPasaHTML()}`;
+  const re = () => factoresTab(m);
+  m.querySelectorAll("[data-fv]").forEach(b=>b.onclick=()=>{EST.fvista=b.dataset.fv; window.scrollTo(0,0); re();});
+  m.querySelectorAll("[data-ef]").forEach(b=>b.onclick=()=>{EST.efac=b.dataset.ef; re();});
+  m.querySelectorAll("[data-ed]").forEach(b=>b.onclick=()=>{EST.edir=+b.dataset.ed; re();});
+  m.querySelectorAll("[data-ev]").forEach(b=>b.onclick=()=>{EST.escV=b.dataset.ev; re();});
+  const sb = m.querySelector("#fbl"); if (sb) sb.onchange = e=>{EST.fbl=e.target.value; re();};
+  const et = m.querySelector("#etodo"); if (et) et.onclick = ()=>{EST.etodo=!EST.etodo; re();};
+  m.querySelectorAll("[data-bs]").forEach(d=>d.onclick=()=>{EST.bloque=d.dataset.bs; EST.vista=null; EST.sel=null; tab="empresas"; navegar(); window.scrollTo(0,0); render();});
   m.querySelectorAll("[data-e]").forEach(d=>d.onclick=()=>{EST.sel=d.dataset.e; EST.ftab="sensib"; window.scrollTo(0,0); render();});
+}
+async function lista(m){
+  if (!E){ m.innerHTML = `<div class="soon"><h2>Lista</h2>Todavía no hay datos. Se generan con la próxima actualización.</div>`; return; }
+  if (!FX){ m.innerHTML = `<p class="mut">Cargando…</p>`; await cargarFX(); }
+  const L = E.empresas, mot = b => FX.empresas?.[b]?.motores || [];
+  const usados = FX.factores.filter(f=>L.some(x=>mot(x.byma).some(z=>z.f===f.id)));
+  const q = (EST.lq||"").toLowerCase();
+  const rows = L.filter(x=>(!q || (x.byma+" "+x.ticker+" "+x.nombre).toLowerCase().includes(q)) && (!EST.lb || BQDE(x.byma)?.id===EST.lb)
+    && (!EST.lm || (EST.lm==="ninguno" ? !mot(x.byma).length : mot(x.byma).some(z=>z.f===EST.lm))) && (!EST.liq || x.liquidez===EST.liq));
+  const V = {general:x=>x.notas?.general, bloque:x=>BQDE(x.byma)?.nombre, pefwd:x=>x.val?.pe_fwd>0?x.val.pe_fwd:null, mueve:x=>mot(x.byma).map(z=>FX.F[z.f]?.nombre).join(" ")||null};
+  const val = x => (V[EST.sort]||(y=>y[EST.sort]))(x);
+  rows.sort((a,b)=>{ const va=val(a), vb=val(b); if (va==null) return 1; if (vb==null) return -1; return (typeof va==="string" ? va.localeCompare(vb) : va-vb)*EST.dir; });
+  const th = (k,t,c="") => `<th class="${c}" data-s="${k}">${t}${EST.sort===k?(EST.dir>0?" ▲":" ▼"):""}</th>`;
+  m.innerHTML = `<details class="help"><summary>Cómo leer esta lista</summary>
+    <p>Las ${L.length} empresas con CEDEAR más operadas en BYMA. Tocá una fila para abrir su ficha; marcá hasta 4 para comparar sus precios.</p>
+    <dl><dt>Nota</dt><dd>Resumen de la ficha: calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15% y tendencia 10%. Sirve para ordenar y ubicarse rápido; no es una señal de compra.</dd>
+    <dt>Lo mueve</dt><dd>Los factores que la mueven más allá del mercado, con relación sólida. ✔: confirmado con datos de 2023 en adelante. Vacío: se mueve sobre todo por su propio negocio.</dd>
+    <dt>vs MA200</dt><dd>Distancia al promedio de las últimas 200 ruedas.</dd>
+    <dt>P/E esp.</dt><dd>Precio sobre la ganancia que esperan los analistas para los próximos 12 meses.</dd>
+    <dt>Premio</dt><dd>Cuánto más caro (+) o barato (−) cotiza el CEDEAR frente al CCL implícito de todo el mercado.</dd></dl></details>
+  <div class="bar">
+    <input id="lq" placeholder="Buscar ticker o empresa" value="${esc(EST.lq||"")}">
+    <select id="lb"><option value="">Todos los bloques</option>${BQ.bloques.map(b=>`<option value="${b.id}" ${b.id===EST.lb?"selected":""}>${esc(b.nombre)}</option>`).join("")}</select>
+    <select id="lm"><option value="">Cualquier motor</option>${usados.map(f=>`<option value="${f.id}" ${f.id===EST.lm?"selected":""}>Se mueve con: ${esc(f.nombre)}</option>`).join("")}<option value="ninguno" ${EST.lm==="ninguno"?"selected":""}>Sin motor claro</option></select>
+    <select id="ll"><option value="">Toda liquidez</option>${["Alta","Media","Baja","Muy baja"].map(s=>`<option ${s===EST.liq?"selected":""}>${s}</option>`).join("")}</select>
+    <button class="btn" id="ecmp" style="margin:0" ${CMP.length<2?"disabled":""}>Comparar${CMP.length?` (${CMP.length})`:""}</button>${CMP.length?`<button class="btn" id="elim" style="margin:0">Limpiar</button>`:""}
+    <span class="count">${rows.length} de ${L.length}</span>
+  </div>
+  <div class="wrap"><table><thead><tr><th></th>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("bloque","Bloque","l")}${th("general","Nota")}${th("mueve","Lo mueve","l")}${th("r3m","3M")}${th("r12m","12M")}${th("vs_ma200","vs MA200")}${th("pefwd","P/E esp.")}${th("premio","Premio")}${th("liquidez","Liquidez","l")}${th("proximo_balance","Balance")}</tr></thead>
+  <tbody>${rows.map(x=>{ const ms = mot(x.byma); return `<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td><input type="checkbox" class="cmpk" data-c="${esc(x.ticker)}" ${CMP.includes(x.ticker)?"checked":""}></td>
+    <td class="tk l">${logoImg(x.byma,"logo-s")}${esc(x.byma)}</td><td class="nm l">${esc(x.nombre)}</td><td class="l mut">${esc(BQDE(x.byma)?.nombre||"—")}</td><td>${chip(x.notas?.general)}</td>
+    <td class="l lm">${ms.length?ms.map(z=>`${esc(FX.F[z.f]?.nombre||z.f)}${okm(FX.empresas[x.byma].f[z.f]?.v)}`).join(" · "):'<span class="mut">—</span>'}</td>
+    <td class="${cls(x.r3m)}">${pct(x.r3m,0)}</td><td class="${cls(x.r12m)}">${pct(x.r12m,0)}</td><td class="${cls(x.vs_ma200)}">${pct(x.vs_ma200,0)}</td><td>${x.val?.pe_fwd>0?nx(x.val.pe_fwd)+"x":"—"}</td>
+    <td class="${x.premio>0.03?"neg":x.premio<-0.03?"pos":""}">${pct(x.premio)}</td><td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td><td>${fch2(x.proximo_balance)}</td></tr>`; }).join("")}</tbody></table></div>`;
+  const re = ()=>lista(m);
+  m.querySelector("#lq").oninput = e=>{EST.lq=e.target.value; re(); const i=m.querySelector("#lq"); i.focus(); i.setSelectionRange(i.value.length,i.value.length);};
+  m.querySelector("#lb").onchange = e=>{EST.lb=e.target.value; re();};
+  m.querySelector("#lm").onchange = e=>{EST.lm=e.target.value; re();};
+  m.querySelector("#ll").onchange = e=>{EST.liq=e.target.value; re();};
+  m.querySelectorAll("th[data-s]").forEach(h=>h.onclick=()=>{const k=h.dataset.s; if (EST.sort===k) EST.dir*=-1; else {EST.sort=k; EST.dir=["byma","nombre","bloque","mueve","liquidez","proximo_balance"].includes(k)?1:-1;} re();});
+  m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=e=>{ if (e.target.classList.contains("cmpk")) return; EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
+  m.querySelectorAll(".cmpk").forEach(c=>c.onchange=()=>{ const t=c.dataset.c, i=CMP.indexOf(t); if (c.checked && i<0){ if (CMP.length>=4){ c.checked=false; return; } CMP.push(t); } else if (!c.checked && i>=0) CMP.splice(i,1); re(); });
+  const bc = m.querySelector("#ecmp"); if (bc) bc.onclick = ()=>{ EST.vista="cmp"; window.scrollTo(0,0); render(); };
+  const bl = m.querySelector("#elim"); if (bl) bl.onclick = ()=>{ CMP.length=0; re(); };
 }
 function factoresMes(){
   if (!FX?.factores?.length) return `<p class="mut">Cargando factores…</p>`;
@@ -919,7 +984,7 @@ function factoresMes(){
     return `<div class="fmes"><div class="fmes-h"><b>${esc(f.nombre)}</b><span class="${s_>0?"pos":"neg"}">${u.cambio>0?"+":""}${nx(u.cambio, f.unidad==="pts"?2:1)}${f.unidad==="pts"?" pts":"%"}</span><em>${mtx(u)} · ${nx(Math.abs(u.z),1)} veces un mes típico</em></div>
       <p class="mut small" style="margin:2px 0 6px">${esc(capit(s_>0?f.sube:f.baja))}${f.proxy?` (medido con ETFs: ${esc(f.proxy.replace("/"," contra "))})`:""}.</p>
       ${bls.length||emp.length?`<div class="rsm-l">${bls.map(chB).join("")}${emp.map(p=>`<span class="rbl" data-e2="${esc(E.empresas.find(q=>q.byma===p.b)?.ticker||p.b)}" style="--fc:#8a94b8">${logoImg(p.b,"logo-s")}${esc(p.b)} <b class="${cls(p.v)}">${efTxt(p.v)}</b></span>`).join("")}</div>`:`<p class="mut small">Ningún bloque ni empresa tiene una relación sólida con este factor.</p>`}</div>`; }).join("")
-    + `<p class="mut small">Los números al lado de cada bloque o empresa son lo que sugiere la relación histórica para un movimiento de este tamaño, contra el SPY. No es lo que pasó este mes: es a quién le pega más este tipo de movimiento. <a href="#" id="iresc">Ver todo en Escenarios →</a></p>`;
+    + `<p class="mut small">Al lado de cada bloque o empresa: cuánto se movió históricamente contra el SPY en un mes con un movimiento de este tamaño. No es lo que pasó este mes ni lo que va a pasar: es a quién le pega más este tipo de movimiento. <a href="#" id="iresc">Ver todo en Factores →</a></p>`;
 }
 function regimenCaja(){
   const xs = FX?.regimen?.[M.actual] || [], q = M.cuadrantes[M.actual];
@@ -997,7 +1062,7 @@ async function bloquePag(m, id){
   ${sec("Ranking del bloque", L?"nota del bloque con las métricas del nicho":"nota general · lectura en preparación", `<div class="wrap" style="max-height:none"><table class="tb2 rk"><thead><tr><th class="l">CEDEAR</th><th class="l">Empresa</th><th>${L?"Nota del bloque":"Nota general"}</th>${cols.map(c=>`<th>${c[0]}</th>`).join("")}</tr></thead>
   <tbody>${fil.map((r,i)=>`<tr data-e="${esc(r.x.ticker)}" style="cursor:pointer"><td class="tk l"><span class="pos-n">${i+1}</span>${logoImg(r.x.byma,"logo-s")}${esc(r.x.byma)}</td><td class="nm l">${esc(r.x.nombre)}</td><td>${chip(r.n)}</td>${cols.map(c=>`<td>${r.f?c[1](r.k):"—"}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
   <p class="mut small">${L?esc(L.pesos_txt):"Nota general: calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15%, tendencia 10%."} Sirve para ordenar dentro del bloque; no es una señal de compra.${L&&L.ciclico?" P/E del ciclo: precio dividido por la ganancia promedio de hasta 10 años.":""}</p>`, "main")}
-  ${motoresBloque(bl)}
+  ${cuadroBloque(bl)}
   ${L?`<section class="fgrid" style="align-items:start">${sec("Cómo gana plata el nicho","",`<p class="lect">${esc(L.negocio)}</p>`)}
     ${sec("Qué mirar","",`<ul class="lst">${L.mirar.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><h4>Riesgos del nicho</h4><ul class="lst">${L.riesgos.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><h4>En cada balance</h4><ul class="lst">${L.balance.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`)}</section>
   ${sec("Empresa por empresa","",fil.map(r=>`<div class="bemp"><div class="tk">${logoImg(r.x.byma,"logo-s")}${esc(r.x.nombre)}</div><p>${esc(L.empresas[r.x.byma]||"")}</p></div>`).join("")+`<p class="mut small">Textos de contexto escritos para el sitio; los datos se actualizan solos cada semana. Es historia, no predicción.</p>`)}`
@@ -1005,6 +1070,7 @@ async function bloquePag(m, id){
   m.querySelector("#bv").onclick = ()=>{EST.bloque=null; window.scrollTo(0,0); render();};
   m.querySelector("#bcmp").onclick = ()=>{CMP.splice(0,CMP.length,...fil.slice(0,4).map(r=>r.x.ticker)); EST.vista="cmp"; window.scrollTo(0,0); render();};
   m.querySelectorAll("[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
+  m.querySelectorAll("[data-em]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.em; EST.ftab="sensib"; window.scrollTo(0,0); render();});
 }
 function panelNicho(f){
   const bl = BQDE(f.byma); if (!bl || !bl.lente) return "";
@@ -1018,56 +1084,11 @@ function panelNicho(f){
     <p class="mut small">Lectura revisada: ${esc(L.revisado)}. Es historia y contexto, no predicción.</p></div></section>`;
 }
 function empresas(m){
-  (E.empresas||[]).forEach(x=>{ if (x.notas) x.notas.general = general(x.notas); });
   if (!E){ m.innerHTML = `<div class="soon"><h2>Empresas</h2>Todavía no hay datos. Se generan con la próxima actualización.</div>`; return; }
   if (EST.vista==="cmp" && CMP.length) return comparador(m);
   if (EST.sel) return ficha(m, EST.sel);
-  if (BQ && EST.vista==="esc") return escenarios(m);
   if (BQ && EST.bloque) return bloquePag(m, EST.bloque);
-  if (BQ && EST.vista!=="lista") return portada(m);
-  const L = E.empresas;
-  const sectores = [...new Set(L.map(x=>x.sector).filter(Boolean))].sort();
-  const nf = L.filter(x=>x.ficha).length;
-  let rows = L.filter(x=>(!EST.q || (x.byma+" "+x.ticker+" "+x.nombre).toLowerCase().includes(EST.q.toLowerCase()))
-    && (!EST.sector || x.sector===EST.sector) && (!EST.liq || x.liquidez===EST.liq)
-    && (!EST.pais || (EST.pais==="us" ? x.pais==="United States" : x.pais!=="United States")) && (!EST.fichas || x.ficha));
-  const val = x => EST.sort in (x.notas||{}) ? x.notas[EST.sort] : x[EST.sort];
-  rows.sort((a,b)=>{ const va=val(a), vb=val(b); if (va==null) return 1; if (vb==null) return -1; return (typeof va==="string" ? va.localeCompare(vb) : va-vb)*EST.dir; });
-  const th = (k,t,c="") => `<th class="${c}" data-s="${k}">${t}${EST.sort===k?(EST.dir>0?" ▲":" ▼"):""}</th>`;
-  m.innerHTML = `
-  <details class="help"><summary>Cómo leer esta lista</summary>
-    <p>Las 125 empresas con CEDEAR que más se operan en BYMA. Hacé clic en una fila para abrir su ficha. Las notas van de 1 a 10 y sirven para ordenar y ubicarse rápido; no son una recomendación de compra.</p>
-    <dl>${NOTAS.map(([k,t])=>`<dt>${t}</dt><dd>${NOTA_TXT[k]}</dd>`).join("")}<dt>General</dt><dd>Resumen para arrancar el análisis: calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15% y tendencia 10%. No es una señal de compra.</dd><dt>Negocio</dt><dd>Promedio de calidad y solidez: qué tan bueno y sólido es el negocio, sin mirar precio ni momento.</dd></dl>
-    <p>Fichas completas: ${nf} de ${L.length}. Las demás muestran por ahora solo precio, valuación y tendencia.</p>
-  </details>
-  <div class="bar">
-    <input id="eq" placeholder="Buscar ticker o empresa" value="${esc(EST.q)}">
-    <select id="es"><option value="">Todos los sectores</option>${sectores.map(s=>`<option ${s===EST.sector?"selected":""}>${esc(s)}</option>`).join("")}</select>
-    <select id="ep"><option value="">Todos los países</option><option value="us" ${EST.pais==="us"?"selected":""}>EE.UU.</option><option value="ext" ${EST.pais==="ext"?"selected":""}>Resto del mundo</option></select>
-    <select id="el"><option value="">Toda liquidez</option>${["Alta","Media","Baja","Muy baja"].map(s=>`<option ${s===EST.liq?"selected":""}>${s}</option>`).join("")}</select>
-    <label class="mut" style="font-size:12px;font-family:var(--mono)"><input type="checkbox" id="ef" ${EST.fichas?"checked":""}> Solo fichas completas</label>
-    <button class="btn" id="ecmp" style="margin:0" ${CMP.length<2?"disabled":""}>Comparar${CMP.length?` (${CMP.length})`:""}</button>${CMP.length?`<button class="btn" id="elim" style="margin:0">Limpiar</button>`:""}
-    <span class="count">${rows.length} empresas · marcá hasta 4 para comparar</span>
-  </div>
-  <div class="wrap"><table><thead><tr><th></th>${th("puesto","#")}${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("sector","Sector","l")}${th("pais","País","l")}
-  ${th("general","General")}${th("negocio","Negocio")}${NOTAS.map(([k,t])=>th(k,t)).join("")}${th("r1m","1M")}${th("r12m","12M")}${th("premio","Premio")}${th("liquidez","Liquidez","l")}${th("proximo_balance","Balance")}</tr></thead>
-  <tbody>${rows.map(x=>`<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td><input type="checkbox" class="cmpk" data-c="${esc(x.ticker)}" ${CMP.includes(x.ticker)?"checked":""}></td><td class="mut">${x.puesto}</td><td class="tk l">${logoImg(x.byma,"logo-s")}${esc(x.byma)}${x.byma!==x.ticker?`<small>${esc(x.ticker)}</small>`:""}</td>
-  <td class="nm l">${esc(x.nombre)}${x.ficha?"":' <span class="mut" title="Ficha completa pendiente">·</span>'}</td><td class="l">${esc(x.sector||"—")}</td><td class="l">${esc(PAIS[x.pais]||x.pais||"—")}</td>
-  <td>${chip(x.notas?.general)}</td><td>${chip(x.notas?.negocio)}</td>${NOTAS.map(([k])=>`<td>${chip(x.notas?.[k])}</td>`).join("")}
-  <td class="${cls(x.r1m)}">${pct(x.r1m)}</td><td class="${cls(x.r12m)}">${pct(x.r12m,0)}</td><td class="${x.premio>0.03?"neg":x.premio<-0.03?"pos":""}">${pct(x.premio)}</td>
-  <td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td><td>${fch2(x.proximo_balance)}</td></tr>`).join("")}</tbody></table></div>`;
-  const re = ()=>empresas(m);
-  m.querySelector("#eq").oninput = e=>{EST.q=e.target.value; re(); const i=m.querySelector("#eq"); i.focus(); i.setSelectionRange(i.value.length,i.value.length);};
-  m.querySelector("#es").onchange = e=>{EST.sector=e.target.value; re();};
-  m.querySelector("#ep").onchange = e=>{EST.pais=e.target.value; re();};
-  m.querySelector("#el").onchange = e=>{EST.liq=e.target.value; re();};
-  m.querySelector("#ef").onchange = e=>{EST.fichas=e.target.checked; re();};
-  m.querySelectorAll("th[data-s]").forEach(h=>h.onclick=()=>{const k=h.dataset.s; if (EST.sort===k) EST.dir*=-1; else {EST.sort=k; EST.dir=["byma","nombre","sector","pais","liquidez","puesto","proximo_balance"].includes(k)?1:-1;} re();});
-  m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=e=>{ if (e.target.classList.contains("cmpk")) return; EST.sel=r.dataset.e; window.scrollTo(0,0); re();});
-  m.querySelectorAll(".cmpk").forEach(c=>c.onchange=()=>{ const t=c.dataset.c, i=CMP.indexOf(t); if (c.checked && i<0){ if (CMP.length>=4){ c.checked=false; return; } CMP.push(t); } else if (!c.checked && i>=0) CMP.splice(i,1); re(); });
-  const bc = m.querySelector("#ecmp"); if (bc) bc.onclick = ()=>{ EST.vista="cmp"; window.scrollTo(0,0); re(); };
-  const bq_ = m.querySelector("#ebq"); if (bq_) bq_.onclick = ()=>{ EST.vista=null; window.scrollTo(0,0); re(); };
-  const bl = m.querySelector("#elim"); if (bl) bl.onclick = ()=>{ CMP.length=0; re(); };
+  return portada(m);
 }
 
 function lineas(sr, per){
@@ -1102,7 +1123,7 @@ function barras(an){
 
 function kv(pares){ return `<div class="kv">${pares.map(([k,v,c])=>`<div><span>${k}</span><b class="${c||""}">${v}</b></div>`).join("")}</div>`; }
 
-const FTABS = [["resumen","Resumen"],["analisis","Análisis"],["numeros","Números"],["valuacion","Valuación"],["analistas","Analistas"],["sensib","Qué la mueve"],["cedear","CEDEAR"],["posicion","Posicionamiento"],["vigilar","Qué vigilar"]];
+const FTABS = [["resumen","Resumen"],["sensib","Qué la mueve"],["analisis","Análisis"],["numeros","Números"],["valuacion","Valuación"],["analistas","Analistas"],["cedear","CEDEAR"],["posicion","Posicionamiento"],["vigilar","Qué vigilar"]];
 const logoImg = (b, cls="logo") => `<img class="${cls}${(LM||{})[b]?" osc":""}" src="data/logos/${encodeURIComponent(b)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} sinlogo',textContent:'${esc(b).slice(0,2)}'}))">`;
 
 function analizar(f){
@@ -1318,7 +1339,7 @@ async function ficha(m, t){
   const f = FCACHE[t], x = E.empresas.find(z=>z.ticker===t) || {};
   const volver = `<button class="btn" id="fv">${EST.bloque?"← Volver al bloque":"← Volver"}</button>`;
   const BQF = BQDE(f.byma||x.byma);
-  const TABS = BQF?.lente ? [FTABS[0],["nicho","Lectura del nicho"],...FTABS.slice(1)] : FTABS;
+  const TABS = BQF?.lente ? [FTABS[0],FTABS[1],["nicho","Lectura del nicho"],...FTABS.slice(2)] : FTABS;
   if (f.sin){
     m.innerHTML = `${volver}<div class="soon"><h2>${esc(x.nombre||t)}</h2>La ficha completa de esta empresa todavía no está generada. Se arma en las próximas tandas.</div>`;
     m.querySelector("#fv").onclick = ()=>{EST.sel=null; render();};
@@ -1498,65 +1519,6 @@ async function ficha(m, t){
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); ficha(m, r.dataset.e);});
 }
 
-function universo(m){
-  if (!D){
-    m.innerHTML = `<div class="empty">Todavía no hay datos. En GitHub: Actions → Actualizar datos → Run workflow.</div>`;
-    return;
-  }
-  const sectores = [...new Set(D.tickers.map(x=>x.sector).filter(Boolean))].sort();
-  m.innerHTML = `
-  <div class="bar">
-    <input id="q" placeholder="Buscar ticker o empresa" value="${esc(st.q)}">
-    <select id="fs"><option value="">Todos los sectores</option>${sectores.map(s=>`<option ${s===st.sector?"selected":""}>${esc(s)}</option>`).join("")}</select>
-    <select id="fl"><option value="">Toda liquidez</option>${["Alta","Media","Baja","Muy baja","Sin dato"].map(s=>`<option ${s===st.liq?"selected":""}>${s}</option>`).join("")}</select>
-    <span class="count" id="cnt"></span>
-  </div>
-  <details class="help"><summary>Cómo leer esta tabla</summary>
-    <dl>${COLS.filter(c=>c.h).map(c=>`<dt>${c.t}</dt><dd>${c.h}</dd>`).join("")}
-    <dt>⚑</dt><dd>Nota sobre la empresa: historia corta, exposición a emergentes, ADR fuera de bolsa, etc. Pasá el mouse para verla.</dd></dl>
-    ${D.sin_datos?.length?`<p>Sin datos esta semana: ${D.sin_datos.map(esc).join(", ")}</p>`:""}
-  </details>
-  <div class="wrap"><table><thead><tr>${COLS.map(c=>`<th class="${c.l?"l":""}" data-k="${c.k}" title="${esc(c.h||"")}">${c.t}${sortK===c.k?(sortDir>0?" ▲":" ▼"):""}</th>`).join("")}</tr></thead><tbody id="tb"></tbody></table></div>`;
-  document.getElementById("q").oninput = e=>{st.q=e.target.value;filas()};
-  document.getElementById("fs").onchange = e=>{st.sector=e.target.value;filas()};
-  document.getElementById("fl").onchange = e=>{st.liq=e.target.value;filas()};
-  document.querySelectorAll("th").forEach(th=>th.onclick=()=>{
-    const k=th.dataset.k; sortDir = sortK===k ? -sortDir : (COLS.find(c=>c.k===k).l?1:-1); sortK=k; universo(m);
-  });
-  filas();
-}
-
-function filas(){
-  const q = st.q.trim().toUpperCase();
-  let r = D.tickers.filter(x=>
-    (!q || x.byma.includes(q) || x.ticker.includes(q) || (x.nombre||"").toUpperCase().includes(q)) &&
-    (!st.sector || x.sector===st.sector) && (!st.liq || x.liquidez===st.liq));
-  r.sort((a,b)=>{
-    const A=a[sortK], B=b[sortK];
-    if (A==null && B==null) return 0; if (A==null) return 1; if (B==null) return -1;
-    return (typeof A==="string" ? A.localeCompare(B) : A-B) * sortDir;
-  });
-  document.getElementById("cnt").textContent = `${r.length} de ${D.n}`;
-  document.getElementById("tb").innerHTML = r.map(x=>`<tr>
-    <td class="l tk">${esc(x.byma)}${x.ticker!==x.byma?`<small>${esc(x.ticker)}</small>`:""}${x.nota?` <span class="flag" title="${esc(x.nota)}">⚑</span>`:""}</td>
-    <td class="l nm" title="${esc(x.industria||"")}">${esc(x.nombre)}</td>
-    <td class="l mut">${esc(x.sector||"—")}</td>
-    <td>${num(x.precio)}</td>
-    <td class="${cls(x.r1m)}">${pct(x.r1m)}</td>
-    <td class="${cls(x.r3m)}">${pct(x.r3m)}</td>
-    <td class="${cls(x.r12m)}">${pct(x.r12m)}</td>
-    <td class="${cls(x.mom12_1)}">${pct(x.mom12_1)}</td>
-    <td class="${cls(x.vs_ma200)}">${pct(x.vs_ma200)}</td>
-    <td>${x.vol==null?"—":(x.vol*100).toFixed(0)+"%"}</td>
-    <td>${num(x.beta)}</td>
-    <td class="neg">${pct(x.dd12m,0)}</td>
-    <td title="${esc(x.px_fecha||"")}">${num(x.px_ars,0)}</td>
-    <td>${usd(x.monto_usd)}</td>
-    <td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td>
-    <td class="${x.premio==null?"mut":x.premio>0.02?"neg":x.premio<-0.02?"pos":""}">${pct(x.premio)}</td>
-  </tr>`).join("");
-}
-
 const QC = {CSI:"#3ecf8e", REC:"#f0b429", EST:"#f2555a", DES:"#5aa9ff"};
 
 function zbar(z){
@@ -1675,7 +1637,6 @@ function semaforoHTML(){
       <p><b>Qué predice:</b> no anticipa las caídas, las confirma: en la historia se encendió cuando el S&P ya había caído entre 7% y 13% desde su máximo. Lo que sí marca es que viene un mercado más flojo y mucho más movido: en los 3 meses siguientes a un rojo el S&P rindió en promedio la mitad que después de un verde, cayó casi el doble de veces y se movió más del doble. No sirve para shocks rápidos que no vienen con freno de la economía (por ejemplo, la caída por aranceles de abril 2025 nunca lo puso en rojo).</p>
       <p>Las dos condiciones se complementan: la tendencia sola da muchas falsas alarmas, y la macro sola llega tarde. Juntas, en la historia, esquivaron la mayor parte de 2008 a cambio de algo de rendimiento en los años buenos.</p>
       <p><b>Uso sugerido:</b> aplicarlo a la parte indexada (núcleo) de clientes conservadores: en rojo, bajar exposición; en amarillo, no hacer cambios pero no sumar riesgo.</p>
-      <p><b>No aplicarlo a las señales de Fundamentals:</b> se probó combinarlo con la estrategia de momentum + MA200 (2006–2026). Salvó 2008, pero en 2019–2026 restó rendimiento y no mejoró la caída, porque esa estrategia ya se protege sola: sale de las acciones que pierden su MA200 y rota hacia las que vienen bien (por ejemplo, energía en 2022).</p>
       <p>${S.base==="tiempo_real"?`<b>Datos honestos:</b> el historial se reconstruyó con los datos macro <b>tal como se conocían cada mes</b> (archivo ALFRED de la Fed de St. Louis), sin las revisiones posteriores. O sea, muestra lo que el semáforo hubiera dicho en su momento. Actividad (CFNAI) tiene versiones desde ${S.cobertura?.CFNAIMA3||"2011"} y subsidios por desempleo desde ${S.cobertura?.ICSA||"2009"}; antes de esas fechas se usa su primera versión disponible.`:`Ojo: el historial usa datos macro revisados, así que en tiempo real podría haber funcionado algo distinto.`}</p>
     </details></div></div>`;
 }
@@ -1803,210 +1764,9 @@ function macro(m){
     ${sec("Régimen mes a mes","",`${bandaSVG()}<div class="sub" style="margin-top:6px">${["CSI","REC","EST","DES"].map(k=>`<span style="color:${QC[k]}">■</span> ${esc(M.cuadrantes[k].nombre)}`).join(" &nbsp; ")}</div>`)}`;
   m.innerHTML = `<div class="ftabs mtabs">${MT.map(([k,t])=>`<button class="${k===mt?"on":""}" data-mt="${k}">${t}</button>`).join("")}</div>${cuerpo}`;
   m.querySelectorAll("[data-mt]").forEach(b=>b.onclick=()=>{ EST.mtab=b.dataset.mt; window.scrollTo(0,0); macro(m); });
-  const ie = document.getElementById("iresc"); if (ie) ie.onclick = e => { e.preventDefault(); EST.escV="bloques"; tab="escenarios"; navegar(); window.scrollTo(0,0); render(); };
+  const ie = document.getElementById("iresc"); if (ie) ie.onclick = e => { e.preventDefault(); EST.fvista="si"; tab="factores"; navegar(); window.scrollTo(0,0); render(); };
   m.querySelectorAll("[data-e2]").forEach(b=>b.onclick=()=>{ EST.sel=b.dataset.e2; EST.ftab="sensib"; EST.bloque=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
   m.querySelectorAll("[data-irb2]").forEach(b=>b.onclick=()=>{ EST.bloque=b.dataset.irb2; EST.sel=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
-}
-
-const fs = {q:"", sector:"", liq:"", ma:false, av:false, sig:"", sort:"total", dir:-1, abierto:null};
-let UMB = {alto:65, bajo:40};
-const SIG = {comprar:{t:"Comprar",c:"var(--pos)",o:1}, esperar:{t:"Esperar",c:"var(--accent)",o:2}, neutral:{t:"Neutral",c:"var(--muted)",o:3}, evitar:{t:"Evitar",c:"var(--neg)",o:4}};
-function senal(x){
-  const t = x.scores.total; if (t==null) return null;
-  if (t < UMB.bajo) return "evitar";
-  if (t < UMB.alto) return "neutral";
-  return (x.raw.vs_ma200??-1) > 0 ? "comprar" : "esperar";
-}
-function alertas(x){
-  const a = [], s = senal(x);
-  if (s!=="comprar" && s!=="esperar") return a;
-  if (x.premio!=null && x.premio > 0.03) a.push({c:`CCL ${pct(x.premio,0)}`, t:`El CEDEAR cotiza ${pct(x.premio,1)} por encima del CCL implícito del mercado: está caro contra su subyacente.`});
-  if (["Muy baja","Sin dato"].includes(x.liquidez)) a.push({c:"liquidez", t:`Liquidez ${x.liquidez.toLowerCase()} en BYMA: puede costar entrar y salir al precio de pantalla.`});
-  const d = dias(x.raw.proximo_balance);
-  if (d!=null && d>=0 && d<=7) a.push({c:`balance ${d}d`, t:`Presenta balance en ${d} días. En 20 años de historia, la semana del balance rindió en promedio algo más que el resto, pero con más volatilidad: no es motivo para no comprar, pero esperá movimientos fuertes.`});
-  return a;
-}
-function porQue(x){
-  const s = senal(x), r = x.raw, t = Math.round(x.scores.total??0);
-  if (s==="evitar") return `Puntaje ${t}: por debajo de ${UMB.bajo}.`;
-  if (s==="neutral") return `Puntaje ${t}: entre ${UMB.bajo} y ${UMB.alto}.`;
-  return s==="comprar" ? `Puntaje ${t} y sobre su MA200.` : `Puntaje ${t}, pero debajo de su MA200: buena empresa, tendencia rota.`;
-}
-const scol = v => v==null ? "var(--muted)" : v>=70 ? "var(--pos)" : v>=40 ? "var(--accent)" : "var(--neg)";
-const sc = v => v==null ? '<span class="mut">—</span>' : `${Math.round(v)}<span class="sbar"><i style="width:${v}%;background:${scol(v)}"></i></span>`;
-const fecha = s => s ? new Date(s).toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"2-digit"}) : "—";
-const dias = s => s ? Math.round((new Date(s) - new Date())/864e5) : null;
-
-function detalle(x){
-  const r = x.raw, P = (v,d=1)=>pct(v,d), N=(v,d=1)=>v==null?"—":num(v,d), S = v => v==null?"—":Math.round(v);
-  const sb = x.sub || {};
-  const g = (t, items) => `<div><h4>${t}</h4><dl>${items.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("")}</dl></div>`;
-  return `<tr class="det"><td colspan="13"><div class="detg">
-    ${g(`REVISIONES · ${S(x.scores.revisiones)}`,[["EPS este año, 90 días",P(r.rev90_0y)],["EPS año próximo, 90 días",P(r.rev90_1y)],["Analistas que suben / bajan (30d)",`${r.rev_suben??"—"} / ${r.rev_bajan??"—"}`],["Sorpresa último balance",P(r.sorpresa)],["Balances que superaron estimaciones",r.consistencia==null?"—":`${Math.round(r.consistencia*(r.n_balances||0))} de ${r.n_balances}`]])}
-    ${g(`MOMENTUM · ${S(x.scores.momentum)}`,[["Retorno 12 meses sin el último",P(r.mom12_1)],["Distancia a MA200",P(r.vs_ma200)]])}
-    ${g(`CALIDAD · ${S(x.scores.calidad)}`,[[`<b>Rentabilidad · ${S(sb.rentabilidad)}</b>`,""],[r.roic!=null?"ROIC (retorno s/ capital invertido)":"Rentabilidad sobre activos",P(r.roic!=null?r.roic:r.roa)],["Margen operativo",P(r.margen_op)],["Margen bruto",P(r.margen_bruto)],
-      [`<b>Solidez · ${S(sb.solidez)}</b>`,""],["Deuda neta / EBITDA",r.deuda_ebitda==null?"—":N(r.deuda_ebitda)+"x"],["F-score (0 a 9)",N(r.fscore,1)],
-      [`<b>Calidad de ganancias · ${S(sb.ganancias)}</b>`,""],["Ganancia no cobrada / activos",P(r.accruals)],["Variabilidad del margen",P(r.estab_margen)],["Dilución en 12 meses",P(r.dilucion)]])}
-    ${g(`VALUACIÓN · ${S(x.scores.valuacion)}`,[["P/E forward",N(r.forward_pe)],["Rendimiento de ganancias",P(r.ey)],["Flujo de caja libre / capitalización",P(r.fcf_yield)],["P/E actual",N(r.pe_trailing)],["P/E mediano de sus últimos años",N(r.pe_hist)],["P/E actual vs su historia",r.pe_vs_hist==null?"—":N(r.pe_vs_hist,2)+"x"],["Crecimiento de ventas",P(r.crec_ventas)]])}
-    ${g("INFORMATIVO (NO SUMA AL PUNTAJE)",[["Recomendación (1 compra – 5 venta)",N(r.recom,2)],["Analistas",r.n_analistas??"—"],["Upside al precio objetivo",P(r.upside)],["Último balance",fecha(r.ultimo_balance)]])}
-  </div>${r.dato_previo?'<div class="sub" style="padding:0 4px 6px">Esta semana Yahoo no devolvió datos: se muestran los de la semana anterior.</div>':""}</td></tr>`;
-}
-
-function cambiosHTML(){
-  const C = F.cambios;
-  if (!C) return `<div class="card" style="margin-bottom:10px"><h3>QUÉ CAMBIÓ ESTA SEMANA</h3><div class="sub">Se completa a partir de la próxima actualización semanal: necesita una foto anterior para comparar.</div></div>`;
-  const tk = x => `<b>${esc(x.byma)}</b>`;
-  const lista = (arr, f) => arr.length ? arr.map(f).join("<br>") : '<span class="mut">Ninguna</span>';
-  const SN = {comprar:"Comprar",esperar:"Esperar",neutral:"Neutral",evitar:"Evitar"};
-  return `<details class="card" style="margin-bottom:10px" open><summary style="cursor:pointer;font-family:var(--mono);font-size:12px;color:var(--muted);letter-spacing:.06em">QUÉ CAMBIÓ DESDE EL ${esc(new Date(C.desde+"T12:00").toLocaleDateString("es-AR"))}</summary>
-    <div class="cmb">
-      <div><h4 style="color:var(--pos)">ENTRARON A COMPRAR · ${C.entran.length}</h4>${lista(C.entran, x=>`${tk(x)} <span class="mut">${Math.round(x.total)} · antes ${SN[x.antes]||"—"}</span>`)}</div>
-      <div><h4 style="color:var(--neg)">SALIERON DE COMPRAR · ${C.salen.length}</h4>${lista(C.salen, x=>`${tk(x)} <span class="mut">ahora ${SN[x.ahora]||"—"}</span>`)}</div>
-      <div><h4>MÁS SUBIERON DE PUNTAJE</h4>${lista(C.suben, x=>`${tk(x)} <span class="pos">+${x.delta.toFixed(0)}</span> <span class="mut">→ ${Math.round(x.total)}</span>`)}</div>
-      <div><h4>MÁS BAJARON DE PUNTAJE</h4>${lista(C.bajan, x=>`${tk(x)} <span class="neg">${x.delta.toFixed(0)}</span> <span class="mut">→ ${Math.round(x.total)}</span>`)}</div>
-    </div></details>`;
-}
-
-function fundamentals(m){
-  if (F && F.umbrales) UMB = F.umbrales;
-  if (!F){ m.innerHTML = `<div class="empty">Todavía no hay datos de fundamentals. Corré Actions → Actualizar datos.</div>`; return; }
-  const sectores = [...new Set(F.tickers.map(x=>x.sector).filter(Boolean))].sort();
-  const f = new Date(F.actualizado).toLocaleDateString("es-AR");
-  m.innerHTML = `
-  <div class="aviso"><b>Momentum y MA200 validados</b> con 20 años de historia; revisiones, calidad y valuación todavía no (se validan con el track record semanal). Usalo para ordenar ideas y revisalo una vez por mes. Actualizado ${f}.</div>
-  ${cambiosHTML()}
-  <div class="bar">
-    <input id="fq" placeholder="Buscar ticker o empresa" value="${esc(fs.q)}">
-    <select id="fsec"><option value="">Todos los sectores</option>${sectores.map(s=>`<option ${s===fs.sector?"selected":""}>${esc(s)}</option>`).join("")}</select>
-    <select id="fliq"><option value="">Toda liquidez</option><option value="am" ${fs.liq==="am"?"selected":""}>Solo Alta y Media</option></select>
-    <select id="fsig"><option value="">Todas las señales</option>${Object.entries(SIG).map(([k,v])=>`<option value="${k}" ${fs.sig===k?"selected":""}>${v.t}</option>`).join("")}</select>
-    <label class="chkl"><input type="checkbox" id="fma" ${fs.ma?"checked":""}> Sobre MA200</label>
-    <span class="count" id="fcnt"></span>
-  </div>
-  <details class="help"><summary>Cómo se calcula</summary>
-    <p>Cada empresa se compara contra las otras ${F.n} del universo en cuatro bloques, y en cada uno recibe un puntaje de 0 a 100 (100 = la mejor). El total es el promedio ponderado:</p>
-    <dl>
-      <dt>Revisiones · ${Math.round(F.pesos.revisiones*100)}%</dt><dd>Cuánto subieron o bajaron las estimaciones de ganancias de los analistas en 90 días (este año y el próximo), cuántos analistas las suben contra cuántos las bajan, la sorpresa del último balance y en cuántos de los últimos 8 balances superó las estimaciones. Es el bloque con más evidencia para horizontes de 3 meses.</dd>
-      <dt>Momentum · ${Math.round(F.pesos.momentum*100)}%</dt><dd>Retorno de 12 meses sin contar el último mes, y distancia al promedio de 200 ruedas.</dd>
-      <dt>Calidad · ${Math.round(F.pesos.calidad*100)}%</dt><dd>Tres partes iguales. <b>Rentabilidad:</b> ROIC (cuánto gana por cada dólar invertido en el negocio), margen operativo y margen bruto. <b>Solidez:</b> deuda neta sobre EBITDA y F-score de Piotroski (9 pruebas año contra año: si gana plata, si genera caja, si mejora la rentabilidad, si baja la deuda, si mejora la liquidez, si no emite acciones, si mejoran el margen y la rotación de activos). <b>Calidad de las ganancias:</b> si la ganancia contable se convierte en caja, qué tan estable es el margen trimestre a trimestre, y si la empresa diluye a los accionistas emitiendo acciones. En bancos y aseguradoras solo cuentan la rentabilidad sobre activos y la dilución, porque el resto no aplica.</dd>
-      <dt>Valuación · ${Math.round(F.pesos.valuacion*100)}%</dt><dd>Rendimiento de ganancias (la inversa del P/E forward) comparado <b>dentro de su sector</b>, flujo de caja libre sobre capitalización, y P/E actual contra su propia mediana de los últimos años (solo empresas de EE.UU.: en las extranjeras la moneda y el ratio del ADR lo distorsionan). Las empresas extranjeras se convierten a dólares.</dd>
-      <dt>Señal</dt><dd><b style="color:var(--pos)">Comprar</b>: puntaje de ${UMB.alto} o más y precio sobre su promedio de 200 ruedas. <b style="color:var(--accent)">Esperar</b>: puntaje de ${UMB.alto} o más, pero debajo de la MA200 (buena empresa, tendencia rota). <b>Neutral</b>: puntaje entre ${UMB.bajo} y ${UMB.alto}. <b style="color:var(--neg)">Evitar</b>: puntaje menor a ${UMB.bajo}.</dd>
-      <dt>Alertas ⚠</dt><dd>En las señales Comprar y Esperar se marcan tres cosas que no cambian el puntaje pero sí cómo operar: <b>CCL</b> si el CEDEAR está más de 3% caro contra el CCL implícito, <b>liquidez</b> si se opera muy poco en BYMA, y <b>balance</b> si presenta resultados en los próximos 7 días (no es motivo para no comprar: históricamente la semana del balance rindió algo más en promedio, pero con más volatilidad).</dd>
-      <dt>Qué está validado</dt><dd>Probado con 20 años de historia (2006–2026, 266 empresas, con costos): el momentum por acción le ganó al promedio del universo en los dos períodos, y esperar a que la acción esté sobre su MA200 bajó la peor caída de −52% a −45% sin costar rendimiento. Conviene revisar el puntaje <b>todos los meses</b>: con revisión trimestral rindió menos. También se probaron filtros de VWAP (anclado al balance y móvil de 1, 3, 6 y 12 meses) y ninguno mejoró a la MA200. Revisiones, calidad y valuación no tienen historia gratuita: se validan con la foto semanal que guarda el monitor.</dd>
-    </dl>
-    <p>Si a una empresa le faltan datos en un bloque, el total se calcula con los bloques disponibles (mínimo 3 de 4).</p>
-  </details>
-  <div class="wrap"><table><thead><tr>
-    ${[["puesto","#"],["byma","Ticker",1],["nombre","Empresa",1],["sector","Sector",1],["senal","Señal"],["total","Puntaje"],["revisiones","Revis."],["momentum","Mom."],["calidad","Calidad"],["valuacion","Valuac."],["vs_ma200","MA200"],["proximo_balance","Próx. balance"],["liquidez","Liquidez",1]]
-      .map(([k,t,l])=>`<th class="${l?"l":""}" data-k="${k}">${t}${fs.sort===k?(fs.dir>0?" ▲":" ▼"):""}</th>`).join("")}
-  </tr></thead><tbody id="ftb"></tbody></table></div>`;
-  const re = ()=>fundFilas();
-  document.getElementById("fq").oninput = e=>{fs.q=e.target.value;re()};
-  document.getElementById("fsec").onchange = e=>{fs.sector=e.target.value;re()};
-  document.getElementById("fliq").onchange = e=>{fs.liq=e.target.value;re()};
-  document.getElementById("fsig").onchange = e=>{fs.sig=e.target.value;re()};
-  document.getElementById("fma").onchange = e=>{fs.ma=e.target.checked;re()};
-  m.querySelectorAll("th").forEach(th=>th.onclick=()=>{const k=th.dataset.k;
-    fs.dir = fs.sort===k ? -fs.dir : (["byma","nombre","sector","liquidez","puesto","proximo_balance","senal"].includes(k)?1:-1); fs.sort=k; fundamentals(m);});
-  re();
-}
-
-function fundFilas(){
-  const q = fs.q.trim().toUpperCase();
-  const val = x => fs.sort==="senal" ? (SIG[senal(x)]?.o ?? 9) : ["total","revisiones","momentum","calidad","valuacion"].includes(fs.sort) ? x.scores[fs.sort]
-    : ["vs_ma200","proximo_balance"].includes(fs.sort) ? x.raw[fs.sort] : x[fs.sort];
-  let r = F.tickers.filter(x=>
-    (!q || x.byma.includes(q) || x.ticker.includes(q) || (x.nombre||"").toUpperCase().includes(q)) &&
-    (!fs.sector || x.sector===fs.sector) && (!fs.liq || ["Alta","Media"].includes(x.liquidez)) &&
-    (!fs.ma || (x.raw.vs_ma200??-1) > 0) && (!fs.sig || senal(x)===fs.sig));
-  r.sort((a,b)=>{ const A=val(a), B=val(b);
-    if (A==null && B==null) return 0; if (A==null) return 1; if (B==null) return -1;
-    return (typeof A==="string" ? A.localeCompare(B) : A-B) * fs.dir; });
-  const cnt = {}; F.tickers.forEach(x=>{const k=senal(x); if(k) cnt[k]=(cnt[k]||0)+1;});
-  document.getElementById("fcnt").innerHTML = `${Object.entries(SIG).map(([k,v])=>`<span style="color:${v.c}">${v.t} ${cnt[k]||0}</span>`).join(" · ")} &nbsp; ${r.length} de ${F.n}`;
-  const tb = document.getElementById("ftb");
-  tb.innerHTML = r.map(x=>{ const d = dias(x.raw.proximo_balance), pronto = d!=null && d>=0 && d<=14;
-    return `<tr data-t="${esc(x.ticker)}" style="cursor:pointer">
-    <td class="mut">${x.puesto??"—"}</td>
-    <td class="l tk">${esc(x.byma)}${x.ticker!==x.byma?`<small>${esc(x.ticker)}</small>`:""}${x.nota?` <span class="flag" title="${esc(x.nota)}">⚑</span>`:""}</td>
-    <td class="l nm">${esc(x.nombre)}</td>
-    <td class="l mut">${esc(x.sector||"—")}</td>
-    <td class="l">${(()=>{const k=senal(x); if(!k) return '<span class="mut">—</span>'; const al = alertas(x);
-      return `<span class="sig" style="color:${SIG[k].c}" title="${esc(porQue(x))}">${SIG[k].t}</span>${al.map(a=>`<span class="alr" title="${esc(a.t)}">⚠ ${esc(a.c)}</span>`).join("")}`})()}</td>
-    <td class="sc">${sc(x.scores.total)}</td>
-    <td>${sc(x.scores.revisiones)}</td><td>${sc(x.scores.momentum)}</td><td>${sc(x.scores.calidad)}</td><td>${sc(x.scores.valuacion)}</td>
-    <td class="${cls(x.raw.vs_ma200)}">${pct(x.raw.vs_ma200)}</td>
-    <td style="${pronto?"color:var(--accent)":""}" title="${pronto?"Balance en los próximos 14 días":""}">${fecha(x.raw.proximo_balance)}${pronto?` · ${d}d`:""}</td>
-    <td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez||"—")}</span></td></tr>
-    ${fs.abierto===x.ticker?detalle(x):""}`; }).join("");
-  tb.querySelectorAll("tr[data-t]").forEach(tr=>tr.onclick=()=>{ fs.abierto = fs.abierto===tr.dataset.t ? null : tr.dataset.t; fundFilas(); });
-}
-
-const MESES = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
-const nomMes = ym => { const [y,mm] = ym.split("-"); return `${MESES[+mm-1]} ${y}`; };
-
-function alertasCartera(p){
-  const a = [];
-  if (p.premio!=null && p.premio > 0.03) a.push({c:`CCL ${pct(p.premio,0)}`, t:`El CEDEAR está ${pct(p.premio,1)} caro contra el CCL implícito: conviene orden límite o esperar.`});
-  const d = dias(p.proximo_balance);
-  if (d!=null && d>=0 && d<=7) a.push({c:`balance ${d}d`, t:`Presenta balance en ${d} días. En 20 años de historia, la semana del balance rindió en promedio algo más que el resto, pero con más volatilidad: no es motivo para no comprar, pero esperá movimientos fuertes.`});
-  if (p.vs_ma200_hoy!=null && p.vs_ma200_hoy < 0 && p.en_cartera) a.push({c:"perdió MA200", t:"Desde que se armó la cartera, el precio quedó debajo de su MA200. No se vende hasta el rebalanceo, pero no conviene sumar."});
-  return a;
-}
-
-function cartera(m){
-  if (!C){ m.innerHTML = `<div class="empty">Todavía no hay cartera armada.</div>`; return; }
-  const P = C.posiciones, act = P.filter(p=>p.en_cartera), liq = P.filter(p=>!p.en_cartera);
-  const sect = {}; act.forEach(p=>{ sect[p.sector||"Otro"] = (sect[p.sector||"Otro"]||0) + 1; });
-  const tr = C.track || [], ult = tr[tr.length-1];
-  const fila = (p, sup) => { const al = alertasCartera(p);
-    return `<tr${sup?' style="opacity:.75"':""}>
-      <td class="mut">${p.puesto}</td>
-      <td class="l tk">${esc(p.byma)}${p.ticker!==p.byma?`<small>${esc(p.ticker)}</small>`:""}</td>
-      <td class="l nm">${esc(p.nombre)}</td>
-      <td class="l mut">${esc(p.sector||"—")}</td>
-      <td>${sup?'<span class="mut">suplente</span>':p.en_cartera?`${Math.round(100/C.parametros.n)}%`:'<span class="mut">a letras</span>'}</td>
-      <td class="${cls(p.mom12_1)}">${pct(p.mom12_1,0)}</td>
-      <td class="${cls(p.vs_ma200_hoy)}">${pct(p.vs_ma200_hoy)}</td>
-      <td class="${cls(p.desde_armado)}">${sup?"—":pct(p.desde_armado)}</td>
-      <td>${num(p.px_ars_hoy,0)}</td>
-      <td>${p.total==null?'<span class="mut">—</span>':Math.round(p.total)}</td>
-      <td class="l"><span class="tag ${(p.liquidez_hoy||p.liquidez||"").split(" ")[0]}">${esc(p.liquidez_hoy||p.liquidez)}</span></td>
-      <td class="l">${al.map(a=>`<span class="alr" title="${esc(a.t)}">⚠ ${esc(a.c)}</span>`).join("")}</td></tr>`; };
-  const cmb = C.cambios;
-  m.innerHTML = `
-  <div class="card" style="border-color:var(--accent)">
-    <h3>RECOMENDACIONES DE ${nomMes(C.mes).toUpperCase()}</h3>
-    <div class="sub">Armada el ${new Date(C.fecha+"T12:00").toLocaleDateString("es-AR")} con la estrategia validada (momentum + MA200), entre los ${C.n_elegibles} CEDEARs con liquidez suficiente para retail. ${C.parametros.n} acciones con igual peso. <b style="color:var(--text)">Sugerencia: 75% en SPY y 25% repartido en estas ${C.parametros.n}.</b> Queda fija todo el mes; el primer sábado del mes que viene se rearma y acá vas a ver qué vender y qué comprar.</div>
-    ${cmb?`<div class="cmb" style="grid-template-columns:repeat(3,1fr);margin-top:12px">
-      <div><h4 style="color:var(--neg)">VENDER · ${cmb.vender.length}</h4>${cmb.vender.length?cmb.vender.map(t=>`<b>${esc(t)}</b>`).join(" · "):'<span class="mut">Ninguna</span>'}</div>
-      <div><h4 style="color:var(--pos)">COMPRAR · ${cmb.comprar.length}</h4>${cmb.comprar.length?cmb.comprar.map(t=>`<b>${esc(t)}</b>`).join(" · "):'<span class="mut">Ninguna</span>'}</div>
-      <div><h4>MANTENER · ${cmb.mantener.length}</h4>${cmb.mantener.map(t=>`<b>${esc(t)}</b>`).join(" · ")||'<span class="mut">Ninguna</span>'}</div></div>`
-      :`<div class="sub" style="margin-top:10px"><b style="color:var(--text)">Primera cartera:</b> comprar las ${act.length} en partes iguales${liq.length?` y dejar ${liq.length*Math.round(100/C.parametros.n)}% en letras o caución`:""}.</div>`}
-  </div>
-  <div class="semgrid" style="grid-template-columns:2fr 1fr">
-    <div class="card"><h3>DESDE QUE SE ARMÓ</h3>
-      <div style="display:flex;gap:28px;font-family:var(--mono)">
-        <div><div class="sub">Cartera</div><div class="big ${cls(ult?.cartera)}">${ult?pct(ult.cartera):"—"}</div></div>
-        <div><div class="sub">S&P 500 (SPY)</div><div class="big ${cls(C.spy_desde)}">${pct(C.spy_desde)}</div></div>
-        <div><div class="sub">Diferencia</div><div class="big ${cls(ult?.dif)}">${ult?pct(ult.dif):"—"}</div></div>
-      </div><div class="sub" style="margin-top:6px">Incluye el costo de compra y venta (${String(C.parametros.costo*100).replace(".",",")}% por operación). En dólares, sobre el precio de las acciones en EE.UU.</div></div>
-    <div class="card"><h3>SECTORES</h3>${Object.entries(sect).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div class="sub" style="display:flex;justify-content:space-between"><span>${esc(k)}</span><b style="color:var(--text);font-family:var(--mono)">${v*Math.round(100/C.parametros.n)}%</b></div>`).join("")}</div>
-  </div>
-  <div class="wrap" style="margin-top:16px;max-height:none"><table><thead><tr>
-    <th>#</th><th class="l">Ticker</th><th class="l">Empresa</th><th class="l">Sector</th><th>Peso</th><th>Mom 12-1</th><th>vs MA200</th><th>Desde armado</th><th>Precio ARS</th><th>Puntaje fund.</th><th class="l">Liquidez</th><th class="l">Alertas</th>
-  </tr></thead><tbody>${P.map(p=>fila(p,false)).join("")}
-    <tr><td colspan="12" class="l mut" style="font-family:var(--mono);font-size:11px;padding-top:12px">SUPLENTES · si alguna no se puede comprar, se reemplaza por la primera de esta lista</td></tr>
-    ${(C.suplentes||[]).map(p=>fila(p,true)).join("")}</tbody></table></div>
-  ${tr.length>1?`<div class="card" style="margin-top:16px"><h3>TRACK RECORD MES A MES</h3><table class="res"><tr><th class="l">Mes</th><th>Cartera</th><th>SPY</th><th>Diferencia</th><th>Acum. cartera</th><th>Acum. SPY</th></tr>
-    ${tr.slice().reverse().map(t=>`<tr><td class="l">${nomMes(t.mes)}${t.parcial?' <span class="mut">(en curso)</span>':""}</td><td class="${cls(t.cartera)}">${pct(t.cartera)}</td><td class="${cls(t.spy)}">${pct(t.spy)}</td><td class="${cls(t.dif)}">${pct(t.dif)}</td><td class="${cls(t.acum_cartera)}">${pct(t.acum_cartera)}</td><td class="${cls(t.acum_spy)}">${pct(t.acum_spy)}</td></tr>`).join("")}</table></div>`:""}
-  <details class="help" style="margin-top:16px"><summary>Cómo usarla</summary>
-    <p><b>Para qué es:</b> complementar al SPY. La sugerencia es 75% en SPY y 25% en estas acciones, en partes iguales. En el backtest, esa mezcla tuvo una caída máxima parecida a la del SPY solo y le ganó en 15 de 20 años. Si la estrategia funciona, el satélite empuja la cartera por encima del índice; si un año falla, el daño queda acotado.</p>
-    <p><b>Cómo se elige:</b> entre los CEDEARs con liquidez alta, media o baja en BYMA (desde USD 30.000 por día), se ordenan por momentum (retorno de 12 meses sin el último y distancia a la MA200) y se toman las ${C.parametros.n} primeras. Si alguna está debajo de su MA200, ese lugar va a letras o caución. Con 20 años de historia esta regla le ganó al promedio del universo, aunque con caídas fuertes y años enteros por debajo del índice.</p>
-    <p><b>Una vez por mes:</b> vendés las que salen y comprás las que entran, en partes iguales. No conviene tocarla en el medio: rebalancear más seguido no mejoró los resultados y suma costos.</p>
-    <p><b>Alertas:</b> CCL caro → orden límite o esperar unos días; balance en menos de 7 días → esperar movimientos fuertes, pero no hace falta postergar la compra (en promedio la semana del balance rindió algo más); perdió MA200 → no sumar, pero no se vende hasta el rebalanceo.</p>
-    <p><b>Qué esperar:</b> probado con 2007–2026 y costo de 0,5% por lado, las 5 acciones le ganaron al SPY en los dos períodos (2007–2018 y 2019–2026), pero con caídas de hasta −46% y años malos. El backtest usa empresas que hoy existen y son líquidas, lo que infla el resultado varios puntos por año: para la mezcla 75/25 es más razonable esperar unos 2 a 4 puntos anuales sobre el SPY, no lo que muestra el backtest. Con 5 acciones cada una pesa 20%: va a ser irregular. Desde diciembre 2026 son 5; noviembre se armó con 10. El track record de esta pestaña es la prueba real.</p>
-  </details>`;
 }
 
 if (ses("rv_ok")==="1") abrir();
