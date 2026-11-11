@@ -674,6 +674,11 @@
      "PYPL": "PayPal y Venmo. Después de años perdiendo terreno, priorizó ganancias sobre volumen y recompra muchas acciones. Cotiza barata (P/E cercano a 10) porque crece poco.",
      "HOOD": "Broker online para inversores minoristas, con cripto, tarjeta de crédito y planes de suscripción. Crece muy rápido pero se mueve mucho con el bitcoin y con el ánimo del mercado (beta cercano a 3)."
     }
+   },
+   "rescates": {
+    "HOOD": [
+     "bitcoin"
+    ]
    }
   },
   {
@@ -724,7 +729,15 @@
      "HUT": "Minera de bitcoin que también desarrolla centros de datos. Tiene participación en American Bitcoin, otra minera. Invierte mucho más de lo que vende."
     }
    },
-   "motores_nota": "Bitcoin tiene datos desde 2014: solo se puede medir el tramo reciente."
+   "motores_nota": "Bitcoin tiene datos desde 2014: solo se puede medir el tramo reciente.",
+   "rescates": {
+    "MSTR": [
+     "bitcoin"
+    ],
+    "COIN": [
+     "bitcoin"
+    ]
+   }
   },
   {
    "id": "electrica",

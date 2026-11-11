@@ -1,4 +1,5 @@
 import io
+import zlib
 import json
 import sys
 import zipfile
@@ -20,10 +21,12 @@ FACTORES = [
     {"id": "tasa", "nombre": "Tasa a 10 años", "grupo": "Tasas y crédito", "serie": "DGS10", "fuente": "FRED", "tipo": "nivel", "sube": "sube la tasa a 10 años", "baja": "baja la tasa a 10 años"},
     {"id": "curva", "nombre": "Pendiente de la curva", "grupo": "Tasas y crédito", "serie": "T10Y2Y", "fuente": "FRED", "tipo": "nivel", "sube": "se empina la curva (10 años menos 2 años)", "baja": "se aplana la curva (10 años menos 2 años)"},
     {"id": "inflacion", "nombre": "Inflación esperada", "grupo": "Tasas y crédito", "serie": "T5YIE", "fuente": "FRED", "tipo": "nivel", "sube": "sube la inflación esperada a 5 años", "baja": "baja la inflación esperada a 5 años"},
+    {"id": "tasareal", "nombre": "Tasa real a 10 años", "grupo": "Tasas y crédito", "serie": "DFII10", "fuente": "FRED", "tipo": "nivel", "sube": "sube la tasa real a 10 años", "baja": "baja la tasa real a 10 años"},
     {"id": "credito", "nombre": "Spread de crédito", "grupo": "Tasas y crédito", "serie": "BAA10Y", "fuente": "FRED", "tipo": "nivel", "sube": "sube el spread de crédito corporativo", "baja": "baja el spread de crédito corporativo"},
-    {"id": "dolar", "nombre": "Dólar global", "grupo": "Monedas", "serie": "DX-Y.NYB", "fuente": "Yahoo", "tipo": "precio", "sube": "se fortalece el dólar global (DXY)", "baja": "se debilita el dólar global (DXY)"},
-    {"id": "yuan", "nombre": "Yuan", "grupo": "Monedas", "serie": "CNY=X", "fuente": "Yahoo", "tipo": "precio", "sube": "se debilita el yuan", "baja": "se fortalece el yuan"},
-    {"id": "real", "nombre": "Real brasileño", "grupo": "Monedas", "serie": "BRL=X", "fuente": "Yahoo", "tipo": "precio", "sube": "se debilita el real", "baja": "se fortalece el real"},
+    {"id": "dolar", "nombre": "Dólar global", "grupo": "Monedas y emergentes", "serie": "DX-Y.NYB", "fuente": "Yahoo", "tipo": "precio", "sube": "se fortalece el dólar global (DXY)", "baja": "se debilita el dólar global (DXY)"},
+    {"id": "yuan", "nombre": "Yuan", "grupo": "Monedas y emergentes", "serie": "CNY=X", "fuente": "Yahoo", "tipo": "precio", "sube": "se debilita el yuan", "baja": "se fortalece el yuan"},
+    {"id": "real", "nombre": "Real brasileño", "grupo": "Monedas y emergentes", "serie": "BRL=X", "fuente": "Yahoo", "tipo": "precio", "sube": "se debilita el real", "baja": "se fortalece el real"},
+    {"id": "emergentes", "nombre": "Emergentes vs EE.UU.", "grupo": "Monedas y emergentes", "serie": "EEM", "contra": "SPY", "fuente": "Yahoo", "tipo": "rel", "sube": "las bolsas emergentes le ganan a EE.UU.", "baja": "EE.UU. le gana a las bolsas emergentes"},
     {"id": "petroleo", "nombre": "Petróleo", "grupo": "Materias primas", "serie": "CL=F", "fuente": "Yahoo", "tipo": "precio", "sube": "sube el petróleo", "baja": "baja el petróleo"},
     {"id": "gas", "nombre": "Gas natural", "grupo": "Materias primas", "serie": "NG=F", "fuente": "Yahoo", "tipo": "precio", "sube": "sube el gas natural", "baja": "baja el gas natural"},
     {"id": "jet", "nombre": "Combustible de aviones", "grupo": "Materias primas", "serie": "DJFUELUSGULF", "fuente": "FRED", "tipo": "precio", "sube": "sube el combustible de aviones", "baja": "baja el combustible de aviones"},
@@ -44,14 +47,12 @@ FACTORES = [
     {"id": "momentum", "nombre": "Momentum", "grupo": "Estilo del mercado", "serie": "Mom", "fuente": "French", "tipo": "ret", "proxy": ("MTUM", "SPY"), "sube": "siguen subiendo las que venían subiendo", "baja": "se dan vuelta las que venían subiendo"},
 ]
 F = {f["id"]: f for f in FACTORES}
-TRAMOS = {"a": ("2005-01", "2014-12"), "r": ("2015-01", None)}
+TRAMOS = {"a": ("2015-01", "2021-12"), "r": ("2022-01", None)}
+TRAMOS_19 = {"a": ("2015-01", "2019-12"), "r": ("2020-01", None)}
+TOTAL = ("2015-01", None)
 COD = ["CSI", "REC", "EST", "DES"]
-FAMILIA = {"dolar": "Dólar y metales", "cobre": "Dólar y metales", "oro": "Dólar y metales", "hierro": "Dólar y metales", "real": "Dólar y metales", "petroleo": "Energía", "jet": "Energía", "gas": "Energía", "inflacion": "Energía", "tasa": "Tasas", "curva": "Tasas"}
-ENT = {"a": ("2005-01", "2014-12"), "r": ("2015-01", "2022-12")}
-TEST = ("2023-01", None)
-MIN_OTROS = 3
+FAMILIA = {"dolar": "Dólar y metales", "cobre": "Dólar y metales", "oro": "Dólar y metales", "hierro": "Dólar y metales", "real": "Dólar y metales", "petroleo": "Energía", "jet": "Energía", "gas": "Energía", "inflacion": "Energía", "tasareal": "Tasas", "emergentes": "Dólar y metales", "tasa": "Tasas", "curva": "Tasas"}
 MIN_MESES = 36
-MIN_RECIENTE = 60
 ROT = 999
 rng = np.random.default_rng(7)
 
@@ -110,6 +111,9 @@ def bajar(tk):
                 ch = s.diff() if f["tipo"] == "nivel" else np.log(s).diff()
                 act[k] = ch.dropna()
                 fs[k] = act[k][act[k].index < hoy]
+            elif f["tipo"] == "rel":
+                fs[k] = (r[f["serie"]] - r[f["contra"]]).dropna()
+                act[k] = (r_todo[f["serie"]] - r_todo[f["contra"]]).dropna()
             else:
                 fs[k] = r[f["serie"]].dropna()
                 act[k] = r_todo[f["serie"]].dropna()
@@ -134,7 +138,8 @@ def prueba(y, m, fs, j=0):
     q, _ = np.linalg.qr(np.column_stack([np.ones(n)] + otros))
     fv = v[:, 2 + j]
     yr = yv - q @ (q.T @ yv)
-    k = rng.integers(12, n - 12, ROT)
+    sem = zlib.crc32(np.round(np.concatenate([yv[:24], fv[:24], [n]]), 6).tobytes())
+    k = np.random.default_rng(sem).integers(12, n - 12, ROT)
     Fm = np.column_stack([fv, fv[(np.arange(n)[:, None] - k[None, :]) % n]])
     Fr = Fm - q @ (q.T @ Fm)
     c = (Fr.T @ yr) / (Fr ** 2).sum(axis=0)
@@ -142,20 +147,16 @@ def prueba(y, m, fs, j=0):
     return {"c": float(c[0]), "p": float(p), "n": int(n)}
 
 
-def dos_tramos(y, m, fs, j=0):
-    return {t: prueba(tramo(y, a, b), tramo(m, a, b), [tramo(f, a, b) for f in fs], j) for t, (a, b) in TRAMOS.items()}
+def dos_tramos(y, m, fs, j=0, tr=TRAMOS):
+    z = {t: prueba(tramo(y, a, b), tramo(m, a, b), [tramo(f, a, b) for f in fs], j) for t, (a, b) in tr.items()}
+    z["t"] = prueba(tramo(y, *TOTAL), tramo(m, *TOTAL), [tramo(f, *TOTAL) for f in fs], j)
+    return z
 
 
 def etiqueta(z):
     a, r = z["a"], z["r"]
-    sa = a is not None and a["p"] < 0.05
-    sr = r is not None and r["p"] < 0.05
-    if sa and sr:
+    if a is not None and r is not None and a["p"] < 0.05 and r["p"] < 0.05:
         return "clara" if np.sign(a["c"]) == np.sign(r["c"]) else "vuelta"
-    if r is not None and r["p"] < 0.01 and r["n"] >= MIN_RECIENTE and not (sa and np.sign(a["c"]) != np.sign(r["c"])):
-        return "reciente"
-    if sa:
-        return "antigua"
     return ""
 
 
@@ -164,20 +165,22 @@ def compacto(z, tip):
         if t is None:
             return None
         return {"ef": round(float(np.exp(t["c"] * tip) - 1) * 100, 2), "p": round(t["p"], 3), "n": t["n"]}
-    return {"a": uno(z["a"]), "r": uno(z["r"]), "e": z["e"]}
+    return {"r": uno(z["t"]), "h1": uno(z["a"]), "h2": uno(z["r"]), "e": z["e"]}
 
 
-def motores(nom, base, serie, spy, fs, tip, confirma, rescate):
-    orden = {"clara": 0, "reciente": 1}
+def motores(nom, base, serie, spy, fs, tip, rescate):
     cand = []
     for k, z in base[nom].items():
         e = z["e"]
-        if e == "reciente" and not (confirma(k, z) or k in rescate):
-            e = "indicio"
-        if e not in orden:
+        if e != "clara":
+            if k in rescate and z["t"] is not None and z["t"]["p"] < 0.05:
+                e = "reciente"
+            else:
+                continue
+        if z["t"] is None:
             continue
-        ef = float(np.exp(z["r"]["c"] * tip[k]) - 1) * 100
-        cand.append((orden[e], -abs(ef), k, e))
+        ef = float(np.exp(z["t"]["c"] * tip[k]) - 1) * 100
+        cand.append((0 if e == "clara" else 1, -abs(ef), k, e))
     cand.sort()
     kept = []
     for c in cand:
@@ -185,24 +188,18 @@ def motores(nom, base, serie, spy, fs, tip, confirma, rescate):
             kept.append(c)
             continue
         fl = [fs[x[2]] for x in kept] + [fs[c[2]]]
-        zj = prueba(tramo(serie, "2015-01", None), tramo(spy, "2015-01", None), [tramo(f, "2015-01", None) for f in fl], len(fl) - 1)
-        if zj and zj["p"] < 0.05 and np.sign(zj["c"]) == np.sign(base[nom][c[2]]["r"]["c"]):
+        zj = prueba(tramo(serie, *TOTAL), tramo(spy, *TOTAL), [tramo(f, *TOTAL) for f in fl], len(fl) - 1)
+        if zj and zj["p"] < 0.05 and np.sign(zj["c"]) == np.sign(base[nom][c[2]]["t"]["c"]):
             kept.append(c)
         if len(kept) == 3:
             break
     return [{"f": c[2], "e": c[3]} for c in kept], [c[2] for c in cand if c not in kept]
 
 
-def validacion(y, spy, f):
-    z = {t: prueba(tramo(y, a, b), tramo(spy, a, b), [tramo(f, a, b)]) for t, (a, b) in ENT.items()}
-    e = etiqueta(z)
-    zt = prueba(tramo(y, *TEST), tramo(spy, *TEST), [tramo(f, *TEST)])
-    ref = z["r"] or z["a"]
-    if e not in ("clara", "reciente") or zt is None or ref is None:
-        return {"v": "", "e_ent": e}
-    mismo = np.sign(zt["c"]) == np.sign(ref["c"])
-    v = "confirmada" if mismo and zt["p"] < 0.10 else "fallo" if not mismo and zt["p"] < 0.10 else "sin_definir"
-    return {"v": v, "e_ent": e, "n_test": zt["n"]}
+def firmeza(y, spy, f, z):
+    q = dos_tramos(y, spy, [f], tr=TRAMOS_19)
+    ok = etiqueta(q) == "clara" and z["t"] is not None and np.sign(q["r"]["c"]) == np.sign(z["t"]["c"])
+    return {"v": "firme" if ok else ""}
 
 
 def regimen(fs, tip):
@@ -246,7 +243,7 @@ def main():
     tk = sorted({em[e] for b in bl for e in b["empresas"] if e in em})
     r, fs, act = bajar(tk)
     spy = r["SPY"]
-    tip = {k: float(tramo(f, "2005-01", None).std()) for k, f in fs.items()}
+    tip = {k: float(tramo(f, *TOTAL).std()) for k, f in fs.items()}
     serie, bloque_de = {}, {}
     for b in bl:
         cols = []
@@ -270,37 +267,24 @@ def main():
     for b in bl:
         bid = "@" + b["id"]
         if bid in base:
-            mot, sol = motores(bid, base, serie[bid], spy, fs, tip, lambda k, z: True, set())
+            mot, sol = motores(bid, base, serie[bid], spy, fs, tip, set())
             fb = {k: compacto(z, tip[k]) for k, z in base[bid].items()}
             for k, z in base[bid].items():
-                if z["e"] in ("clara", "reciente"):
-                    fb[k].update(validacion(serie[bid], spy, fs[k]))
+                if z["e"] == "clara":
+                    fb[k].update(firmeza(serie[bid], spy, fs[k], z))
             emps_b = [e for e in b["empresas"] if e in serie]
-            comp = {k: sum(1 for e in emps_b if base[e][k]["e"] in ("clara", "reciente") and base[e][k]["r"] and fb[k]["r"] and np.sign(base[e][k]["r"]["c"]) == np.sign(fb[k]["r"]["ef"])) for k in fb}
+            comp = {k: sum(1 for e in emps_b if base[e][k]["e"] == "clara" and base[e][k]["t"] and base[bid][k]["t"] and np.sign(base[e][k]["t"]["c"]) == np.sign(base[bid][k]["t"]["c"])) for k in fb}
             mot = [m_ for m_ in mot if comp[m_["f"]] * 2 >= len(emps_b)]
             out_b[b["id"]] = {"f": fb, "motores": mot, "solapados": sol, "n": len(emps_b), "comparten": comp}
         for e in b["empresas"]:
             if e not in serie:
                 out_e[e] = {"sin": "historia"}
                 continue
-            otros = [o for o in b["empresas"] if o in serie and o != e]
-            excl = pd.concat([serie[o] for o in otros], axis=1).mean(axis=1, skipna=True) if len(otros) >= MIN_OTROS else None
-            cache = {}
-
-            def confirma(k, z, excl=excl, cache=cache):
-                if excl is None:
-                    return False
-                if k not in cache:
-                    q = dos_tramos(excl, spy, [fs[k]])
-                    q["e"] = etiqueta(q)
-                    cache[k] = q
-                q = cache[k]
-                return bool(q["e"] in ("clara", "reciente") and q["r"] and np.sign(q["r"]["c"]) == np.sign(z["r"]["c"]))
-            mot, sol = motores(e, base, serie[e], spy, fs, tip, confirma, rescates.get(e, set()))
+            mot, sol = motores(e, base, serie[e], spy, fs, tip, rescates.get(e, set()))
             fx = {k: compacto(z, tip[k]) for k, z in base[e].items()}
             for k, z in base[e].items():
-                if z["e"] in ("clara", "reciente"):
-                    fx[k].update(validacion(serie[e], spy, fs[k]))
+                if z["e"] == "clara":
+                    fx[k].update(firmeza(serie[e], spy, fs[k], z))
             for m_ in mot:
                 if m_["f"] in rescates.get(e, set()):
                     m_["rescate"] = True
@@ -319,7 +303,7 @@ def main():
     salida = {
         "actualizado": dt.date.today().isoformat(),
         "tramos": {k: {"desde": a, "hasta": b} for k, (a, b) in TRAMOS.items()},
-        "reglas": {"min_meses": MIN_MESES, "min_reciente": MIN_RECIENTE, "rotaciones": ROT},
+        "reglas": {"min_meses": MIN_MESES, "rotaciones": ROT, "total": TOTAL[0], "corte": "2021-12", "corte_firme": "2019-12"},
         "factores": facs,
         "bloques": out_b,
         "empresas": out_e,

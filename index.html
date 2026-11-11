@@ -777,9 +777,9 @@ async function cargarFX(){
   FX.F = Object.fromEntries((FX.factores||[]).map(f=>[f.id,f]));
   return FX;
 }
-const ETQ = {clara:["Clara","var(--pos)"], reciente:["Solo reciente","var(--accent)"], indicio:["Puede ser casualidad","var(--muted)"], vuelta:["Se dio vuelta","var(--neg)"], antigua:["Solo antes de 2015","var(--muted)"], "":["Sin relación","var(--muted)"]};
+const ETQ = {clara:["Clara","var(--pos)"], reciente:["Incluida a mano","var(--accent)"], indicio:["Puede ser casualidad","var(--muted)"], vuelta:["Se dio vuelta","var(--neg)"], antigua:["Solo antes de 2015","var(--muted)"], "":["Sin relación","var(--muted)"]};
 const etq = e => { const q = ETQ[e]||ETQ[""]; return `<span class="etq" style="--ec:${q[1]}">${q[0]}</span>`; };
-const ETQC = {clara:"Clara", reciente:"Reciente", indicio:"Dudosa", vuelta:"Invertida", antigua:"Vieja", "":"No"};
+const ETQC = {clara:"Clara", reciente:"A mano", indicio:"Dudosa", vuelta:"Invertida", antigua:"Vieja", "":"No"};
 const etqc = e => `<span class="etq" style="--ec:${(ETQ[e]||ETQ[""])[1]}">${ETQC[e]??"No"}</span>`;
 const solido = e => e==="clara" || e==="reciente";
 const tipTxt = f => f.unidad==="pts" ? `±${nx(f.tipico,2)} puntos` : `±${nx(f.tipico, f.tipico<3?1:0)}%`;
@@ -798,14 +798,14 @@ function hbarras(xs, attr){
       <div class="hb-h">${p.v<0?`<div class="hb-f neg" style="width:${w}%"></div>`:`<span class="hb-v l">${efTxt(p.v)}</span>`}</div>
       <div class="hb-h">${p.v>=0?`<div class="hb-f pos" style="width:${w}%"></div>`:`<span class="hb-v r">${efTxt(p.v)}</span>`}</div></div></div>`; }).join("")}</div>`;
 }
-const VAL = {confirmada:["✔ 2023+","var(--pos)","Se sostuvo con datos de 2023 en adelante, que el cálculo no había usado."], sin_definir:["~ 2023+","var(--muted)","Con los datos de 2023 en adelante todavía no alcanza para confirmarla ni descartarla."], fallo:["✘ 2023+","var(--neg)","Con los datos de 2023 en adelante fue en sentido contrario: tomala con cuidado."]};
+const VAL = {firme:["✔ firme","var(--pos)","También se sostiene si el período se corta en 2019 en vez de 2021: no depende de dónde se corte."]};
 const valB = v => VAL[v] ? `<span class="vb" style="--ec:${VAL[v][1]}" title="${VAL[v][2]}">${VAL[v][0]}</span>` : "";
-const okm = v => v==="confirmada" ? '<span class="okm" title="Confirmada con datos de 2023 en adelante">✔</span>' : "";
+const okm = v => v==="firme" ? '<span class="okm" title="Firme: no depende de dónde se corte el período">✔</span>' : "";
 const yjoin = xs => xs.length<2 ? xs.join("") : xs.slice(0,-1).join(", ")+" y "+xs[xs.length-1];
 const tkDe = b => E.empresas.find(z=>z.byma===b)?.ticker || b;
 const parientes = k => { const fa = FX?.F?.[k]?.familia; return fa ? FX.factores.filter(x=>x.familia===fa && x.id!==k) : []; };
 const parTxt = k => { const ps = parientes(k); return ps.length ? `Se mueve bastante junto con ${yjoin(ps.map(x=>x.nombre.toLowerCase()))}: si una empresa aparece con varios de ellos, es en buena parte una sola exposición.` : ""; };
-const LEYENDA = `<p class="mut small">Cada número es cuánto se movió la acción contra el SPY en los meses en que el factor tuvo un movimiento típico (datos mensuales desde 2015; aparte, 2005–2014). <b style="color:var(--pos)">Clara</b>: se repitió en los dos períodos y le gana al azar en ambos. <b style="color:var(--accent)">Solo reciente</b>: aparece con fuerza desde 2015 y lo confirman otras empresas de su bloque. <b style="color:var(--pos)">✔ 2023+</b>: además se sostuvo con datos de 2023 en adelante que el cálculo no había usado. Dice a quién le pega un movimiento, no si va a pasar. <a href="#" data-como="1">Cómo se mide →</a></p>`;
+const LEYENDA = `<p class="mut small">Cada número es cuánto se movió la acción contra el SPY desde 2015 en los meses en que el factor tuvo un movimiento típico. <b style="color:var(--pos)">Clara</b>: la relación aparece en 2015–2021 (tasas bajas) y en 2022–hoy (tasas altas), en el mismo sentido y ganándole al azar en los dos. <b style="color:var(--pos)">✔ firme</b>: también se sostiene si el período se corta en 2019. Dice a quién le pega un movimiento, no si va a pasar. <a href="#" data-como="1">Cómo se mide →</a></p>`;
 function queMueve(f){
   const x = FX?.empresas?.[f.byma], be = f.sensibilidades?.beta, bl = BQDE(f.byma), xb = bl ? FX?.bloques?.[bl.id] : null;
   const bt = be!=null ? `<div class="bkpi" style="margin-bottom:10px"><div><span>Beta contra el S&P 500</span><b>${nx(be,2)}</b></div></div><p class="mut small" style="margin:-4px 0 12px">Beta 1,2: cuando el S&P sube 10%, esta acción sube en promedio 12%. Lo de abajo es lo que la mueve más allá del mercado.</p>` : "";
@@ -816,7 +816,7 @@ function queMueve(f){
     ctx = !bm.length ? `Su bloque, <b>${esc(bl.nombre)}</b>, no tiene un motor común: cada empresa va por su lado.`
       : `Su bloque, <b>${esc(bl.nombre)}</b>, se mueve sobre todo con ${yjoin(bm.map(nm))}. ${com.length===bm.length?"Esta empresa también.":com.length?`Esta empresa comparte ${yjoin(com.map(nm))}.`:"Esta empresa no: se mueve por otras cosas."}`; }
   const fila = m_ => { const ff = FX.F[m_.f], z = x.f[m_.f], pt = parTxt(m_.f);
-    return `<div class="mot"><div class="mot-h"><b>${esc(ff.nombre)}</b>${etq(m_.e)}${valB(z.v)}</div><p class="mot-t">Cuando ${esc(ff.sube)} en un mes típico (${tipTxt(ff)}), la acción se movió <b class="${cls(z.r.ef)}">${efTxt(z.r.ef)}</b> contra el SPY desde 2015${z.a?`; entre 2005 y 2014, ${efTxt(z.a.ef)}`:""}. Si ${esc(ff.baja)}, el efecto fue el inverso.${m_.rescate?" <i>Incluida a mano por lógica económica: los datos solos no alcanzaban.</i>":""}</p>${pt?`<p class="mut small" style="margin:-4px 0 2px">${esc(pt)}</p>`:""}</div>`; };
+    return `<div class="mot"><div class="mot-h"><b>${esc(ff.nombre)}</b>${etq(m_.e)}${valB(z.v)}</div><p class="mot-t">Cuando ${esc(ff.sube)} en un mes típico (${tipTxt(ff)}), la acción se movió <b class="${cls(z.r.ef)}">${efTxt(z.r.ef)}</b> contra el SPY desde 2015${z.h1&&z.h2?` (2015–2021: ${efTxt(z.h1.ef)}; 2022–hoy: ${efTxt(z.h2.ef)})`:""}. Si ${esc(ff.baja)}, el efecto fue el inverso.${m_.rescate?" <i>Incluida a mano por lógica económica: los datos solos no alcanzaban.</i>":""}</p>${pt?`<p class="mut small" style="margin:-4px 0 2px">${esc(pt)}</p>`:""}</div>`; };
   const sol = (x.solapados||[]).map(k=>FX.F[k]?.nombre).filter(Boolean);
   const card1 = `<div class="card"><h3>Qué la mueve <span class="mut">· más allá del mercado</span></h3>${bt}
     ${ctx?`<p class="lect" style="margin:0 0 6px">${ctx}</p>`:""}
@@ -825,9 +825,9 @@ function queMueve(f){
     ${LEYENDA}</div>`;
   const filas = FX.factores.map(ff=>({f:ff, z:x.f?.[ff.id], e:etqEmp(f.byma, ff.id)})).filter(p=>p.z);
   filas.sort((a,b)=>(solido(b.e)-solido(a.e)) || Math.abs(b.z.r?.ef||0)-Math.abs(a.z.r?.ef||0));
-  const card2 = `<div class="card"><h3>Todos los factores <span class="mut">· un mes típico de cada uno</span></h3><div class="wrap" style="max-height:none"><table class="tb2 tbf"><thead><tr><th class="l">Factor</th><th>Desde 2015</th><th class="c-a">2005–2014</th><th class="l">Relación</th><th class="l">2023+</th></tr></thead><tbody>
-    ${filas.map(p=>`<tr${solido(p.e)?"":` style="opacity:.6"`}><td class="l">${esc(p.f.nombre)}<span class="mut small c-t"> ${tipTxt(p.f)}</span></td><td class="${solido(p.e)?cls(p.z.r?.ef):""}">${efTxt(p.z.r?.ef)}</td><td class="mut c-a">${efTxt(p.z.a?.ef)}</td><td class="l">${etqc(p.e)}</td><td class="l">${solido(p.e)&&VAL[p.z.v]?`<span style="color:${VAL[p.z.v][1]};font-weight:700" title="${VAL[p.z.v][2]}">${VAL[p.z.v][0].split(" ")[0]}</span>`:""}</td></tr>`).join("")}</tbody></table></div>
-    <p class="mut small">Cada factor por separado. Reciente: solo desde 2015. Dudosa: puede ser casualidad. Invertida: fuerte en los dos períodos pero en sentido contrario, así que no sirve como guía. Vieja: solo antes de 2015. No: sin relación. 2023+: ✔ se confirmó con datos nuevos, ~ todavía no alcanza para decir.</p></div>`;
+  const card2 = `<div class="card"><h3>Todos los factores <span class="mut">· un mes típico de cada uno</span></h3><div class="wrap" style="max-height:none"><table class="tb2 tbf"><thead><tr><th class="l">Factor</th><th>Desde 2015</th><th class="c-a">2015–21</th><th class="c-a">2022–hoy</th><th class="l">Relación</th><th class="l">Firme</th></tr></thead><tbody>
+    ${filas.map(p=>`<tr${solido(p.e)?"":` style="opacity:.6"`}><td class="l">${esc(p.f.nombre)}<span class="mut small c-t"> ${tipTxt(p.f)}</span></td><td class="${solido(p.e)?cls(p.z.r?.ef):""}">${efTxt(p.z.r?.ef)}</td><td class="mut c-a">${efTxt(p.z.h1?.ef)}</td><td class="mut c-a">${efTxt(p.z.h2?.ef)}</td><td class="l">${etqc(p.e)}</td><td class="l">${solido(p.e)&&VAL[p.z.v]?`<span style="color:${VAL[p.z.v][1]};font-weight:700" title="${VAL[p.z.v][2]}">${VAL[p.z.v][0].split(" ")[0]}</span>`:""}</td></tr>`).join("")}</tbody></table></div>
+    <p class="mut small">Cada factor por separado. Clara: aparece en 2015–2021 y en 2022–hoy. Invertida: fuerte en los dos períodos pero en sentido contrario, así que no sirve como guía. A mano: incluida por lógica económica. No: sin relación firme. ✔: tampoco depende de dónde se corte el período.</p></div>`;
   return `<section class="fgrid" style="align-items:start">${card1}${card2}</section>`;
 }
 function cuadroBloque(bl){
@@ -841,7 +841,7 @@ function cuadroBloque(bl){
   const comun = bm.length ? `<p class="lect">Motor común del bloque: ${bm.map(k=>`<b>${esc(FX.F[k].nombre)}</b> <span class="mut">(lo comparten ${xb.comparten?.[k]??cnt[k]??0} de ${xb.n})</span>`).join(" · ")}.</p>`
     : `<p class="lect">Este bloque no tiene un motor común: sus empresas se mueven por cosas distintas.</p>`;
   const celda = (b,k) => { const x = FX.empresas[b], mo = (x.motores||[]).find(z=>z.f===k); if (!mo) return `<td class="mut">·</td>`; const z = x.f[k];
-    return `<td class="${cls(z.r.ef)}" title="${esc(ETQ[mo.e]?.[0]||"")}${z.v==="confirmada"?" · confirmada con datos de 2023+":""}">${efTxt(z.r.ef)}${z.v==="confirmada"?'<sup class="ok">✔</sup>':""}</td>`; };
+    return `<td class="${cls(z.r.ef)}" title="${esc(ETQ[mo.e]?.[0]||"")}${z.v==="firme"?" · firme":""}">${efTxt(z.r.ef)}${z.v==="firme"?'<sup class="ok">✔</sup>':""}</td>`; };
   const tabla = cols.length ? `<div class="wrap" style="max-height:none"><table class="tb2 cxf"><thead><tr><th class="l">Empresa</th>${cols.map(k=>`<th title="${esc(FX.F[k].nombre)}: mes típico ${tipTxt(FX.F[k])}">${esc(FX.F[k].nombre)}${bm.includes(k)?"<small>común</small>":""}</th>`).join("")}</tr></thead>
     <tbody>${emps.map(b=>`<tr data-em="${esc(tkDe(b))}" style="cursor:pointer"><td class="tk l">${logoImg(b,"logo-s")}${esc(b)}</td>${cols.map(k=>celda(b,k)).join("")}</tr>`).join("")}</tbody></table></div>` : "";
   const sinM = emps.filter(b=>!(FX.empresas[b].motores||[]).length);
@@ -849,7 +849,7 @@ function cuadroBloque(bl){
     ${resto.length?`<p class="mut small">Otros motores de alguna empresa: ${resto.map(k=>esc(FX.F[k].nombre)).join(", ")}. Están en la ficha de cada una.</p>`:""}
     ${sinM.length?`<p class="mut small">Sin motor claro: ${sinM.map(esc).join(", ")}. Se mueven por su propio negocio.</p>`:""}
     ${sinH.length?`<p class="mut small">Sin historia suficiente para medir: ${sinH.map(esc).join(", ")}.</p>`:""}
-    <p class="mut small">Cada celda es cuánto se movió la empresa contra el SPY en un mes típico de ese factor; solo aparecen las relaciones sólidas (un punto: no se mueve con ese factor). ✔: confirmada con datos de 2023 en adelante. Tocá una empresa para ver el detalle. <a href="#" data-como="1">Cómo se mide →</a></p>`, "main");
+    <p class="mut small">Cada celda es cuánto se movió la empresa contra el SPY en un mes típico de ese factor; solo aparecen las relaciones claras (un punto: no se mueve con ese factor). ✔: firme, no depende de dónde se corte el período. Tocá una empresa para ver el detalle. <a href="#" data-como="1">Cómo se mide →</a></p>`, "main");
 }
 function siPasaHTML(){
   const fid = FX.F[EST.efac] ? EST.efac : "petroleo", dir = EST.edir || 1, v = EST.escV==="bloques" ? "bloques" : "empresas", todo = !!EST.etodo, fb = EST.fbl || "";
@@ -867,13 +867,13 @@ function siPasaHTML(){
     ${v==="empresas"?`<div class="bar" style="margin:10px 0 0"><select id="fbl"><option value="">Todos los bloques</option>${BQ.bloques.map(b=>`<option value="${b.id}" ${b.id===fb?"selected":""}>${esc(b.nombre)}</option>`).join("")}</select></div>`:""}</section>
   ${sec(`Si ${esc(dir>0?f.sube:f.baja)}`, `un mes típico: ${tipTxt(f)} · ${nOk} de ${xs.length} con relación sólida`, `${pt?`<p class="mut small" style="margin-top:0">${esc(pt)}</p>`:""}${vis.length?hbarras(vis, v==="bloques"?"data-bs":"data-e"):`<p class="lect">${v==="bloques"?"Ningún bloque":"Ninguna empresa"} tiene una relación sólida con este factor.</p>`}
     ${nOk<xs.length?`<button class="btn" id="etodo" style="margin-top:10px">${todo?"Mostrar solo las relaciones sólidas":`Ver también las que pueden ser casualidad (${xs.length-nOk})`}</button>`:""}
-    <p class="mut small" style="margin-top:10px">Contra el SPY, en un mes con un movimiento típico del factor, con datos desde 2015. ✔: confirmada con datos de 2023 en adelante. Factor medido desde ${esc(f.desde)}${f.fuente==="French"?" (biblioteca académica de Kenneth French)":""}.</p>${LEYENDA}`, "main")}`;
+    <p class="mut small" style="margin-top:10px">Contra el SPY, en un mes con un movimiento típico del factor, con datos desde 2015. ✔: firme, no depende de dónde se corte el período. Factor medido desde ${esc(f.desde)}${f.fuente==="French"?" (biblioteca académica de Kenneth French)":""}.</p>${LEYENDA}`, "main")}`;
 }
 function familiasHTML(){
   const ent = FX.factores.map(f=>({f, xs:Object.entries(FX.empresas).map(([b,x])=>{ const mo = (x.motores||[]).find(z=>z.f===f.id); return mo ? {b, ef:x.f[f.id].r.ef, v:x.f[f.id].v} : null; }).filter(Boolean)})).filter(p=>p.xs.length).sort((a,b)=>b.xs.length-a.xs.length);
   const chipE = p => `<span class="rbl" data-e="${esc(tkDe(p.b))}" style="--fc:#8a94b8;cursor:pointer">${logoImg(p.b,"logo-s")}${esc(p.b)} <b class="${cls(p.ef)}">${efTxt(p.ef)}</b>${okm(p.v)}</span>`;
   const sinU = FX.factores.filter(f=>!ent.some(p=>p.f.id===f.id));
-  return `<p class="mut small" style="margin:0 0 12px">Empresas que comparten un motor, sin importar el bloque. Cada número es cuánto se movieron contra el SPY cuando el factor subió en un mes típico. ✔: confirmada con datos de 2023 en adelante. Tocá una empresa para ver su ficha.</p>
+  return `<p class="mut small" style="margin:0 0 12px">Empresas que comparten un motor, sin importar el bloque. Cada número es cuánto se movieron contra el SPY cuando el factor subió en un mes típico. ✔: firme, no depende de dónde se corte el período. Tocá una empresa para ver su ficha.</p>
   <div class="fams2">${ent.map(({f,xs})=>{ const a = xs.filter(p=>p.ef>0).sort((p,q)=>q.ef-p.ef), c = xs.filter(p=>p.ef<0).sort((p,q)=>p.ef-q.ef), pt = parTxt(f.id);
     return sec(esc(f.nombre), `${xs.length} ${xs.length===1?"empresa":"empresas"} · mes típico ${tipTxt(f)}`,
       `${a.length?`<h4>Le ganan al mercado cuando ${esc(f.sube)}</h4><div class="rsm-l">${a.map(chipE).join("")}</div>`:""}
@@ -888,16 +888,15 @@ function comoHTML(){
     <li><b>En un mes típico.</b> Cada factor se mide en su movimiento normal de un mes (por ejemplo, ±11% el petróleo o ±0,25 puntos la tasa), así se pueden comparar entre sí. Lo probamos: si el factor baja, el efecto es el inverso, y si el movimiento es más grande, el efecto crece más o menos en proporción.</li>
     <li><b>Mismo mes.</b> Es una relación del mismo mes: dice a quién le pega un movimiento, no anticipa el movimiento.</li></ul>`)
   + sec("Cómo se evita engañarse","",`<ul class="lst">
-    <li><b>Dos períodos.</b> La historia se parte en 2005–2014 y 2015 en adelante. "Clara" exige que la relación aparezca en los dos y en el mismo sentido.</li>
+    <li><b>Desde 2015, en dos períodos.</b> Se usa solo la historia desde 2015 y se parte en 2015–2021 (tasas en cero, inflación baja) y 2022–hoy (inflación alta y la suba de tasas más fuerte en 40 años). "Clara" exige que la relación aparezca en los dos mundos y en el mismo sentido.</li>
     <li><b>Prueba contra el azar.</b> En cada período, la relación real se compara contra cientos de versiones con el factor corrido en el tiempo. Si no les gana, no cuenta.</li>
-    <li><b>Solo reciente.</b> Aparece con fuerza desde 2015, con un filtro más exigente, y la confirman otras empresas del mismo bloque sin contar a la propia. Antes de 2015 no aparecía o no había datos.</li>
+    <li><b>Firme (✔).</b> Además se sostiene si el corte se hace en 2019 en vez de 2021. Cerca de un tercio de las relaciones claras depende de dónde se corte; las firmes no.</li>
     <li><b>Prueba con datos que no vio.</b> Se recalculó todo con datos hasta 2022 y se miró qué pasó en 2023–2026:
       <table class="tb2 oos"><thead><tr><th class="l">Etiqueta</th><th>Mantuvo el sentido</th><th>Además, con fuerza</th></tr></thead><tbody>
-      <tr><td class="l">Clara</td><td class="pos">84%</td><td>43%</td></tr>
-      <tr><td class="l">Solo reciente, confirmada por su bloque</td><td class="pos">76%</td><td>28%</td></tr>
-      <tr><td class="l">Sin relación (lo que da el azar)</td><td>52%</td><td>8%</td></tr></tbody></table>
-      Ningún motor de los que muestra el sitio fue en sentido contrario con fuerza. Prueba de noviembre de 2026.</li>
-    <li><b>Factores que se mueven juntos.</b> Dólar, cobre, oro, hierro y real; petróleo, gas, combustible e inflación esperada; tasa y curva. Cuando una empresa aparece con varios de la misma familia, es en buena parte una sola exposición.</li></ul>`)
+      <tr><td class="l">Clara</td><td class="pos">82%</td><td>50%</td></tr>
+      <tr><td class="l">Sin relación (lo que da el azar)</td><td>51%</td><td>8%</td></tr></tbody></table>
+      Las relaciones claras conservaron además el 94% de su tamaño. Prueba de noviembre de 2026, partiendo 2015–2022 en dos mitades.</li>
+    <li><b>Factores que se mueven juntos.</b> Dólar, cobre, oro, hierro, real y emergentes; petróleo, gas, combustible e inflación esperada; tasa, tasa real y curva. Cuando una empresa aparece con varios de la misma familia, es en buena parte una sola exposición.</li></ul>`)
   + sec("Lo que no hace","",`<ul class="lst">
     <li>No dice si un factor se va a mover. Eso lo pone tu tesis.</li>
     <li>No dice si la acción va a subir: dice si le va mejor o peor que al mercado.</li>
@@ -905,7 +904,7 @@ function comoHTML(){
     <li>Lo que mueve el precio es la sorpresa: si el mercado ya espera que suba el petróleo, eso ya está en el precio.</li>
     <li>Los factores de estilo (valor contra crecimiento, rentables, chicas contra grandes, momentum, inversión) describen qué tipo de acción es, más que un catalizador de afuera.</li>
     <li>Son las empresas que hoy cotizan, y las que salieron a la bolsa hace poco todavía no se pueden medir bien.</li>
-    <li>Unos pocos motores se incluyeron a mano por lógica económica; están marcados en la ficha.</li></ul>`)
+    <li>Unos pocos motores se incluyeron a mano por lógica económica (PLTR con bitcoin, MELI y GLOB con el real); están marcados en la ficha.</li></ul>`)
   + sec("Los factores","fuentes gratuitas · se actualizan solos cada sábado",`<div class="wrap" style="max-height:none"><table class="tb2"><thead><tr><th class="l">Factor</th><th class="l">Grupo</th><th>Mes típico</th><th>Desde</th><th class="l">Fuente</th></tr></thead><tbody>
     ${FX.factores.map(f=>`<tr><td class="l">${esc(f.nombre)}</td><td class="l mut">${esc(f.grupo)}</td><td>${tipTxt(f)}</td><td>${esc(f.desde)}</td><td class="l mut">${esc(FU[f.fuente]||f.fuente)}${f.proxy?` <span title="El mes en curso se aproxima con ${esc(f.proxy)}">*</span>`:""}</td></tr>`).join("")}</tbody></table></div>
     <p class="mut small">* Los factores de estilo se publican con un mes de atraso; el mes en curso se aproxima con ETFs.</p>`);
@@ -942,7 +941,7 @@ async function lista(m){
   m.innerHTML = `<details class="help"><summary>Cómo leer esta lista</summary>
     <p>Las ${L.length} empresas con CEDEAR más operadas en BYMA. Tocá una fila para abrir su ficha; marcá hasta 4 para comparar sus precios.</p>
     <dl><dt>Nota</dt><dd>Resumen de la ficha: calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15% y tendencia 10%. Sirve para ordenar y ubicarse rápido; no es una señal de compra.</dd>
-    <dt>Lo mueve</dt><dd>Los factores que la mueven más allá del mercado, con relación sólida. ✔: confirmado con datos de 2023 en adelante. Vacío: se mueve sobre todo por su propio negocio.</dd>
+    <dt>Lo mueve</dt><dd>Los factores que la mueven más allá del mercado, con relación sólida. ✔: firme. Vacío: se mueve sobre todo por su propio negocio.</dd>
     <dt>vs MA200</dt><dd>Distancia al promedio de las últimas 200 ruedas.</dd>
     <dt>P/E esp.</dt><dd>Precio sobre la ganancia que esperan los analistas para los próximos 12 meses.</dd>
     <dt>Premio</dt><dd>Cuánto más caro (+) o barato (−) cotiza el CEDEAR frente al CCL implícito de todo el mercado.</dd></dl></details>
@@ -988,7 +987,7 @@ function factoresMes(){
 }
 function regimenCaja(){
   const xs = FX?.regimen?.[M.actual] || [], q = M.cuadrantes[M.actual];
-  const txt = xs.length ? `<ul class="lst">${xs.map(z=>{ const f = FX.F[z.f]; return f ? `<li>${esc(capit(z.sigma>0?f.sube:f.baja))} en los 3 meses siguientes, más que en el resto de los meses <span class="mut">(${ETQ[z.e==="fuerte"?"clara":"reciente"][0].toLowerCase()}, ${z.meses} meses)</span>.</li>` : ""; }).join("")}</ul>`
+  const txt = xs.length ? `<ul class="lst">${xs.map(z=>{ const f = FX.F[z.f]; return f ? `<li>${esc(capit(z.sigma>0?f.sube:f.baja))} en los 3 meses siguientes, más que en el resto de los meses <span class="mut">(${z.e==="fuerte"?"en 2015–2021 y en 2022–hoy":"solo desde 2022"}, ${z.meses} meses)</span>.</li>` : ""; }).join("")}</ul>`
     : `<p class="lect">Después de este régimen no hay un patrón firme en ningún factor.</p>`;
   return `<div class="rsm-k" style="margin-top:6px"><span>Qué pasó después de ${esc(q.nombre.toLowerCase())}</span>${txt}<em>Probamos si el régimen anticipa a los factores: casi nunca, y lo poco que aparece sale de uno o dos episodios desde 2015. Tomalo como contexto, no como predicción.</em></div>`;
 }
