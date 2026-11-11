@@ -207,6 +207,13 @@ td.lm{font-size:12px;white-space:normal;max-width:230px;min-width:170px;line-hei
 .oos{margin:8px 0 4px}.oos td,.oos th{padding:4px 8px}
 @media(max-width:640px){.fams2{grid-template-columns:1fr}}
 .etq{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;color:var(--ec);border:1px solid var(--ec);border-radius:20px;padding:1px 8px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
+.ctiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px}
+.ctile{background:var(--panel2);border:1px solid var(--line);border-top:3px solid var(--tc);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:3px;min-width:0}
+.ctile .ct-n{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--tc);font-weight:600}
+.ctile b{font-size:20px;font-weight:700;line-height:1.2}.ctile em{font-style:normal;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+.ctile small{font-size:11.5px;color:#c8d0ea;line-height:1.35}.ctile small.mut{color:var(--muted);font-size:10.5px}
+.spk{width:100%;height:34px;margin:4px 0 2px;display:block}
+@media (max-width:640px){.ctiles{grid-template-columns:1fr 1fr;gap:8px}.ctile{padding:8px 9px}.ctile b{font-size:16px}.ctile small{font-size:10.5px}.spk{height:26px}}
 .mot{padding:10px 0 12px;border-bottom:1px solid var(--line)}.mot:last-of-type{border-bottom:0}
 .mot-h{display:flex;align-items:center;font-size:14px}.mot-t{margin:6px 0 8px;font-size:13px;line-height:1.5;color:#c8d0ea}
 .hbs{display:grid;gap:2px;max-width:820px}
@@ -793,79 +800,76 @@ const mesTxt = k => { const [y,m] = k.split("-"); return ["ene","feb","mar","abr
 const trimTxt = k => { const [y,q] = k.split("Q"); return `${q}.º trim. ${y}`; };
 const mesN = k => { const [y,m] = k.split("-").map(Number); return y*12+m-1; };
 const mesK = n => `${Math.floor(n/12)}-${String(n%12+1).padStart(2,"0")}`;
-function pronosHTML(bid, solo){
-  const P = CI?.pronos?.[bid]; if (!P || !P.serie?.length) return "";
-  const vDr = solo!=="nand", vNd = solo!=="dram";
-  const xs = P.serie.map(([q,pub,a,b,c,d,nota])=>({q, pub, dr:a!=null&&b!=null?(a+b)/2:null, nd:c!=null&&d!=null?(c+d)/2:null, a,b,c,d, nota}));
-  const W=620, H=175, pl=50, pb=24, n=xs.length, all = xs.flatMap(x=>[vDr?x.dr:null, vNd?x.nd:null]).filter(v=>v!=null), hi = Math.max(10,...all), lo = Math.min(0,...all);
-  const Y = v => 10 + (hi-v)/(hi-lo)*(H-pb-10), bw = (W-pl-8)/n, X = i => pl + i*bw;
-  const tk = [-20,0,20,40,60,80].filter(v=>v>=lo-1&&v<=hi+1).map(v=>`<line x1="${pl}" x2="${W-8}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"${v===0?' stroke-width="1.5"':""}/><text x="${pl-5}" y="${Y(v)+4}" text-anchor="end">${v>0?"+":""}${v}%</text>`).join("");
-  const bar = (i,v,o,c) => v==null ? "" : `<rect x="${(X(i)+o).toFixed(1)}" y="${Math.min(Y(v),Y(0)).toFixed(1)}" width="${(bw*0.38).toFixed(1)}" height="${Math.max(1,Math.abs(Y(v)-Y(0))).toFixed(1)}" fill="${c}" opacity="${v<0?0.55:0.9}"><title>${esc(xs[i].q)}: ${v>0?"+":""}${nx(v,1)}%</title></rect>`;
-  const bars = xs.map((x,i)=>(vDr?bar(i,x.dr,vNd?bw*0.1:bw*0.25,"#6ea8ff"):"")+(vNd?bar(i,x.nd,vDr?bw*0.52:bw*0.25,"#c792ea"):"")).join("");
-  const yrs = xs.map((x,i)=>x.q.endsWith("Q1")?`<text x="${X(i)+2}" y="${H-8}">${x.q.slice(0,4)}</text>`:"").join("");
-  const K = vDr ? "dr" : "nd", lo_ = vDr ? "a" : "c", hi_ = vDr ? "b" : "d", nomK = vDr ? "DRAM" : "NAND";
-  const u = xs[n-1], prev = xs.slice(-5,-1).filter(x=>x[K]!=null), mx = prev.length ? prev.reduce((a,b)=>b[K]>a[K]?b:a) : null;
-  const rng = (a,b) => a==null ? "sin dato" : `${a>0?"+":""}${a}% a ${b>0?"+":""}${b}%`;
-  const qtxt = q => `${["1.er","2.º","3.er","4.º"][+q.slice(-1)-1]} trim. ${q.slice(0,4)}`;
-  const freno = mx && u[K]!=null && mx[K]>15 && u[K] < mx[K]/2 ? ` La suba esperada de ${nomK} se frenó: de ${rng(mx[lo_],mx[hi_])} en el ${qtxt(mx.q)} a ${rng(u[lo_],u[hi_])} ahora. Los precios siguen subiendo, pero bastante más despacio.` : "";
-  return `<div class="mot" style="margin-top:12px"><div class="mot-h"><b>Cuánto se espera que suba el precio de la memoria</b><span class="mut small" style="margin-left:8px">último: ${qtxt(u.q)}</span></div>
-    <svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Pronósticos de precio de memoria por trimestre">${tk}${bars}${yrs}</svg>
-    <div class="leg">${vDr?'<span style="color:#6ea8ff">■ DRAM</span> ':""}${vNd?'<span style="color:#c792ea">■ NAND</span>':""} <span class="mut">· cambio esperado contra el trimestre anterior (punto medio del rango)</span></div>
-    <p class="mot-t">Último pronóstico (${qtxt(u.q)}, publicado ${fch2(u.pub)}): ${[vDr?`DRAM <b>${rng(u.a,u.b)}</b>`:"", vNd?`NAND <b>${rng(u.c,u.d)}</b>`:""].filter(Boolean).join(", ")}.${freno} En lo medido con MU y SK Hynix desde 2021, la acción se movió sobre todo el trimestre <b>antes</b> de que salga cada pronóstico: sirve para ubicar el ciclo, no para anticiparlo.</p>
-    <p class="mut small" style="margin:-4px 0 2px">Fuente: ${esc(P.fuente)}</p></div>`;
+const qtxt = q => `${["1.er","2.º","3.er","4.º"][+q.slice(-1)-1]} trim. ${q.slice(0,4)}`;
+const rngT = (a,b) => a==null ? "—" : `${a>0?"+":""}${a}% a ${b>0?"+":""}${b}%`;
+function spk2(vals, c, bars){
+  const v = vals.filter(x=>x!=null); if (v.length<2) return "";
+  const W=150, H=34, lo = Math.min(...v, bars?0:Infinity), hi = Math.max(...v, bars?0:-Infinity), Y = x => 2 + (hi-x)/(hi-lo||1)*(H-4), X = i => i/(vals.length-1)*W;
+  if (bars){ const bw = W/vals.length; return `<svg viewBox="0 0 ${W} ${H}" class="spk">${vals.map((x,i)=>x==null?"":`<rect x="${(i*bw+bw*0.15).toFixed(1)}" y="${Math.min(Y(x),Y(0)).toFixed(1)}" width="${(bw*0.7).toFixed(1)}" height="${Math.max(1,Math.abs(Y(x)-Y(0))).toFixed(1)}" fill="${c}" opacity="${x<0?0.5:0.9}"/>`).join("")}</svg>`; }
+  return `<svg viewBox="0 0 ${W} ${H}" class="spk"><path d="${vals.map((x,i)=>x==null?"":`${i?"L":"M"}${X(i).toFixed(1)} ${Y(x).toFixed(1)}`).join("")}" fill="none" stroke="${c}" stroke-width="1.8"/><circle cx="${X(vals.length-1)}" cy="${Y(vals[vals.length-1])}" r="2.6" fill="${c}"/></svg>`;
+}
+function pronosSerie(bid, solo){
+  const P = CI?.pronos?.[bid]; if (!P?.serie?.length) return null;
+  const k = solo==="nand" ? [4,5] : [2,3];
+  return {P, nom: solo==="nand" ? "NAND" : "DRAM", xs: P.serie.map(r=>({q:r[0], pub:r[1], a:r[k[0]], b:r[k[1]], m:r[k[0]]!=null&&r[k[1]]!=null?(r[k[0]]+r[k[1]])/2:null}))};
+}
+function tiles(cf, bid){
+  const out = [];
+  cf.indicadores.forEach(k=>{ const v = CI.indicadores[k], c = colI(k), s = v.serie.map(p=>p[1]);
+    let big, sub, est;
+    if (k==="mu_inv"){ const u = s[s.length-1], p = s[s.length-2], avg = s.reduce((a,b)=>a+b,0)/s.length;
+      big = `${nx(u,0)} días`; sub = `antes ${nx(p,0)} · promedio ${nx(avg,0)}`; est = u>p*1.03 ? ["Sube","neg"] : u<p*0.97 ? ["Baja","pos"] : ["Estable",""]; }
+    else if (v.frec==="mensual"){ big = pct(v.anual,0); sub = `vs. hace un año · 3 meses: ${pct(v.trim,0)}`; est = v.trim>0.05 ? ["Sube","pos"] : v.trim<-0.05 ? ["Baja","neg"] : ["Estable",""]; }
+    else { big = `US$ ${nx(v.valor,1)} mil M`; sub = `en 12 meses · ${pct(v.anual,0)} en un año`; est = v.anual>0.05 ? ["Sube", k==="mu_capex"?"":"pos"] : v.anual<-0.05 ? ["Baja", k==="mu_capex"?"":"neg"] : ["Estable",""]; }
+    out.push(`<div class="ctile" style="--tc:${c}"><span class="ct-n">${esc(v.corto)}</span><b>${big}</b><em class="${est[1]}">${est[0]}</em><small>${sub}</small>${spk2(s.slice(k==="nanya"?-48:-16), c)}<small class="mut">${v.frec==="mensual"?mesTxt(v.ultimo):trimTxt(v.ultimo)}</small></div>`); });
+  const ps = pronosSerie(cf.pronos_de || (cf.pronos ? bid : ""), cf.solo);
+  if (ps){ const xs = ps.xs, u = xs[xs.length-1], pv = xs.slice(-5,-1).filter(x=>x.m!=null), mx = pv.length ? pv.reduce((a,b)=>b.m>a.m?b:a) : null;
+    const fr = mx && u.m!=null && mx.m>15 && u.m<mx.m/2;
+    out.push(`<div class="ctile" style="--tc:#e0c26a"><span class="ct-n">Precio ${ps.nom} esperado</span><b>${rngT(u.a,u.b)}</b><em class="${fr?"neg":u.m>0?"pos":"neg"}">${fr?"Se frena":u.m>0?"Sube":"Baja"}</em><small>${fr?`venía de ${rngT(mx.a,mx.b)} (${qtxt(mx.q)})`:"contra el trimestre anterior"}</small>${spk2(xs.slice(-12).map(x=>x.m), "#e0c26a", true)}<small class="mut">${qtxt(u.q)} · TrendForce</small></div>`); }
+  return `<div class="ctiles">${tiles.length?"":""}${out.join("")}</div>`;
 }
 function cicloCard(f){
   const bl = BQDE(f.byma), cb = bl && CI?.bloques?.[bl.id], ce = CI?.empresas?.[f.byma];
   const cf = ce || (cb && (!cb.empresas || cb.empresas.includes(f.byma)) ? cb : null);
   if (!cf || !cf.indicadores.length) return "";
-  const ids = cf.indicadores, on = ids.filter(k=>(EST.cis||[ids[0]]).includes(k)), rel = !!EST.crel;
+  const ids = cf.indicadores, base = cf.base && ids.includes(cf.base) ? cf.base : ids[0], rel = !!EST.crel;
   const pxa = CI.precios?.[f.ticker] || [], spy = Object.fromEntries(CI.precios?.SPY || []);
-  const px = rel ? pxa.filter(p=>spy[p[0]]).map(p=>[p[0], p[1]/spy[p[0]]]) : pxa;
+  const relA = pxa.filter(p=>spy[p[0]]).map(p=>[p[0], p[1]/spy[p[0]]]), px = rel ? relA : pxa;
   const per = EST.cper || cf.per || "todo", desde = {"3y":36,"5y":60,"todo":999}[per];
-  const fin = px.length ? px[px.length-1][0] : null;
-  const ini = fin && desde<900 ? mesK(mesN(fin)-desde) : "2015-01";
+  const fin = px.length ? px[px.length-1][0] : null, ini = fin && desde<900 ? mesK(mesN(fin)-desde) : "2015-01";
+  const vb = CI.indicadores[base];
   const ser = [];
-  if (px.length) ser.push({t:rel?`${f.byma} contra el SPY`:f.byma, c:"var(--accent)", w:2.2, d:px.filter(p=>p[0]>=ini)});
-  on.forEach(k=>{ const v = CI.indicadores[k]; ser.push({t:v.corto, c:colI(k), w:1.6, d:v.serie.filter(p=>p[0]>=ini)}); });
+  if (px.length) ser.push({t:rel?`${f.byma} contra el SPY`:f.byma, c:"var(--accent)", w:2.4, d:px.filter(p=>p[0]>=ini)});
+  ser.push({t:vb.corto, c:colI(base), w:1.8, d:vb.serie.filter(p=>p[0]>=ini)});
   const meses = []; if (fin) for (let n = mesN(ini); n <= mesN(fin); n++) meses.push(mesK(n));
   const ix = Object.fromEntries(meses.map((k,i)=>[k,i]));
   const norm = ser.filter(s=>s.d.length>1).map(s=>{ const b = s.d[0][1]; return {...s, b, p:s.d.filter(q=>q[0] in ix && q[1]>0).map(q=>[ix[q[0]], Math.log(q[1]/b*100)]), u:s.d[s.d.length-1][1]/b}; });
-  const ciclos = (cf.picos||[]).map(([n,mv])=>{ const c = cf.ciclos.find(z=>z[0]===n), pr = px.filter(p=>p[0]>=c[1] && p[0]<=c[2]);
-    const pa = pr.length ? pr.reduce((a,b)=>b[1]>a[1]?b:a) : null; return {n, mv, pa}; });
-  let chart = `<p class="mut">Sin datos para graficar.</p>`;
+  const ciclos = (cf.picos||[]).map(([n,mv])=>{ const c = cf.ciclos.find(z=>z[0]===n), pr = relA.filter(p=>p[0]>=c[1] && p[0]<=c[2]); return {n, mv, pa: pr.length ? pr.reduce((a,b)=>b[1]>a[1]?b:a) : null}; });
+  let chart = "";
   if (norm.length && meses.length>2){
-    const all = norm.flatMap(s=>s.p.map(q=>q[1])), lo = Math.min(...all), hi = Math.max(...all), W=620, H=260, pl=44, pb=22;
-    const X = i => pl + i/(meses.length-1)*(W-pl-8), Y = v => 14 + (hi-v)/(hi-lo||1)*(H-pb-14);
+    const all = norm.flatMap(s=>s.p.map(q=>q[1])), lo = Math.min(...all), hi = Math.max(...all), W=620, H=240, pl=44, pb=22;
+    const X = i => pl + i/(meses.length-1)*(W-pl-8), Y = v => 16 + (hi-v)/(hi-lo||1)*(H-pb-16);
     const mk = [10,25,50,100,200,500,1000,2000,5000,10000,20000].map(Math.log).filter(v=>v>=lo-0.01 && v<=hi+0.01);
     const ticks = mk.map(v=>`<line x1="${pl}" x2="${W-8}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"${Math.abs(v-Math.log(100))<1e-9?' stroke-dasharray="3 3"':""}/><text x="${pl-6}" y="${Y(v)+4}" text-anchor="end">${Math.round(Math.exp(v))}</text>`).join("");
     const xt = [0, Math.floor((meses.length-1)/2), meses.length-1].map((i,j)=>`<text x="${X(i)}" y="${H-6}" text-anchor="${["start","middle","end"][j]}">${mesTxt(meses[i])}</text>`).join("");
+    const marcas = ciclos.map(c=>c.mv in ix ? `<line x1="${X(ix[c.mv])}" x2="${X(ix[c.mv])}" y1="14" y2="${H-pb}" stroke="${colI(base)}" stroke-dasharray="2 3" opacity=".6"/><text x="${X(ix[c.mv])+4}" y="12" fill="${colI(base)}" opacity=".85">pico ${c.n}</text>` : "").join("");
     const paths = norm.map(s=>`<path d="${s.p.map((q,i)=>(i?"L":"M")+X(q[0]).toFixed(1)+" "+Y(q[1]).toFixed(1)).join("")}" fill="none" stroke="${s.c}" stroke-width="${s.w}"/>`).join("");
-    const s0 = norm[0];
-    const marcas = ciclos.map(c=>{ let o = "";
-      if (c.mv in ix) o += `<line x1="${X(ix[c.mv])}" x2="${X(ix[c.mv])}" y1="12" y2="${H-pb}" stroke="${CICOL[0]}" stroke-dasharray="2 3" opacity=".8"/><text x="${X(ix[c.mv])+3}" y="10" fill="${CICOL[0]}">pico ${c.n}</text>`;
-      if (c.pa && c.pa[0] in ix && px.length && s0.t.startsWith(f.byma)){ const v = Math.log(c.pa[1]/s0.b*100); o += `<circle cx="${X(ix[c.pa[0]])}" cy="${Y(v)}" r="4" fill="none" stroke="var(--accent)" stroke-width="2"/>`; }
-      return o; }).join("");
-    chart = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Precio y ciclo del sector">${ticks}${marcas}${paths}${xt}</svg>
-      <div class="leg">${norm.map(s=>`<span style="color:${s.c}">■ ${esc(s.t)} ×${nx(s.u, s.u<10?1:0)}</span>`).join(" ")} <span class="mut">· base 100 al inicio, escala logarítmica${ciclos.length?" · línea punteada: pico de ventas de cada ciclo; círculo: máximo de la acción en ese ciclo":""}</span></div>
-      <p class="mut small">Las líneas no tienen que coincidir. Muestran si la acción y el negocio del sector van para el mismo lado, y cuánto se adelantó o se atrasó la acción. ×25 quiere decir que se multiplicó por 25 en el período.</p>`;
+    chart = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Acción contra el ciclo del sector">${ticks}${marcas}${paths}${xt}</svg>
+      <div class="leg">${norm.map(s=>`<span style="color:${s.c}">■ ${esc(s.t)} ×${nx(s.u, s.u<10?1:0)}</span>`).join(" ")} <span class="mut">· base 100, escala logarítmica</span></div>`;
   }
-  const spyAll = CI.precios?.SPY || [], relA = pxa.filter(p=>spy[p[0]]).map(p=>[p[0], p[1]/spy[p[0]]]);
-  const hist = (cf.picos||[]).map(([n,mv])=>{ const c = cf.ciclos.find(z=>z[0]===n), pr = relA.filter(p=>p[0]>=c[1] && p[0]<=c[2]); if (!pr.length) return null;
-    const pa = pr.reduce((a,b)=>b[1]>a[1]?b:a), d = mesN(mv)-mesN(pa[0]);
-    return `en ${n}, ${esc(f.byma)} tocó su máximo contra el SPY en ${mesTxt(pa[0])} y las ventas en ${mesTxt(mv)}: ${d>0?`la acción se adelantó ${d} ${d===1?"mes":"meses"}`:d<0?`la acción llegó ${-d} ${d===-1?"mes":"meses"} después`:"coincidieron"}`; }).filter(Boolean);
-  const histP = hist.length ? `<p class="lect" style="margin:8px 0 4px">Ciclos anteriores: ${hist.join("; ")}.</p>` : "";
-  const lect = ids.map(k=>{ const v = CI.indicadores[k], c = colI(k), tr = v.frec==="mensual";
-    const det = v.detalle && Object.keys(v.detalle).length>1 ? ` <span class="mut">(último trimestre: ${Object.entries(v.detalle).map(([a,b])=>`${esc(a)} ${nx(b,1)}`).join(" · ")} mil millones)</span>` : "";
-    const mp = v.max_previo ? ` Antes de este ciclo, lo máximo fue <b>${pct(v.max_previo[0],0)}</b> (${tr?mesTxt(v.max_previo[1]):trimTxt(v.max_previo[1])}).` : "";
-    return `<div class="mot"><div class="mot-h"><b style="color:${c}">${esc(v.nombre)}</b><span class="mut small" style="margin-left:8px">último dato: ${tr?mesTxt(v.ultimo):trimTxt(v.ultimo)}</span></div>
-      ${v.lectura ? `<p class="mot-t">${esc(v.que)} ${v.lectura}</p>` : `<p class="mot-t">${esc(v.que)}${v.valor!=null?` Hoy: <b>${nx(v.valor,1)} mil millones de USD</b> en 12 meses.`:""} Contra hace un año: <b class="${cls(v.anual)}">${pct(v.anual,0)}</b>.${mp} ${tr?"Últimos 3 meses contra los 3 anteriores":"Último trimestre contra el mismo de hace un año"}: <b class="${cls(v.trim)}">${pct(v.trim,0)}</b>.${det}</p>`}
-      <p class="mut small" style="margin:-4px 0 2px">Fuente: ${esc(v.fuente)}</p></div>`; }).join("");
+  const hist = ciclos.filter(c=>c.pa).map(c=>{ const d = mesN(c.mv)-mesN(c.pa[0]); return `<b>${c.n}</b>: ${esc(f.byma)} hizo techo contra el SPY en ${mesTxt(c.pa[0])}, las ventas en ${mesTxt(c.mv)} (${d>0?`${d} ${d===1?"mes":"meses"} antes`:d<0?`${-d} ${d===-1?"mes":"meses"} después`:"a la vez"})`; });
+  const ps = pronosSerie(cf.pronos_de || (cf.pronos ? bl.id : ""), cf.solo);
+  const glos = [...ids.map(k=>{ const v = CI.indicadores[k]; return `<dt style="color:${colI(k)}">${esc(v.nombre)}</dt><dd>${esc(v.que)}${v.lectura?` ${v.lectura}`:v.max_previo?` Antes de este ciclo, su mayor crecimiento anual fue ${pct(v.max_previo[0],0)}.`:""} <span class="mut">Fuente: ${esc(v.fuente)}</span></dd>`; }),
+    ps ? `<dt style="color:#e0c26a">Precio ${ps.nom} esperado</dt><dd>Cuánto espera TrendForce que cambie el precio de contrato en el trimestre, contra el anterior (punto medio del rango). Medido con MU y SK Hynix desde 2021, la acción se movió sobre todo el trimestre <b>antes</b> de cada pronóstico. <span class="mut">Fuente: ${esc(ps.P.fuente)}</span></dd>` : ""].join("");
   return `<section class="card" style="margin-top:14px"><h3>El ciclo de su sector <span class="mut">· contexto, no motor medido</span></h3>
-    <div class="aviso">${esc(cf.nota)}</div>
-    <div class="bar" style="margin:10px 0;gap:8px;flex-wrap:wrap"><div class="segs">${ids.map(k=>`<button class="seg sm${on.includes(k)?" on2":""}" data-ci="${k}">${esc(CI.indicadores[k].corto)}</button>`).join("")}</div>
+    <p class="mut small" style="margin:0 0 10px">${esc(cf.nota)}</p>
+    ${tiles(cf, bl.id)}
+    <div class="bar" style="margin:14px 0 6px;gap:8px;flex-wrap:wrap;justify-content:space-between"><b class="small">${esc(f.byma)} y ${esc(vb.corto)}</b><div style="display:flex;gap:8px;flex-wrap:wrap">
       <div class="seg">${[["0","Precio"],["1","Contra el SPY"]].map(([p,t])=>`<button data-crel="${p}" class="${(rel?"1":"0")===p?"on":""}">${t}</button>`).join("")}</div>
-      <div class="seg">${[["3y","3 años"],["5y","5 años"],["todo","Desde 2015"]].map(([p,t])=>`<button data-cper="${p}" class="${per===p?"on":""}">${t}</button>`).join("")}</div></div>
-    ${chart}${histP}${pronosHTML(cf.pronos_de || (cf.pronos ? bl.id : ""), cf.solo)}${lect}</section>`;
+      <div class="seg">${[["3y","3 años"],["5y","5 años"],["todo","Desde 2015"]].map(([p,t])=>`<button data-cper="${p}" class="${per===p?"on":""}">${t}</button>`).join("")}</div></div></div>
+    ${chart}
+    ${hist.length?`<p class="small" style="margin:8px 0 0">Ciclos anteriores · ${hist.join(" · ")}. La acción se adelantó a las ventas.</p>`:""}
+    <details class="help" style="margin-top:12px"><summary>Qué es cada dato y de dónde sale</summary><dl>${glos}</dl></details></section>`;
 }
 const ETQ = {clara:["Clara","var(--pos)"], reciente:["Incluida a mano","var(--accent)"], indicio:["Puede ser casualidad","var(--muted)"], vuelta:["Se dio vuelta","var(--neg)"], antigua:["Solo antes de 2015","var(--muted)"], "":["Sin relación","var(--muted)"]};
 const etq = e => { const q = ETQ[e]||ETQ[""]; return `<span class="etq" style="--ec:${q[1]}">${q[0]}</span>`; };
@@ -1616,7 +1620,7 @@ async function ficha(m, t){
   m.querySelectorAll("[data-per]").forEach(b=>b.onclick=()=>{EST.per=b.dataset.per; ficha(m,t);});
   m.querySelectorAll("[data-cper]").forEach(b=>b.onclick=()=>{EST.cper=b.dataset.cper; ficha(m,t);});
   m.querySelectorAll("[data-crel]").forEach(b=>b.onclick=()=>{EST.crel=b.dataset.crel==="1"; ficha(m,t);});
-  m.querySelectorAll("[data-ci]").forEach(b=>b.onclick=()=>{ const ids = CI.bloques[BQDE(FCACHE[t].byma).id].indicadores; let a = EST.cis || [ids[0]]; a = a.includes(b.dataset.ci) ? a.filter(k=>k!==b.dataset.ci) : [...a, b.dataset.ci]; EST.cis = a; ficha(m,t);});
+
   const ta = m.querySelector("#nota");
   if (ta) ta.oninput = ()=>{ try{ localStorage.setItem("rvnota:"+f.ticker, ta.value); m.querySelector("#notamsg").textContent = "Guardado en este navegador."; }catch(e){ m.querySelector("#notamsg").textContent = "Este navegador no permite guardar notas."; } };
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=()=>{EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); ficha(m, r.dataset.e);});
