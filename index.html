@@ -799,7 +799,7 @@ async function cargarFX(){
   return FX;
 }
 let CI = null;
-const CICOL = ["#6ea8ff","#5fb3a1","#c792ea"], CIC = {nanya:"#6ea8ff", mu_inv:"#f78c6c", hyper:"#5fb3a1", mu_capex:"#c792ea"}, colI = k => CIC[k] || "#9aa5c8";
+const CICOL = ["#6ea8ff","#5fb3a1","#c792ea"], CIC = {nanya:"#6ea8ff", tsmc:"#6ea8ff", mu_inv:"#f78c6c", chips_inv:"#f78c6c", hyper:"#5fb3a1", mu_capex:"#c792ea", fab_capex:"#c792ea"}, colI = k => CIC[k] || "#9aa5c8";
 const mesTxt = k => { const [y,m] = k.split("-"); return ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"][+m-1]+" "+y; };
 const trimTxt = k => { const [y,q] = k.split("Q"); return `${q}.º trim. ${y}`; };
 const mesN = k => { const [y,m] = k.split("-").map(Number); return y*12+m-1; };
@@ -822,15 +822,16 @@ function tiles(cf, bid){
   const out = [];
   cf.indicadores.forEach(k=>{ const v = CI.indicadores[k], c = colI(k), s = v.serie.map(p=>p[1]);
     let big, sub, est, vd;
-    if (k==="mu_inv"){ const u = s[s.length-1], p = s[s.length-2], avg = s.reduce((a,b)=>a+b,0)/s.length;
+    const sup = cf.dir?.[k]===-1;
+    if (k.endsWith("_inv")){ const u = s[s.length-1], p = s[s.length-2], avg = s.reduce((a,b)=>a+b,0)/s.length;
       big = `${nx(u,0)} días`; sub = `antes ${nx(p,0)} · promedio ${nx(avg,0)}`; est = u>p*1.03 ? ["Sube","neg"] : u<p*0.97 ? ["Baja","pos"] : ["Estable",""];
-      vd = u>p*1.03 ? ["bear","El stock se acumula: suele anticipar precios más bajos."] : u<p*0.97 ? ["bull","El stock baja: la memoria se vende sola."] : ["neu","Stock estable."]; }
+      vd = u>p*1.03 ? ["bear","El stock se acumula: suele anticipar menos ventas o precios más bajos."] : u<p*0.97 ? ["bull","El stock baja: lo que fabrican se vende solo."] : ["neu","Stock estable."]; }
     else if (v.frec==="mensual"){ big = pct(v.anual,0); sub = `vs. hace un año · 3 meses: ${pct(v.trim,0)}`; est = v.trim>0.05 ? ["Sube","pos"] : v.trim<-0.05 ? ["Baja","neg"] : ["Estable",""];
       vd = v.trim>0.05 ? ["bull","Las ventas siguen creciendo."] : v.trim<-0.05 ? ["bear","Las ventas caen: en 2018 y 2021 la primera caída marcó el pico."] : ["neu","Ventas planas."]; }
-    else { big = `US$ ${nx(v.valor,1)} mil M`; sub = `en 12 meses · ${pct(v.anual,0)} en un año`; est = v.anual>0.05 ? ["Sube", k==="mu_capex"?"":"pos"] : v.anual<-0.05 ? ["Baja", k==="mu_capex"?"":"neg"] : ["Estable",""];
-      vd = k==="mu_capex" ? (v.anual>0.3 ? ["bear","Los fabricantes invierten fuerte: en uno o dos años puede sobrar memoria."] : v.anual<0 ? ["bull","Recortan inversión: menos oferta a futuro."] : ["neu","Inversión moderada."])
+    else { big = `US$ ${nx(v.valor,1)} mil M`; sub = `en 12 meses · ${pct(v.anual,0)} en un año`; est = v.anual>0.05 ? ["Sube", sup?"":"pos"] : v.anual<-0.05 ? ["Baja", sup?"":"neg"] : ["Estable",""];
+      vd = sup ? (v.anual>0.3 ? ["bear","Los fabricantes invierten fuerte: en uno o dos años puede sobrar memoria."] : v.anual<0 ? ["bull","Recortan inversión: menos oferta a futuro."] : ["neu","Inversión moderada."])
         : (v.anual>0.05 ? ["bull","Los clientes siguen invirtiendo: hay demanda."] : v.anual<-0.05 ? ["bear","Los clientes recortan: menos demanda."] : ["neu","Demanda estable."]); }
-    out.push(`<div class="ctile" style="--tc:${c}"><span class="ct-n">${esc(v.corto)}</span>${vdTag(vd)}<b>${big}</b><em class="${est[1]}">${est[0]}</em><small>${sub}</small>${spk2(s.slice(k==="nanya"?-48:-16), c)}<small class="vdr">${esc(vd[1])}</small><small class="mut">${v.frec==="mensual"?mesTxt(v.ultimo):trimTxt(v.ultimo)}</small></div>`); });
+    out.push(`<div class="ctile" style="--tc:${c}"><span class="ct-n">${esc(v.corto)}</span>${vdTag(vd)}<b>${big}</b><em class="${est[1]}">${est[0]}</em><small>${sub}</small>${spk2(s.slice(v.frec==="mensual"?-48:-16), c)}<small class="vdr">${esc(vd[1])}</small><small class="mut">${v.frec==="mensual"?mesTxt(v.ultimo):trimTxt(v.ultimo)}</small></div>`); });
   const ps = pronosSerie(cf.pronos_de || (cf.pronos ? bid : ""), cf.solo);
   if (ps){ const xs = ps.xs, u = xs[xs.length-1], pv = xs.slice(-5,-1).filter(x=>x.m!=null), mx = pv.length ? pv.reduce((a,b)=>b.m>a.m?b:a) : null;
     const fr = mx && u.m!=null && mx.m>15 && u.m<mx.m/2;
@@ -854,7 +855,7 @@ function cicloCard(f){
   const meses = []; if (fin) for (let n = mesN(ini); n <= mesN(fin); n++) meses.push(mesK(n));
   const ix = Object.fromEntries(meses.map((k,i)=>[k,i]));
   const norm = ser.filter(s=>s.d.length>1).map(s=>{ const b = s.d[0][1]; return {...s, b, p:s.d.filter(q=>q[0] in ix && q[1]>0).map(q=>[ix[q[0]], Math.log(q[1]/b*100)]), u:s.d[s.d.length-1][1]/b}; });
-  const ciclos = (cf.picos||[]).map(([n,mv])=>{ const c = cf.ciclos.find(z=>z[0]===n), pr = relA.filter(p=>p[0]>=c[1] && p[0]<=c[2]); return {n, mv, pa: pr.length ? pr.reduce((a,b)=>b[1]>a[1]?b:a) : null}; });
+  const ciclos = (cf.picos||[]).map(([n,mv])=>{ const c = cf.ciclos.find(z=>z[0]===n), hasta = mesK(Math.min(mesN(c[2]), mesN(mv)+3)), pr = relA.filter(p=>p[0]>=c[1] && p[0]<=hasta); return {n, mv, pa: pr.length ? pr.reduce((a,b)=>b[1]>a[1]?b:a) : null}; });
   let chart = "";
   if (norm.length && meses.length>2){
     const all = norm.flatMap(s=>s.p.map(q=>q[1])), lo = Math.min(...all), hi = Math.max(...all), W=620, H=240, pl=44, pb=22;
@@ -878,7 +879,7 @@ function cicloCard(f){
       <div class="seg">${[["0","Precio"],["1","Contra el SPY"]].map(([p,t])=>`<button data-crel="${p}" class="${(rel?"1":"0")===p?"on":""}">${t}</button>`).join("")}</div>
       <div class="seg">${[["3y","3 años"],["5y","5 años"],["todo","Desde 2015"]].map(([p,t])=>`<button data-cper="${p}" class="${per===p?"on":""}">${t}</button>`).join("")}</div></div></div>
     ${chart}
-    ${hist.length?`<p class="small" style="margin:8px 0 0">Ciclos anteriores · ${hist.join(" · ")}. La acción se adelantó a las ventas.</p>`:""}
+    ${hist.length?`<p class="small" style="margin:8px 0 0">Ciclos anteriores · ${hist.join(" · ")}.${ciclos.every(c=>c.pa && mesN(c.mv)>mesN(c.pa[0])) ? " En los dos, la acción se adelantó a las ventas." : ""}</p>`:""}
     <details class="help" style="margin-top:12px"><summary>Qué es cada dato y de dónde sale</summary><dl>${glos}</dl></details></section>`;
 }
 const ETQ = {clara:["Clara","var(--pos)"], reciente:["Incluida a mano","var(--accent)"], indicio:["Puede ser casualidad","var(--muted)"], vuelta:["Se dio vuelta","var(--neg)"], antigua:["Solo antes de 2015","var(--muted)"], "":["Sin relación","var(--muted)"]};
