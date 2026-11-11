@@ -21,7 +21,10 @@ CAPEX = ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProduct
 BLOQUES = {
     "memorias": {
         "indicadores": ["nanya", "hyper", "mu_capex"],
-        "nota": "Datos del ciclo de la memoria. No son motores medidos: la acción suele moverse antes que estos datos, que confirman en qué parte del ciclo estamos.",
+        "empresas": ["MU", "SKHY"],
+        "ciclos": [["2018", "2017-01", "2019-12"], ["2021", "2020-06", "2022-12"]],
+        "base": "nanya",
+        "nota": "Datos del ciclo de la memoria DRAM. No son motores medidos: la acción suele moverse antes que estos datos, que confirman en qué parte del ciclo estamos.",
     }
 }
 
@@ -56,7 +59,11 @@ def nanya():
     t3 = s.rolling(3).sum().dropna()
     a = s.iloc[-3:].sum() / s.iloc[-15:-12].sum() - 1 if len(s) >= 15 else None
     p = s.iloc[-3:].sum() / s.iloc[-6:-3].sum() - 1 if len(s) >= 6 else None
+    yy = (t3 / t3.shift(12) - 1).dropna()
+    prev = yy[yy.index < pd.Period("2023-01", "M")]
     return {
+        "max_previo": [float(prev.max()), str(prev.idxmax())],
+        "base3": [[str(k), float(v)] for k, v in t3.items()],
         "nombre": "Ventas de memoria DRAM (Nanya)",
         "corto": "Ventas DRAM",
         "frec": "mensual",
@@ -114,12 +121,15 @@ def capex_ind(df, nombre, corto, que, fuente):
     a = ttm.iloc[-1] / ttm.iloc[-5] - 1 if len(ttm) >= 5 else None
     p = tot.iloc[-1] / tot.iloc[-5] - 1 if len(tot) >= 5 else None
     serie = [[str(k.asfreq("M", "end")), float(v) / 1e9] for k, v in ttm.items() if k >= pd.Period("2015Q1", "Q")]
+    yy = (ttm / ttm.shift(4) - 1).dropna()
+    prev = yy[yy.index < pd.Period("2023Q1", "Q")]
     ult = df.iloc[-1]
     return {
         "nombre": nombre, "corto": corto, "frec": "trimestral", "fuente": fuente, "que": que,
         "ultimo": str(df.index[-1]), "anual": a, "trim": p, "unidad": "miles de millones de USD (últimos 12 meses)",
         "detalle": {k: round(float(v) / 1e9, 1) for k, v in ult.items()},
         "valor": round(float(ttm.iloc[-1]) / 1e9, 1),
+        "max_previo": [float(prev.max()), str(prev.idxmax())] if len(prev) else None,
         "serie": serie,
     }
 
@@ -149,7 +159,7 @@ def main():
         m = capex({"MU": 723125})
         print(m.tail(6).div(1e9).round(2).to_string(), file=sys.stderr)
         ind["mu_capex"] = capex_ind(m, "Inversión de Micron", "Inversión Micron",
-                                    "Lo que invierte Micron en fábricas, en los últimos 12 meses. Es la oferta futura: cuando los fabricantes invierten fuerte a la vez, uno o dos años después suele sobrar memoria y los precios caen.",
+                                    "Lo que invierte Micron en fábricas, en los últimos 12 meses. Es la oferta futura: cuando los fabricantes invierten fuerte a la vez, uno o dos años después suele sobrar memoria y los precios caen. Es una aproximación: Samsung y SK Hynix no presentan balances a la SEC, así que no están.",
                                     "Balances trimestrales de Micron presentados a la SEC.")
     except Exception as e:
         print(f"mu_capex: {e}", file=sys.stderr)
@@ -161,6 +171,12 @@ def main():
     except Exception as e:
         print(f"precios: {e}", file=sys.stderr)
         px = {}
+    for b, v in BLOQUES.items():
+        if v.get("base") in ind:
+            t3 = pd.Series({pd.Period(k, "M"): x for k, x in ind[v["base"]]["base3"]})
+            v["picos"] = [[n, str(t3[a:z].idxmax())] for n, a, z in v["ciclos"]]
+    for k in ind:
+        ind[k].pop("base3", None)
     out = {
         "actualizado": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "indicadores": ind,
