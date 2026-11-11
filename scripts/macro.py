@@ -68,10 +68,15 @@ def mes(s):
 
 
 def infl_impulso(s):
-    m = mes(s)
+    m0 = mes(s)
+    m = np.exp(np.log(m0).interpolate(limit_area="inside"))
+    est = (m0.isna() & m.notna()).astype(bool)
     ann3 = (m / m.shift(3)) ** 4 - 1
     yoy = m / m.shift(12) - 1
-    return (ann3 - yoy) * 100, yoy * 100, f"{yoy.dropna().iloc[-1] * 100:.1f}% anual · {ann3.dropna().iloc[-1] * 100:.1f}% anualizado 3m"
+    u = yoy.dropna().index[-1]
+    usa_est = bool(est.shift(12, fill_value=False).loc[u] or est.shift(3, fill_value=False).loc[u] or est.loc[u])
+    nota = " · compara con un mes estimado (sin dato oficial)" if usa_est else ""
+    return (ann3 - yoy) * 100, yoy * 100, f"{yoy.dropna().iloc[-1] * 100:.1f}% anual · {ann3.dropna().iloc[-1] * 100:.1f}% anualizado 3m{nota}"
 
 
 def indicadores(f, y):
