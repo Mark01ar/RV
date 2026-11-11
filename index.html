@@ -52,6 +52,13 @@ tbody tr:hover{background:var(--panel)}
 td.tk{color:var(--accent);font-weight:600}
 td.tk small{color:var(--muted);font-weight:400;margin-left:4px}
 td.nm{max-width:220px;overflow:hidden;text-overflow:ellipsis;font-family:var(--sans)}
+td.lt{font-size:15px;white-space:nowrap}td.ln{font-size:15px;font-weight:500;color:var(--text)}
+.logo-s.logo-l{width:30px;height:30px;border-radius:6px}
+th.sub,td.sub{padding-left:6px;padding-right:6px}th.sub{font-size:10px}
+td.lm{max-width:230px;white-space:normal;font-size:12px;line-height:1.35}
+.nmini{font-family:var(--mono);font-weight:600;font-size:12.5px}
+.perf{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid;white-space:nowrap}
+.perf.p0{color:#7ad19a;border-color:#7ad19a55;background:#7ad19a14}.perf.p1{color:#e0c26a;border-color:#e0c26a55;background:#e0c26a14}.perf.p2{color:#ef7b7b;border-color:#ef7b7b55;background:#ef7b7b14}
 .pos{color:var(--pos)}.neg{color:var(--neg)}.mut{color:var(--muted)}
 .tag{display:inline-block;padding:1px 6px;border:1px solid var(--line);font-size:11px}
 .tag.Alta{color:var(--pos);border-color:var(--pos)}
@@ -196,7 +203,7 @@ tr.det td{background:var(--panel);white-space:normal;text-align:left}
 .cxf td sup.ok{color:var(--pos);font-size:9px;margin-left:2px}.cxf tbody tr:hover{background:var(--panel2)}
 .fams2{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:0 14px;align-items:start}
 .fams2 h4{margin:4px 0 6px;font-size:12px;color:var(--muted);font-weight:600}
-td.lm{font-size:12px;white-space:nowrap}
+td.lm{font-size:12px;white-space:normal;max-width:230px;min-width:170px;line-height:1.35}
 .oos{margin:8px 0 4px}.oos td,.oos th{padding:4px 8px}
 @media(max-width:640px){.fams2{grid-template-columns:1fr}}
 .etq{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.04em;color:var(--ec);border:1px solid var(--ec);border-radius:20px;padding:1px 8px;margin-left:8px;vertical-align:middle;text-transform:uppercase}
@@ -986,6 +993,17 @@ async function factoresTab(m){
   m.querySelectorAll("[data-bs]").forEach(d=>d.onclick=()=>{EST.bloque=d.dataset.bs; EST.vista=null; EST.sel=null; tab="empresas"; navegar(); window.scrollTo(0,0); render();});
   m.querySelectorAll("[data-e]").forEach(d=>d.onclick=()=>{EST.sel=d.dataset.e; EST.ftab="sensib"; window.scrollTo(0,0); render();});
 }
+const PERF = ["Conservador","Moderado","Agresivo"];
+function perfil(x){
+  const r = x.riesgo || {}, v = r.vol, c = r.caida, so = x.notas?.solidez;
+  if (v==null || c==null) return null;
+  let n = v<0.25 && c>-0.35 ? 0 : v<0.45 && c>-0.55 ? 1 : 2;
+  if (so!=null && so<4 && n<2) n++;
+  return n;
+}
+const perfTag = x => { const n = perfil(x); return n==null ? '<span class="mut">—</span>' : `<span class="perf p${n}" title="Volatilidad anual ${pct(x.riesgo.vol,0)} · peor caída en 5 años ${pct(x.riesgo.caida,0)}${x.notas?.solidez<4?" · deuda alta":""}">${PERF[n]}</span>`; };
+const SUBN = [["calidad","Calidad"],["solidez","Solidez"],["crecimiento","Crecim."],["valuacion","Valuac."],["tendencia","Tendencia"],["analistas","Analistas"]];
+const mini = v => `<span class="nmini" style="color:${v==null?"var(--muted)":ncol(v)}">${v==null?"—":nx(v)}</span>`;
 async function lista(m){
   if (!E){ m.innerHTML = `<div class="soon"><h2>Lista</h2>Todavía no hay datos. Se generan con la próxima actualización.</div>`; return; }
   if (!FX){ m.innerHTML = `<p class="mut">Cargando…</p>`; await cargarFX(); }
@@ -993,14 +1011,16 @@ async function lista(m){
   const usados = FX.factores.filter(f=>L.some(x=>mot(x.byma).some(z=>z.f===f.id)));
   const q = (EST.lq||"").toLowerCase();
   const rows = L.filter(x=>(!q || (x.byma+" "+x.ticker+" "+x.nombre).toLowerCase().includes(q)) && (!EST.lb || BQDE(x.byma)?.id===EST.lb)
-    && (!EST.lm || (EST.lm==="ninguno" ? !mot(x.byma).length : mot(x.byma).some(z=>z.f===EST.lm))) && (!EST.liq || x.liquidez===EST.liq));
-  const V = {general:x=>x.notas?.general, bloque:x=>BQDE(x.byma)?.nombre, pefwd:x=>x.val?.pe_fwd>0?x.val.pe_fwd:null, mueve:x=>mot(x.byma).map(z=>FX.F[z.f]?.nombre).join(" ")||null};
+    && (!EST.lm || (EST.lm==="ninguno" ? !mot(x.byma).length : mot(x.byma).some(z=>z.f===EST.lm))) && (!EST.liq || x.liquidez===EST.liq) && (EST.lp==null || EST.lp==="" || perfil(x)===+EST.lp));
+  const V = {general:x=>x.notas?.general, perfil:x=>perfil(x), ...Object.fromEntries(SUBN.map(([k])=>[k, x=>x.notas?.[k]])), bloque:x=>BQDE(x.byma)?.nombre, pefwd:x=>x.val?.pe_fwd>0?x.val.pe_fwd:null, mueve:x=>mot(x.byma).map(z=>FX.F[z.f]?.nombre).join(" ")||null};
   const val = x => (V[EST.sort]||(y=>y[EST.sort]))(x);
   rows.sort((a,b)=>{ const va=val(a), vb=val(b); if (va==null) return 1; if (vb==null) return -1; return (typeof va==="string" ? va.localeCompare(vb) : va-vb)*EST.dir; });
   const th = (k,t,c="") => `<th class="${c}" data-s="${k}">${t}${EST.sort===k?(EST.dir>0?" ▲":" ▼"):""}</th>`;
   m.innerHTML = `<details class="help"><summary>Cómo leer esta lista</summary>
     <p>Las ${L.length} empresas con CEDEAR más operadas en BYMA. Tocá una fila para abrir su ficha; marcá hasta 4 para comparar sus precios.</p>
     <dl><dt>Nota</dt><dd>Resumen de la ficha: calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15% y tendencia 10%. Sirve para ordenar y ubicarse rápido; no es una señal de compra.</dd>
+    <dt>Perfil</dt><dd>Para qué tipo de cliente encaja por cuánto se mueve. Conservador: volatilidad anual menor a 25% y peor caída de los últimos 5 años menor a 35%. Moderado: volatilidad menor a 45% y caída menor a 55%. Agresivo: el resto. Si la empresa tiene mucha deuda (solidez menor a 4) sube un escalón. Pasá el mouse por encima para ver los números.</dd>
+    <dt>Calidad, Solidez, Crecim., Valuac., Tendencia, Analistas</dt><dd>Las notas de 1 a 10 que arman la nota general. Tocá el encabezado para ordenar por cada una.</dd>
     <dt>Lo mueve</dt><dd>Los factores que la mueven más allá del mercado, con relación sólida. ✔: firme. Vacío: se mueve sobre todo por su propio negocio.</dd>
     <dt>vs MA200</dt><dd>Distancia al promedio de las últimas 200 ruedas.</dd>
     <dt>P/E esp.</dt><dd>Precio sobre la ganancia que esperan los analistas para los próximos 12 meses.</dd>
@@ -1009,22 +1029,24 @@ async function lista(m){
     <input id="lq" placeholder="Buscar ticker o empresa" value="${esc(EST.lq||"")}">
     <select id="lb"><option value="">Todos los bloques</option>${BQ.bloques.map(b=>`<option value="${b.id}" ${b.id===EST.lb?"selected":""}>${esc(b.nombre)}</option>`).join("")}</select>
     <select id="lm"><option value="">Cualquier motor</option>${usados.map(f=>`<option value="${f.id}" ${f.id===EST.lm?"selected":""}>Se mueve con: ${esc(f.nombre)}</option>`).join("")}<option value="ninguno" ${EST.lm==="ninguno"?"selected":""}>Sin motor claro</option></select>
+    <select id="lp"><option value="">Todo perfil</option>${PERF.map((p,i)=>`<option value="${i}" ${String(i)===String(EST.lp??"")?"selected":""}>${p}</option>`).join("")}</select>
     <select id="ll"><option value="">Toda liquidez</option>${["Alta","Media","Baja","Muy baja"].map(s=>`<option ${s===EST.liq?"selected":""}>${s}</option>`).join("")}</select>
     <button class="btn" id="ecmp" style="margin:0" ${CMP.length<2?"disabled":""}>Comparar${CMP.length?` (${CMP.length})`:""}</button>${CMP.length?`<button class="btn" id="elim" style="margin:0">Limpiar</button>`:""}
     <span class="count">${rows.length} de ${L.length}</span>
   </div>
-  <div class="wrap"><table><thead><tr><th></th>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("bloque","Bloque","l")}${th("general","Nota")}${th("mueve","Lo mueve","l")}${th("r3m","3M")}${th("r12m","12M")}${th("vs_ma200","vs MA200")}${th("pefwd","P/E esp.")}${th("premio","Premio")}${th("liquidez","Liquidez","l")}${th("proximo_balance","Balance")}</tr></thead>
+  <div class="wrap"><table><thead><tr><th></th>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("bloque","Bloque","l")}${th("general","Nota")}${th("perfil","Perfil","l")}${SUBN.map(([k,t])=>th(k,t,"c-a sub")).join("")}${th("mueve","Lo mueve","l")}${th("vs_ma200","vs MA200")}${th("pefwd","P/E esp.")}${th("premio","Premio")}${th("liquidez","Liquidez","l")}${th("proximo_balance","Balance")}</tr></thead>
   <tbody>${rows.map(x=>{ const ms = mot(x.byma); return `<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td><input type="checkbox" class="cmpk" data-c="${esc(x.ticker)}" ${CMP.includes(x.ticker)?"checked":""}></td>
-    <td class="tk l">${logoImg(x.byma,"logo-s")}${esc(x.byma)}</td><td class="nm l">${esc(x.nombre)}</td><td class="l mut">${esc(BQDE(x.byma)?.nombre||"—")}</td><td>${chip(x.notas?.general)}</td>
+    <td class="tk l lt">${logoImg(x.byma,"logo-s logo-l")}${esc(x.byma)}</td><td class="nm l ln">${esc(x.nombre)}</td><td class="l mut">${esc(BQDE(x.byma)?.nombre||"—")}</td><td>${chip(x.notas?.general)}</td><td class="l">${perfTag(x)}</td>${SUBN.map(([k])=>`<td class="c-a sub">${mini(x.notas?.[k])}</td>`).join("")}
     <td class="l lm">${ms.length?ms.map(z=>`${esc(FX.F[z.f]?.nombre||z.f)}${okm(FX.empresas[x.byma].f[z.f]?.v)}`).join(" · "):'<span class="mut">—</span>'}</td>
-    <td class="${cls(x.r3m)}">${pct(x.r3m,0)}</td><td class="${cls(x.r12m)}">${pct(x.r12m,0)}</td><td class="${cls(x.vs_ma200)}">${pct(x.vs_ma200,0)}</td><td>${x.val?.pe_fwd>0?nx(x.val.pe_fwd)+"x":"—"}</td>
+    <td class="${cls(x.vs_ma200)}">${pct(x.vs_ma200,0)}</td><td>${x.val?.pe_fwd>0?nx(x.val.pe_fwd)+"x":"—"}</td>
     <td class="${x.premio>0.03?"neg":x.premio<-0.03?"pos":""}">${pct(x.premio)}</td><td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td><td>${fch2(x.proximo_balance)}</td></tr>`; }).join("")}</tbody></table></div>`;
   const re = ()=>lista(m);
   m.querySelector("#lq").oninput = e=>{EST.lq=e.target.value; re(); const i=m.querySelector("#lq"); i.focus(); i.setSelectionRange(i.value.length,i.value.length);};
   m.querySelector("#lb").onchange = e=>{EST.lb=e.target.value; re();};
   m.querySelector("#lm").onchange = e=>{EST.lm=e.target.value; re();};
   m.querySelector("#ll").onchange = e=>{EST.liq=e.target.value; re();};
-  m.querySelectorAll("th[data-s]").forEach(h=>h.onclick=()=>{const k=h.dataset.s; if (EST.sort===k) EST.dir*=-1; else {EST.sort=k; EST.dir=["byma","nombre","bloque","mueve","liquidez","proximo_balance"].includes(k)?1:-1;} re();});
+  m.querySelector("#lp").onchange = e=>{EST.lp=e.target.value; re();};
+  m.querySelectorAll("th[data-s]").forEach(h=>h.onclick=()=>{const k=h.dataset.s; if (EST.sort===k) EST.dir*=-1; else {EST.sort=k; EST.dir=["byma","nombre","bloque","mueve","liquidez","proximo_balance","perfil"].includes(k)?1:-1;} re();});
   m.querySelectorAll("tr[data-e]").forEach(r=>r.onclick=e=>{ if (e.target.classList.contains("cmpk")) return; EST.sel=r.dataset.e; EST.ftab="resumen"; window.scrollTo(0,0); render();});
   m.querySelectorAll(".cmpk").forEach(c=>c.onchange=()=>{ const t=c.dataset.c, i=CMP.indexOf(t); if (c.checked && i<0){ if (CMP.length>=4){ c.checked=false; return; } CMP.push(t); } else if (!c.checked && i>=0) CMP.splice(i,1); re(); });
   const bc = m.querySelector("#ecmp"); if (bc) bc.onclick = ()=>{ EST.vista="cmp"; window.scrollTo(0,0); render(); };

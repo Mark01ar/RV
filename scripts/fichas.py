@@ -62,6 +62,11 @@ def liquidez(m):
     return "Alta" if m >= 1e6 else "Media" if m >= 2e5 else "Baja" if m >= 3e4 else "Muy baja"
 
 
+def riesgo(f):
+    pb = f.get("precio_bloque") or {}
+    return {"vol": pb.get("vol1y"), "caida": pb.get("caida_max_5y"), "beta": pb.get("beta")}
+
+
 def fila(df, *nombres):
     if df is None or getattr(df, "empty", True):
         return None
@@ -716,6 +721,7 @@ def main():
                 e["sorpresa_media"] = media([z["sorpresa"] for z in ana.get("sorpresas", [])])
                 e["arriba_abajo"] = ((ana.get("suben_30d") or 0) - (ana.get("bajan_30d") or 0)) / max((ana.get("suben_30d") or 0) + (ana.get("bajan_30d") or 0), 1)
                 e["notas_abs"] = {k_: v for k_, v in ficha["notas_abs"].items() if k_ != "detalle"}
+                e["riesgo"] = riesgo(ficha)
                 e["ficha"] = True
                 fichas[t] = ficha
             except Exception as ex:
@@ -727,6 +733,7 @@ def main():
                 for c in ["proximo_balance", "rev90", "sorpresa_media", "arriba_abajo"]:
                     e[c] = (previo.get(t) or {}).get(c)
                 e["proximo_balance"] = e["proximo_balance"] or (fv.get("analistas") or {}).get("proximo_balance")
+                e["riesgo"] = riesgo(fv)
                 e["ficha"] = True
             except Exception:
                 pass
