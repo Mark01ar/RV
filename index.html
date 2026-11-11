@@ -422,10 +422,11 @@ async function sha(s){
   return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");
 }
 function ses(k,v){try{if(v===undefined)return sessionStorage.getItem(k);sessionStorage.setItem(k,v)}catch(e){return null}}
+function loc(k,v){try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}}
 
 document.getElementById("gf").addEventListener("submit", async e=>{
   e.preventDefault();
-  if (await sha(document.getElementById("gp").value) === HASH){ ses("rv_ok","1"); abrir(); }
+  if (await sha(document.getElementById("gp").value) === HASH){ ses("rv_ok","1"); loc("rv_clave",HASH); abrir(); }
   else document.getElementById("ge").textContent = "Clave incorrecta";
 });
 
@@ -1853,7 +1854,7 @@ function macro(m){
   m.querySelectorAll("[data-irb2]").forEach(b=>b.onclick=()=>{ EST.bloque=b.dataset.irb2; EST.sel=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
 }
 
-if (ses("rv_ok")==="1") abrir();
+if (ses("rv_ok")==="1" || loc("rv_clave")===HASH) abrir();
 </script>
 </body>
 </html>
