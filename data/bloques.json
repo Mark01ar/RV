@@ -50,7 +50,9 @@
      "WDC": "Desde la separación de SanDisk en 2025 es solo discos rígidos, que se usan en centros de datos para guardar datos en masa. Tiene menos competidores (básicamente Seagate) y un ciclo algo más suave. Los años anteriores mezclan negocios distintos y no son del todo comparables."
     }
    },
-   "motores_nota": "No hay un precio gratis de las memorias con historia larga, que sería el motor real. El cobre aparece como termómetro del ciclo industrial global."
+   "motores_nota": [
+    "Ningún factor macro explica bien el ciclo de la memoria. Para eso está el cuadro \"El ciclo de su sector\" en la ficha de MU, SKHY y SNDK: ventas, inventario, inversión y precios esperados."
+   ]
   },
   {
    "id": "chips",
