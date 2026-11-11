@@ -909,13 +909,9 @@ function queMueve(f){
     ${ctx?`<p class="lect" style="margin:0 0 6px">${ctx}</p>`:""}
     ${mo.length ? mo.map(fila).join("") : `<p class="lect">Sin motor macro claro: se mueve sobre todo por su propio negocio.</p>`}
     ${sol.length?`<p class="mut small">También aparece relacionada con ${sol.slice(0,4).map(z=>esc(z.toLowerCase())).join(", ")}${sol.length>4?" y otros":""}, que se mueven junto con lo de arriba: cuando se miran juntos, cuesta separar cuál la mueve.</p>`:""}
+    <p class="mut small">Se probaron ${FX.factores.length} factores; solo se muestran los que tienen relación clara con esta empresa. <a href="#" data-como="1">Cómo se mide →</a></p>
     ${LEYENDA}</div>`;
-  const filas = FX.factores.map(ff=>({f:ff, z:x.f?.[ff.id], e:etqEmp(f.byma, ff.id)})).filter(p=>p.z);
-  filas.sort((a,b)=>(solido(b.e)-solido(a.e)) || Math.abs(b.z.r?.ef||0)-Math.abs(a.z.r?.ef||0));
-  const card2 = `<div class="card"><h3>Todos los factores <span class="mut">· un mes típico de cada uno</span></h3><div class="wrap" style="max-height:none"><table class="tb2 tbf"><thead><tr><th class="l">Factor</th><th>Desde 2015</th><th class="c-a">2015–21</th><th class="c-a">2022–hoy</th><th class="l">Relación</th><th class="l">Firme</th></tr></thead><tbody>
-    ${filas.map(p=>`<tr${solido(p.e)?"":` style="opacity:.6"`}><td class="l">${esc(p.f.nombre)}<span class="mut small c-t"> ${tipTxt(p.f)}</span></td><td class="${solido(p.e)?cls(p.z.r?.ef):""}">${efTxt(p.z.r?.ef)}</td><td class="mut c-a">${efTxt(p.z.h1?.ef)}</td><td class="mut c-a">${efTxt(p.z.h2?.ef)}</td><td class="l">${etqc(p.e)}</td><td class="l">${solido(p.e)&&VAL[p.z.v]?`<span style="color:${VAL[p.z.v][1]};font-weight:700" title="${VAL[p.z.v][2]}">${VAL[p.z.v][0].split(" ")[0]}</span>`:""}</td></tr>`).join("")}</tbody></table></div>
-    <p class="mut small">Cada factor por separado. Clara: aparece en 2015–2021 y en 2022–hoy. Invertida: fuerte en los dos períodos pero en sentido contrario, así que no sirve como guía. A mano: incluida por lógica económica. No: sin relación firme. ✔: tampoco depende de dónde se corte el período.</p></div>`;
-  return `<section class="fgrid" style="align-items:start">${card1}${card2}</section>`;
+  return card1;
 }
 function cuadroBloque(bl){
   const xb = FX?.bloques?.[bl.id], nota = bl.motores_nota ? `<div class="aviso">${esc(bl.motores_nota)}</div>` : "";
