@@ -18,9 +18,20 @@ UA = {"User-Agent": "MaQ RV research marcosracimo@gmail.com"}
 MESES = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
 HYPER = {"MSFT": 789019, "GOOGL": 1652044, "AMZN": 1018724, "META": 1326801}
 CAPEX = ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"]
+COSTO = ["CostOfGoodsAndServicesSold", "CostOfRevenue"]
+INVENT = ["InventoryNet"]
+EMPRESAS = {
+    "SNDK": {
+        "indicadores": ["hyper"],
+        "pronos_de": "memorias",
+        "solo": "nand",
+        "per": "3y",
+        "nota": "Datos del ciclo de la memoria NAND, que es lo que vende Sandisk. No son motores medidos: la acción suele moverse antes que estos datos. Sandisk cotiza sola desde febrero de 2025, así que hay poca historia propia.",
+    }
+}
 BLOQUES = {
     "memorias": {
-        "indicadores": ["nanya", "hyper", "mu_capex"],
+        "indicadores": ["nanya", "mu_inv", "hyper", "mu_capex"],
         "empresas": ["MU", "SKHY"],
         "ciclos": [["2018", "2017-01", "2019-12"], ["2021", "2020-06", "2022-12"]],
         "base": "nanya",
@@ -76,11 +87,36 @@ def nanya():
     }
 
 
-def trimestres(cik):
-    f = requests.get(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json", headers=UA, timeout=60).json()
-    g = f.get("facts", {}).get("us-gaap", {})
+HECHOS = {}
+
+
+def hechos(cik):
+    if cik not in HECHOS:
+        HECHOS[cik] = requests.get(f"https://data.sec.gov/api/xbrl/companyfacts/CIK{cik:010d}.json", headers=UA, timeout=60).json().get("facts", {}).get("us-gaap", {})
+    return HECHOS[cik]
+
+
+def instantes(cik, conceptos):
+    g = hechos(cik)
     d = {}
-    for pri, n in enumerate(CAPEX):
+    for pri, n in enumerate(conceptos):
+        for e in g.get(n, {}).get("units", {}).get("USD", []):
+            if "start" in e or e.get("form") not in ("10-Q", "10-K", "10-Q/A", "10-K/A"):
+                continue
+            per = pd.Period(pd.Timestamp(e["end"]) - pd.Timedelta(days=10), "Q")
+            k = (per, pri)
+            if k not in d or e["filed"] > d[k][1]:
+                d[k] = (float(e["val"]), e["filed"])
+    out = {}
+    for (per, pri), (v, _) in sorted(d.items(), key=lambda z: -z[0][1]):
+        out[per] = v
+    return pd.Series(out).sort_index()
+
+
+def trimestres(cik, conceptos=CAPEX):
+    g = hechos(cik)
+    d = {}
+    for pri, n in enumerate(conceptos):
         for e in g.get(n, {}).get("units", {}).get("USD", []):
             if "start" not in e or e.get("form") not in ("10-Q", "10-K", "10-Q/A", "10-K/A"):
                 continue
@@ -135,6 +171,25 @@ def capex_ind(df, nombre, corto, que, fuente):
     }
 
 
+def inventario(cik, nombre, corto):
+    inv = instantes(cik, INVENT)
+    cg = trimestres(cik, COSTO)
+    dias = (inv / cg * 91).dropna()
+    dias = dias[dias.index >= pd.Period("2014Q1", "Q")]
+    h = dias[dias.index >= pd.Period("2015Q1", "Q")]
+    ult = float(dias.iloc[-1])
+    return {
+        "nombre": nombre, "corto": corto, "frec": "trimestral",
+        "fuente": "Balances trimestrales de Micron presentados a la SEC (inventario sobre costo de ventas).",
+        "que": "Cuántos días de ventas tiene Micron guardados en stock. Es la señal clásica del ciclo: cuando la memoria se vende sola el stock baja; cuando empieza a sobrar, se acumula y los precios caen después.",
+        "ultimo": str(dias.index[-1]),
+        "anual": float(dias.iloc[-1] / dias.iloc[-5] - 1) if len(dias) >= 5 else None,
+        "trim": float(dias.iloc[-1] / dias.iloc[-2] - 1) if len(dias) >= 2 else None,
+        "lectura": f"Hoy: <b>{ult:.0f} días</b> de stock. Promedio desde 2015: {h.mean():.0f} días. Lo más alto fue {h.max():.0f} días ({str(h.idxmax())[-1]}.º trim. {str(h.idxmax())[:4]}), en plena caída de precios; lo más bajo, {h.min():.0f} días ({str(h.idxmin())[-1]}.º trim. {str(h.idxmin())[:4]}). En el último trimestre pasó de {float(dias.iloc[-2]):.0f} a {ult:.0f} días.",
+        "serie": [[str(k.asfreq("M", "end")), round(float(v), 1)] for k, v in h.items()],
+    }
+
+
 def precios(tks):
     px = yf.download(sorted(set(tks)), start="2014-10-01", auto_adjust=True, progress=False, threads=True)["Close"]
     px = px.ffill().resample("ME").last()
@@ -164,6 +219,11 @@ def main():
                                     "Balances trimestrales de Micron presentados a la SEC.")
     except Exception as e:
         print(f"mu_capex: {e}", file=sys.stderr)
+    try:
+        ind["mu_inv"] = inventario(723125, "Días de inventario de Micron", "Inventario Micron")
+        print("mu_inv", ind["mu_inv"]["serie"][-8:], file=sys.stderr)
+    except Exception as e:
+        print(f"mu_inv: {e}", file=sys.stderr)
     em = {x["byma"]: x["ticker"] for x in json.loads((D / "empresas.json").read_text())["empresas"]}
     bl = {b["id"]: b for b in json.loads((D / "bloques.json").read_text())["bloques"]}
     tks = {b: [em[e] for e in bl[b]["empresas"] if e in em] for b in BLOQUES if b in bl}
@@ -193,6 +253,7 @@ def main():
         "bloques": {b: {**v, "indicadores": [i for i in v["indicadores"] if i in ind]} for b, v in BLOQUES.items()},
         "precios": {t: px[t] for t in px},
         "pronos": pronos,
+        "empresas": {e: {**v, "indicadores": [i for i in v["indicadores"] if i in ind]} for e, v in EMPRESAS.items()},
     }
     SALIDA.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
     for k, v in ind.items():

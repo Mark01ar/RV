@@ -788,42 +788,45 @@ async function cargarFX(){
   return FX;
 }
 let CI = null;
-const CICOL = ["#6ea8ff","#5fb3a1","#c792ea"];
+const CICOL = ["#6ea8ff","#5fb3a1","#c792ea"], CIC = {nanya:"#6ea8ff", mu_inv:"#f78c6c", hyper:"#5fb3a1", mu_capex:"#c792ea"}, colI = k => CIC[k] || "#9aa5c8";
 const mesTxt = k => { const [y,m] = k.split("-"); return ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"][+m-1]+" "+y; };
 const trimTxt = k => { const [y,q] = k.split("Q"); return `${q}.º trim. ${y}`; };
 const mesN = k => { const [y,m] = k.split("-").map(Number); return y*12+m-1; };
 const mesK = n => `${Math.floor(n/12)}-${String(n%12+1).padStart(2,"0")}`;
-function pronosHTML(bid){
+function pronosHTML(bid, solo){
   const P = CI?.pronos?.[bid]; if (!P || !P.serie?.length) return "";
+  const vDr = solo!=="nand", vNd = solo!=="dram";
   const xs = P.serie.map(([q,pub,a,b,c,d,nota])=>({q, pub, dr:a!=null&&b!=null?(a+b)/2:null, nd:c!=null&&d!=null?(c+d)/2:null, a,b,c,d, nota}));
-  const W=620, H=175, pl=50, pb=24, n=xs.length, all = xs.flatMap(x=>[x.dr,x.nd]).filter(v=>v!=null), hi = Math.max(10,...all), lo = Math.min(0,...all);
+  const W=620, H=175, pl=50, pb=24, n=xs.length, all = xs.flatMap(x=>[vDr?x.dr:null, vNd?x.nd:null]).filter(v=>v!=null), hi = Math.max(10,...all), lo = Math.min(0,...all);
   const Y = v => 10 + (hi-v)/(hi-lo)*(H-pb-10), bw = (W-pl-8)/n, X = i => pl + i*bw;
   const tk = [-20,0,20,40,60,80].filter(v=>v>=lo-1&&v<=hi+1).map(v=>`<line x1="${pl}" x2="${W-8}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"${v===0?' stroke-width="1.5"':""}/><text x="${pl-5}" y="${Y(v)+4}" text-anchor="end">${v>0?"+":""}${v}%</text>`).join("");
   const bar = (i,v,o,c) => v==null ? "" : `<rect x="${(X(i)+o).toFixed(1)}" y="${Math.min(Y(v),Y(0)).toFixed(1)}" width="${(bw*0.38).toFixed(1)}" height="${Math.max(1,Math.abs(Y(v)-Y(0))).toFixed(1)}" fill="${c}" opacity="${v<0?0.55:0.9}"><title>${esc(xs[i].q)}: ${v>0?"+":""}${nx(v,1)}%</title></rect>`;
-  const bars = xs.map((x,i)=>bar(i,x.dr,bw*0.1,"#6ea8ff")+bar(i,x.nd,bw*0.52,"#c792ea")).join("");
+  const bars = xs.map((x,i)=>(vDr?bar(i,x.dr,vNd?bw*0.1:bw*0.25,"#6ea8ff"):"")+(vNd?bar(i,x.nd,vDr?bw*0.52:bw*0.25,"#c792ea"):"")).join("");
   const yrs = xs.map((x,i)=>x.q.endsWith("Q1")?`<text x="${X(i)+2}" y="${H-8}">${x.q.slice(0,4)}</text>`:"").join("");
-  const u = xs[n-1], prev = xs.slice(-5,-1).filter(x=>x.dr!=null), mx = prev.length ? prev.reduce((a,b)=>b.dr>a.dr?b:a) : null;
+  const K = vDr ? "dr" : "nd", lo_ = vDr ? "a" : "c", hi_ = vDr ? "b" : "d", nomK = vDr ? "DRAM" : "NAND";
+  const u = xs[n-1], prev = xs.slice(-5,-1).filter(x=>x[K]!=null), mx = prev.length ? prev.reduce((a,b)=>b[K]>a[K]?b:a) : null;
   const rng = (a,b) => a==null ? "sin dato" : `${a>0?"+":""}${a}% a ${b>0?"+":""}${b}%`;
   const qtxt = q => `${["1.er","2.º","3.er","4.º"][+q.slice(-1)-1]} trim. ${q.slice(0,4)}`;
-  const freno = mx && u.dr!=null && mx.dr>15 && u.dr < mx.dr/2 ? ` La suba esperada de DRAM se frenó: de ${rng(mx.a,mx.b)} en el ${qtxt(mx.q)} a ${rng(u.a,u.b)} ahora. Los precios siguen subiendo, pero bastante más despacio.` : "";
+  const freno = mx && u[K]!=null && mx[K]>15 && u[K] < mx[K]/2 ? ` La suba esperada de ${nomK} se frenó: de ${rng(mx[lo_],mx[hi_])} en el ${qtxt(mx.q)} a ${rng(u[lo_],u[hi_])} ahora. Los precios siguen subiendo, pero bastante más despacio.` : "";
   return `<div class="mot" style="margin-top:12px"><div class="mot-h"><b>Cuánto se espera que suba el precio de la memoria</b><span class="mut small" style="margin-left:8px">último: ${qtxt(u.q)}</span></div>
     <svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Pronósticos de precio de memoria por trimestre">${tk}${bars}${yrs}</svg>
-    <div class="leg"><span style="color:#6ea8ff">■ DRAM</span> <span style="color:#c792ea">■ NAND</span> <span class="mut">· cambio esperado contra el trimestre anterior (punto medio del rango)</span></div>
-    <p class="mot-t">Último pronóstico (${qtxt(u.q)}, publicado ${fch2(u.pub)}): DRAM <b>${rng(u.a,u.b)}</b>, NAND <b>${rng(u.c,u.d)}</b>.${freno} En lo medido desde 2021, la acción se movió sobre todo el trimestre <b>antes</b> de que salga cada pronóstico: sirve para ubicar el ciclo, no para anticiparlo.</p>
+    <div class="leg">${vDr?'<span style="color:#6ea8ff">■ DRAM</span> ':""}${vNd?'<span style="color:#c792ea">■ NAND</span>':""} <span class="mut">· cambio esperado contra el trimestre anterior (punto medio del rango)</span></div>
+    <p class="mot-t">Último pronóstico (${qtxt(u.q)}, publicado ${fch2(u.pub)}): ${[vDr?`DRAM <b>${rng(u.a,u.b)}</b>`:"", vNd?`NAND <b>${rng(u.c,u.d)}</b>`:""].filter(Boolean).join(", ")}.${freno} En lo medido con MU y SK Hynix desde 2021, la acción se movió sobre todo el trimestre <b>antes</b> de que salga cada pronóstico: sirve para ubicar el ciclo, no para anticiparlo.</p>
     <p class="mut small" style="margin:-4px 0 2px">Fuente: ${esc(P.fuente)}</p></div>`;
 }
 function cicloCard(f){
-  const bl = BQDE(f.byma), cf = bl && CI?.bloques?.[bl.id];
-  if (!cf || !cf.indicadores.length || (cf.empresas && !cf.empresas.includes(f.byma))) return "";
+  const bl = BQDE(f.byma), cb = bl && CI?.bloques?.[bl.id], ce = CI?.empresas?.[f.byma];
+  const cf = ce || (cb && (!cb.empresas || cb.empresas.includes(f.byma)) ? cb : null);
+  if (!cf || !cf.indicadores.length) return "";
   const ids = cf.indicadores, on = ids.filter(k=>(EST.cis||[ids[0]]).includes(k)), rel = !!EST.crel;
   const pxa = CI.precios?.[f.ticker] || [], spy = Object.fromEntries(CI.precios?.SPY || []);
   const px = rel ? pxa.filter(p=>spy[p[0]]).map(p=>[p[0], p[1]/spy[p[0]]]) : pxa;
-  const per = EST.cper || "todo", desde = {"3y":36,"5y":60,"todo":999}[per];
+  const per = EST.cper || cf.per || "todo", desde = {"3y":36,"5y":60,"todo":999}[per];
   const fin = px.length ? px[px.length-1][0] : null;
   const ini = fin && desde<900 ? mesK(mesN(fin)-desde) : "2015-01";
   const ser = [];
   if (px.length) ser.push({t:rel?`${f.byma} contra el SPY`:f.byma, c:"var(--accent)", w:2.2, d:px.filter(p=>p[0]>=ini)});
-  on.forEach(k=>{ const v = CI.indicadores[k]; ser.push({t:v.corto, c:CICOL[ids.indexOf(k)], w:1.6, d:v.serie.filter(p=>p[0]>=ini)}); });
+  on.forEach(k=>{ const v = CI.indicadores[k]; ser.push({t:v.corto, c:colI(k), w:1.6, d:v.serie.filter(p=>p[0]>=ini)}); });
   const meses = []; if (fin) for (let n = mesN(ini); n <= mesN(fin); n++) meses.push(mesK(n));
   const ix = Object.fromEntries(meses.map((k,i)=>[k,i]));
   const norm = ser.filter(s=>s.d.length>1).map(s=>{ const b = s.d[0][1]; return {...s, b, p:s.d.filter(q=>q[0] in ix && q[1]>0).map(q=>[ix[q[0]], Math.log(q[1]/b*100)]), u:s.d[s.d.length-1][1]/b}; });
@@ -851,18 +854,18 @@ function cicloCard(f){
     const pa = pr.reduce((a,b)=>b[1]>a[1]?b:a), d = mesN(mv)-mesN(pa[0]);
     return `en ${n}, ${esc(f.byma)} tocó su máximo contra el SPY en ${mesTxt(pa[0])} y las ventas en ${mesTxt(mv)}: ${d>0?`la acción se adelantó ${d} ${d===1?"mes":"meses"}`:d<0?`la acción llegó ${-d} ${d===-1?"mes":"meses"} después`:"coincidieron"}`; }).filter(Boolean);
   const histP = hist.length ? `<p class="lect" style="margin:8px 0 4px">Ciclos anteriores: ${hist.join("; ")}.</p>` : "";
-  const lect = ids.map(k=>{ const v = CI.indicadores[k], c = CICOL[ids.indexOf(k)], tr = v.frec==="mensual";
+  const lect = ids.map(k=>{ const v = CI.indicadores[k], c = colI(k), tr = v.frec==="mensual";
     const det = v.detalle && Object.keys(v.detalle).length>1 ? ` <span class="mut">(último trimestre: ${Object.entries(v.detalle).map(([a,b])=>`${esc(a)} ${nx(b,1)}`).join(" · ")} mil millones)</span>` : "";
     const mp = v.max_previo ? ` Antes de este ciclo, lo máximo fue <b>${pct(v.max_previo[0],0)}</b> (${tr?mesTxt(v.max_previo[1]):trimTxt(v.max_previo[1])}).` : "";
     return `<div class="mot"><div class="mot-h"><b style="color:${c}">${esc(v.nombre)}</b><span class="mut small" style="margin-left:8px">último dato: ${tr?mesTxt(v.ultimo):trimTxt(v.ultimo)}</span></div>
-      <p class="mot-t">${esc(v.que)}${v.valor!=null?` Hoy: <b>${nx(v.valor,1)} mil millones de USD</b> en 12 meses.`:""} Contra hace un año: <b class="${cls(v.anual)}">${pct(v.anual,0)}</b>.${mp} ${tr?"Últimos 3 meses contra los 3 anteriores":"Último trimestre contra el mismo de hace un año"}: <b class="${cls(v.trim)}">${pct(v.trim,0)}</b>.${det}</p>
+      ${v.lectura ? `<p class="mot-t">${esc(v.que)} ${v.lectura}</p>` : `<p class="mot-t">${esc(v.que)}${v.valor!=null?` Hoy: <b>${nx(v.valor,1)} mil millones de USD</b> en 12 meses.`:""} Contra hace un año: <b class="${cls(v.anual)}">${pct(v.anual,0)}</b>.${mp} ${tr?"Últimos 3 meses contra los 3 anteriores":"Último trimestre contra el mismo de hace un año"}: <b class="${cls(v.trim)}">${pct(v.trim,0)}</b>.${det}</p>`}
       <p class="mut small" style="margin:-4px 0 2px">Fuente: ${esc(v.fuente)}</p></div>`; }).join("");
   return `<section class="card" style="margin-top:14px"><h3>El ciclo de su sector <span class="mut">· contexto, no motor medido</span></h3>
     <div class="aviso">${esc(cf.nota)}</div>
     <div class="bar" style="margin:10px 0;gap:8px;flex-wrap:wrap"><div class="segs">${ids.map(k=>`<button class="seg sm${on.includes(k)?" on2":""}" data-ci="${k}">${esc(CI.indicadores[k].corto)}</button>`).join("")}</div>
       <div class="seg">${[["0","Precio"],["1","Contra el SPY"]].map(([p,t])=>`<button data-crel="${p}" class="${(rel?"1":"0")===p?"on":""}">${t}</button>`).join("")}</div>
       <div class="seg">${[["3y","3 años"],["5y","5 años"],["todo","Desde 2015"]].map(([p,t])=>`<button data-cper="${p}" class="${per===p?"on":""}">${t}</button>`).join("")}</div></div>
-    ${chart}${histP}${pronosHTML(bl.id)}${lect}</section>`;
+    ${chart}${histP}${pronosHTML(cf.pronos_de || (cf.pronos ? bl.id : ""), cf.solo)}${lect}</section>`;
 }
 const ETQ = {clara:["Clara","var(--pos)"], reciente:["Incluida a mano","var(--accent)"], indicio:["Puede ser casualidad","var(--muted)"], vuelta:["Se dio vuelta","var(--neg)"], antigua:["Solo antes de 2015","var(--muted)"], "":["Sin relación","var(--muted)"]};
 const etq = e => { const q = ETQ[e]||ETQ[""]; return `<span class="etq" style="--ec:${q[1]}">${q[0]}</span>`; };
