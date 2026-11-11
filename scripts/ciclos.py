@@ -24,6 +24,7 @@ BLOQUES = {
         "empresas": ["MU", "SKHY"],
         "ciclos": [["2018", "2017-01", "2019-12"], ["2021", "2020-06", "2022-12"]],
         "base": "nanya",
+        "pronos": "trendforce.csv",
         "nota": "Datos del ciclo de la memoria DRAM. No son motores medidos: la acción suele moverse antes que estos datos, que confirman en qué parte del ciclo estamos.",
     }
 }
@@ -177,11 +178,21 @@ def main():
             v["picos"] = [[n, str(t3[a:z].idxmax())] for n, a, z in v["ciclos"]]
     for k in ind:
         ind[k].pop("base3", None)
+    pronos = {}
+    for b, v in BLOQUES.items():
+        f = D / v.get("pronos", "-")
+        if f.exists():
+            t = pd.read_csv(f)
+            pronos[b] = {
+                "fuente": "Pronósticos de TrendForce publicados al empezar cada trimestre (cuánto esperan que cambie el precio de contrato contra el trimestre anterior). Se cargan a mano cuatro veces por año.",
+                "serie": [[r.trimestre, r.publicado, *(None if pd.isna(x) else float(x) for x in (r.dram_min, r.dram_max, r.nand_min, r.nand_max)), "" if pd.isna(r.nota) else r.nota] for r in t.itertuples()],
+            }
     out = {
         "actualizado": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%d %H:%M UTC"),
         "indicadores": ind,
         "bloques": {b: {**v, "indicadores": [i for i in v["indicadores"] if i in ind]} for b, v in BLOQUES.items()},
         "precios": {t: px[t] for t in px},
+        "pronos": pronos,
     }
     SALIDA.write_text(json.dumps(out, ensure_ascii=False, separators=(",", ":")))
     for k, v in ind.items():
