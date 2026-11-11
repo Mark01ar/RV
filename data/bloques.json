@@ -342,6 +342,14 @@
     "GLOB": [
      "real"
     ]
+   },
+   "excluir": {
+    "SAP": [
+     "gas"
+    ],
+    "CRM": [
+     "real"
+    ]
    }
   },
   {
@@ -397,6 +405,11 @@
      "BB": "Ya no hace teléfonos: vende software de seguridad y QNX, el sistema operativo que usan muchos autos. Empresa chica que crece poco.",
      "RGTI": "Computación cuántica. Casi no tiene ventas y pierde mucha plata; vive de la caja que levanta emitiendo acciones. El precio refleja expectativas sobre una tecnología que todavía no es comercial."
     }
+   },
+   "excluir": {
+    "XROX": [
+     "real"
+    ]
    }
   },
   {
@@ -451,6 +464,14 @@
      "YELP": "Reseñas y publicidad para negocios locales en EE.UU. Empresa chica, sin deuda, que crece poco y usa casi todo su flujo para recomprar acciones. Cotiza muy barata (P/E cerca de 8).",
      "TMUS": "La operadora de celulares que más creció en EE.UU. en la última década. Negocio estable, con mucha inversión en red y mucha deuda; devuelve plata con dividendo y recompras. Se mueve poco con el mercado (beta muy bajo)."
     }
+   },
+   "excluir": {
+    "NFLX": [
+     "pedidos"
+    ],
+    "YELP": [
+     "jet"
+    ]
    }
   },
   {
@@ -678,6 +699,11 @@
    "rescates": {
     "HOOD": [
      "bitcoin"
+    ]
+   },
+   "excluir": {
+    "MA": [
+     "petroleo"
     ]
    }
   },

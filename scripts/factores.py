@@ -263,6 +263,11 @@ def main():
             z["e"] = etiqueta(z)
             base[nom][k] = z
     rescates = {e: set(v) for b in bl for e, v in (b.get("rescates") or {}).items()}
+    excluir = {e: set(v) for b in bl for e, v in (b.get("excluir") or {}).items()}
+    for e, ks in excluir.items():
+        for k in ks:
+            if e in base and k in base[e]:
+                base[e][k]["e"] = ""
     out_e, out_b = {}, {}
     for b in bl:
         bid = "@" + b["id"]
@@ -288,6 +293,9 @@ def main():
             for m_ in mot:
                 if m_["f"] in rescates.get(e, set()):
                     m_["rescate"] = True
+            for k in excluir.get(e, set()):
+                if k in fx:
+                    fx[k]["excl"] = True
             out_e[e] = {"f": fx, "motores": mot, "solapados": sol}
     facs = []
     hoy = pd.Period(dt.date.today(), "M")

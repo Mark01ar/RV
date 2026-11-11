@@ -904,7 +904,7 @@ function comoHTML(){
     <li>Lo que mueve el precio es la sorpresa: si el mercado ya espera que suba el petróleo, eso ya está en el precio.</li>
     <li>Los factores de estilo (valor contra crecimiento, rentables, chicas contra grandes, momentum, inversión) describen qué tipo de acción es, más que un catalizador de afuera.</li>
     <li>Son las empresas que hoy cotizan, y las que salieron a la bolsa hace poco todavía no se pueden medir bien.</li>
-    <li>Unos pocos motores se incluyeron a mano por lógica económica (PLTR con bitcoin, MELI y GLOB con el real); están marcados en la ficha.</li></ul>`)
+    <li>Unos pocos motores se incluyeron a mano por lógica económica (bitcoin en PLTR, MSTR, COIN y HOOD; el real en MELI y GLOB) y están marcados en la ficha. Y unas pocas relaciones que pasaban la prueba pero no tienen explicación económica se sacaron a mano (por ejemplo, Netflix con pedidos de electrónica o Yelp con combustible de aviones).</li></ul>`)
   + sec("Los factores","fuentes gratuitas · se actualizan solos cada sábado",`<div class="wrap" style="max-height:none"><table class="tb2"><thead><tr><th class="l">Factor</th><th class="l">Grupo</th><th>Mes típico</th><th>Desde</th><th class="l">Fuente</th></tr></thead><tbody>
     ${FX.factores.map(f=>`<tr><td class="l">${esc(f.nombre)}</td><td class="l mut">${esc(f.grupo)}</td><td>${tipTxt(f)}</td><td>${esc(f.desde)}</td><td class="l mut">${esc(FU[f.fuente]||f.fuente)}${f.proxy?` <span title="El mes en curso se aproxima con ${esc(f.proxy)}">*</span>`:""}</td></tr>`).join("")}</tbody></table></div>
     <p class="mut small">* Los factores de estilo se publican con un mes de atraso; el mes en curso se aproxima con ETFs.</p>`);
