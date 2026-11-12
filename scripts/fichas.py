@@ -20,7 +20,7 @@ import actualizar as A
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
 OUT = DATA / "fichas"
-UA = {"User-Agent": "MR33 RV research marcosracimo@gmail.com"}
+UA = {"User-Agent": "MR RV research marcosracimo@gmail.com"}
 ETF_SECTOR = {"Technology": "XLK", "Communication Services": "XLC", "Consumer Cyclical": "XLY", "Consumer Defensive": "XLP",
               "Financial Services": "XLF", "Healthcare": "XLV", "Industrials": "XLI", "Energy": "XLE", "Basic Materials": "XLB",
               "Real Estate": "XLRE", "Utilities": "XLU"}

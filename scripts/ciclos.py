@@ -14,7 +14,7 @@ import macro as MA
 
 D = MA.ROOT / "data"
 SALIDA = D / "ciclos.json"
-UA = {"User-Agent": "MR33 RV research marcosracimo@gmail.com"}
+UA = {"User-Agent": "MR RV research marcosracimo@gmail.com"}
 MESES = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
 HYPER = {"MSFT": 789019, "GOOGL": 1652044, "AMZN": 1018724, "META": 1326801}
 FABS = {"INTC": 50863, "MU": 723125, "TXN": 97476}
