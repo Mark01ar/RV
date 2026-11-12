@@ -751,6 +751,8 @@ def salida(lista, fichas, ccl):
     tend = (rk(L["mom12_1"]) + rk(L["vs_ma200"]) + rk(L["rel6m"])) / 3
     V = pd.DataFrame({t: x for t, x in L["val"].items()}).T.apply(pd.to_numeric, errors="coerce")
     V["ey"] = 1 / V["pe"].where(V["pe"] > 0)
+    sin_dato = V["pe"].isna() & V["ev_ebitda"].isna() & V["fcf_yield"].isna()
+    V.loc[sin_dato, "ey"] = 1 / V.loc[sin_dato, "pe_fwd"].where(V.loc[sin_dato, "pe_fwd"] > 0)
     V["ee"] = 1 / V["ev_ebitda"].where(V["ev_ebitda"] > 0)
     V["sector"] = L["sector"]
     V["tipo"] = L["tipo"]
