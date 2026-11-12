@@ -436,7 +436,20 @@ details.help>summary{font-size:13px;color:var(--muted)}
 .rbl{border-left-color:var(--line)!important}
 .fmes{border-color:var(--line);padding:12px 0}
 .rtx{font-size:13px;color:var(--muted);margin-left:4px}.rtx a{color:var(--text);text-decoration:none}.rtx a:hover{text-decoration:underline}
-.rbl .bc-ic{display:none}.rbl{padding:3px 10px;background:transparent}
+.rbl .bc-ic{display:none}
+header,nav,main{max-width:none!important}
+main{padding-left:28px;padding-right:28px}
+@media (max-width:640px){main{padding-left:12px;padding-right:12px}}
+.lwrap{overflow-x:visible;max-height:none}
+.ltab{width:100%;table-layout:auto}
+.ltab th,.ltab td{padding:8px 6px}
+.ltab th{white-space:normal;line-height:1.2;vertical-align:bottom}
+.ltab td.ln{max-width:none;white-space:normal;line-height:1.25}
+.ltab td.l.mut{white-space:normal;line-height:1.25;font-size:12.5px;min-width:110px}
+.ltab td.lm{min-width:130px;max-width:210px}
+.ltab td.lt{font-size:14px}
+@media (max-width:1500px){.ltab .c-liq,.ltab .c-bal{display:none}}
+@media (max-width:1250px){.ltab .c-a{display:none}}.rbl{padding:3px 10px;background:transparent}
 .fams{display:block}.fam{margin-bottom:22px}
 .fam .bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
 .fam .bcard{width:auto}
@@ -1081,7 +1094,7 @@ function perfil(x){
 }
 const perfTag = x => { const n = perfil(x); return n==null ? '<span class="mut">—</span>' : `<span class="perf p${n}" title="Volatilidad anual ${pct(x.riesgo.vol,0)} · peor caída en 5 años ${pct(x.riesgo.caida,0)}${x.notas?.solidez<4?" · deuda alta":""}">${PERF[n]}</span>`; };
 const SUBN = [["calidad","Calidad"],["solidez","Solidez"],["crecimiento","Crecim."],["valuacion","Valuac."],["tendencia","Tendencia"],["analistas","Analistas"]];
-const mini = v => `<span class="nmini" style="color:${v==null?"var(--muted)":v<4?"var(--neg)":"var(--text)"}">${v==null?"—":nx(v)}</span>`;
+const mini = v => v==null ? `<span class="nmini mut">—</span>` : `<span class="nmini" style="color:${v>=7.5?"#7fd6a0":v>=5.5?"#dfe3ee":v>=4?"#e3c27a":"#ef8a8a"}">${nx(v)}</span>`;
 async function lista(m){
   if (!E){ m.innerHTML = `<div class="soon"><h2>Lista</h2>Todavía no hay datos. Se generan con la próxima actualización.</div>`; return; }
   if (!FX){ m.innerHTML = `<p class="mut">Cargando…</p>`; await cargarFX(); }
@@ -1112,12 +1125,12 @@ async function lista(m){
     <button class="btn" id="ecmp" style="margin:0" ${CMP.length<2?"disabled":""}>Comparar${CMP.length?` (${CMP.length})`:""}</button>${CMP.length?`<button class="btn" id="elim" style="margin:0">Limpiar</button>`:""}
     <span class="count">${rows.length} de ${L.length}</span>
   </div>
-  <div class="wrap"><table><thead><tr><th></th>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("bloque","Bloque","l")}${th("general","Nota")}${th("perfil","Perfil","l")}${SUBN.map(([k,t])=>th(k,t,"c-a sub")).join("")}${th("mueve","Lo mueve","l")}${th("vs_ma200","vs MA200")}${th("pefwd","P/E esp.")}${th("premio","Premio")}${th("liquidez","Liquidez","l")}${th("proximo_balance","Balance")}</tr></thead>
+  <div class="wrap lwrap"><table class="ltab"><thead><tr><th></th>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("bloque","Bloque","l")}${th("general","Nota")}${th("perfil","Perfil","l")}${SUBN.map(([k,t])=>th(k,t,"c-a sub")).join("")}${th("mueve","Lo mueve","l")}${th("vs_ma200","vs MA200")}${th("pefwd","P/E esp.")}${th("premio","Premio")}${th("liquidez","Liquidez","l c-liq")}${th("proximo_balance","Balance","c-bal")}</tr></thead>
   <tbody>${rows.map(x=>{ const ms = mot(x.byma); return `<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td><input type="checkbox" class="cmpk" data-c="${esc(x.ticker)}" ${CMP.includes(x.ticker)?"checked":""}></td>
     <td class="tk l lt">${logoImg(x.byma,"logo-s logo-l")}${esc(x.byma)}</td><td class="nm l ln">${esc(x.nombre)}</td><td class="l mut">${esc(BQDE(x.byma)?.nombre||"—")}</td><td>${chip(x.notas?.general)}</td><td class="l">${perfTag(x)}</td>${SUBN.map(([k])=>`<td class="c-a sub">${mini(x.notas?.[k])}</td>`).join("")}
     <td class="l lm">${ms.length?ms.map(z=>`${esc(FX.F[z.f]?.nombre||z.f)}${okm(FX.empresas[x.byma].f[z.f]?.v)}`).join(" · "):'<span class="mut">—</span>'}</td>
     <td class="${cls(x.vs_ma200)}">${pct(x.vs_ma200,0)}</td><td>${x.val?.pe_fwd>0?nx(x.val.pe_fwd)+"x":"—"}</td>
-    <td class="${x.premio>0.03?"neg":x.premio<-0.03?"pos":""}">${pct(x.premio)}</td><td class="l"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td><td>${fch2(x.proximo_balance)}</td></tr>`; }).join("")}</tbody></table></div>`;
+    <td class="${x.premio>0.03?"neg":x.premio<-0.03?"pos":""}">${pct(x.premio)}</td><td class="l c-liq"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td><td class="c-bal">${fch2(x.proximo_balance)}</td></tr>`; }).join("")}</tbody></table></div>`;
   const re = ()=>lista(m);
   m.querySelector("#lq").oninput = e=>{EST.lq=e.target.value; re(); const i=m.querySelector("#lq"); i.focus(); i.setSelectionRange(i.value.length,i.value.length);};
   m.querySelector("#lb").onchange = e=>{EST.lb=e.target.value; re();};
