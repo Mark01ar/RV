@@ -793,6 +793,13 @@ def salida(lista, fichas, ccl):
             f["pares"]["n"] = int(len(secv))
             f["actualizado"] = dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes")
             (OUT / f"{t}.json").write_text(json.dumps(f, ensure_ascii=False, default=lambda o: None, separators=(",", ":")).replace("NaN", "null"))
+        elif (OUT / f"{t}.json").exists():
+            try:
+                f = json.loads((OUT / f"{t}.json").read_text())
+                f["notas"] = nt
+                (OUT / f"{t}.json").write_text(json.dumps(f, ensure_ascii=False, default=lambda o: None, separators=(",", ":")).replace("NaN", "null"))
+            except Exception as e:
+                print(f"{t}: no se pudo actualizar la nota de la ficha ({e})")
     (DATA / "empresas.json").write_text(json.dumps({"actualizado": dt.datetime.now(dt.timezone.utc).isoformat(timespec="minutes"), "ccl": ccl,
                                                     "empresas": sal}, ensure_ascii=False, default=lambda o: None, separators=(",", ":")).replace("NaN", "null"))
     print(f"empresas: {len(sal)}; fichas: {len(fichas)}")

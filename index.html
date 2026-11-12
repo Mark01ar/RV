@@ -1507,7 +1507,7 @@ async function ficha(m, t){
     m.querySelector("#fv").onclick = ()=>{EST.sel=null; render();};
     return;
   }
-  const pb = f.precio_bloque || {}, a = f.analistas || {}, nt = f.notas || {}, nd = f.notas_detalle || {};
+  const pb = f.precio_bloque || {}, a = f.analistas || {}, nt = x.notas || f.notas || {}, nd = f.notas_detalle || {};
   const an = (f.anual||[]).slice(-10);
   const tipoTxt = {banco:"Banco / financiera: calidad y solidez se miden con ROE, ROA y patrimonio sobre activos.", cripto:"Su valor depende sobre todo del bitcoin: la valuación por múltiplos es poco representativa.", inmobiliaria:"Inmobiliaria: lo habitual es medirla por FFO; las ganancias contables subestiman su flujo."}[f.tipo];
   const xx = z => z==null ? "—" : nx(z)+"x";
