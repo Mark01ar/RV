@@ -1423,7 +1423,7 @@ function bandaPE(b, hoy){
     ${hoy?`<circle cx="${X(n-1)}" cy="${Y(Math.min(hoy,hi))}" r="4" fill="var(--text)"/>`:""}${xt}</svg>
     <div class="leg"><span style="color:var(--accent)">— P/E mensual</span><span style="color:var(--blue)">- - mediana ${nx(p50,0)}x</span><span class="mut">▮ rango habitual ${nx(p25,0)}x a ${nx(p75,0)}x</span></div>
     <p class="small" style="margin:6px 0 0">Hoy: <b>${hoy==null?"—":nx(hoy,1)+"x"}</b>${pos?`, ${pos}.`:""}</p>
-    <p class="mut small">P/E con el precio de cada mes y la ganancia del último ejercicio publicado. Ajustado por splits y por la cantidad de acciones de cada año (recompras o emisiones).</p>`;
+    <p class="mut small">P/E con el precio de cada mes y la ganancia del último ejercicio publicado. Ajustado por splits y por la cantidad de acciones de cada año (recompras o emisiones). Ojo en empresas que crecen muy rápido: el P/E pasado se ve alto porque usa la ganancia del año anterior, y el de hoy se ve barato si la ganancia se multiplicó.</p>`;
 }
 
 function premioCh(ch){
