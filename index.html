@@ -569,6 +569,8 @@ p .pos,p .neg,li .pos,li .neg,.fh-sub .pos,.fh-sub .neg{font-weight:700}
 .sofa.sbig{font-size:46px;padding:8px 14px;border-radius:8px;min-width:96px;font-weight:800}
 .fh-score .pill{display:inline-flex;align-items:center;gap:8px}
 .ltab td .sofa.smini{display:inline-flex}
+.hy .news{max-height:720px;overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#2b3a6e transparent}
+.hy .news::-webkit-scrollbar{width:8px}.hy .news::-webkit-scrollbar-thumb{background:#2b3a6e;border-radius:8px}.hy .news::-webkit-scrollbar-track{background:transparent}
 </style>
 </head>
 <body>
@@ -593,10 +595,10 @@ p .pos,p .neg,li .pos,li .neg,.fh-sub .pos,.fh-sub .neg{font-weight:700}
 const HASH = "3a892eea646c4e4fc44df3a264545ce2e51f4bdc752cbd996dae588e5c839602";
 const TABS = [
   {id:"hoy", t:"Hoy", ok:true},
-  {id:"macro", t:"Macro", ok:true},
-  {id:"factores", t:"Factores", ok:true},
+  {id:"lista", t:"Lista", ok:true},
   {id:"empresas", t:"Empresas", ok:true},
-  {id:"lista", t:"Lista", ok:true}
+  {id:"factores", t:"Factores", ok:true},
+  {id:"macro", t:"Macro", ok:true}
 ];
 let D = null, M = null, E = null, FR = null, LM = null, BQ = null, HY = undefined, tab = "hoy";
 
@@ -791,7 +793,7 @@ function hoyTab(m){
     <div class="leg"><span><i style="background:var(--accent)"></i>Balance</span><span><i style="background:var(--pos)"></i>Balance de una idea tuya</span><span><i style="background:var(--hd)"></i>Dato macro</span>${ya.length?`<span>· Presentaron en los últimos días: ${ya.map(y=>`<b>${esc(y.byma)}</b> ${y.veredicto?esc(y.veredicto.replace(" lo esperado","").toLowerCase()):""}${y.reaccion!=null?` <b class="${cls(y.reaccion)}">${pct(y.reaccion)}</b>`:` <span class="mut">(reacción pendiente)</span>`}`).join(" · ")} <span class="mut">(reacción al día siguiente)</span></span>`:""}</div></section>` : "";
   const filtro = EST.hyf || "todas", tks = new Set((h.ideas||[]).map(x=>x.ticker));
   const ns = (h.noticias||[]).filter(n => filtro==="todas" || (filtro==="ideas" ? n.tickers.some(t=>tks.has(t)) : n.grupo===filtro));
-  const lim = EST.hyabre ? ns.length : 10;
+
   const hoyS = new Date().toLocaleDateString("en-CA",{timeZone:HYZ});
   const fila = n => { const t0 = n.tickers[0], mv = t0!=null ? n.mov?.[t0] : null, d = hyDia(n.fecha), g = HYG[n.grupo]||HYG.otros;
     return `<div class="it"><span class="h">${d===hoyS?"":`${hyFecha(d)}<br>`}${hyHora(n.fecha)}</span><span class="tx">${n.tipo==="sec"?`<span class="of">SEC</span>`:n.tipo==="fed"?`<span class="of">FED</span>`:""}${n.tickers.slice(0,4).map(t=>`<span class="tk${tks.has(t)?" idea":""}" data-hyt="${esc(t)}">${esc(hyEmp(t)?.byma||t)}</span>`).join("")}<a class="tl" href="${esc(n.url)}" target="_blank" rel="noopener"${n.titulo_en?` title="${esc(n.titulo_en)}"`:""}>${esc(n.titulo)}</a>
@@ -800,8 +802,8 @@ function hoyTab(m){
   const bts = [["todas","Todas"],["ideas","Mis ideas"],["ia","IA y tecnología"],["energia","Energía"],["finanzas","Finanzas"],["macro","Macro y Fed"],["otros","Otras"]];
   const sec3 = `<div><div class="sh" style="--sc:var(--accent)"><div><div class="kick"><em>02</em>Noticiero del mediodía</div><h2>Noticias</h2><p>Solo lo que toca a tus empresas, sin repetidos${(h.noticias||[]).some(n=>n.titulo_en)?" · traducción automática (pasá el mouse para ver el original)":""}</p></div>
       <div class="filt">${bts.map(([k,t])=>`<button data-hyf="${k}" class="${filtro===k?"on":""}">${t}</button>`).join("")}</div></div>
-    <div class="news">${ns.slice(0,lim).map(fila).join("") || `<p class="mut" style="padding:14px 0">Sin noticias en este filtro.</p>`}</div>
-    ${ns.length>10?`<button class="mas" data-hymas="1">${EST.hyabre?"▲ Mostrar menos":`▼ Ver las ${ns.length-10} noticias restantes`}</button>`:""}
+    <div class="news">${ns.map(fila).join("") || `<p class="mut" style="padding:14px 0">Sin noticias en este filtro.</p>`}</div>
+    ${ns.length>10?`<p class="nota-pie" style="text-align:center">${ns.length} noticias · scrolleá dentro del cuadro para ver las anteriores</p>`:""}
     <p class="nota-pie">A la derecha, cuánto se movió la empresa en el último día contra el S&amp;P: si casi no se movió, la noticia no le importó al mercado.</p></div>`;
   const pm = h.predicciones||[];
   const sec4 = pm.length ? `<div><div class="sh" style="--sc:var(--vio)"><div><div class="kick"><em>03</em>Mercados de predicción</div><h2>Qué apuesta la gente</h2><p>Probabilidades de Polymarket, con plata real en juego</p></div></div>
@@ -811,7 +813,7 @@ function hoyTab(m){
     <div class="frase">${hyFrase(h)}</div>${kp}${sec2}<section class="dos">${sec3}${sec4}</section>${sec1}</div>`;
   m.querySelectorAll("[data-hyt]").forEach(a=>a.onclick=ev=>{ ev.preventDefault(); const e = hyEmp(a.dataset.hyt); if (!e) return; EST.sel=e.ticker; EST.ftab="resumen"; EST.bloque=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
   m.querySelectorAll("[data-hyf]").forEach(b=>b.onclick=()=>{ EST.hyf=b.dataset.hyf; EST.hyabre=false; hoyTab(m); });
-  const mb = m.querySelector("[data-hymas]"); if (mb) mb.onclick=()=>{ const y = window.scrollY; EST.hyabre=!EST.hyabre; hoyTab(m); if (!EST.hyabre) document.querySelector(".hy .news")?.scrollIntoView({block:"start"}); else window.scrollTo(0,y); };
+
 }
 
 const DECC = ["#8fd0f2","#e0b44c","#7fd6a0","#c3a6ff","#e8b860","#f78c6c"];
