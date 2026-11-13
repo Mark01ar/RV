@@ -850,7 +850,7 @@ const NOTA_TXT = {calidad:"Rentabilidad, márgenes y flujo de caja. Escala absol
   analistas:"Revisiones de estimaciones y sorpresas en los últimos balances, contra las 125. Relativa."};
 const big = x => x==null ? "—" : Math.abs(x)>=1e12 ? (x/1e12).toFixed(2).replace(".",",")+" T" : Math.abs(x)>=1e9 ? (x/1e9).toFixed(1).replace(".",",")+" B" : Math.abs(x)>=1e6 ? (x/1e6).toFixed(0)+" M" : x.toFixed(0);
 const nx = (x,d=1) => x==null ? "—" : x.toFixed(d).replace(".",",");
-const ncol = v => v==null ? "var(--line)" : v>=9 ? "#374df5" : v>=8 ? "#00adc4" : v>=7 ? "#00c424" : v>=6.5 ? "#d9af00" : v>=6 ? "#ed7e07" : "#e51c1c";
+const ncol = v => v==null ? "var(--line)" : v>=9 ? "#1f35c9" : v>=8 ? "#3d7cf5" : v>=6 ? "#00b82b" : v>=4 ? "#d9a800" : "#e51c1c";
 const sofa = (v, c="") => `<span class="sofa${c?" "+c:""}" style="background:${v==null?"var(--panel2)":ncol(v)}${v==null?";color:var(--muted)":""}">${v==null?"—":nx(v)}</span>`;
 const chip = v => sofa(v, "nchip");
 const fch2 = f => f ? new Date(f+"T12:00").toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"2-digit"}) : "—";
