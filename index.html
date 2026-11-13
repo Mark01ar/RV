@@ -575,6 +575,41 @@ p .pos,p .neg,li .pos,li .neg,.fh-sub .pos,.fh-sub .neg{font-weight:700}
 .hy .po .pl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hy .po b{font-size:16px;font-weight:800;color:var(--vio)}.hy .po .pw{font-size:11.5px;text-align:right}
 .hy .po .trk{grid-column:1/-1;margin:2px 0 0;height:6px}
 .hy .pq .q span{font-weight:700;font-size:14px}
+
+.fx-mov{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.fx-mt{font:inherit;text-align:left;cursor:pointer;color:var(--text);border:1px solid var(--line);border-top:3px solid var(--gc);border-radius:14px;padding:14px 16px;background:linear-gradient(180deg,color-mix(in srgb,var(--gc) 10%,var(--panel2)) 0,var(--panel2) 80%);display:flex;flex-direction:column;gap:2px;transition:transform .12s}
+.fx-mt:hover{transform:translateY(-2px);border-color:var(--gc)}
+.fx-mt .g{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gc);font-weight:700}
+.fx-mt b{font-size:16px}.fx-mt .v{font-size:26px;font-weight:800;line-height:1.2}.fx-mt .m{font-size:12px;color:var(--muted)}.fx-mt .ir{font-size:12px;color:var(--gc);margin-top:6px;font-weight:600}
+.fx-grs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.fx-gr{border-radius:12px;padding:12px;background:color-mix(in srgb,var(--gc) 6%,transparent);border:1px solid color-mix(in srgb,var(--gc) 25%,var(--line))}
+.fx-gh{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gc);margin-bottom:8px}
+.fx-chips{display:flex;flex-direction:column;gap:6px}
+.fx-ch{font:inherit;font-size:13px;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 10px;border-radius:8px;border:1px solid transparent;background:rgba(255,255,255,.03);color:var(--text);cursor:pointer;text-align:left}
+.fx-ch:hover{border-color:color-mix(in srgb,var(--gc) 50%,transparent)}
+.fx-ch em{font-style:normal;font-size:11.5px;font-weight:600}.fx-ch em.fz{font-weight:800}
+.fx-ch.on{background:var(--gc);color:#07101f;font-weight:700}.fx-ch.on em{color:#07101f!important}
+.fx-hero{margin:4px 0 18px;border-radius:16px;padding:22px 24px;border:1px solid color-mix(in srgb,var(--gc) 40%,var(--line));border-top:4px solid var(--gc);background:linear-gradient(135deg,color-mix(in srgb,var(--gc) 14%,var(--panel)) 0,var(--panel) 60%)}
+.fx-ht{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
+.fx-k{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gc)}
+.fx-hero h2{margin:4px 0 4px;font-size:32px;font-weight:800;letter-spacing:-.01em;color:var(--text);text-transform:none}
+.fx-hero p{margin:0;color:var(--muted);font-size:13.5px}
+.fx-sw{display:inline-flex;background:rgba(0,0,0,.25);border:1px solid var(--line);border-radius:999px;padding:3px}
+.fx-sw button{font:inherit;font-size:13.5px;font-weight:600;border:0;background:none;color:var(--muted);padding:7px 16px;border-radius:999px;cursor:pointer}
+.fx-sw button.on{background:var(--gc);color:#07101f}
+.fx-sw.sm button{font-size:12.5px;padding:5px 12px}
+.fx-kp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-top:18px}
+.fx-kp>div{background:rgba(0,0,0,.18);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:4px}
+.fx-kp span{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--gc);font-weight:700}
+.fx-kp b{font-size:22px;font-weight:800}.fx-kp b small{font-size:13px;color:var(--muted);font-weight:500}.fx-kp small{font-size:12px;color:var(--muted)}
+.fx-kp select{margin-top:6px;max-width:100%}
+.fx-pt{margin-top:14px!important;font-size:12.5px!important}
+.fx-cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+.fx-col{border-radius:12px;padding:10px 12px;background:color-mix(in srgb,var(--cc) 5%,transparent);border-top:2px solid var(--cc)}
+.fx-colh{display:flex;justify-content:space-between;font-weight:700;color:var(--cc);margin-bottom:8px;font-size:14px}.fx-colh span{color:var(--muted);font-weight:500}
+@media (max-width:1100px){.fx-mov,.fx-kp{grid-template-columns:repeat(2,minmax(0,1fr))}.fx-grs{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.fx-cols,.fx-grs{grid-template-columns:1fr}.fx-hero h2{font-size:24px}}
+.fx-kp select{background:var(--panel2);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font:inherit;font-size:12.5px}
 </style>
 </head>
 <body>
@@ -1263,9 +1298,14 @@ function cuadroBloque(bl){
     ${sinH.length?`<p class="mut small">Sin historia suficiente para medir: ${sinH.map(esc).join(", ")}.</p>`:""}
     <details class="help" style="margin-top:10px"><summary>Cómo se lee</summary><p class="mut small">Cada celda es cuánto se movió la empresa contra el SPY en un mes típico de ese factor; solo aparecen las relaciones claras (un punto: no se mueve con ese factor). ✔: firme, no depende de dónde se corte el período. Tocá una empresa para ver el detalle. <a href="#" data-como="1">Cómo se mide →</a></p></details>`, "main");
 }
+const GC = {"Tasas y crédito":"#8fd0f2","Monedas y emergentes":"#c3a6ff","Materias primas":"#e8b860","Actividad":"#7fd6a0","Estilo del mercado":"#f78c6c"};
+const gcol = g => GC[g] || "#8a94b8";
+const fUlt = f => (f.ultimos||[]).slice(-1)[0];
+const fMov = (f,u) => u ? `${u.cambio>0?"+":""}${nx(u.cambio, f.unidad==="pts"?2:1)}${f.unidad==="pts"?" pts":"%"}` : "—";
+const fMes = u => { const MS = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"]; return u ? `${MS[+u.mes.slice(5,7)-1]}${u.en_curso?" (en curso)":""}` : ""; };
 function siPasaHTML(){
   const fid = FX.F[EST.efac] ? EST.efac : "petroleo", dir = EST.edir || 1, v = EST.escV==="bloques" ? "bloques" : "empresas", todo = !!EST.etodo, fb = EST.fbl || "";
-  const f = FX.F[fid], grupos = [...new Set(FX.factores.map(x=>x.grupo))];
+  const f = FX.F[fid], grupos = [...new Set(FX.factores.map(x=>x.grupo))], gc = gcol(f.grupo), u0 = fUlt(f);
   let xs;
   if (v==="bloques") xs = BQ.bloques.map(bl=>{ const z = FX.bloques[bl.id]?.f?.[fid]; if (!z?.r) return null; const fm = FAM.find(q=>q.b.includes(bl.id)) || {c:"#8a94b8"};
     return {n:`<span class="bc-ic sm" style="--fc:${fm.c}"><svg viewBox="0 0 24 24">${ICO[bl.id]||""}</svg></span>${esc(bl.nombre)}${solido(z.e)?okm(z.v):""}`, v:z.r.ef*dir, cl:solido(z.e), k:bl.id, t:`${bl.nombre}: ${ETQ[z.e]?.[0]||""}`}; }).filter(Boolean);
@@ -1273,13 +1313,23 @@ function siPasaHTML(){
     return {n:`${logoImg(b,"logo-s")}${esc(b)}${solido(e)?okm(z.v):""}`, v:z.r.ef*dir, cl:solido(e), k:tkDe(b), t:`${E.empresas.find(q=>q.byma===b)?.nombre||b}: ${ETQ[e]?.[0]||""}`}; }).filter(Boolean);
   xs.sort((a,b)=>b.v-a.v);
   const nOk = xs.filter(p=>p.cl).length, vis = todo ? xs : xs.filter(p=>p.cl), pt = parTxt(fid);
-  return `<section class="fhead2 bhead"><div class="fgrs" style="margin-top:0">${grupos.map(g=>`<div class="fgr"><span>${esc(g)}</span><div class="segs">${FX.factores.filter(x=>x.grupo===g).map(x=>`<button class="seg sm${x.id===fid?" on2":""}" data-ef="${x.id}">${esc(x.nombre)}</button>`).join("")}</div></div>`).join("")}</div>
-    <div class="segs vsel" style="margin-top:12px"><button class="seg sm${dir>0?" on2":""}" data-ed="1">${esc(capit(f.sube))}</button><button class="seg sm${dir<0?" on2":""}" data-ed="-1">${esc(capit(f.baja))}</button></div>
-    <div class="segs vsel" style="margin-top:8px"><button class="seg sm${v==="empresas"?" on2":""}" data-ev="empresas">Por empresa</button><button class="seg sm${v==="bloques"?" on2":""}" data-ev="bloques">Por bloque</button></div>
-    ${v==="empresas"?`<div class="bar" style="margin:10px 0 0"><select id="fbl"><option value="">Todos los bloques</option>${BQ.bloques.map(b=>`<option value="${b.id}" ${b.id===fb?"selected":""}>${esc(b.nombre)}</option>`).join("")}</select></div>`:""}</section>
-  ${sec(`Si ${esc(dir>0?f.sube:f.baja)}`, `un mes típico: ${tipTxt(f)} · ${nOk} de ${xs.length} con relación sólida`, `${pt?`<p class="mut small" style="margin-top:0">${esc(pt)}</p>`:""}${vis.length?hbarras(vis, v==="bloques"?"data-bs":"data-e"):`<p class="lect">${v==="bloques"?"Ningún bloque":"Ninguna empresa"} tiene una relación sólida con este factor.</p>`}
-    ${nOk<xs.length?`<button class="btn" id="etodo" style="margin-top:10px">${todo?"Mostrar solo las relaciones sólidas":`Ver también las que pueden ser casualidad (${xs.length-nOk})`}</button>`:""}
-    <details class="help" style="margin-top:10px"><summary>Cómo se lee</summary><p class="mut small" style="margin-top:10px">Contra el SPY, en un mes con un movimiento típico del factor, con datos desde 2015. ✔: firme, no depende de dónde se corte el período. Factor medido desde ${esc(f.desde)}${f.fuente==="French"?" (biblioteca académica de Kenneth French)":""}.</p>${LEYENDA}</details>`, "main")}`;
+  const gan = vis.filter(p=>p.v>0), pie = vis.filter(p=>p.v<0).sort((a,b)=>a.v-b.v), at = v==="bloques"?"data-bs":"data-e", que = v==="bloques"?"bloques":"empresas";
+  const mov = FX.factores.map(x=>({x, u:fUlt(x)})).filter(z=>z.u && z.u.z!=null).sort((a,b)=>Math.abs(b.u.z)-Math.abs(a.u.z)).slice(0,4);
+  const movH = `<section class="card"><h3>Lo que se está moviendo <span class="mut">· los factores que más se alejaron de un mes normal</span></h3>
+    <div class="fx-mov">${mov.map(({x,u})=>`<button class="fx-mt" style="--gc:${gcol(x.grupo)}" data-ef="${x.id}" data-ed="${u.z>0?1:-1}"><span class="g">${esc(x.grupo)}</span><b>${esc(x.nombre)}</b><span class="v ${u.cambio>0?"pos":"neg"}">${fMov(x,u)}</span><span class="m">${fMes(u)} · ${nx(Math.abs(u.z),1)} veces un mes típico</span><span class="ir">Ver a quién le pega →</span></button>`).join("")}</div></section>`;
+  const sel = `<section class="card"><h3>Elegí un factor <span class="mut">· al lado, cuánto se movió en el último mes</span></h3>
+    <div class="fx-grs">${grupos.map(g=>`<div class="fx-gr" style="--gc:${gcol(g)}"><div class="fx-gh">${esc(g)}</div><div class="fx-chips">${FX.factores.filter(x=>x.grupo===g).map(x=>{ const u = fUlt(x), fuerte = u && Math.abs(u.z)>=1; return `<button class="fx-ch${x.id===fid?" on":""}" data-ef="${x.id}"><span>${esc(x.nombre)}</span>${u?`<em class="${u.cambio>0?"pos":"neg"}${fuerte?" fz":""}">${fMov(x,u)}</em>`:""}</button>`; }).join("")}</div></div>`).join("")}</div></section>`;
+  const hero = `<section class="fx-hero" style="--gc:${gc}"><div class="fx-ht"><div><span class="fx-k">${esc(f.grupo)}</span><h2>Si ${esc(dir>0?f.sube:f.baja)}</h2><p>A quién le va mejor y a quién peor que al mercado en un mes así, con la historia desde 2015.</p></div>
+      <div class="fx-sw"><button class="${dir>0?"on":""}" data-ed="1">▲ Sube</button><button class="${dir<0?"on":""}" data-ed="-1">▼ Baja</button></div></div>
+    <div class="fx-kp"><div><span>Mes típico</span><b>${tipTxt(f)}</b></div><div><span>Último mes</span><b class="${u0?(u0.cambio>0?"pos":"neg"):""}">${fMov(f,u0)}</b><small>${fMes(u0)}${u0?.z!=null?` · ${nx(Math.abs(u0.z),1)} veces lo típico`:""}</small></div><div><span>Relación sólida</span><b>${nOk} <small>de ${xs.length}</small></b><small>${que}</small></div>
+      <div><span>Ver por</span><div class="fx-sw sm"><button class="${v==="empresas"?"on":""}" data-ev="empresas">Empresa</button><button class="${v==="bloques"?"on":""}" data-ev="bloques">Bloque</button></div>${v==="empresas"?`<select id="fbl"><option value="">Todos los bloques</option>${BQ.bloques.map(b=>`<option value="${b.id}" ${b.id===fb?"selected":""}>${esc(b.nombre)}</option>`).join("")}</select>`:""}</div></div>
+    ${pt?`<p class="fx-pt">${esc(pt)}</p>`:""}</section>`;
+  const col = (t, arr, c) => `<div class="fx-col" style="--cc:${c}"><div class="fx-colh">${t}<span>${arr.length}</span></div>${arr.length?hbarras(arr, at):`<p class="mut small" style="padding:6px 2px">Ninguna con relación sólida.</p>`}</div>`;
+  const res = `<section class="card"><h3>${vis.length?`Quién gana y quién pierde`:"Sin relaciones sólidas"} <span class="mut">· contra el SPY, en un mes típico</span></h3>
+    ${vis.length?`<div class="fx-cols">${col("▲ Le ganan al mercado", gan, "var(--pos)")}${col("▼ Le pierden al mercado", pie, "var(--neg)")}</div>`:`<p class="lect">${v==="bloques"?"Ningún bloque":"Ninguna empresa"} tiene una relación sólida con este factor.</p>`}
+    ${nOk<xs.length?`<button class="btn" id="etodo" style="margin-top:12px">${todo?"Mostrar solo las relaciones sólidas":`Ver también las que pueden ser casualidad (${xs.length-nOk})`}</button>`:""}
+    <details class="help" style="margin-top:10px"><summary>Cómo se lee</summary><p class="mut small" style="margin-top:10px">Cuánto le ganó o le perdió cada una al SPY, en promedio, en un mes con un movimiento típico del factor, con datos desde 2015. ✔: firme, no depende de dónde se corte el período. Tocá una barra para ir a la ficha. Factor medido desde ${esc(f.desde)}${f.fuente==="French"?" (biblioteca académica de Kenneth French)":""}.</p>${LEYENDA}</details></section>`;
+  return movH + sel + hero + res;
 }
 function familiasHTML(){
   const ent = FX.factores.map(f=>({f, xs:Object.entries(FX.empresas).map(([b,x])=>{ const mo = (x.motores||[]).find(z=>z.f===f.id); return mo ? {b, ef:x.f[f.id].r.ef, v:x.f[f.id].v} : null; }).filter(Boolean)})).filter(p=>p.xs.length).sort((a,b)=>b.xs.length-a.xs.length);
@@ -1330,8 +1380,8 @@ async function factoresTab(m){
     ${fv==="familias" ? familiasHTML() : fv==="como" ? comoHTML() : siPasaHTML()}`;
   const re = () => factoresTab(m);
   m.querySelectorAll("[data-fv]").forEach(b=>b.onclick=()=>{EST.fvista=b.dataset.fv; window.scrollTo(0,0); re();});
-  m.querySelectorAll("[data-ef]").forEach(b=>b.onclick=()=>{EST.efac=b.dataset.ef; re();});
-  m.querySelectorAll("[data-ed]").forEach(b=>b.onclick=()=>{EST.edir=+b.dataset.ed; re();});
+  m.querySelectorAll("[data-ef]").forEach(b=>b.onclick=async()=>{EST.efac=b.dataset.ef; const ir = b.dataset.ed!=null; if (ir) EST.edir=+b.dataset.ed; await re(); if (ir) m.querySelector(".fx-hero")?.scrollIntoView({behavior:"smooth",block:"start"});});
+  m.querySelectorAll("[data-ed]:not([data-ef])").forEach(b=>b.onclick=()=>{EST.edir=+b.dataset.ed; re();});
   m.querySelectorAll("[data-ev]").forEach(b=>b.onclick=()=>{EST.escV=b.dataset.ev; re();});
   const sb = m.querySelector("#fbl"); if (sb) sb.onchange = e=>{EST.fbl=e.target.value; re();};
   const et = m.querySelector("#etodo"); if (et) et.onclick = ()=>{EST.etodo=!EST.etodo; re();};
