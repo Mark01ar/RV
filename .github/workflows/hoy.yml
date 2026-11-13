@@ -2,9 +2,10 @@ name: Hoy
 
 on:
   schedule:
-    - cron: "3 11 * * 1-5"
-    - cron: "33 15 * * 1-5"
-    - cron: "33 21 * * 1-5"
+    - cron: "3 13 * * 1-5"
+    - cron: "3 16 * * 1-5"
+    - cron: "3 19 * * 1-5"
+    - cron: "3 22 * * 1-5"
   workflow_dispatch:
 
 permissions:

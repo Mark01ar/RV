@@ -682,7 +682,7 @@ const hyPts = x => x==null ? "—" : (x>0?"+":"") + x.toFixed(2).replace(".",","
 const hyEmp = t => (E?.empresas||[]).find(z=>z.ticker===t || z.byma===t);
 function hyProxima(){
   const ahora = new Date(new Date().toLocaleString("en-US",{timeZone:HYZ}));
-  const hs = [[8,0],[12,30],[18,30]];
+  const hs = [[10,0],[13,0],[16,0],[19,0]];
   for (let k=0;k<8;k++){ const d = new Date(ahora); d.setDate(d.getDate()+k); if (d.getDay()===0||d.getDay()===6) continue;
     for (const [h,mi] of hs){ const c = new Date(d); c.setHours(h,mi,0,0); if (c>ahora) return (k===0?"":k===1?"mañana ":HYD[c.getDay()].toLowerCase()+" ")+`${String(h).padStart(2,"0")}:${String(mi).padStart(2,"0")}`; } }
   return "";
@@ -714,7 +714,7 @@ function hyCuando(f){
 }
 function hoyTab(m){
   if (HY===undefined){ m.innerHTML = `<p class="mut">Cargando…</p>`; fetch("data/hoy.json?v="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null).then(j=>{ HY=j; if (tab==="hoy") hoyTab(m); }); return; }
-  if (!HY){ m.innerHTML = `<div class="card"><p class="mut">Todavía no hay datos de Hoy. Se generan los días hábiles a las 8:00, 12:30 y 18:30.</p></div>`; return; }
+  if (!HY){ m.innerHTML = `<div class="card"><p class="mut">Todavía no hay datos de Hoy. Se generan los días hábiles a las 10:00, 13:00, 16:00 y 19:00.</p></div>`; return; }
   const h = HY, md = h.mercado?.datos||{}, sem = M?.semaforo, ar = h.argentina||{};
   const hoyD = new Date(new Date().toLocaleString("en-US",{timeZone:HYZ}));
   const titulo = `${["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"][hoyD.getDay()]} ${hoyD.getDate()} de ${["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"][hoyD.getMonth()]}`;
