@@ -2,10 +2,7 @@ name: Hoy
 
 on:
   schedule:
-    - cron: "3 13 * * 1-5"
-    - cron: "3 16 * * 1-5"
-    - cron: "3 19 * * 1-5"
-    - cron: "3 22 * * 1-5"
+    - cron: "*/10 12-23 * * 1-5"
   workflow_dispatch:
 
 permissions:
@@ -21,14 +18,36 @@ jobs:
     timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - id: gate
+        env:
+          EV: ${{ github.event_name }}
+        run: |
+          git pull -q --rebase origin main || true
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, os, datetime as dt
+          from zoneinfo import ZoneInfo
+          ahora = dt.datetime.now(ZoneInfo("America/Argentina/Buenos_Aires"))
+          try:
+              ult = dt.datetime.fromisoformat(json.load(open("data/hoy.json"))["actualizado"].replace("Z", "+00:00"))
+          except Exception:
+              ult = None
+          turnos = [ahora.replace(hour=h, minute=0, second=0, microsecond=0) for h in (10, 13, 16, 19)]
+          vencidos = [t for t in turnos if t <= ahora]
+          correr = os.environ["EV"] == "workflow_dispatch" or (ahora.weekday() < 5 and bool(vencidos) and (ult is None or ult < vencidos[-1]))
+          print(f"correr={'true' if correr else 'false'}")
+          PY
+      - if: steps.gate.outputs.correr == 'true'
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: pip install -r requirements.txt deep-translator
-      - run: python scripts/hoy.py
+      - if: steps.gate.outputs.correr == 'true'
+        run: pip install -r requirements.txt deep-translator
+      - if: steps.gate.outputs.correr == 'true'
+        run: python scripts/hoy.py
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
-      - run: |
+      - if: steps.gate.outputs.correr == 'true'
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
           git add data/hoy.json
