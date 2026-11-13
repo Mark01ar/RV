@@ -859,7 +859,7 @@ async function cargarFX(){
   return FX;
 }
 let CI = null;
-const CICOL = ["#6ea8ff","#5fb3a1","#c792ea"], CIC = {nanya:"#6ea8ff", tsmc:"#6ea8ff", mu_inv:"#f78c6c", chips_inv:"#f78c6c", hyper:"#5fb3a1", mu_capex:"#c792ea", fab_capex:"#c792ea"}, colI = k => CIC[k] || "#9aa5c8";
+const CICOL = ["#6ea8ff","#5fb3a1","#c792ea"], CIC = {nanya:"#6ea8ff", tsmc:"#6ea8ff", mu_inv:"#f78c6c", chips_inv:"#f78c6c", hyper:"#5fb3a1", mu_capex:"#c792ea", fab_capex:"#c792ea", neo_rpo:"#6ea8ff", neo_cob:"#f78c6c", neo_deuda:"#c792ea"}, colI = k => CIC[k] || "#9aa5c8";
 const mesTxt = k => { const [y,m] = k.split("-"); return ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"][+m-1]+" "+y; };
 const trimTxt = k => { const [y,q] = k.split("Q"); return `${q}.º trim. ${y}`; };
 const mesN = k => { const [y,m] = k.split("-").map(Number); return y*12+m-1; };
@@ -886,6 +886,11 @@ function tiles(cf, bid){
     if (k.endsWith("_inv")){ const u = s[s.length-1], p = s[s.length-2], avg = s.reduce((a,b)=>a+b,0)/s.length;
       big = `${nx(u,0)} días`; sub = `antes ${nx(p,0)} · promedio ${nx(avg,0)}`; est = u>p*1.03 ? ["Sube","neg"] : u<p*0.97 ? ["Baja","pos"] : ["Estable",""];
       vd = u>p*1.03 ? ["bear","El stock se acumula: suele anticipar menos ventas o precios más bajos."] : u<p*0.97 ? ["bull","El stock baja: lo que fabrican se vende solo."] : ["neu","Stock estable."]; }
+    else if (v.tipo==="veces"){ big = `${nx(v.valor,1)} veces`; sub = v.previo!=null ? `inversión / caja que generan · hace un año ${nx(v.previo,1)}` : "inversión / caja que generan"; est = v.anual>0.05 ? ["Sube","neg"] : v.anual<-0.05 ? ["Baja","pos"] : ["Estable",""];
+      vd = v.valor>1.5 ? ["bear","Invierten bastante más de lo que generan: la diferencia se pide prestada."] : v.valor>1 ? ["neu","Invierten algo más de lo que generan."] : ["bull","La inversión sale de su propia caja."]; }
+    else if (v.tipo==="nivel"){ big = `US$ ${nx(v.valor,0)} mil M`; sub = `${pct(v.anual,0)} en un año · ${pct(v.trim,0)} en el trimestre`; est = v.anual>0.05 ? ["Sube", sup?"neg":"pos"] : v.anual<-0.05 ? ["Baja", sup?"pos":"neg"] : ["Estable",""];
+      vd = sup ? (v.anual>0.3 ? ["bear","La deuda crece rápido: más intereses y más riesgo si la demanda se frena."] : v.anual<0 ? ["bull","Bajan la deuda."] : ["neu","La deuda crece moderado."])
+        : (v.anual>0.1 ? ["bull","Siguen firmando contratos: hay demanda asegurada para varios años."] : v.anual<0 ? ["bear","Los contratos por cobrar bajan: entran menos pedidos nuevos."] : ["neu","Contratos estables."]); }
     else if (v.frec==="mensual"){ big = pct(v.anual,0); sub = `vs. hace un año · 3 meses: ${pct(v.trim,0)}`; est = v.trim>0.05 ? ["Sube","pos"] : v.trim<-0.05 ? ["Baja","neg"] : ["Estable",""];
       vd = v.trim>0.05 ? ["bull","Las ventas siguen creciendo."] : v.trim<-0.05 ? ["bear","Las ventas caen: en 2018 y 2021 la primera caída marcó el pico."] : ["neu","Ventas planas."]; }
     else { big = `US$ ${nx(v.valor,1)} mil M`; sub = `en 12 meses · ${pct(v.anual,0)} en un año`; est = v.anual>0.05 ? ["Sube", sup?"":"pos"] : v.anual<-0.05 ? ["Baja", sup?"":"neg"] : ["Estable",""];

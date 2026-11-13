@@ -21,6 +21,12 @@ FABS = {"INTC": 50863, "MU": 723125, "TXN": 97476}
 CAPEX = ["PaymentsToAcquirePropertyPlantAndEquipment", "PaymentsToAcquireProductiveAssets"]
 COSTO = ["CostOfGoodsAndServicesSold", "CostOfRevenue"]
 INVENT = ["InventoryNet"]
+NEO = {"ORCL": 1341439, "CRWV": 1769628, "IREN": 1878848}
+FCO = ["NetCashProvidedByUsedInOperatingActivities"]
+RPO = ["RevenueRemainingPerformanceObligation"]
+DEUDA_TOT = ["LongTermDebt", "DebtLongtermAndShorttermCombinedAmount", "DebtInstrumentCarryingAmount"]
+DEUDA_LP = ["LongTermNotesAndLoans", "LongTermDebtNoncurrent", "LongTermNotesPayable"]
+DEUDA_CP = ["NotesPayableCurrent", "LongTermDebtCurrent", "DebtCurrent"]
 EMPRESAS = {
     "SNDK": {
         "indicadores": ["hyper"],
@@ -46,6 +52,13 @@ BLOQUES = {
         "ciclos": [["2018", "2018-01", "2019-06"], ["2022", "2021-06", "2023-12"]],
         "base": "tsmc",
         "nota": "Datos del ciclo de los chips. No son motores medidos: la acción suele moverse antes que estos datos, que confirman en qué parte del ciclo estamos.",
+    },
+    "infraia": {
+        "indicadores": ["hyper", "neo_rpo", "neo_cob", "neo_deuda"],
+        "base": "neo_rpo",
+        "per": "5y",
+        "nota": "Datos del ciclo de los centros de datos para IA. Oracle, CoreWeave, Nebius e IREN alquilan capacidad de cómputo: firman contratos largos con OpenAI, Microsoft o Meta y se endeudan para construir los centros de datos antes de cobrar. No son motores medidos: hay poca historia y la acción suele moverse antes que estos datos.",
+        "dir": {"neo_deuda": -1},
     },
     "fabricacion": {
         "indicadores": ["tsmc", "fab_capex", "hyper"],
@@ -244,6 +257,77 @@ def inventario(ciks, nombre, corto, fuente, que):
     }
 
 
+def suma_empresas(series):
+    df = pd.DataFrame(series).sort_index()
+    if df.empty:
+        return pd.Series(dtype=float), df
+    fin = min(df[c].last_valid_index() for c in df.columns)
+    df = df[df.index <= fin]
+    for c in df.columns:
+        ini = df[c].first_valid_index()
+        df.loc[df.index >= ini, c] = df.loc[df.index >= ini, c].ffill()
+    df = df.fillna(0)
+    return df.sum(axis=1), df
+
+
+def deuda(cik):
+    tot = [instantes(cik, [n]) for n in DEUDA_TOT]
+    lp, cp = instantes(cik, DEUDA_LP), instantes(cik, DEUDA_CP)
+    xs = [x for x in tot if len(x)] + ([lp + cp.reindex(lp.index).fillna(0)] if len(lp) else [])
+    return pd.concat(xs, axis=1).max(axis=1).dropna()
+
+
+def nivel_ind(tot, df, nombre, corto, fuente, que, lectura):
+    tot = tot[tot.index >= pd.Period("2015Q1", "Q")]
+    a = float(tot.iloc[-1] / tot.iloc[-5] - 1) if len(tot) >= 5 and tot.iloc[-5] > 0 else None
+    return {
+        "nombre": nombre, "corto": corto, "frec": "trimestral", "tipo": "nivel", "fuente": fuente, "que": que,
+        "ultimo": str(tot.index[-1]), "anual": a, "trim": float(tot.iloc[-1] / tot.iloc[-2] - 1) if len(tot) >= 2 and tot.iloc[-2] > 0 else None,
+        "valor": round(float(tot.iloc[-1]) / 1e9, 1), "unidad": "miles de millones de USD",
+        "detalle": {k: round(float(v) / 1e9, 1) for k, v in df.iloc[-1].items() if v},
+        "lectura": lectura(tot),
+        "serie": [[str(k.asfreq("M", "end")), round(float(v) / 1e9, 2)] for k, v in tot.items()],
+    }
+
+
+def coma(x):
+    return f"{x:.1f}".replace(".", ",")
+
+
+def neo():
+    out = {}
+    det = lambda df: ", ".join(f"{k} US$ {v / 1e9:.0f} mil M" for k, v in df.iloc[-1].items() if v)
+    rpo, drpo = suma_empresas({t: instantes(c, RPO) for t, c in NEO.items()})
+    out["neo_rpo"] = nivel_ind(rpo, drpo, "Contratos firmados por cobrar (Oracle, CoreWeave e IREN)", "Contratos firmados",
+                               "Balances trimestrales presentados a la SEC (obligaciones de desempeño pendientes).",
+                               "Lo que los clientes ya se comprometieron a pagarles en los próximos años por usar sus centros de datos. Es la demanda asegurada: si crece, siguen llegando contratos nuevos. Ojo: buena parte depende de pocos clientes, sobre todo OpenAI.",
+                               lambda t: f"Hoy: {det(drpo)}. Hace un año sumaban US$ {t.iloc[-5] / 1e9:.0f} mil M." if len(t) >= 5 else "")
+    cx = {t: trimestres(c) for t, c in NEO.items()}
+    fc = {t: trimestres(c, FCO) for t, c in NEO.items()}
+    tc, dcx = suma_empresas(cx)
+    tf, _ = suma_empresas(fc)
+    tc, tf = tc.rolling(4).sum().dropna(), tf.rolling(4).sum().dropna()
+    idx = tc.index.intersection(tf.index)
+    r = (tc[idx] / tf[idx]).where(tf[idx] > 0).dropna()
+    r = r[r.index >= pd.Period("2015Q1", "Q")]
+    h = r[r.index < pd.Period("2023Q1", "Q")]
+    out["neo_cob"] = {
+        "nombre": "Inversión contra caja que generan (Oracle, CoreWeave e IREN)", "corto": "Inversión vs. caja", "frec": "trimestral", "tipo": "veces",
+        "fuente": "Balances trimestrales presentados a la SEC (compras de propiedad y equipo sobre flujo de la operación, últimos 12 meses).",
+        "que": "Cuántas veces invierten lo que generan con su negocio. Por debajo de 1, la inversión sale de su propia caja; por encima, la diferencia se pide prestada. Es el punto débil del sector: si la demanda afloja, quedan con la deuda.",
+        "ultimo": str(r.index[-1]), "valor": round(float(r.iloc[-1]), 2), "previo": round(float(r.iloc[-5]), 2) if len(r) >= 5 else None,
+        "anual": float(r.iloc[-1] / r.iloc[-5] - 1) if len(r) >= 5 else None, "trim": float(r.iloc[-1] / r.iloc[-2] - 1) if len(r) >= 2 else None,
+        "lectura": f"Hoy invierten <b>{coma(r.iloc[-1])} veces</b> lo que generan (en 12 meses: inversión US$ {tc.iloc[-1] / 1e9:.0f} mil M, caja de la operación US$ {tf.iloc[-1] / 1e9:.0f} mil M). Entre 2015 y 2022 Oracle sola invertía {coma(h.mean())} veces." if len(h) else "",
+        "serie": [[str(k.asfreq("M", "end")), round(float(v), 3)] for k, v in r.items()],
+    }
+    dd, ddf = suma_empresas({t: deuda(c) for t, c in NEO.items()})
+    out["neo_deuda"] = nivel_ind(dd, ddf, "Deuda de Oracle, CoreWeave e IREN", "Deuda",
+                                 "Balances trimestrales presentados a la SEC (deuda financiera, sin alquileres).",
+                                 "Lo que deben a bancos y bonistas. Crece porque construyen los centros de datos antes de cobrar los contratos. Si sube más rápido que los contratos firmados, el riesgo aumenta.",
+                                 lambda t: f"Hoy: {det(ddf)}. Hace un año sumaban US$ {t.iloc[-5] / 1e9:.0f} mil M. No incluye los alquileres de centros de datos, que también son compromisos grandes." if len(t) >= 5 else "")
+    return out
+
+
 def precios(tks):
     px = yf.download(sorted(set(tks)), start="2014-10-01", auto_adjust=True, progress=False, threads=False)["Close"]
     px = px.ffill().resample("ME").last()
@@ -299,6 +383,12 @@ def main():
                                      "Balances trimestrales presentados a la SEC (compras de propiedad y equipo).")
     except Exception as e:
         print(f"fab_capex: {e}", file=sys.stderr)
+    try:
+        ind.update(neo())
+        for k_ in ["neo_rpo", "neo_cob", "neo_deuda"]:
+            print(k_, ind[k_]["serie"][-6:], ind[k_].get("detalle"), file=sys.stderr)
+    except Exception as e:
+        print(f"neo: {e}", file=sys.stderr)
     em = {x["byma"]: x["ticker"] for x in json.loads((D / "empresas.json").read_text())["empresas"]}
     bl = {b["id"]: b for b in json.loads((D / "bloques.json").read_text())["bloques"]}
     tks = {b: [em[e] for e in bl[b]["empresas"] if e in em] for b in BLOQUES if b in bl}
@@ -308,7 +398,7 @@ def main():
         print(f"precios: {e}", file=sys.stderr)
         px = {}
     for b, v in BLOQUES.items():
-        if v.get("base") in ind:
+        if v.get("base") in ind and "base3" in ind[v["base"]] and v.get("ciclos"):
             t3 = pd.Series({pd.Period(k, "M"): x for k, x in ind[v["base"]]["base3"]})
             v["picos"] = [[n, str(t3[a:z].idxmax())] for n, a, z in v["ciclos"]]
     for k in ind:
