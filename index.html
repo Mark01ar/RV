@@ -702,7 +702,7 @@ function hyFrase(h){
   const id = (h.ideas||[]).filter(x=>!x.nueva && hyFavor(x)!=null).sort((a,b)=>hyFavor(b)-hyFavor(a));
   if (id.length){ const bien = id.filter(x=>hyFavor(x)>0.01).slice(0,2), mal = id.filter(x=>hyFavor(x)<-0.01).slice(-2).reverse();
     const nm = x => `${esc(x.byma||x.ticker)} (${pct(hyFavor(x))})`;
-    txt += `<b class="t">Lo tuyo:</b> ` + [bien.length?`<span class="g">${bien.map(nm).join(" y ")} ${bien.length>1?"van":"va"} a favor</span>`:"", mal.length?`<span class="r">${mal.map(nm).join(" y ")} ${mal.length>1?"van":"va"} en contra</span>`:""].filter(Boolean).join("; ") + ". "; }
+    txt += `<b class="t">Tus recomendaciones:</b> ` + [bien.length?`<span class="g">${bien.map(nm).join(" y ")} ${bien.length>1?"van":"va"} a favor</span>`:"", mal.length?`<span class="r">${mal.map(nm).join(" y ")} ${mal.length>1?"van":"va"} en contra</span>`:""].filter(Boolean).join("; ") + ". "; }
   const pr = (h.balances?.proximos||[]).filter(b=>b.grande||b.idea), cal = (h.calendario||[]).filter(c=>c.peso>=3);
   const ev = [...pr.map(b=>({f:b.fecha, t:`${esc(b.nombre||b.byma)} presenta ${hyCuando(b.fecha)}${b.cuando?` ${b.cuando}`:""}`})), ...cal.map(c=>({f:c.fecha, t:`${c.nombre} ${hyCuando(c.fecha)}`}))].sort((a,b)=>a.f<b.f?-1:1);
   if (ev.length) txt += `<b class="t">Lo que viene:</b> <span class="w">${ev.slice(0,2).map(e=>e.t).join("; ")}</span>.`;
@@ -739,7 +739,7 @@ function hoyTab(m){
       ${x.noticia?`<div class="nw"><a href="${esc(x.noticia.url)}" target="_blank" rel="noopener">${esc(x.noticia.titulo)}</a> <span>· ${esc(x.noticia.fuente)}</span></div>`:""}</div>`; };
   const prom = t => { const v = (h.ideas||[]).filter(x=>x.tipo===t && !x.nueva && hyFavor(x)!=null).map(hyFavor); return v.length ? v.reduce((a,b)=>a+b,0)/v.length : null; };
   const ow = prom("OW"), uw = prom("UW");
-  const sec1 = `<section><div class="sh" style="--sc:var(--pos)"><div><div class="kick"><em>01</em>Tu cartera de ideas</div><h2>Tus ideas</h2><p>Cuánto le ganan o pierden al S&amp;P 500 desde la fecha en que las elegiste</p></div></div>
+  const sec1 = `<section><div class="sh" style="--sc:var(--pos)"><div><div class="kick"><em>04</em>Tus recomendaciones</div><h2>Recomendaciones</h2><p>Cuánto le ganan o pierden al S&amp;P 500 desde la fecha en que las elegiste</p></div></div>
     <div class="ideas">${ideas.map(card).join("")}</div>
     <div class="resu"><span>Promedio OW: <b class="${cls(ow)}">${pct(ow)}</b> contra el S&amp;P</span><span>Promedio UW: <b class="${cls(uw)}">${pct(uw)}</b> a favor</span><span>Las recién cargadas cuentan desde el cierre de su fecha.</span></div>
     <details class="help" style="margin-top:10px"><summary>Cómo se cargan o se cambian</summary><p class="mut small">Están en el archivo <b>data/ideas.csv</b> del repositorio: una línea por idea con el ticker de EE.UU., OW o UW, la fecha desde la que cuenta (año-mes-día) y un comentario opcional. Para editarlo desde GitHub: abrí el archivo, tocá el lápiz ("Edit this file"), cambiá la línea y apretá "Commit changes". También me podés decir "poné X en OW" y lo cargo yo. Se ve en la próxima actualización.</p></details></section>`;
@@ -751,32 +751,32 @@ function hoyTab(m){
       ${!bs.length&&!cs.length?`<div class="vacio">Sin eventos</div>`:""}</div>`; };
   const tksI = new Set((h.ideas||[]).map(x=>x.ticker));
   const ya = [...(h.balances?.ya||[])].filter(y=>(Date.now()-new Date(y.fecha+"T12:00:00"))/864e5<=6).sort((a,b)=>(tksI.has(b.ticker)-tksI.has(a.ticker)) || (b.fecha>a.fecha?1:-1)).slice(0,8);
-  const sec2 = dias.length ? `<section><div class="sh" style="--sc:var(--hd)"><div><div class="kick"><em>02</em>Agenda</div><h2>Los próximos días</h2><p>Balances de tus empresas y datos macro de EE.UU., día por día (hora argentina)</p></div></div>
+  const sec2 = dias.length ? `<section><div class="sh" style="--sc:var(--hd)"><div><div class="kick"><em>01</em>Agenda</div><h2>Los próximos días</h2><p>Balances de tus empresas y datos macro de EE.UU., día por día (hora argentina)</p></div></div>
     <div class="semana">${dias.map(dcol).join("")}</div>
     <div class="leg"><span><i style="background:var(--accent)"></i>Balance</span><span><i style="background:var(--pos)"></i>Balance de una idea tuya</span><span><i style="background:var(--hd)"></i>Dato macro</span>${ya.length?`<span>· Presentaron en los últimos días: ${ya.map(y=>`<b>${esc(y.byma)}</b> ${y.veredicto?esc(y.veredicto.replace(" lo esperado","").toLowerCase()):""}${y.reaccion!=null?` <b class="${cls(y.reaccion)}">${pct(y.reaccion)}</b>`:` <span class="mut">(reacción pendiente)</span>`}`).join(" · ")} <span class="mut">(reacción al día siguiente)</span></span>`:""}</div></section>` : "";
   const filtro = EST.hyf || "todas", tks = new Set((h.ideas||[]).map(x=>x.ticker));
   const ns = (h.noticias||[]).filter(n => filtro==="todas" || (filtro==="ideas" ? n.tickers.some(t=>tks.has(t)) : n.grupo===filtro));
-  const lim = EST.hyn || 25;
+  const lim = EST.hyabre ? ns.length : 10;
   const hoyS = new Date().toLocaleDateString("en-CA",{timeZone:HYZ});
   const fila = n => { const t0 = n.tickers[0], mv = t0!=null ? n.mov?.[t0] : null, d = hyDia(n.fecha), g = HYG[n.grupo]||HYG.otros;
     return `<div class="it"><span class="h">${d===hoyS?"":`${hyFecha(d)}<br>`}${hyHora(n.fecha)}</span><span class="tx">${n.tipo==="sec"?`<span class="of">SEC</span>`:n.tipo==="fed"?`<span class="of">FED</span>`:""}${n.tickers.slice(0,4).map(t=>`<span class="tk${tks.has(t)?" idea":""}" data-hyt="${esc(t)}">${esc(hyEmp(t)?.byma||t)}</span>`).join("")}<a class="tl" href="${esc(n.url)}" target="_blank" rel="noopener"${n.titulo_en?` title="${esc(n.titulo_en)}"`:""}>${esc(n.titulo)}</a>
       <small>${esc(n.fuentes[0])}${n.n>1?` y ${n.n-1} ${n.n-1===1?"fuente":"fuentes"} más`:""}${(n.bloques||[]).slice(0,1).map(b=>` <span class="blk" style="--bc:${g[1]}">${esc(b)}</span>`).join("")}${n.tipo==="general"?` <span class="blk" style="--bc:var(--vio)">Mercado</span>`:""}</small></span>
       <span class="mv ${cls(mv)}" title="Movimiento del último día contra el S&P 500">${mv==null?"—":pct(mv)}</span></div>`; };
   const bts = [["todas","Todas"],["ideas","Mis ideas"],["ia","IA y tecnología"],["energia","Energía"],["finanzas","Finanzas"],["macro","Macro y Fed"],["otros","Otras"]];
-  const sec3 = `<div><div class="sh" style="--sc:var(--accent)"><div><div class="kick"><em>03</em>Noticiero del mediodía</div><h2>Noticias</h2><p>Solo lo que toca a tus empresas, sin repetidos${(h.noticias||[]).some(n=>n.titulo_en)?" · traducción automática (pasá el mouse para ver el original)":""}</p></div>
+  const sec3 = `<div><div class="sh" style="--sc:var(--accent)"><div><div class="kick"><em>02</em>Noticiero del mediodía</div><h2>Noticias</h2><p>Solo lo que toca a tus empresas, sin repetidos${(h.noticias||[]).some(n=>n.titulo_en)?" · traducción automática (pasá el mouse para ver el original)":""}</p></div>
       <div class="filt">${bts.map(([k,t])=>`<button data-hyf="${k}" class="${filtro===k?"on":""}">${t}</button>`).join("")}</div></div>
     <div class="news">${ns.slice(0,lim).map(fila).join("") || `<p class="mut" style="padding:14px 0">Sin noticias en este filtro.</p>`}</div>
-    ${ns.length>lim?`<button class="mas" data-hymas="1">Ver más (${ns.length-lim})</button>`:""}
+    ${ns.length>10?`<button class="mas" data-hymas="1">${EST.hyabre?"▲ Mostrar menos":`▼ Ver las ${ns.length-10} noticias restantes`}</button>`:""}
     <p class="nota-pie">A la derecha, cuánto se movió la empresa en el último día contra el S&amp;P: si casi no se movió, la noticia no le importó al mercado.</p></div>`;
   const pm = h.predicciones||[];
-  const sec4 = pm.length ? `<div><div class="sh" style="--sc:var(--vio)"><div><div class="kick"><em>04</em>Mercados de predicción</div><h2>Qué apuesta la gente</h2><p>Probabilidades de Polymarket, con plata real en juego</p></div></div>
+  const sec4 = pm.length ? `<div><div class="sh" style="--sc:var(--vio)"><div><div class="kick"><em>03</em>Mercados de predicción</div><h2>Qué apuesta la gente</h2><p>Probabilidades de Polymarket, con plata real en juego</p></div></div>
     <div class="pm">${pm.map(p=>`<div class="pq"><a href="${esc(p.url)}" target="_blank" rel="noopener" title="${esc(p.pregunta_en||"")}"><div class="q"><span>${esc(p.pregunta)}</span><b>${Math.round(p.p*100)}%</b></div><div class="trk"><i style="width:${(p.p*100).toFixed(0)}%"></i></div></a><small class="${p.semana==null?"mut":cls(p.semana)}">${p.semana==null?"sin dato semanal":Math.abs(p.semana)<0.005?"sin cambios en la semana":`${p.semana>0?"+":""}${Math.round(p.semana*100)} puntos en la semana`}</small></div>`).join("")}</div>
     <p class="nota-pie">Son apuestas, no pronósticos: sirven para ver qué espera el mercado y cuánto cambió en la semana.</p></div>` : "";
   m.innerHTML = `<div class="hy"><div class="hola"><div><h1>${titulo}</h1><p>Lo que pasó y lo que viene, <b>en 5 minutos</b>.</p></div><span class="upd"><i></i>Actualizado ${hyHora(h.actualizado)}${hyDia(h.actualizado)!==hoyS?` del ${hyFecha(hyDia(h.actualizado))}`:""} · próxima ${hyProxima()}</span></div>
-    <div class="frase">${hyFrase(h)}</div>${kp}${sec1}${sec2}<section class="dos">${sec3}${sec4}</section></div>`;
+    <div class="frase">${hyFrase(h)}</div>${kp}${sec2}<section class="dos">${sec3}${sec4}</section>${sec1}</div>`;
   m.querySelectorAll("[data-hyt]").forEach(a=>a.onclick=ev=>{ ev.preventDefault(); const e = hyEmp(a.dataset.hyt); if (!e) return; EST.sel=e.ticker; EST.ftab="resumen"; EST.bloque=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
-  m.querySelectorAll("[data-hyf]").forEach(b=>b.onclick=()=>{ EST.hyf=b.dataset.hyf; EST.hyn=25; hoyTab(m); });
-  const mb = m.querySelector("[data-hymas]"); if (mb) mb.onclick=()=>{ EST.hyn=(EST.hyn||25)+25; hoyTab(m); };
+  m.querySelectorAll("[data-hyf]").forEach(b=>b.onclick=()=>{ EST.hyf=b.dataset.hyf; EST.hyabre=false; hoyTab(m); });
+  const mb = m.querySelector("[data-hymas]"); if (mb) mb.onclick=()=>{ const y = window.scrollY; EST.hyabre=!EST.hyabre; hoyTab(m); if (!EST.hyabre) document.querySelector(".hy .news")?.scrollIntoView({block:"start"}); else window.scrollTo(0,y); };
 }
 
 function render(){
