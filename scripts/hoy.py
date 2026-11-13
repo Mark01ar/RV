@@ -480,75 +480,65 @@ def juntar(items):
 
 
 def polymarket():
-    vistos = {}
-    urls = ["https://gamma-api.polymarket.com/events?closed=false&active=true&limit=200&order=volume24hr&ascending=false"]
-    urls += [f"https://gamma-api.polymarket.com/events?closed=false&active=true&limit=100&tag_slug={s}" for s in ["fed", "fed-rates", "economy", "finance", "business", "stocks", "argentina", "ai", "tech"]]
-    urls += [f"https://gamma-api.polymarket.com/public-search?q={q}&limit_per_type=20&events_status=active" for q in ["fed decision", "fed december", "fed rate", "recession", "openai ipo", "largest company", "milei"]]
-    for u in urls:
-        try:
-            js = requests.get(u, headers=WEB, timeout=30).json()
-            evs = js.get("events", []) if isinstance(js, dict) else js
-            for ev in evs:
-                for mk in ev.get("markets") or []:
-                    if mk.get("closed"):
-                        continue
-                    vistos[mk.get("id")] = {**mk, "_ev": ev.get("title")}
-        except Exception as e:
-            log("polymarket", u, e)
-    buscar = [
-        ("fed", r"(\bfed\b|fomc|federal reserve)", r"(decrease|cut|lower).*(rate|bps)|(rate|bps).*(decrease|cut|lower)", 75),
-        ("recesion", r"recession", r"(2026|2027)", 500),
-        ("openai", r"openai", r"ipo", 900),
-        ("argentina", r"(argentina|milei)", r"", 900),
-        ("nvidia", r"(nvidia|largest company)", r"", 120),
-    ]
-    log("polymarket mercados", len(vistos), [m.get("question") for m in vistos.values() if re.search(r"\bfed\b|fomc", m.get("question") or "", re.I)][:8])
+    try:
+        conf = pd.read_csv(D / "predicciones.csv", dtype=str).fillna("")
+    except Exception as e:
+        log("predicciones.csv", e)
+        return []
     out = []
-    fed = []
-    for mk in vistos.values():
-        q = mk.get("question") or ""
-        if re.search(r"\bfed\b", q, re.I) and re.search(r"december", q, re.I) and re.search(r"meeting", q, re.I):
+    for r in conf.itertuples():
+        evs = []
+        for u in [f"https://gamma-api.polymarket.com/public-search?q={requests.utils.quote(r.buscar)}&limit_per_type=20&events_status=active",
+                  f"https://gamma-api.polymarket.com/events?closed=false&active=true&limit=50&title={requests.utils.quote(r.buscar)}"]:
             try:
-                if [o.lower() for o in json.loads(mk.get("outcomes") or "[]")][:1] != ["yes"]:
-                    continue
-                p = float(json.loads(mk.get("outcomePrices") or "[]")[0])
-            except Exception:
+                js = requests.get(u, headers=WEB, timeout=30).json()
+                evs += js.get("events", []) if isinstance(js, dict) else js
+            except Exception as e:
+                log("polymarket", u, e)
+        cand = [e for e in evs if re.search(r.patron, e.get("title") or "", re.I) and not e.get("closed")]
+        log("polymarket", r.buscar, len(evs), [e.get("title") for e in evs[:6]], "->", [e.get("title") for e in cand[:3]])
+        if not cand:
+            continue
+        ev = max(cand, key=lambda e: num(e.get("volume")) or 0)
+        mks = ev.get("markets") or []
+        if not mks or not all("outcomePrices" in m for m in mks):
+            try:
+                ev = requests.get(f"https://gamma-api.polymarket.com/events/slug/{ev.get('slug')}", headers=WEB, timeout=30).json()
+                mks = ev.get("markets") or []
+            except Exception as e:
+                log("polymarket evento", e)
+        ops = []
+        for m in mks:
+            if m.get("closed") or m.get("active") is False:
                 continue
-            ql = q.lower()
-            txt = "La Fed baja 50 puntos o más en diciembre" if "50+" in ql or "50 bps" in ql else "La Fed baja 25 puntos en diciembre" if "decrease" in ql else "La Fed sube la tasa en diciembre" if "increase" in ql else "La Fed deja la tasa sin cambios en diciembre" if "no change" in ql else None
-            if txt:
-                fed.append({"k": "fed", "pregunta": txt, "es": True, "p": p, "semana": num(mk.get("oneWeekPriceChange")), "vol": num(mk.get("volume")) or 0,
-                            "fin": str(mk.get("endDate"))[:10], "url": f"https://polymarket.com/event/{(mk.get('events') or [{}])[0].get('slug') if mk.get('events') else mk.get('slug')}"})
-    if fed:
-        out.append(max(fed, key=lambda z: z["p"]))
-    buscar = [z for z in buscar if z[0] != "fed"]
-    for k, a, b, dias in buscar:
-        mejor = None
-        for mk in vistos.values():
-            q = f"{mk.get('question') or ''} {mk.get('_ev') or ''}"
-            if not re.search(a, q, re.I) or (b and not re.search(b, q, re.I)):
+            if re.match(r"^(candidate|person|player|other|team) ?[a-z0-9]?$", (m.get("groupItemTitle") or "").strip(), re.I) or (num(m.get("volume")) or 0) <= 0:
                 continue
             try:
-                fin = pd.Timestamp(mk.get("endDate")).date()
-                if (fin - HOY).days > dias or fin < HOY:
-                    continue
-                pr = json.loads(mk.get("outcomePrices") or "[]")
-                oc = json.loads(mk.get("outcomes") or "[]")
-                if not pr or [o.lower() for o in oc][:1] != ["yes"]:
-                    continue
+                pr = json.loads(m.get("outcomePrices") or "[]")
+                oc = [o.lower() for o in json.loads(m.get("outcomes") or "[]")]
                 p = float(pr[0])
             except Exception:
                 continue
-            if not (0.03 <= p <= 0.97):
-                continue
-            vol = num(mk.get("volume")) or 0
-            if not mejor or vol > mejor["vol"]:
-                mejor = {"k": k, "pregunta": mk.get("question"), "p": p, "semana": num(mk.get("oneWeekPriceChange")), "vol": vol,
-                         "fin": str(fin), "url": f"https://polymarket.com/event/{(mk.get('events') or [{}])[0].get('slug') if mk.get('events') else mk.get('slug')}"}
-        if mejor:
-            out.append(mejor)
+            if len(mks) == 1:
+                ops.append({"label": "Sí" if oc[:1] == ["yes"] else (json.loads(m.get("outcomes"))[0]), "p": p, "semana": num(m.get("oneWeekPriceChange"))})
+            else:
+                ops.append({"label": m.get("groupItemTitle") or m.get("question"), "p": p, "semana": num(m.get("oneWeekPriceChange"))})
+        fechas = []
+        for o in ops:
+            try:
+                fechas.append(pd.Timestamp(o["label"]) if re.search(r"(january|february|march|april|may|june|july|august|september|october|november|december)", o["label"] or "", re.I) else None)
+            except Exception:
+                fechas.append(None)
+        if ops and all(f is not None for f in fechas):
+            hoy_ = pd.Timestamp(HOY)
+            orden = sorted(zip(fechas, ops), key=lambda z: z[0])
+            ops = [o for f, o in orden if f >= hoy_ and o["p"] >= 0.02][:3] or [o for f, o in orden][:3]
+        else:
+            ops = sorted(ops, key=lambda z: -z["p"])[:3]
+        if ops:
+            out.append({"titulo": r.titulo, "es": True, "url": f"https://polymarket.com/event/{ev.get('slug')}", "vol": num(ev.get("volume")) or 0,
+                        "titulo_en": ev.get("title"), "opciones": ops})
     return out
-
 
 def argentina(datos):
     out = {}
@@ -651,10 +641,10 @@ def main():
             x["noticia"] = {"titulo": n["titulo"], "url": n["url"], "fuente": n["fuentes"][0], "fecha": n["fecha"]}
     try:
         pm = polymarket()
-        pt = [m for m in pm if not m.get("es")]
-        tr = traducir([m["pregunta"] for m in pt])
-        for m, t in zip(pt, tr):
-            m["pregunta_en"], m["pregunta"] = m["pregunta"], t
+        labs = [o for m in pm for o in m["opciones"] if re.search(r"(bps|increase|decrease|change|hike|cut|january|february|march|april|may|june|july|august|september|october|november|december|before|by |yes|no$)", o["label"] or "", re.I)]
+        tr = traducir([o["label"] for o in labs])
+        for o, t in zip(labs, tr):
+            o["label_en"], o["label"] = o["label"], t
         out["predicciones"] = pm
     except Exception as e:
         log("predicciones", e)

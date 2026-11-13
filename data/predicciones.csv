@@ -1,0 +1,6 @@
+titulo,buscar,patron
+Próximo CEO de Nvidia,nvidia ceo,nvidia.*ceo|ceo.*nvidia
+Decisión de la Fed en diciembre,fed decision december,fed decision.*dec
+¿Cuándo se conoce un cuarto affaire de Jensen Huang?,jensen huang affair,huang.*affair
+¿Cuándo se anuncia la fusión Tesla–SpaceX?,tesla spacex merger,(tesla.*spacex|spacex.*tesla).*(merge|merger)
+Ganador de la elección presidencial de EE.UU. 2028,presidential election winner 2028,presidential election winner 2028|2028.*presidential election winner
