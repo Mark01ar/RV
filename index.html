@@ -636,7 +636,8 @@ function metr(f){
   const nprom = nets.length>=4 ? nets.reduce((s,v)=>s+v,0)/nets.length : null;
   const mcap = f.mcap;
   const peC = nprom==null||!mcap ? null : nprom<=0 ? -1 : mcap/nprom;
-  const peMed = f.pe_banda ? medi(f.pe_banda.pe) : null;
+  const peMed = f.pe_banda && f.pe_banda.pe.length>=36 ? medi(f.pe_banda.pe) : null;
+  const peAn = f.pe_banda ? Math.round(f.pe_banda.pe.length/12) : null;
   const pe = f.val?.pe;
   const desc = pe && peMed ? pe/peMed - 1 : null;
   const srt = [...ms].sort((a,b)=>a-b);
@@ -655,7 +656,7 @@ function metr(f){
   const sn_ = f.sensibilidades || {}, fxe_ = FX?.empresas?.[f.byma]?.f || {};
   const roe = u.neto!=null && u.patrimonio>0 ? u.neto/u.patrimonio : null, roa = u.neto!=null && u.activo>0 ? u.neto/u.activo : null, eqa = u.patrimonio!=null && u.activo>0 ? u.patrimonio/u.activo : null;
   const ex_ = {roe, roa, eqa, pvl: f.val?.pvl, btc: fxe_.bitcoin?.r ? fxe_.bitcoin.r.ef/100 : null, btce: etqEmp(f.byma,"bitcoin"), oil: fxe_.petroleo?.r ? fxe_.petroleo.r.ef/100 : null, oile: etqEmp(f.byma,"petroleo"), beta: sn_.beta, fcfm, sbcv, pfcf: f.val?.pfcf, cx, cx3, cxc, fcfy, vg1, dn, dne, fcf: u.fcf, deuda: u.deuda, caja: u.caja, dev: f.val?.rend_accionista!=null && f.val?.div_yield!=null && f.val.rend_accionista>=0 ? Math.max(f.val.rend_accionista, f.val.div_yield) : (f.val?.rend_accionista ?? f.val?.div_yield)};
-  return {...ex_, mu, pctl, mmin: ms.length?Math.min(...ms):null, mmax: ms.length?Math.max(...ms):null, nanos: me.length, nprom, nn: nets.length, peC, peMed, pe, desc, picos, v3, mb: u.m_bruto, mid: u.m_id, pefwd: f.val?.pe_fwd, peg: f.val?.peg, div: f.val?.div_yield, r12m: f.precio_bloque?.r12m};
+  return {...ex_, mu, pctl, mmin: ms.length?Math.min(...ms):null, mmax: ms.length?Math.max(...ms):null, nanos: me.length, nprom, nn: nets.length, peC, peMed, peAn, pe, desc, picos, v3, mb: u.m_bruto, mid: u.m_id, pefwd: f.val?.pe_fwd, peg: f.val?.peg, div: f.val?.div_yield, r12m: f.precio_bloque?.r12m};
 }
 function notaBloque(x, f, bl){
   const L = bl.lente; if (!L) return general(x.notas);
@@ -670,7 +671,7 @@ function lecturaCiclo(f, k){
   if (k.mu!=null) s.push(k.pctl==null ? `Margen EBIT del último año: <b>${pc0(k.mu)}</b>. Hay pocos años de historia para ubicarlo en su ciclo.` : `Margen EBIT del último año: <b>${pc0(k.mu)}</b>, ${k.pctl>=1?`<b>el más alto de los ${k.nanos} años con datos</b>`:k.pctl<=0?`el más bajo de los ${k.nanos} años con datos`:`más alto que el <b>${Math.round(k.pctl*100)}%</b> de sus otros años`} (rango ${pc0(k.mmin)} a ${pc0(k.mmax)}).${k.pctl>=0.75?" Está en la zona alta de su ciclo.":k.pctl<=0.25?" Está en la zona baja de su ciclo.":""}`);
   if (k.peC!=null) s.push(k.peC<0 ? `Sumando los últimos ${k.nn} años, la empresa <b>perdió plata en promedio</b>: el P/E de hoy (${nx(k.pe)}x) depende de que la ganancia actual se sostenga.` : `Con la ganancia de hoy el P/E es <b>${nx(k.pe)}x</b>; con la ganancia promedio de los últimos ${k.nn} años (US$ ${big(k.nprom)}) sería <b>${nx(k.peC)}x</b>.`);
   else s.push(`No hay suficientes años de ganancia para calcular el P/E del ciclo.`);
-  if (k.desc!=null) s.push(k.desc<0 ? `Para que el P/E llegue a su mediana de los últimos años (${nx(k.peMed)}x) con el precio de hoy, la ganancia podría caer <b>${pc0(-k.desc)}</b>.` : `Su P/E está <b>${pc0(k.desc)}</b> por encima de su mediana de los últimos años (${nx(k.peMed)}x).`);
+  if (k.desc!=null) s.push(k.desc<0 ? `Para que el P/E llegue a su mediana de los últimos ${k.peAn} años (${nx(k.peMed)}x) con el precio de hoy, la ganancia podría caer <b>${pc0(-k.desc)}</b>.` : `Su P/E está <b>${pc0(k.desc)}</b> por encima de su mediana de los últimos ${k.peAn} años (${nx(k.peMed)}x).`);
   if (k.picos.length) s.push(`Las otras veces que el margen estuvo en la zona alta: ${k.picos.map(p=>`<b>${p.anio}</b> → ${p.perd?"al año siguiente pasó a pérdida":`al año siguiente la ganancia ${p.sig>=0?"subió":"cayó"} ${pc0(Math.abs(p.sig))}`}`).join("; ")}.`);
   return s;
 }
@@ -681,7 +682,7 @@ function lecturaFarma(f, k){
   if (k.mid!=null) s.push(`Invierte <b>${pc0(k.mid)}</b> de sus ventas en investigación.`);
   if (k.pefwd!=null) s.push(`P/E esperado <b>${nx(k.pefwd)}x</b>${k.peg!=null?`, PEG ${nx(k.peg,2)}`:""}.${k.v3!=null&&k.v3<0.03&&k.pefwd<14?" Crecimiento bajo con P/E bajo: el mercado está descontando que pierde ventas por vencimientos.":k.v3!=null&&k.v3>0.15&&k.pefwd>25?" Crecimiento alto con P/E alto: el precio ya descuenta que el crecimiento sigue.":""}`);
   if (k.pe && k.pefwd && k.pe/k.pefwd>1.8) s.push(`El P/E de los últimos 12 meses (${nx(k.pe)}x) es mucho más alto que el esperado (${nx(k.pefwd)}x): la ganancia contable reciente probablemente está golpeada por cargos únicos (compras de empresas o juicios). Conviene mirar más el esperado.`);
-  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos años (${nx(k.peMed)}x).`);
+  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos ${k.peAn} años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos ${k.peAn} años (${nx(k.peMed)}x).`);
   if (k.mu!=null && k.pctl!=null) s.push(`Margen EBIT ${pc0(k.mu)}, ${rangoTxt(k)}.`);
   return s;
 }
@@ -694,7 +695,7 @@ function lecturaCrec(f, k){
   if (k.mid!=null) s.push(`Invierte <b>${pc0(k.mid)}</b> de sus ventas en investigación.`);
   if (k.pefwd!=null) s.push(`P/E esperado <b>${nx(k.pefwd)}x</b>${k.pe?` contra ${nx(k.pe)}x de los últimos 12 meses`:""}.${k.pe&&k.pe/k.pefwd>1.8?" La diferencia es grande: los analistas esperan que la ganancia crezca mucho (o la ganancia reciente tiene cargos únicos). Si esa ganancia no llega, el P/E esperado engaña.":""}`);
   if (k.peg!=null) s.push(`PEG ${nx(k.peg,2)}${k.peg<0.5?": muy bajo porque se espera mucho crecimiento; es tan confiable como esas estimaciones.":"."}`);
-  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos años (${nx(k.peMed)}x).`);
+  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos ${k.peAn} años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos ${k.peAn} años (${nx(k.peMed)}x).`);
   return s;
 }
 function lecturaEquipos(f, k){
@@ -711,7 +712,7 @@ function lecturaPlat(f, k){
   if (k.fcfy!=null) s.push(`Flujo libre: US$ ${big(k.fcf)}, un <b>${pc0(k.fcfy,1)}</b> de lo que vale la empresa por año.`);
   if (k.dev!=null) s.push(`Devuelve al accionista (dividendos más recompras) un <b>${pc0(k.dev,1)}</b> por año.`);
   if (k.pefwd!=null) s.push(`P/E esperado <b>${nx(k.pefwd)}x</b>${k.pe?`, de los últimos 12 meses ${nx(k.pe)}x`:""}.`);
-  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos años (${nx(k.peMed)}x).`);
+  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos ${k.peAn} años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos ${k.peAn} años (${nx(k.peMed)}x).`);
   return s;
 }
 function lecturaInfra(f, k){
@@ -730,7 +731,7 @@ function lecturaSoft(f, k){
   if (k.fcfm!=null) s.push(`Flujo libre: <b>${pc0(k.fcfm)}</b> de las ventas.`);
   if (k.sbcv!=null) s.push(`Compensación en acciones: <b>${pc0(k.sbcv)}</b> de las ventas.${k.sbcv>0.15?" Es alta: el flujo libre exagera lo que realmente gana el accionista, porque ese costo se paga diluyendo.":""}`);
   if (k.pfcf!=null) s.push(`Precio / flujo libre <b>${nx(k.pfcf)}x</b>${k.pefwd!=null?`; P/E esperado ${nx(k.pefwd)}x`:""}.`);
-  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos años (${nx(k.peMed)}x).`);
+  if (k.desc!=null) s.push(k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos ${k.peAn} años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos ${k.peAn} años (${nx(k.peMed)}x).`);
   return s;
 }
 function lecturaHard(f, k){
@@ -742,7 +743,7 @@ function lecturaHard(f, k){
   if (k.dev!=null) s.push(`Devuelve al accionista <b>${pc0(k.dev,1)}</b> por año entre dividendos y recompras.`);
   return s;
 }
-const pex = (k,txt) => k.desc==null ? null : (k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos años (${nx(k.peMed)}x).`);
+const pex = (k,txt) => k.desc==null ? null : (k.desc<0 ? `Cotiza <b>${pc0(-k.desc)}</b> por debajo de su P/E mediano de los últimos ${k.peAn} años (${nx(k.peMed)}x).` : `Cotiza <b>${pc0(k.desc)}</b> por encima de su P/E mediano de los últimos ${k.peAn} años (${nx(k.peMed)}x).`);
 function lecturaGen(f, k){
   const s = [];
   if (k.vg1!=null) s.push(`Ventas: <b>${pct(k.vg1,0)}</b> el último año${k.v3!=null?`, ${pct(k.v3,0)} por año en los últimos 3`:""}.`);
@@ -1422,7 +1423,7 @@ function bandaPE(b, hoy){
     ${hoy?`<circle cx="${X(n-1)}" cy="${Y(Math.min(hoy,hi))}" r="4" fill="var(--text)"/>`:""}${xt}</svg>
     <div class="leg"><span style="color:var(--accent)">— P/E mensual</span><span style="color:var(--blue)">- - mediana ${nx(p50,0)}x</span><span class="mut">▮ rango habitual ${nx(p25,0)}x a ${nx(p75,0)}x</span></div>
     <p class="small" style="margin:6px 0 0">Hoy: <b>${hoy==null?"—":nx(hoy,1)+"x"}</b>${pos?`, ${pos}.`:""}</p>
-    <p class="mut small">P/E con el precio de cada mes y la ganancia del último ejercicio publicado. Aproximado: supone la misma cantidad de acciones que hoy.</p>`;
+    <p class="mut small">P/E con el precio de cada mes y la ganancia del último ejercicio publicado. Ajustado por splits y por la cantidad de acciones de cada año (recompras o emisiones).</p>`;
 }
 
 function premioCh(ch){

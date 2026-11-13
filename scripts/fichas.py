@@ -141,11 +141,12 @@ def sec_anual(ticker, cik):
         return None
     sh = []
     for u, lst in f.get("facts", {}).get("dei", {}).get("EntityCommonStockSharesOutstanding", {}).get("units", {}).items():
-        sh += [(pd.Timestamp(e["end"]), float(e["val"])) for e in lst]
+        sh += [(pd.Timestamp(e["end"]), e.get("accn"), e.get("filed"), float(e["val"])) for e in lst]
     df = pd.DataFrame(out)
     df = df[df.index >= df.index.max() - pd.Timedelta(days=365 * 10 + 30)]
     if sh:
-        s = pd.DataFrame(sh, columns=["end", "v"]).groupby("end")["v"].sum().sort_index()
+        s = pd.DataFrame(sh, columns=["end", "accn", "filed", "v"]).groupby(["end", "accn", "filed"], dropna=False)["v"].sum().reset_index()
+        s = s.sort_values(["end", "filed"]).groupby("end")["v"].last().sort_index()
         df["sh"] = [s[s.index <= e + pd.Timedelta(days=120)].iloc[-1] if (s.index <= e + pd.Timedelta(days=120)).any() else np.nan for e in df.index]
     df["fuente"] = "SEC"
     return df
@@ -398,10 +399,48 @@ def logo(t, b, info):
             pass
 
 
+def ajustar_acciones(an, splits):
+    for d, r in sorted(splits.items()):
+        if not r or abs(r - 1) < 0.05:
+            continue
+        d = pd.Timestamp(d).tz_localize(None) if pd.Timestamp(d).tzinfo else pd.Timestamp(d)
+        filas = [x for x in an if x.get("acciones")]
+        for a, b in zip(filas, filas[1:]):
+            ca, cb = pd.Timestamp(a["cierre"]), pd.Timestamp(b["cierre"])
+            if not (ca - pd.Timedelta(days=60) <= d <= cb + pd.Timedelta(days=150)):
+                continue
+            if abs(b["acciones"] / a["acciones"] / r - 1) < 0.25:
+                for x in an:
+                    if x.get("acciones") and pd.Timestamp(x["cierre"]) <= ca:
+                        x["acciones"] = x["acciones"] * r
+                break
+    filas = [x for x in an if x.get("acciones")]
+    for a, b, c in zip(filas, filas[1:], filas[2:]):
+        if not (a["acciones"] and b["acciones"] and c["acciones"]):
+            continue
+        r1, r2 = b["acciones"] / a["acciones"], c["acciones"] / b["acciones"]
+        if (r1 > 1.6 and r2 < 1 / 1.6 or r1 < 1 / 1.6 and r2 > 1.6) and 0.7 < c["acciones"] / a["acciones"] < 1.4:
+            b["acciones"] = None
+    return an
+
+
+def factor_acciones(an):
+    filas = [x for x in an if x.get("acciones")]
+    if not filas:
+        return lambda x: 1.0
+    hoy = filas[-1]["acciones"]
+    def f(x):
+        v = x.get("acciones")
+        r = v / hoy if v else 1.0
+        return r if 0.25 < r < 4 else 1.0
+    return f
+
+
 def banda_pe(an, s, mcap, precio):
     if not mcap or not precio or not len(s):
         return None
-    fy = [(pd.Timestamp(x["cierre"]) + pd.offsets.MonthEnd(0) + pd.Timedelta(days=75), x["neto"]) for x in an if x.get("neto")]
+    fa = factor_acciones(an)
+    fy = [(pd.Timestamp(x["cierre"]) + pd.offsets.MonthEnd(0) + pd.Timedelta(days=75), x["neto"] / fa(x)) for x in an if x.get("neto")]
     m = s.resample("ME").last().dropna()
     m = m[m.index >= m.index[-1] - pd.Timedelta(days=3660)]
     f_, pe_ = [], []
@@ -660,6 +699,11 @@ def main():
                     for c_ in ["objetivo", "objetivo_alto", "objetivo_bajo"]:
                         if ana.get(c_):
                             ana[c_] = ana[c_] / fxc
+                try:
+                    an = ajustar_acciones(an, k.splits.to_dict())
+                except Exception:
+                    pass
+                fa = factor_acciones(an)
                 hist_pe = []
                 for x_ in an:
                     if not (x_.get("neto") and x_["neto"] > 0):
@@ -669,7 +713,7 @@ def main():
                     if not len(p_) or (d - p_.index[-1]).days >= 10:
                         continue
                     if mcap and precio:
-                        hist_pe.append({"anio": x_["anio"], "pe": float(p_.iloc[-1]) / precio * mcap / x_["neto"]})
+                        hist_pe.append({"anio": x_["anio"], "pe": float(p_.iloc[-1]) / precio * mcap * fa(x_) / x_["neto"]})
                 ficha = {**{k_: v for k_, v in e.items()}, "descripcion": info.get("longBusinessSummary"), "web": info.get("website"),
                          "empleados": num(info.get("fullTimeEmployees")), "precio_bloque": pb, "anual": an, "trimestral": trimestral(k, conv),
                          "analistas": ana, "pe_historia": hist_pe, "posicion": posicion(k, info)}
