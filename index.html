@@ -559,6 +559,16 @@ p .pos,p .neg,li .pos,li .neg,.fh-sub .pos,.fh-sub .neg{font-weight:700}
 .fam-h::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,var(--fc) 0,color-mix(in srgb,var(--fc) 25%,transparent) 30%,transparent 100%)}
 .fam .bcard{border-top:3px solid var(--fc);background:linear-gradient(180deg,color-mix(in srgb,var(--fc) 8%,rgba(12,19,48,.82)) 0,rgba(12,19,48,.82) 140px)}
 .lwrap{border-top:3px solid var(--accent)!important;border-radius:10px}
+
+.sofa{display:inline-flex;align-items:center;justify-content:center;min-width:38px;padding:4px 7px;border-radius:4px;color:#fff!important;font-weight:800;font-size:13px;line-height:1.1;letter-spacing:0;font-family:inherit;text-shadow:0 1px 1px rgba(0,0,0,.25);border:0}
+.sofa.nchip{min-width:40px;font-size:13px}
+.rk .sofa.nchip{font-size:15px;padding:5px 10px}
+.sofa.smini{min-width:34px;padding:3px 5px;font-size:12px}
+.sofa.sin{min-width:34px;padding:2px 6px;font-size:12.5px;vertical-align:1px}
+.sofa.sxs{min-width:28px;padding:1px 4px;font-size:11px;vertical-align:1px}
+.sofa.sbig{font-size:46px;padding:8px 14px;border-radius:8px;min-width:96px;font-weight:800}
+.fh-score .pill{display:inline-flex;align-items:center;gap:8px}
+.ltab td .sofa.smini{display:inline-flex}
 </style>
 </head>
 <body>
@@ -756,7 +766,7 @@ function hoyTab(m){
     const rv = x.sin_precio ? `<div class="r" style="color:var(--muted)">—<small>sin precio</small></div>` : x.nueva ? `<div class="r" style="color:var(--muted)">—<small>recién cargada</small></div>`
       : `<div class="r ${cls(f)}">${pct(f)}<small>${x.tipo==="UW"?(f>=0?"a favor: rinde menos que el S&P":"en contra: rinde más que el S&P"):"contra el S&P"}</small></div>`;
     const sp = x.nueva||x.sin_precio ? "" : hySpark((x.serie||[]).map(v=>x.tipo==="UW"?-v:v), f>=0?"var(--pos)":"var(--neg)");
-    return `<div class="id" style="--c:${c}"><div class="t"><a data-hyt="${esc(x.ticker)}">${esc(x.byma||x.ticker)}</a><span class="tg">${x.tipo}</span><span class="n">nota <b>${nota!=null?nx(nota):"—"}</b></span></div>
+    return `<div class="id" style="--c:${c}"><div class="t"><a data-hyt="${esc(x.ticker)}">${esc(x.byma||x.ticker)}</a><span class="tg">${x.tipo}</span><span class="n">${sofa(nota,"sin")}</span></div>
       <div class="nm">${esc(x.nombre||e?.nombre||"")} · desde ${hyFecha(x.desde)}${x.ret!=null&&!x.nueva?` · precio ${pct(x.ret)}`:""}</div>
       <div class="rv">${rv}${sp}</div>
       ${(x.alertas||[]).length?`<div class="al">${x.alertas.slice(0,2).map(a=>esc(a[1])).join("<br>")}</div>`:""}
@@ -771,7 +781,7 @@ function hoyTab(m){
   const dias = h.balances?.dias||[], pr = h.balances?.proximos||[], cal = h.calendario||[];
   const dcol = d => { const bs = pr.filter(b=>b.fecha===d), cs = cal.filter(c=>c.fecha===d), dest = bs.find(b=>b.grande||b.idea), x = new Date(d+"T12:00:00");
     return `<div class="dia${dest?" dest":""}"><h4><span>${HYD[x.getDay()]} ${x.getDate()}</span><span>${dest?esc(dest.nombre||dest.byma):""}</span></h4>
-      ${bs.map(b=>{ const e = hyEmp(b.ticker); return `<div class="ev bal${b.idea?" idea":""}" data-hyt="${esc(b.ticker)}"><b>${esc(b.byma)}</b>${e?.notas?.general!=null?` <span class="mut">· nota ${nx(e.notas.general)}</span>`:""}<small>${b.cuando?capit(b.cuando):"Horario a confirmar"}${b.idea?" · tu idea":""}</small></div>`; }).join("")}
+      ${bs.map(b=>{ const e = hyEmp(b.ticker); return `<div class="ev bal${b.idea?" idea":""}" data-hyt="${esc(b.ticker)}"><b>${esc(b.byma)}</b>${e?.notas?.general!=null?` ${sofa(e.notas.general,"sxs")}`:""}<small>${b.cuando?capit(b.cuando):"Horario a confirmar"}${b.idea?" · tu idea":""}</small></div>`; }).join("")}
       ${cs.map(c=>`<div class="ev mac${c.peso>=3?" p3":""}">${esc(c.nombre)}<small>${c.hora}</small></div>`).join("")}
       ${!bs.length&&!cs.length?`<div class="vacio">Sin eventos</div>`:""}</div>`; };
   const tksI = new Set((h.ideas||[]).map(x=>x.ticker));
@@ -840,8 +850,9 @@ const NOTA_TXT = {calidad:"Rentabilidad, márgenes y flujo de caja. Escala absol
   analistas:"Revisiones de estimaciones y sorpresas en los últimos balances, contra las 125. Relativa."};
 const big = x => x==null ? "—" : Math.abs(x)>=1e12 ? (x/1e12).toFixed(2).replace(".",",")+" T" : Math.abs(x)>=1e9 ? (x/1e9).toFixed(1).replace(".",",")+" B" : Math.abs(x)>=1e6 ? (x/1e6).toFixed(0)+" M" : x.toFixed(0);
 const nx = (x,d=1) => x==null ? "—" : x.toFixed(d).replace(".",",");
-const ncol = v => v==null ? "var(--line)" : v>=7 ? "var(--pos)" : v>=4.5 ? "var(--accent)" : "var(--neg)";
-const chip = v => `<span class="nchip" style="background:${v==null?"var(--panel2)":ncol(v)};${v==null?"color:var(--muted)!important":""}">${v==null?"—":nx(v)}</span>`;
+const ncol = v => v==null ? "var(--line)" : v>=9 ? "#374df5" : v>=8 ? "#00adc4" : v>=7 ? "#00c424" : v>=6.5 ? "#d9af00" : v>=6 ? "#ed7e07" : "#e51c1c";
+const sofa = (v, c="") => `<span class="sofa${c?" "+c:""}" style="background:${v==null?"var(--panel2)":ncol(v)}${v==null?";color:var(--muted)":""}">${v==null?"—":nx(v)}</span>`;
+const chip = v => sofa(v, "nchip");
 const fch2 = f => f ? new Date(f+"T12:00").toLocaleDateString("es-AR",{day:"2-digit",month:"2-digit",year:"2-digit"}) : "—";
 const dias = s => s ? Math.round((new Date(s) - new Date())/864e5) : null;
 const PAIS = {"United States":"EE.UU.","Taiwan":"Taiwán","Brazil":"Brasil","China":"China","South Korea":"Corea","Netherlands":"Países Bajos","Japan":"Japón","United Kingdom":"Reino Unido","Germany":"Alemania","Switzerland":"Suiza","Argentina":"Argentina","Uruguay":"Uruguay","Luxembourg":"Luxemburgo","Canada":"Canadá","Israel":"Israel","Colombia":"Colombia","South Africa":"Sudáfrica","Denmark":"Dinamarca","Ireland":"Irlanda","Australia":"Australia","Nigeria":"Nigeria","Bermuda":"Bermudas","Singapore":"Singapur"};
@@ -1328,7 +1339,7 @@ function perfil(x){
 }
 const perfTag = x => { const n = perfil(x); return n==null ? '<span class="mut">—</span>' : `<span class="perf p${n}" title="Volatilidad anual ${pct(x.riesgo.vol,0)} · peor caída en 5 años ${pct(x.riesgo.caida,0)}${x.notas?.solidez<4?" · deuda alta":""}">${PERF[n]}</span>`; };
 const SUBN = [["calidad","Calidad"],["solidez","Solidez"],["crecimiento","Crecim."],["valuacion","Valuac."],["tendencia","Tendencia"],["analistas","Analistas"]];
-const mini = v => v==null ? `<span class="nmini mut">—</span>` : `<span class="nmini" style="color:${v>=7.5?"#7fd6a0":v>=5.5?"#dfe3ee":v>=4?"#e3c27a":"#ef8a8a"}">${nx(v)}</span>`;
+const mini = v => sofa(v, "smini");
 async function lista(m){
   if (!E){ m.innerHTML = `<div class="soon"><h2>Lista</h2>Todavía no hay datos. Se generan con la próxima actualización.</div>`; return; }
   if (!FX){ m.innerHTML = `<p class="mut">Cargando…</p>`; await cargarFX(); }
@@ -1463,7 +1474,7 @@ async function bloquePag(m, id){
   const r3 = medi(xs.map(x=>x.r3m)), r12 = medi(xs.map(x=>x.r12m)), nm = medi(fil.map(r=>r.n));
   m.innerHTML = `<button class="btn" id="bv">← Bloques</button> <button class="btn" id="bcmp">Comparar precios del bloque</button>
   <section class="fhead2 bhead"><div class="bh-top"><div><h2>${esc(bl.nombre)}</h2><div class="fh-sub">${esc(bl.clave)}</div>${L?`<div class="fh-sub mut">Lectura revisada: ${esc(L.revisado)}</div>`:""}</div>
-    <div class="bkpi"><div><span>Empresas</span><b>${xs.length}</b></div><div><span>3 meses</span><b class="${cls(r3)}">${pct(r3,0)}</b></div><div><span>12 meses</span><b class="${cls(r12)}">${pct(r12,0)}</b></div><div><span>${L?"Nota del bloque":"Nota general"}</span><b style="color:${ncol(nm)}">${nx(nm)}</b></div></div></div>
+    <div class="bkpi"><div><span>Empresas</span><b>${xs.length}</b></div><div><span>3 meses</span><b class="${cls(r3)}">${pct(r3,0)}</b></div><div><span>12 meses</span><b class="${cls(r12)}">${pct(r12,0)}</b></div><div><span>${L?"Nota del bloque":"Nota general"}</span><b>${sofa(nm,"sin")}</b></div></div></div>
     ${hoy.length?`<div class="bhoy"><span>El bloque hoy</span><ul class="lst">${hoy.map(h=>`<li>${h}</li>`).join("")}</ul></div>`:""}</section>
   ${sec("Ranking del bloque", L?"nota del bloque con las métricas del nicho":"nota general · lectura en preparación", `<div class="wrap" style="max-height:none"><table class="tb2 rk"><thead><tr><th class="l">CEDEAR</th><th class="l">Empresa</th><th>${L?"Nota del bloque":"Nota general"}</th>${cols.map(c=>`<th>${c[0]}</th>`).join("")}</tr></thead>
   <tbody>${fil.map((r,i)=>`<tr data-e="${esc(r.x.ticker)}" style="cursor:pointer"><td class="tk l"><span class="pos-n">${i+1}</span>${logoImg(r.x.byma,"logo-s")}${esc(r.x.byma)}</td><td class="nm l">${esc(r.x.nombre)}</td><td>${chip(r.n)}</td>${cols.map(c=>`<td>${r.f?c[1](r.k):"—"}</td>`).join("")}</tr>`).join("")}</tbody></table></div>
@@ -1484,7 +1495,7 @@ function panelNicho(f){
   const T = TIPO(L), s = T==="ciclo" ? lecturaCiclo(f,k) : T==="crecimiento" ? lecturaCrec(f,k) : T==="equipos" ? lecturaEquipos(f,k) : T==="plataforma" ? lecturaPlat(f,k) : T==="software" ? lecturaSoft(f,k) : T==="general" ? lecturaGen(f,k) : T==="banco" ? lecturaBanco(f,k) : T==="cripto" ? lecturaCripto(f,k) : T==="utility" ? lecturaUtil(f,k) : T==="commodity" ? lecturaCommodity(f,k,L) : T==="salud" ? lecturaSalud(f,k) : T==="hardware" ? lecturaHard(f,k) : T==="infra" ? lecturaInfra(f,k) : lecturaFarma(f,k);
   return `<section class="fgrid"><div class="card"><h3>Lectura como ${esc(bl.nombre)}</h3><p class="lect">${esc(L.empresas[f.byma]||"")}</p>
     <h4>Lo que dicen los números</h4><ul class="lst">${s.map(t=>`<li>${t}</li>`).join("")}</ul>
-    <p class="mut small">Nota dentro del bloque: <b style="color:${ncol(notaBloque(x,f,bl))}">${nx(notaBloque(x,f,bl))}</b> · ${esc(L.pesos_txt)}</p>
+    <p class="mut small">Nota dentro del bloque: ${sofa(notaBloque(x,f,bl),"sin")} · ${esc(L.pesos_txt)}</p>
     <button class="btn" data-irb="${bl.id}">Ver el bloque completo →</button></div>
     <div class="card"><h3>Cómo se lee el nicho</h3><p class="lect">${esc(L.negocio)}</p><h4>Riesgos del nicho</h4><ul class="lst">${L.riesgos.map(t=>`<li>${esc(t)}</li>`).join("")}</ul><h4>En cada balance</h4><ul class="lst">${L.balance.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>
     <p class="mut small">Lectura revisada: ${esc(L.revisado)}. Es historia y contexto, no predicción.</p></div></section>`;
@@ -1777,8 +1788,8 @@ async function ficha(m, t){
         <div class="fh-tend" style="color:${acol}">${AN.tend==="Mejora"?"▲ Mejora":AN.tend==="Empeora"?"▼ Empeora":"= Estable"}</div>
         ${frase?`<p class="frase">${esc(frase)}</p>`:""}
         ${tipoTxt?`<div class="aviso">${tipoTxt}</div>`:""}</div>
-      <div class="fh-score"><div class="big" style="color:${ncol(general(nt))}">${general(nt)==null?"—":nx(general(nt))}</div><div class="lbl">NOTA GENERAL</div>
-        <div class="pill" style="color:${ncol(nt.negocio)}">Negocio ${nt.negocio==null?"—":nx(nt.negocio)}</div> <div class="pill" style="color:${ncol(nt.tendencia)}">Tendencia ${nt.tendencia==null?"—":nx(nt.tendencia)}</div></div>
+      <div class="fh-score"><div class="big">${sofa(general(nt),"sbig")}</div><div class="lbl">NOTA GENERAL</div>
+        <div class="pill">Negocio ${sofa(nt.negocio,"sin")}</div> <div class="pill">Tendencia ${sofa(nt.tendencia,"sin")}</div></div>
     </div>
     <div class="fh-kpis">
       <div><span>Precio USD</span><b>${pb.precio?num(pb.precio,2):"—"}</b><small>CEDEAR $ ${f.px_ars?num(f.px_ars,0):"—"} · premio ${pct(f.premio)}</small></div>
@@ -1792,9 +1803,9 @@ async function ficha(m, t){
   <div class="ftabs">${TABS.map(([k,tt])=>`<button data-ft="${k}" class="${k===sub?"on":""}">${tt}</button>`).join("")}</div>`;
 
   const perfil = `<div class="card"><h3>Perfil <span class="mut">· 1 a 10, para ubicarse; no es recomendación</span></h3>${NOTAS.map(([k,tt])=>{ const v = nt[k]; const det = nd[k]||{};
-    return `<div class="nrow"><div class="nlab">${tt}</div><div class="nbar"><i style="width:${v==null?0:v*10}%;background:${ncol(v)}"></i></div><div class="nval" style="color:${ncol(v)}">${v==null?"—":nx(v)}</div>
+    return `<div class="nrow"><div class="nlab">${tt}</div><div class="nbar"><i style="width:${v==null?0:v*10}%;background:${ncol(v)}"></i></div><div class="nval">${sofa(v,"sin")}</div>
     <div class="ndet">${Object.entries(det).map(([a_,b_])=>`<span>${esc(a_)}: <b>${fmtDet(a_,b_)}</b></span>`).join("")}</div></div>`; }).join("")}
-    <div class="nneg">Nota general: <b style="color:${ncol(general(nt))}">${general(nt)==null?"—":nx(general(nt))}</b> <span class="mut">(calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15%, tendencia 10%)</span> · Negocio (calidad + solidez): <b style="color:${ncol(nt.negocio)}">${nt.negocio==null?"—":nx(nt.negocio)}</b></div></div>`;
+    <div class="nneg">Nota general: ${sofa(general(nt),"sin")} <span class="mut">(calidad 25%, crecimiento 20%, solidez 15%, valuación 15%, analistas 15%, tendencia 10%)</span> · Negocio (calidad + solidez): <b style="color:${ncol(nt.negocio)}">${nt.negocio==null?"—":nx(nt.negocio)}</b></div></div>`;
 
   const precio = `<div class="card"><h3>Precio y tendencia</h3>
       <div class="seg">${[["1y","1 año"],["3y","3 años"],["5y","5 años"]].map(([p,tt])=>`<button data-per="${p}" class="${EST.per===p?"on":""}">${tt}</button>`).join("")}</div>
