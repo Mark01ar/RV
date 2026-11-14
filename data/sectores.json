@@ -309,7 +309,7 @@
   "pais": null,
   "moneda": null,
   "mcap": null,
-  "fecha": "2026-11-08"
+  "fecha": "2026-11-14"
  },
  "BKNG": {
   "sector": "Consumer Cyclical",
@@ -692,8 +692,8 @@
   "industria": null,
   "pais": null,
   "moneda": "USD",
-  "mcap": 33455161344,
-  "fecha": "2026-11-08"
+  "mcap": 33934002176,
+  "fecha": "2026-11-14"
  },
  "FSLR": {
   "sector": "Technology",
@@ -1133,7 +1133,7 @@
   "pais": null,
   "moneda": null,
   "mcap": null,
-  "fecha": "2026-11-08"
+  "fecha": "2026-11-14"
  },
  "MMM": {
   "sector": "Industrials",
@@ -1405,7 +1405,7 @@
   "pais": null,
   "moneda": null,
   "mcap": null,
-  "fecha": "2026-11-08"
+  "fecha": "2026-11-14"
  },
  "ORCL": {
   "sector": "Technology",
@@ -1477,7 +1477,7 @@
   "pais": null,
   "moneda": null,
   "mcap": null,
-  "fecha": "2026-11-08"
+  "fecha": "2026-11-14"
  },
  "PEP": {
   "sector": "Consumer Defensive",
@@ -2158,5 +2158,13 @@
   "moneda": "USD",
   "mcap": 26797414400,
   "fecha": "2026-11-05"
+ },
+ "NU": {
+  "sector": "Financial Services",
+  "industria": "Banks - Regional",
+  "pais": "Brazil",
+  "moneda": "USD",
+  "mcap": 63965421568,
+  "fecha": "2026-11-14"
  }
 }
