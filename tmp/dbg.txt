@@ -1,0 +1,81 @@
+## scripts/traducir.py 0
+NVDA: 429 Client Error: Too Many Requests for url: https://www.google.com/sorry/index?continue=https://tra
+PANW: 429 Client Error: Too Many Requests for url: https://www.google.com/sorry/index?continue=https://tra
+PBR: 429 Client Error: Too Many Requests for url: https://www.google.com/sorry/index?continue=https://tra
+PCAR: 429 Client Error: Too Many Requests for url: https://www.google.com/sorry/index?continue=https://tra
+PFE: 429 Client Error: Too Many Requests for url: https://www.google.com/sorry/index?continue=https://tra
+traducidas: 96; total: 96
+
+
+## scripts/ciclos.py 0
+nanya.csv web: 3 meses, último 2026-10
+tsmc.csv web: 3 meses, último 2026-10
+nanya 2026-10 5.386755643592944 0.35007935211128705 None None
+hyper 2026Q3 0.8660805803043443 1.0758807866681743 615.4 {'MSFT': 39.4, 'GOOGL': 51.4, 'AMZN': 77.3, 'META': 33.9}
+mu_capex 2026Q3 0.9368102415337076 0.9635913750441851 30.7 {'MU': 11.1}
+mu_inv 2026Q3 0.08221701270931181 0.07886800642970293 None None
+tsmc 2026-10 0.5601566390292247 0.21572517301005467 None None
+chips_inv 2026Q3 0.10866848803437557 0.07099444979706493 None None
+fab_capex 2026Q3 0.24765040089205126 0.6807112068965517 47.0 {'INTC': 4.0, 'MU': 11.1, 'TXN': 0.5}
+wti 2026-11 0.5598199089832763 0.1761895369431834 93.7 None
+crudo_inv 2026-11 None -0.038643192699648665 -4.2 None
+crudo_prod 2026-11 0.01314053321283315 0.01286591976870266 14.01 None
+pet_capex 2026Q3 0.030226871349001483 -0.15048211980867054 45.5 {'XOM': 7.2, 'CVX': 4.0}
+neo_rpo 2026Q3 0.5878435140371816 0.07478173540439204 802.6 {'ORCL': 664.0, 'CRWV': 132.3, 'IREN': 6.3}
+neo_cob 2026Q3 0.1936169778542245 -0.011174163569970141 1.91 None
+neo_deuda 2026Q3 0.7170457218265567 0.05491976326992076 182.9 {'ORCL': 125.3, 'CRWV': 47.5, 'IREN': 10.0}
+
+0.9   35.7  44.2  19.0
+2026Q2  35.8   44.9  54.2  30.1
+2026Q3  39.4   51.4  77.3  33.9
+           MU
+2025Q2   2.94
+2025Q3   5.66
+2025Q4   5.39
+2026Q1   6.39
+2026Q2   7.83
+2026Q3  11.11
+mu_inv [['2024-12', 147.8], ['2025-03', 161.0], ['2025-06', 137.1], ['2025-09', 121.4], ['2025-12', 124.5], ['2026-03', 123.2], ['2026-06', 121.8], ['2026-09', 131.4]]
+chips_inv [['2025-06', 74.4], ['2025-09', 116.8], ['2025-12', 127.0], ['2026-03', 122.5], ['2026-06', 120.9], ['2026-09', 129.5]]
+        INTC     MU   TXN
+2025Q2  3.55   2.94  1.30
+2025Q3  2.42   5.66  1.20
+2025Q4  3.49   5.39  0.92
+2026Q1  3.64   6.39  0.68
+2026Q2  2.56   7.83  0.51
+2026Q3  4.02  11.11  0.46
+wti [['2026-08', 83.05], ['2026-09', 87.22], ['2026-10', 94.42], ['2026-11', 97.69]] Hoy: <b>US$ 94</b> por barril (promedio del mes). Hace un año, US$ 60. Desde 2015 el promedio fue US$ 64; lo más alto, US$ 115 (2022-06).
+/home/runner/work/RV/RV/scripts/ciclos.py:345: Pandas4Warning: The xlrd engine is deprecated and will be removed in a future version. Use the calamine engine instead, by setting engine='calamine'.
+  t = pd.read_excel(io.BytesIO(r.content), sheet_name="Data 1", skiprows=2)
+crudo_inv [['2026-08', -0.35], ['2026-09', 1.28], ['2026-10', -2.8], ['2026-11', -4.21]] Última semana (06/11): <b>414 millones de barriles</b>, -4,2% contra el promedio de los últimos 5 años para este mes. Hace tres meses estaba en -0,3%.
+/home/runner/work/RV/RV/scripts/ciclos.py:345: Pandas4Warning: The xlrd engine is deprecated and will be removed in a future version. Use the calamine engine instead, by setting engine='calamine'.
+  t = pd.read_excel(io.BytesIO(r.content), sheet_name="Data 1", skiprows=2)
+crudo_prod [['2026-08', 13.835], ['2026-09', 13.946], ['2026-10', 13.784], ['2026-11', 14.013]] Hoy: <b>14,0 millones de barriles por día</b>. Hace un año, 13,8. El máximo desde 2015 fue 14,0 (2026-11).
+         XOM   CVX
+2025Q2  6.28  3.71
+2025Q3  8.73  4.44
+2025Q4  7.45  5.26
+2026Q1  6.47  4.06
+2026Q2  6.53  4.54
+2026Q3  7.18  4.01
+neo_rpo [['2025-06', 167.9], ['2025-09', 505.5], ['2025-12', 593.7], ['2026-03', 652.11], ['2026-06', 746.8], ['2026-09', 802.65]] {'ORCL': 664.0, 'CRWV': 132.3, 'IREN': 6.3}
+neo_cob [['2025-06', 1.399], ['2025-09', 1.601], ['2025-12', 1.818], ['2026-03', 2.232], ['2026-06', 1.933], ['2026-09', 1.911]] None
+neo_deuda [['2025-06', 105.08], ['2025-09', 106.51], ['2025-12', 130.68], ['2026-03', 160.74], ['2026-06', 173.36], ['2026-09', 182.88]] {'ORCL': 125.3, 'CRWV': 47.5, 'IREN': 10.0}
+
+## scripts/hoy.py 0
+ideas 17 balances 10 ya 17 calendario 5 noticias 120 sec 3 fed 2 general 11 predicciones 5 argentina {'mep': 1580.9, 'ccl': 1671.9, 'canje': 0.0575621481434625, 'fecha_dolar': '2026-11-14T11:58:00.000Z', 'riesgo': 830, 'riesgo_fecha': '2026-11-13', 'riesgo_semana': -109}
+
+x-efficient way to don')]
+items crudos 746 {'empresa': 709, 'sec': 17, 'fed': 20}
+items filtrados 162
+traduccion 429 Client Error: Too Many Requests for url: https://www.google.com/sorry/index?continue=https://translate.googleapis.co
+traduccion 429 Client Error: Too Many Requests for url: https://www.google.com/sorry/index?continue=https://translate.googleapis.co
+traduccion 429 Client Error: Too Many Requests for url: https://www.google.com/sorry/index?continue=https://translate.googleapis.co
+traduccion {'ok': 0, 'mal': 51}
+polymarket nvidia ceo 54 ['New NVIDIA CEO named by December 31, 2026?', 'Next NVIDIA CEO: internal or external?', 'Next CEO of NVIDIA?', 'Jensen Huang resigned or removed & Nvidia above $4T end of 2026?', 'Kraken IPO by ___ ?', 'Macron out by...?'] -> ['New NVIDIA CEO named by December 31, 2026?', 'Next NVIDIA CEO: internal or external?', 'Next CEO of NVIDIA?']
+polymarket fed decision december 52 ['How many dissent at the December Fed meeting?', 'Fed Decision in December?', 'Kraken IPO by ___ ?', 'Macron out by...?', 'UK election called by...?', 'China x India military clash by...?'] -> ['Fed Decision in December?']
+polymarket jensen huang affair 53 ['Fourth Jensen Huang affair reported by...?', 'Jensen Huang admits to another affair with a woman by December 31?', 'How many Jensen Huang affairs will be reported by December 31?', 'Kraken IPO by ___ ?', 'Macron out by...?', 'UK election called by...?'] -> ['Fourth Jensen Huang affair reported by...?', 'Jensen Huang admits to another affair with a woman by December 31?', 'How many Jensen Huang affairs will be reported by December 31?']
+polymarket tesla spacex merger 51 ['Tesla and SpaceX merger officially announced by...?', 'Kraken IPO by ___ ?', 'Macron out by...?', 'UK election called by...?', 'China x India military clash by...?', 'NATO/EU troops fighting in Ukraine by...?'] -> ['Tesla and SpaceX merger officially announced by...?']
+polymarket presidential election winner 2028 70 ['Presidential Election Winner 2028', '2028 Presidential Election: Wisconsin Winner', '2028 Presidential Election: Montana Winner', '2028 Presidential Election: Kentucky Winner', '2028 Presidential Election: Tennessee Winner', '2028 Presidential Election: Oklahoma Winner'] -> ['Presidential Election Winner 2028', 'Presidential Election Winner 2028']
+traduccion 429 Client Error: Too Many Requests for url: https://www.google.com/sorry/index?continue=https://translate.googleapis.co
+traduccion {'ok': 0, 'mal': 59}
