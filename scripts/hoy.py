@@ -75,6 +75,7 @@ def num(x):
 
 
 TRAD = {"ok": 0, "mal": 0}
+GLOSA = [(r"\bOPI [Aa]ntr[óo]pica\b", "salida a bolsa de Anthropic"), (r"\b[Aa]ntr[óo]pic[oa]s?\b", "Anthropic"), (r"\bOPI\b", "salida a bolsa"), (r"\bAlfabeto\b", "Alphabet"), (r"\bOr[áa]culo\b", "Oracle"), (r"\bManzana\b", "Apple"), (r"\bAmazonas\b", "Amazon")]
 
 
 def traducir(textos):
@@ -105,7 +106,10 @@ def traducir(textos):
             partes = tr.split("\n")
             if len(partes) == len(lote):
                 for k, v in zip(lote, partes):
-                    out[k] = v.strip() or textos[k]
+                    v = v.strip()
+                    for pat, rep in GLOSA:
+                        v = re.sub(pat, rep, v)
+                    out[k] = v or textos[k]
                 TRAD["ok"] += len(lote)
             else:
                 TRAD["mal"] += len(lote)
@@ -578,6 +582,13 @@ def main():
     out["mercado"] = mercado(px)
     prox = proximos_balances(fichas)
     out["ideas"] = ideas_calc(ideas, px, uni, fichas, prox)
+    try:
+        prev = json.loads(SALIDA.read_text())
+        if prev["mercado"]["fecha"] > out["mercado"]["fecha"] and set(i["ticker"] for i in prev.get("ideas", [])) == set(ideas_tk):
+            log("precios atrasados", out["mercado"]["fecha"], "se mantienen los de", prev["mercado"]["fecha"])
+            out["mercado"], out["ideas"] = prev["mercado"], prev["ideas"]
+    except Exception as e:
+        log("previo", e)
     try:
         out["balances"] = balances(fichas, prox, uni, ideas_tk, px)
     except Exception as e:

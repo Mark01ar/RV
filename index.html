@@ -456,7 +456,7 @@ main{padding-left:28px;padding-right:28px}
 .fam .bcard{width:auto}
 .fam-h{color:var(--muted);letter-spacing:.08em}
 .nmini{font-weight:500}
-@media (max-width:640px){header{padding:12px 14px 4px}nav{padding:0 4px}main{padding:16px 12px 30px}.card{padding:16px 14px}.bsec>.bh,.bsec.main>.bh{padding:14px 14px 2px}.bsec>.bb{padding:10px 14px 16px}}
+@media (max-width:640px){header{padding:12px 14px 4px}nav{padding:0 4px}nav button{padding:12px 10px;font-size:14px}main{padding:16px 12px 30px}.card{padding:16px 14px}.bsec>.bh,.bsec.main>.bh{padding:14px 14px 2px}.bsec>.bb{padding:10px 14px 16px}}
 
 .hy{--pos:#7fd6a0;--neg:#f07a7a;--amb:#e8b860;--vio:#c3a6ff}
 .hy .hola{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin:6px 0 20px}
@@ -1141,7 +1141,7 @@ async function cargarFX(){
   return FX;
 }
 let CI = null;
-const CICOL = ["#6ea8ff","#5fb3a1","#c792ea"], CIC = {nanya:"#6ea8ff", tsmc:"#6ea8ff", mu_inv:"#f78c6c", chips_inv:"#f78c6c", hyper:"#5fb3a1", mu_capex:"#c792ea", fab_capex:"#c792ea", neo_rpo:"#6ea8ff", neo_cob:"#f78c6c", neo_deuda:"#c792ea"}, colI = k => CIC[k] || "#9aa5c8";
+const CICOL = ["#6ea8ff","#5fb3a1","#c792ea"], CIC = {nanya:"#6ea8ff", tsmc:"#6ea8ff", mu_inv:"#f78c6c", chips_inv:"#f78c6c", hyper:"#5fb3a1", mu_capex:"#c792ea", fab_capex:"#c792ea", neo_rpo:"#6ea8ff", neo_cob:"#f78c6c", neo_deuda:"#c792ea", wti:"#5fb3a1", crudo_inv:"#8fd0f2", crudo_prod:"#f78c6c", pet_capex:"#c792ea"}, colI = k => CIC[k] || "#9aa5c8";
 const mesTxt = k => { const [y,m] = k.split("-"); return ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"][+m-1]+" "+y; };
 const trimTxt = k => { const [y,q] = k.split("Q"); return `${q}.º trim. ${y}`; };
 const mesN = k => { const [y,m] = k.split("-").map(Number); return y*12+m-1; };
@@ -1165,7 +1165,7 @@ function tiles(cf, bid){
   cf.indicadores.forEach(k=>{ const v = CI.indicadores[k], c = colI(k), s = v.serie.map(p=>p[1]);
     let big, sub, est, vd;
     const sup = cf.dir?.[k]===-1;
-    if (k.endsWith("_inv")){ const u = s[s.length-1], p = s[s.length-2], avg = s.reduce((a,b)=>a+b,0)/s.length;
+    if (k.endsWith("_inv") && !v.tipo){ const u = s[s.length-1], p = s[s.length-2], avg = s.reduce((a,b)=>a+b,0)/s.length;
       big = `${nx(u,0)} días`; sub = `antes ${nx(p,0)} · promedio ${nx(avg,0)}`; est = u>p*1.03 ? ["Sube","neg"] : u<p*0.97 ? ["Baja","pos"] : ["Estable",""];
       vd = u>p*1.03 ? ["bear","El stock se acumula: suele anticipar menos ventas o precios más bajos."] : u<p*0.97 ? ["bull","El stock baja: lo que fabrican se vende solo."] : ["neu","Stock estable."]; }
     else if (v.tipo==="veces"){ big = `${nx(v.valor,1)} veces`; sub = v.previo!=null ? `inversión / caja que generan · hace un año ${nx(v.previo,1)}` : "inversión / caja que generan"; est = v.anual>0.05 ? ["Sube","neg"] : v.anual<-0.05 ? ["Baja","pos"] : ["Estable",""];
@@ -1173,6 +1173,14 @@ function tiles(cf, bid){
     else if (v.tipo==="nivel"){ big = `US$ ${nx(v.valor,0)} mil M`; sub = `${pct(v.anual,0)} en un año · ${pct(v.trim,0)} en el trimestre`; est = v.anual>0.05 ? ["Sube", sup?"neg":"pos"] : v.anual<-0.05 ? ["Baja", sup?"pos":"neg"] : ["Estable",""];
       vd = sup ? (v.anual>0.3 ? ["bear","La deuda crece rápido: más intereses y más riesgo si la demanda se frena."] : v.anual<0 ? ["bull","Bajan la deuda."] : ["neu","La deuda crece moderado."])
         : (v.anual>0.1 ? ["bull","Siguen firmando contratos: hay demanda asegurada para varios años."] : v.anual<0 ? ["bear","Los contratos por cobrar bajan: entran menos pedidos nuevos."] : ["neu","Contratos estables."]); }
+    else if (v.tipo==="precio"){ const mm = v.mes ?? 0; big = `US$ ${nx(v.valor,0)}`; sub = `${pct(v.anual,0)} en un año · 3 meses: ${pct(v.trim,0)}${v.mes!=null?` · mes: ${pct(v.mes,0)}`:""}`; est = mm<-0.07 ? ["Baja","neg"] : v.trim>0.05 ? ["Sube","pos"] : v.trim<-0.05 ? ["Baja","neg"] : ["Estable",""];
+      vd = mm<-0.07 && v.trim>0 ? ["neu","Venía subiendo pero este mes afloja: ojo con las productoras que ya subieron mucho."] : mm>0.07 && v.trim<0 ? ["neu","Venía bajando pero este mes rebota."] : v.trim>0.05 ? ["bull","El crudo sube: viento a favor para las productoras."] : v.trim<-0.05 ? ["bear","El crudo baja: menos ganancia para las productoras."] : ["neu","Precio estable."]; }
+    else if (v.tipo==="desvio"){ big = `${v.valor>0?"+":""}${nx(v.valor,1)}%`; sub = `vs. promedio de 5 años · ${nx(v.barriles,0)} M de barriles`; est = v.trim>0.02 ? ["Sube","neg"] : v.trim<-0.02 ? ["Baja","pos"] : ["Estable",""];
+      vd = v.valor>3 ? ["bear","Sobra crudo guardado: presiona el precio a la baja."] : v.valor<-3 ? ["bull","Hay menos crudo que lo normal: sostiene el precio."] : ["neu","Stock en niveles normales."]; }
+    else if (v.tipo==="volumen"){ big = `${nx(v.valor,1)} M b/d`; sub = `${pct(v.anual,1)} en un año · 3 meses: ${pct(v.trim,1)}`; est = v.anual>0.01 ? ["Sube","neg"] : v.anual<-0.01 ? ["Baja","pos"] : ["Estable",""];
+      vd = v.anual>0.03 ? ["bear","EE.UU. produce cada vez más: más oferta, techo para el precio."] : v.anual<0 ? ["bull","La producción baja: menos oferta en el mundo."] : ["neu","Producción casi estable."]; }
+    else if (k==="pet_capex"){ big = `US$ ${nx(v.valor,1)} mil M`; sub = `en 12 meses · ${pct(v.anual,0)} en un año`; est = v.anual>0.05 ? ["Sube",""] : v.anual<-0.05 ? ["Baja",""] : ["Estable",""];
+      vd = v.anual>0.15 ? ["bear","Las petroleras invierten fuerte: más oferta en uno o dos años."] : v.anual<0 ? ["bull","Recortan inversión: menos oferta a futuro, sostiene el precio."] : ["neu","Inversión moderada: disciplina de las petroleras."]; }
     else if (v.frec==="mensual"){ big = pct(v.anual,0); sub = `vs. hace un año · 3 meses: ${pct(v.trim,0)}`; est = v.trim>0.05 ? ["Sube","pos"] : v.trim<-0.05 ? ["Baja","neg"] : ["Estable",""];
       vd = v.trim>0.05 ? ["bull","Las ventas siguen creciendo."] : v.trim<-0.05 ? ["bear","Las ventas caen: en 2018 y 2021 la primera caída marcó el pico."] : ["neu","Ventas planas."]; }
     else { big = `US$ ${nx(v.valor,1)} mil M`; sub = `en 12 meses · ${pct(v.anual,0)} en un año`; est = v.anual>0.05 ? ["Sube", sup?"":"pos"] : v.anual<-0.05 ? ["Baja", sup?"":"neg"] : ["Estable",""];
@@ -1215,7 +1223,7 @@ function cicloCard(f){
     chart = `<svg viewBox="0 0 ${W} ${H}" class="chart" role="img" aria-label="Acción contra el ciclo del sector">${ticks}${marcas}${paths}${xt}</svg>
       <div class="leg">${norm.map(s=>`<span style="color:${s.c}">■ ${esc(s.t)} ×${nx(s.u, s.u<10?1:0)}</span>`).join(" ")} <span class="mut">· base 100, escala logarítmica</span></div>`;
   }
-  const hist = ciclos.filter(c=>c.pa).map(c=>{ const d = mesN(c.mv)-mesN(c.pa[0]); return `<b>${c.n}</b>: ${esc(f.byma)} hizo techo contra el SPY en ${mesTxt(c.pa[0])}, las ventas en ${mesTxt(c.mv)} (${d>0?`${d} ${d===1?"mes":"meses"} antes`:d<0?`${-d} ${d===-1?"mes":"meses"} después`:"a la vez"})`; });
+  const hist = ciclos.filter(c=>c.pa).map(c=>{ const d = mesN(c.mv)-mesN(c.pa[0]); return `<b>${c.n}</b>: ${esc(f.byma)} hizo techo contra el SPY en ${mesTxt(c.pa[0])}, ${base==="wti"?"el crudo":"las ventas"} en ${mesTxt(c.mv)} (${d>0?`${d} ${d===1?"mes":"meses"} antes`:d<0?`${-d} ${d===-1?"mes":"meses"} después`:"a la vez"})`; });
   const ps = pronosSerie(cf.pronos_de || (cf.pronos ? bl.id : ""), cf.solo);
   const glos = [...ids.map(k=>{ const v = CI.indicadores[k]; return `<dt style="color:${colI(k)}">${esc(v.nombre)}</dt><dd>${esc(v.que)}${v.lectura?` ${v.lectura}`:v.max_previo?` Antes de este ciclo, su mayor crecimiento anual fue ${pct(v.max_previo[0],0)}.`:""} <span class="mut">Fuente: ${esc(v.fuente)}</span></dd>`; }),
     ps ? `<dt style="color:#e0c26a">Precio ${ps.nom} esperado</dt><dd>Cuánto espera TrendForce que cambie el precio de contrato en el trimestre, contra el anterior (punto medio del rango). Medido con MU y SK Hynix desde 2021, la acción se movió sobre todo el trimestre <b>antes</b> de cada pronóstico. <span class="mut">Fuente: ${esc(ps.P.fuente)}</span></dd>` : ""].join("");
@@ -1226,7 +1234,7 @@ function cicloCard(f){
       <div class="seg">${[["0","Precio"],["1","Contra el SPY"]].map(([p,t])=>`<button data-crel="${p}" class="${(rel?"1":"0")===p?"on":""}">${t}</button>`).join("")}</div>
       <div class="seg">${[["3y","3 años"],["5y","5 años"],["todo","Desde 2015"]].map(([p,t])=>`<button data-cper="${p}" class="${per===p?"on":""}">${t}</button>`).join("")}</div></div></div>
     ${chart}
-    ${hist.length?`<p class="small" style="margin:8px 0 0">Ciclos anteriores · ${hist.join(" · ")}.${ciclos.every(c=>c.pa && mesN(c.mv)>mesN(c.pa[0])) ? " En los dos, la acción se adelantó a las ventas." : ""}</p>`:""}
+    ${hist.length?`<p class="small" style="margin:8px 0 0">Ciclos anteriores · ${hist.join(" · ")}.${ciclos.every(c=>c.pa && mesN(c.mv)>mesN(c.pa[0])) ? ` En los dos, la acción se adelantó ${base==="wti"?"al crudo":"a las ventas"}.` : ""}</p>`:""}
     <details class="help" style="margin-top:12px"><summary>Cómo se lee y de dónde sale cada dato</summary><p class="mut small">Bullish / Bearish: si el dato hoy es viento a favor o en contra para la acción según cómo funciona el ciclo. No es una señal de compra o venta: la acción suele moverse antes que estos datos.</p><dl>${glos}</dl></details></section>`;
 }
 const ETQ = {clara:["Clara","var(--pos)"], reciente:["Incluida a mano","var(--accent)"], indicio:["Puede ser casualidad","var(--muted)"], vuelta:["Se dio vuelta","var(--neg)"], antigua:["Solo antes de 2015","var(--muted)"], "":["Sin relación","var(--muted)"]};
@@ -1260,7 +1268,7 @@ const parTxt = k => { const ps = parientes(k); return ps.length ? `Se mueve bast
 const LEYENDA = `<p class="mut small">Cada número es cuánto se movió la acción contra el SPY desde 2015 en los meses en que el factor tuvo un movimiento típico. <b style="color:var(--pos)">Clara</b>: la relación aparece en 2015–2021 (tasas bajas) y en 2022–hoy (tasas altas), en el mismo sentido y ganándole al azar en los dos. <b style="color:var(--pos)">✔ firme</b>: también se sostiene si el período se corta en 2019. Dice a quién le pega un movimiento, no si va a pasar. <a href="#" data-como="1">Cómo se mide →</a></p>`;
 function queMueve(f){
   const x = FX?.empresas?.[f.byma], be = f.sensibilidades?.beta, bl = BQDE(f.byma), xb = bl ? FX?.bloques?.[bl.id] : null;
-  const bt = be!=null ? `<div class="bkpi" style="margin-bottom:10px"><div><span>Beta contra el S&P 500</span><b>${nx(be,2)}</b></div></div><p class="mut small" style="margin:-4px 0 12px">Cuando el S&P sube 10%, esta acción sube en promedio ${nx(be*10,0)}%. Lo de abajo es lo que la mueve más allá del mercado.</p>` : "";
+  const bt = be!=null ? `<div class="bkpi" style="margin-bottom:10px"><div><span>Beta contra el S&P 500</span><b>${nx(be,2)}</b></div></div><p class="mut small" style="margin:-4px 0 12px">${Math.abs(be)<0.25 ? "Casi no sigue al mercado: en el último tiempo se movió por su cuenta." : `Cuando el S&P sube 10%, esta acción ${be>0?"sube":"baja"} en promedio ${nx(Math.abs(be*10),0)}%.`} Lo de abajo es lo que la mueve más allá del mercado.</p>` : "";
   if (!x || x.sin) return `<div class="card">${bt}<p class="mut">Sin historia suficiente para medir qué la mueve (hacen falta al menos 3 años de datos mensuales).</p></div>`;
   const mo = x.motores || [], mk = mo.map(z=>z.f), nm = k => (FX.F[k]?.nombre||k).toLowerCase();
   let ctx = "";
@@ -1808,12 +1816,14 @@ async function comparador(m){
   m.querySelectorAll("[data-per]").forEach(b=>b.onclick=()=>{EST.per=b.dataset.per; comparador(m);});
 }
 
+let DESC = null;
 async function ficha(m, t){
   if (!FCACHE[t]){
     m.innerHTML = `<p class="mut">Cargando ficha…</p>`;
     try{ const r = await fetch(`data/fichas/${encodeURIComponent(t)}.json?v=${Date.now()}`); FCACHE[t] = r.ok ? await r.json() : {sin:true}; }catch(e){ FCACHE[t] = {sin:true}; }
   }
   if (!FX) await cargarFX();
+  if (!DESC){ try{ const r = await fetch("data/desc_es.json?v="+Date.now()); DESC = r.ok ? await r.json() : {}; }catch(e){ DESC = {}; } }
   const f = FCACHE[t], x = E.empresas.find(z=>z.ticker===t) || {};
   const volver = `<button class="btn" id="fv">${EST.bloque?"← Volver al bloque":"← Volver"}</button>`;
   const BQF = BQDE(f.byma||x.byma);
@@ -1881,8 +1891,8 @@ async function ficha(m, t){
         ["Día siguiente", pct(ub.reaccion), cls(ub.reaccion)],["5 ruedas después", pct(ub.reaccion_5d), cls(ub.reaccion_5d)],["Próximo balance", fch2(a.proximo_balance)]])}
       <p class="coment">${esc(ub.comentario||"")}</p></div>` : `<div class="card"><h3>Último balance</h3><p class="mut">Sin datos del último balance.</p></div>`;
 
-  const negocio = `<div class="card"><h3>A qué se dedica</h3>${f.descripcion?`<p class="desc">${esc(f.descripcion)}</p><p class="mut small">Texto de Yahoo Finance, en inglés. El resumen en castellano se suma más adelante.</p>`:`<p class="mut">Sin descripción disponible.</p>`}
-    ${kv([["Empleados", f.empleados?num(f.empleados,0):"—"],["Sitio web", f.web?`<a href="${esc(f.web)}" target="_blank" rel="noopener">${esc(f.web.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))}</a>`:"—"],["Reporta en", esc(f.moneda_reporte||"USD")]])}</div>`;
+  const negocio = `<div class="card"><h3>A qué se dedica</h3>${f.descripcion?(DESC?.[f.ticker]?.es?`<p class="desc">${esc(DESC[f.ticker].es)}</p><p class="mut small">Descripción de Yahoo Finance, traducida automáticamente.</p>`:`<p class="desc">${esc(f.descripcion)}</p><p class="mut small">Texto de Yahoo Finance, en inglés.</p>`):`<p class="mut">Sin descripción disponible.</p>`}
+    ${kv([["Empleados", f.empleados?num(f.empleados,0):"—"],["Sitio web", f.web?`<a href="${esc(f.web)}" target="_blank" rel="noopener" style="word-break:break-all">${esc(f.web.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))}</a>`:"—"],["Reporta en", esc(f.moneda_reporte||"USD")]])}</div>`;
 
   const parte = sub => { let cuerpo = "";
   if (sub==="resumen"){

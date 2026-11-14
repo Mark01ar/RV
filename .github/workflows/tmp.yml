@@ -1,0 +1,27 @@
+name: tmp
+
+on:
+  push:
+    branches: [prueba-base]
+
+permissions:
+  contents: write
+
+jobs:
+  prueba:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - run: mkdir -p tmp; python tmp/dbg.py > tmp/dbg_log.txt 2>&1 || true; cat tmp/dbg_log.txt tmp/dbg.txt
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -f tmp
+          git commit -m "Resultado prueba"
+          git push
