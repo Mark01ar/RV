@@ -1,3 +1,4 @@
+import os
 import re
 import sys
 import json
@@ -59,6 +60,13 @@ BLOQUES = {
         "per": "5y",
         "nota": "Datos del ciclo de los centros de datos para IA. Oracle, CoreWeave, Nebius e IREN alquilan capacidad de cómputo: firman contratos largos con OpenAI, Microsoft o Meta y se endeudan para construir los centros de datos antes de cobrar. No son motores medidos: hay poca historia y la acción suele moverse antes que estos datos.",
         "dir": {"neo_deuda": -1},
+    },
+    "petroleo": {
+        "indicadores": ["wti", "crudo_inv", "crudo_prod", "pet_capex"],
+        "ciclos": [["2018", "2018-01", "2019-06"], ["2022", "2021-06", "2023-06"]],
+        "base": "wti",
+        "nota": "Datos del ciclo del petróleo. Las productoras (Exxon, Chevron, Shell, Petrobras, GeoPark) ganan más cuando el crudo sube; Tenaris vende los caños para perforar, así que depende más de cuánto invierten. No son motores medidos: la acción suele moverse antes que estos datos.",
+        "dir": {"crudo_inv": -1, "crudo_prod": -1, "pet_capex": -1},
     },
     "fabricacion": {
         "indicadores": ["tsmc", "fab_capex", "hyper"],
@@ -328,6 +336,98 @@ def neo():
     return out
 
 
+PETRO = {"XOM": 34088, "CVX": 93410}
+
+
+def eia(serie):
+    import io
+    r = requests.get(f"https://www.eia.gov/dnav/pet/hist_xls/{serie}w.xls", headers={"User-Agent": "Mozilla/5.0"}, timeout=60)
+    t = pd.read_excel(io.BytesIO(r.content), sheet_name="Data 1", skiprows=2)
+    t = t.iloc[:, :2].dropna()
+    return pd.Series(t.iloc[:, 1].astype(float).values, index=pd.to_datetime(t.iloc[:, 0])).sort_index()
+
+
+def capex_petro():
+    df = capex(PETRO)
+    for t in PETRO:
+        try:
+            cf = yf.Ticker(t).quarterly_cashflow
+            fila = cf.loc["Capital Expenditure"].dropna()
+            for d, v in fila.items():
+                q = pd.Timestamp(d).to_period("Q")
+                if q not in df.index or pd.isna(df.loc[q, t]):
+                    df.loc[q, t] = abs(float(v))
+        except Exception as e:
+            print(f"capex yf {t}: {e}", file=sys.stderr)
+    return df.sort_index()
+
+
+def fred(serie, desde="2009-01-01"):
+    key = os.environ.get("FRED_API_KEY", "").strip()
+    r = requests.get("https://api.stlouisfed.org/fred/series/observations", params={"series_id": serie, "api_key": key, "file_type": "json", "observation_start": desde}, timeout=60).json()
+    return pd.Series({pd.Timestamp(o["date"]): float(o["value"]) for o in r["observations"] if o["value"] not in (".", "")}).sort_index()
+
+
+def wti():
+    s = fred("DCOILWTICO").resample("ME").mean().dropna()
+    s.index = s.index.to_period("M")
+    t3 = s.rolling(3).mean().dropna()
+    yy = (t3 / t3.shift(12) - 1).dropna()
+    prev = yy[yy.index < pd.Period("2023-01", "M")]
+    h = s[s.index >= pd.Period("2015-01", "M")]
+    return {
+        "max_previo": [float(prev.max()), str(prev.idxmax())],
+        "base3": [[str(k), float(v)] for k, v in t3.items()],
+        "nombre": "Precio del petróleo WTI", "corto": "Petróleo WTI", "frec": "mensual", "tipo": "precio",
+        "fuente": "Reserva Federal de St. Louis (FRED): precio diario del WTI promediado por mes.",
+        "que": "El precio del barril en EE.UU. Es lo que más mueve las ganancias de las productoras: con el crudo arriba, ganan más y pagan más dividendos.",
+        "ultimo": str(s.index[-1]), "valor": round(float(s.iloc[-1]), 1),
+        "anual": float(s.iloc[-1] / s.iloc[-13] - 1), "trim": float(t3.iloc[-1] / t3.iloc[-4] - 1), "mes": float(s.iloc[-1] / s.iloc[-2] - 1),
+        "lectura": f"Hoy: <b>US$ {s.iloc[-1]:.0f}</b> por barril (promedio del mes). Hace un año, US$ {s.iloc[-13]:.0f}. Desde 2015 el promedio fue US$ {h.mean():.0f}; lo más alto, US$ {h.max():.0f} ({h.idxmax()}).",
+        "serie": [[str(k), round(float(v), 2)] for k, v in t3.items() if k >= pd.Period("2015-01", "M")],
+    }
+
+
+def crudo_inv():
+    w = eia("WCESTUS1")
+    m = w.resample("ME").mean().dropna()
+    m.index = m.index.to_period("M")
+    dev = {}
+    for k, v in m.items():
+        prev = [m.get(pd.Period(f"{k.year - i}-{k.month:02d}", "M")) for i in range(1, 6)]
+        prev = [x for x in prev if x is not None and not pd.isna(x)]
+        if len(prev) == 5:
+            dev[k] = v / (sum(prev) / 5) - 1
+    d = pd.Series(dev).sort_index()
+    u = float(w.iloc[-1])
+    return {
+        "nombre": "Inventarios de crudo de EE.UU. contra el promedio de 5 años", "corto": "Inventarios de crudo", "frec": "mensual", "tipo": "desvio",
+        "fuente": "Departamento de Energía de EE.UU. (EIA), dato semanal sin la reserva estratégica.",
+        "que": "Cuánto crudo hay guardado en EE.UU. comparado con lo normal para esta época del año. Si sobra, el precio tiende a bajar; si falta, a subir. Es el dato semanal que más mira el mercado.",
+        "ultimo": str(d.index[-1]), "valor": round(float(d.iloc[-1]) * 100, 1), "previo": round(float(d.iloc[-4]) * 100, 1) if len(d) > 4 else None,
+        "barriles": round(u / 1000), "semana": str(w.index[-1].date()),
+        "anual": None, "trim": float(d.iloc[-1] - d.iloc[-4]) if len(d) > 4 else None,
+        "lectura": f"Última semana ({w.index[-1].strftime('%d/%m')}): <b>{u / 1000:.0f} millones de barriles</b>, {coma(d.iloc[-1] * 100)}% contra el promedio de los últimos 5 años para este mes. Hace tres meses estaba en {coma(d.iloc[-4] * 100)}%.",
+        "serie": [[str(k), round(float(v) * 100, 2)] for k, v in d.items() if k >= pd.Period("2015-01", "M")],
+    }
+
+
+def crudo_prod():
+    w = eia("WCRFPUS2")
+    m = w.resample("ME").mean().dropna()
+    m.index = m.index.to_period("M")
+    h = m[m.index >= pd.Period("2015-01", "M")]
+    return {
+        "nombre": "Producción de crudo de EE.UU.", "corto": "Producción EE.UU.", "frec": "mensual", "tipo": "volumen",
+        "fuente": "Departamento de Energía de EE.UU. (EIA), dato semanal promediado por mes.",
+        "que": "Cuántos barriles por día saca EE.UU., el mayor productor del mundo. Si sigue subiendo, hay más oferta y el precio tiene un techo; si se frena, la OPEP+ tiene más poder para sostenerlo.",
+        "ultimo": str(m.index[-1]), "valor": round(float(m.iloc[-1]) / 1000, 2),
+        "anual": float(m.iloc[-1] / m.iloc[-13] - 1), "trim": float(m.iloc[-1] / m.iloc[-4] - 1),
+        "lectura": f"Hoy: <b>{coma(m.iloc[-1] / 1000)} millones de barriles por día</b>. Hace un año, {coma(m.iloc[-13] / 1000)}. El máximo desde 2015 fue {coma(h.max() / 1000)} ({h.idxmax()}).",
+        "serie": [[str(k), round(float(v) / 1000, 3)] for k, v in h.items()],
+    }
+
+
 def precios(tks):
     px = yf.download(sorted(set(tks)), start="2014-10-01", auto_adjust=True, progress=False, threads=False)["Close"]
     px = px.ffill().resample("ME").last()
@@ -383,6 +483,20 @@ def main():
                                      "Balances trimestrales presentados a la SEC (compras de propiedad y equipo).")
     except Exception as e:
         print(f"fab_capex: {e}", file=sys.stderr)
+    for k_, fn in [("wti", wti), ("crudo_inv", crudo_inv), ("crudo_prod", crudo_prod)]:
+        try:
+            ind[k_] = fn()
+            print(k_, ind[k_]["serie"][-4:], ind[k_].get("lectura"), file=sys.stderr)
+        except Exception as e:
+            print(f"{k_}: {e}", file=sys.stderr)
+    try:
+        pc = capex_petro()
+        print(pc.tail(6).div(1e9).round(2).to_string(), file=sys.stderr)
+        ind["pet_capex"] = capex_ind(pc, "Inversión de Exxon y Chevron", "Inversión petroleras",
+                                     "Lo que invierten las dos grandes petroleras de EE.UU. en pozos y yacimientos, en los últimos 12 meses. Es la oferta futura: si invierten fuerte, en uno o dos años hay más crudo. Para Tenaris es al revés: más inversión es más venta de caños.",
+                                     "Balances trimestrales presentados a la SEC (compras de propiedad y equipo).")
+    except Exception as e:
+        print(f"pet_capex: {e}", file=sys.stderr)
     try:
         ind.update(neo())
         for k_ in ["neo_rpo", "neo_cob", "neo_deuda"]:
