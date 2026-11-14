@@ -64,7 +64,8 @@
     "QCOM",
     "MRVL",
     "ALAB",
-    "INTC"
+    "INTC",
+    "ARM"
    ],
    "clave": "Crecimiento y dependencia de pocos clientes grandes.",
    "lente": {
@@ -121,7 +122,8 @@
     "TSM",
     "ASML",
     "AMAT",
-    "LRCX"
+    "LRCX",
+    "KLAC"
    ],
    "clave": "Dependen de cuánto invierten los fabricantes y de las restricciones de exportación.",
    "lente": {
@@ -363,7 +365,8 @@
     "HPQ",
     "XROX",
     "BB",
-    "RGTI"
+    "RGTI",
+    "ANET"
    ],
    "clave": "Grupo heterogéneo: ciclo de renovación de equipos y servidores.",
    "lente": {
@@ -597,7 +600,8 @@
     "GS",
     "BBD",
     "ITUB",
-    "NMR"
+    "NMR",
+    "NU"
    ],
    "clave": "Precio / valor libro contra ROE, y sensibilidad a la tasa.",
    "lente": {
@@ -775,7 +779,9 @@
     "CEG",
     "GEV",
     "OKLO",
-    "FSLR"
+    "FSLR",
+    "TLN",
+    "CCJ"
    ],
    "clave": "Demanda de los centros de datos y precio de la electricidad.",
    "lente": {
@@ -889,7 +895,9 @@
     "HMY",
     "HL",
     "MP",
-    "TXR"
+    "TXR",
+    "NEM",
+    "SCCO"
    ],
    "clave": "Precio del metal y costo por onza o tonelada.",
    "lente": {
@@ -945,7 +953,8 @@
     "NVO",
     "JNJ",
     "PFE",
-    "ABT"
+    "ABT",
+    "ABBV"
    ],
    "clave": "Patentes que vencen, lo que tienen en desarrollo y cuánto pesa su producto principal.",
    "lente": {
@@ -1057,7 +1066,9 @@
     "PG",
     "MO",
     "WMT",
-    "MCD"
+    "MCD",
+    "COST",
+    "PM"
    ],
    "clave": "Estabilidad, poder de precio y dividendo.",
    "lente": {
@@ -1109,7 +1120,8 @@
    "empresas": [
     "NKE",
     "ANF",
-    "GT"
+    "GT",
+    "HD"
    ],
    "clave": "Cuánto gasta la gente, inventarios y márgenes.",
    "lente": {
@@ -1266,7 +1278,8 @@
    "empresas": [
     "CAT",
     "PCAR",
-    "ADGO"
+    "ADGO",
+    "DE"
    ],
    "clave": "Ciclo de inversión del campo, la construcción y el transporte.",
    "lente": {

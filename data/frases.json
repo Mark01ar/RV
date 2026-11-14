@@ -123,5 +123,18 @@
 "TEAM": "Software de trabajo en equipo (Jira, Confluence). Crece, aunque el mercado teme el impacto de la IA.",
 "BIOX": "Biotecnología agrícola de origen argentino (trigo HB4, biológicos). Chica, con deuda y muy volátil.",
 "NVO": "Fabricante de Ozempic y Wegovy, perdiendo terreno frente a Lilly. Barata contra su historia.",
-"BA": "Aviones comerciales y defensa, todavía recuperándose de sus problemas de calidad. Mucha deuda; historia de recuperación."
+"BA": "Aviones comerciales y defensa, todavía recuperándose de sus problemas de calidad. Mucha deuda; historia de recuperación.",
+"NU": "Nubank: el banco digital más grande de América Latina, con más de 100 millones de clientes en Brasil, México y Colombia. Crece rápido y con alta rentabilidad; depende mucho de Brasil y del real.",
+"ANET": "Hace los switches que conectan miles de chips dentro de los centros de datos. Gana con la IA sin importar qué chip se use; Meta y Microsoft son sus grandes clientes.",
+"ARM": "Diseña la arquitectura que usan casi todos los celulares y cada vez más chips de servidores y PCs. Cobra regalías por cada chip; cotiza caro por su potencial en IA.",
+"KLAC": "Hace las máquinas que inspeccionan y miden los chips mientras se fabrican. Junto con ASML, Applied y Lam completa el grupo de equipos; márgenes altísimos.",
+"TLN": "Generadora eléctrica con una central nuclear que le vende energía directo a centros de datos de Amazon. Apuesta a la demanda eléctrica de la IA.",
+"CCJ": "Uno de los mayores productores de uranio del mundo, el combustible de las centrales nucleares. Gana si la energía nuclear vuelve a crecer por la demanda de la IA.",
+"COST": "Supermercados mayoristas con membresía: cobra una cuota anual y vende barato. Clientes muy fieles y crecimiento estable; casi siempre cotiza caro.",
+"HD": "La mayor cadena de materiales y herramientas para el hogar de EE.UU. Depende del mercado inmobiliario y de las tasas: con hipotecas caras, la gente remodela menos.",
+"PM": "Cigarrillos fuera de EE.UU. y el líder en productos sin humo (IQOS y Zyn). Paga buen dividendo y el negocio sin humo crece rápido.",
+"ABBV": "Farmacéutica con remedios para enfermedades inmunes (Skyrizi, Rinvoq) y estética (Botox). Superó el fin de la patente de Humira y paga buen dividendo.",
+"NEM": "La mayor productora de oro del mundo. Gana cuando sube el oro; sus costos y la producción de sus minas son lo que la diferencia.",
+"SCCO": "Una de las mayores mineras de cobre del mundo, con minas en Perú y México y reservas para décadas. Gana cuando sube el cobre; paga buen dividendo.",
+"DE": "El mayor fabricante de maquinaria agrícola del mundo (John Deere). Depende de los precios de los granos y del ingreso de los productores."
 }

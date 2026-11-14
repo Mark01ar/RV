@@ -124,3 +124,16 @@ puesto,byma,ticker_us,nombre,ratio,monto_usd_dia,fuente_volumen
 123,BIOX,BIOX,Bioceres,1:1,40064,6 meses
 124,NVO,NVO,Novo Nordisk,7:1,39149,20 dias
 125,BA,BA,Boeing,24:1,38915,6 meses
+126,NU,NU,Nu Holdings,2:1,12556085,agregada a mano
+127,ANET,ANET,Arista Networks,29:1,58107,agregada a mano
+128,ARM,ARM,ARM Holdings,27:1,88843,agregada a mano
+129,KLAC,KLAC,KLA,34:1,62755,agregada a mano
+130,TLN,TLN,Talen Energy,63:1,16636,agregada a mano
+131,CCJ,CCJ,Cameco,23:1,2580,agregada a mano
+132,COST,COST,Costco,48:1,79389,agregada a mano
+133,HD,HD,Home Depot,32:1,33430,agregada a mano
+134,PM,PM,Philip Morris,18:1,6004,agregada a mano
+135,ABBV,ABBV,AbbVie,10:1,22310,agregada a mano
+136,NEM,NEM,Newmont,3:1,9759,agregada a mano
+137,SCCO,SCCO,Southern Copper,2:1,92055,agregada a mano
+138,DE,DE,Deere,40:1,14781,agregada a mano
