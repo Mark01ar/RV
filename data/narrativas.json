@@ -5246,6 +5246,802 @@
    "Próximo balance"
   ]
  ]
+},
+"UAL": {
+ "fecha": "2026-11-16",
+ "tesis": "La aerolínea internacional más fuerte de EE.UU.: muy barata, pero los analistas recortan por el combustible.",
+ "bull": [
+  [
+   "Muy barata",
+   "P/E de 10 y flujo libre de 7%: nota de valuación 9,8."
+  ],
+  [
+   "Demanda fuerte",
+   "Ventas +17% en el último trimestre; vuelos premium e internacionales llenos."
+  ],
+  [
+   "El crudo afloja",
+   "Si el petróleo sigue bajando, la ganancia rebota rápido."
+  ]
+ ],
+ "bear": [
+  [
+   "Combustible",
+   "Los analistas bajaron 32% la ganancia esperada en 90 días por el combustible caro."
+  ],
+  [
+   "Deuda",
+   "Nota de solidez 4,4."
+  ],
+  [
+   "Ciclo",
+   "Si la economía se enfría, las aerolíneas son las primeras en sufrir."
+  ]
+ ],
+ "practica": "Igual que Delta: apuesta a que el crudo baja. Delta es más sólida; United es más barata.",
+ "mirar": [
+  [
+   "2027-01-26",
+   "Próximo balance"
+  ]
+ ]
+},
+"AAL": {
+ "fecha": "2026-11-16",
+ "tesis": "La aerolínea más endeudada de EE.UU.: barata por algo.",
+ "bull": [
+  [
+   "Rebote posible",
+   "15% de las acciones en corto: si el combustible baja, puede subir fuerte."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 23% más de lo esperado en el último balance."
+  ]
+ ],
+ "bear": [
+  [
+   "Muchísima deuda",
+   "Deuda neta de 6,4 veces EBITDA: nota de solidez 1,3."
+  ],
+  [
+   "Margen mínimo",
+   "Gana 1 de cada 100 que vende."
+  ],
+  [
+   "Combustible",
+   "El petróleo caro le pega más que a nadie."
+  ],
+  [
+   "Analistas recortando",
+   "Las estimaciones se desplomaron en 90 días."
+  ]
+ ],
+ "practica": "Si se quiere aerolínea, Delta o United. American no es para minoristas.",
+ "mirar": [
+  [
+   "2027-01-26",
+   "Próximo balance"
+  ]
+ ]
+},
+"XROX": {
+ "fecha": "2026-11-16",
+ "tesis": "Fotocopiadoras en un mundo sin papel: suspendió el dividendo y la acción vale menos de un dólar.",
+ "bull": [
+  [
+   "Muy castigada",
+   "−74% desde el máximo: si sobrevive, el rebote puede ser grande."
+  ],
+  [
+   "Mucho corto",
+   "35% de las acciones en corto."
+  ]
+ ],
+ "bear": [
+  [
+   "Suspendió el dividendo",
+   "Bajó el pronóstico y suspendió el dividendo: la acción cayó 40% en un día."
+  ],
+  [
+   "Deuda enorme",
+   "Deuda de 13,6 veces EBITDA: nota de solidez 2,5."
+  ],
+  [
+   "Negocio en declive",
+   "Ventas −5% por año."
+  ]
+ ],
+ "practica": "No es para clientes minoristas.",
+ "mirar": [
+  [
+   "2027-01-28",
+   "Próximo balance"
+  ]
+ ]
+},
+"NOW": {
+ "fecha": "2026-11-16",
+ "tesis": "El software que automatiza procesos en grandes empresas: crece 21%, pero tuvo su peor día en 14 años por miedo a la IA.",
+ "bull": [
+  [
+   "Crece",
+   "Ventas +21% en el último trimestre."
+  ],
+  [
+   "Más barata que nunca",
+   "P/E esperado de 21: −41% desde el máximo."
+  ],
+  [
+   "Caja",
+   "Flujo libre de 34% de las ventas y caja neta."
+  ],
+  [
+   "Analistas positivos",
+   "Recomendación de compra fuerte y potencial de 52%."
+  ]
+ ],
+ "bear": [
+  [
+   "Peor día en 14 años",
+   "Cayó 25–27% porque el pronóstico de contratos nuevos quedó debajo de lo esperado."
+  ],
+  [
+   "Miedo a la IA",
+   "El mercado teme que los agentes de IA reemplacen su software."
+  ],
+  [
+   "Margen en baja",
+   "El margen operativo bajó de 17% a 9% en el trimestre."
+  ]
+ ],
+ "practica": "Calidad castigada. Para perfiles moderados que acepten volatilidad, de a poco.",
+ "mirar": [
+  [
+   "2027-01-27",
+   "Próximo balance"
+  ]
+ ]
+},
+"CEG": {
+ "fecha": "2026-11-16",
+ "tesis": "La mayor operadora de centrales nucleares de EE.UU.: vende energía limpia y constante a las big tech para sus centros de datos.",
+ "bull": [
+  [
+   "Superó por mucho",
+   "Ganó 30% más de lo esperado y subió 10%."
+  ],
+  [
+   "Contratos con big tech",
+   "Firmó acuerdos de largo plazo con Microsoft y Meta para alimentar centros de datos."
+  ],
+  [
+   "Crece",
+   "Ventas +45% en el último trimestre."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 22, por encima de las eléctricas."
+  ],
+  [
+   "Regulación",
+   "Los reguladores revisan cuánto pueden conectar las big tech directo a las centrales."
+  ],
+  [
+   "Tendencia",
+   "−26% desde el máximo."
+  ]
+ ],
+ "practica": "Una de las mejores formas de jugar la energía para la IA con menos riesgo que Oklo o Talen.",
+ "mirar": [
+  [
+   "2027-02-24",
+   "Próximo balance"
+  ]
+ ]
+},
+"GS": {
+ "fecha": "2026-11-16",
+ "tesis": "El banco de inversión más famoso del mundo: gana mucho cuando hay fusiones y salidas a bolsa, como ahora.",
+ "bull": [
+  [
+   "Superó por mucho",
+   "Ganó 30% más de lo esperado en el último balance."
+  ],
+  [
+   "Muchas salidas a bolsa",
+   "Con OpenAI, Anthropic y otras pensando en cotizar, la banca de inversión tiene años buenos."
+  ],
+  [
+   "Precio razonable",
+   "P/E de 13 y dividendo de 2,2%."
+  ]
+ ],
+ "bear": [
+  [
+   "Cíclico",
+   "Si el mercado se da vuelta, se frenan las operaciones."
+  ],
+  [
+   "Endeudado",
+   "Opera con mucha deuda: nota de solidez 4,9."
+  ],
+  [
+   "Tendencia",
+   "−20% desde el máximo."
+  ]
+ ],
+ "practica": "Buena forma de apostar a un boom de salidas a bolsa. Para perfiles moderados.",
+ "mirar": [
+  [
+   "2027-01-19",
+   "Próximo balance"
+  ]
+ ]
+},
+"HPQ": {
+ "fecha": "2026-11-16",
+ "tesis": "Computadoras e impresoras: barata, con dividendo de 4%, pero la memoria cara le complica el año.",
+ "bull": [
+  [
+   "Barata",
+   "P/E de 11 y flujo libre de 10,6%: nota de valuación 9,4."
+  ],
+  [
+   "Dividendo",
+   "Rinde 4,1%."
+  ],
+  [
+   "Tendencia",
+   "19% arriba de su media de 200 ruedas."
+  ]
+ ],
+ "bear": [
+  [
+   "Memoria cara",
+   "Las computadoras se encarecen y se venden menos."
+  ],
+  [
+   "No crece",
+   "Se espera ganancia −3% el año próximo."
+  ],
+  [
+   "Analistas sin potencial",
+   "El precio objetivo está 7% debajo del actual."
+  ]
+ ],
+ "practica": "Para el que busca dividendo alto en tecnología. Balance el 24/11.",
+ "mirar": [
+  [
+   "2026-11-24",
+   "Balance trimestral"
+  ]
+ ]
+},
+"TXR": {
+ "fecha": "2026-11-16",
+ "tesis": "La siderúrgica del grupo Techint en México, Argentina y Brasil: barata y con dividendo, pero con márgenes chicos.",
+ "bull": [
+  [
+   "Barata",
+   "P/E esperado de 6."
+  ],
+  [
+   "Dividendo",
+   "Rinde 3,6%."
+  ],
+  [
+   "México",
+   "Se beneficia del traslado de fábricas de Asia a México."
+  ]
+ ],
+ "bear": [
+  [
+   "Último balance flojo",
+   "Ganó 22% menos de lo esperado."
+  ],
+  [
+   "Margen bajo",
+   "Margen operativo de 5% anual."
+  ],
+  [
+   "Acero chino",
+   "El acero barato de China presiona precios."
+  ],
+  [
+   "Analistas tibios",
+   "Nota de analistas 2,4."
+  ]
+ ],
+ "practica": "Para el cliente que conoce Techint y busca dividendo. Tenaris tiene mejor nota.",
+ "mirar": [
+  [
+   "2027-02-16",
+   "Próximo balance"
+  ]
+ ]
+},
+"PCAR": {
+ "fecha": "2026-11-16",
+ "tesis": "Camiones Kenworth y Peterbilt: sólida y bien manejada, en un ciclo de camiones flojo.",
+ "bull": [
+  [
+   "Calidad",
+   "Nunca perdió plata en su historia y paga dividendos extra."
+  ],
+  [
+   "Crece",
+   "Ventas +19% en el último trimestre."
+  ],
+  [
+   "Precio razonable",
+   "P/E esperado de 16 y flujo libre de 6,5%."
+  ]
+ ],
+ "bear": [
+  [
+   "Ciclo de camiones",
+   "Con tasas altas, las transportistas postergan compras."
+  ],
+  [
+   "Aranceles",
+   "Los aranceles encarecen componentes."
+  ],
+  [
+   "Analistas tibios",
+   "Nota de analistas 3,5."
+  ]
+ ],
+ "practica": "Industrial de calidad para el largo plazo. Sin apuro.",
+ "mirar": [
+  [
+   "2027-02-02",
+   "Próximo balance"
+  ]
+ ]
+},
+"TEAM": {
+ "fecha": "2026-11-16",
+ "tesis": "Software de trabajo en equipo (Jira): crece en la nube, pero el pronóstico de crecimiento la hundió.",
+ "bull": [
+  [
+   "Crece",
+   "Ventas +24% y la nube +31%."
+  ],
+  [
+   "Mejora el margen",
+   "Pasó de margen operativo negativo a 11%."
+  ],
+  [
+   "Analistas positivos",
+   "Potencial de 45%."
+  ]
+ ],
+ "bear": [
+  [
+   "Pronóstico flojo",
+   "Cayó 17% porque espera que la nube crezca menos."
+  ],
+  [
+   "Miedo a la IA",
+   "La IA puede cambiar cómo trabajan los equipos de software."
+  ],
+  [
+   "Muy volátil",
+   "−34% desde el máximo y volatilidad de 80% anual."
+  ]
+ ],
+ "practica": "Calidad de software castigada. Para perfiles agresivos, de a poco.",
+ "mirar": [
+  [
+   "2027-02-04",
+   "Próximo balance"
+  ]
+ ]
+},
+"BIOX": {
+ "fecha": "2026-11-16",
+ "tesis": "Biotecnología agrícola argentina en crisis financiera: la acción cayó 89% en un año.",
+ "bull": [
+  [
+   "Tecnología",
+   "Su trigo y soja resistentes a la sequía (HB4) son innovadores."
+  ],
+  [
+   "Precio mínimo",
+   "Si logra reestructurar, el rebote puede ser grande."
+  ]
+ ],
+ "bear": [
+  [
+   "Crisis de deuda",
+   "Deuda de casi 10 veces EBITDA: nota de solidez 1,7."
+  ],
+  [
+   "Ventas en caída",
+   "Ventas −23% en el último trimestre informado."
+  ],
+  [
+   "Se desplomó",
+   "−89% en un año."
+  ]
+ ],
+ "practica": "No es para clientes minoristas.",
+ "mirar": [
+  [
+   "2027-03-11",
+   "Próximo balance"
+  ]
+ ]
+},
+"NVO": {
+ "fecha": "2026-11-16",
+ "tesis": "Creador de Ozempic y Wegovy: perdió el liderazgo frente a Lilly, pero está barata y su pastilla vende bien.",
+ "bull": [
+  [
+   "Pastilla que vende",
+   "Wegovy en pastilla crece fuerte; subió el pronóstico por tercera vez en el año."
+  ],
+  [
+   "Barata",
+   "P/E de 10,5 contra 41 del sector: nota de valuación 8,8."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 25% más de lo esperado."
+  ],
+  [
+   "Dividendo",
+   "Rinde 4,3%."
+  ]
+ ],
+ "bear": [
+  [
+   "Lilly le gana",
+   "Mounjaro y Zepbound le sacaron mercado."
+  ],
+  [
+   "Precios en baja",
+   "Topes de precio en EE.UU. presionan los ingresos."
+  ],
+  [
+   "Crece poco",
+   "Se espera ganancia −3% el año próximo."
+  ]
+ ],
+ "practica": "Opción barata y con dividendo en obesidad. Más riesgo que Lilly, mucho más barata.",
+ "mirar": [
+  [
+   "2027-02-03",
+   "Próximo balance"
+  ]
+ ]
+},
+"BA": {
+ "fecha": "2026-11-16",
+ "tesis": "Boeing intenta salir de años de crisis: pierde menos, pero los aviones comerciales siguen decepcionando.",
+ "bull": [
+  [
+   "Pierde menos",
+   "El margen operativo mejoró de −21% a 1% contra un año atrás."
+  ],
+  [
+   "Pedidos enormes",
+   "Tiene años de aviones vendidos por entregar."
+  ],
+  [
+   "Analistas positivos",
+   "Recomendación de compra fuerte y potencial de 36%."
+  ]
+ ],
+ "bear": [
+  [
+   "Aviones comerciales flojos",
+   "La división comercial decepcionó y la acción cayó 11% con el balance."
+  ],
+  [
+   "Deuda",
+   "Deuda de 3,9 veces EBITDA."
+  ],
+  [
+   "Problemas de calidad",
+   "Los reguladores todavía limitan cuántos aviones puede fabricar."
+  ]
+ ],
+ "practica": "Recuperación lenta. Para pacientes; no es prioritaria.",
+ "mirar": [
+  [
+   "2027-01-26",
+   "Próximo balance"
+  ]
+ ]
+},
+"HD": {
+ "fecha": "2026-11-16",
+ "tesis": "El mayor vendedor de materiales para el hogar: calidad, pero el mercado inmobiliario de EE.UU. está frenado por las tasas.",
+ "bull": [
+  [
+   "Calidad",
+   "Margen operativo de 13% y dividendo de 2,7%."
+  ],
+  [
+   "Si bajan las tasas",
+   "Un mercado inmobiliario más activo la beneficia directo."
+  ],
+  [
+   "Profesionales",
+   "Crece en ventas a constructores profesionales."
+  ]
+ ],
+ "bear": [
+  [
+   "Tasas altas",
+   "Con la Fed subiendo, la gente compra y remodela menos casas."
+  ],
+  [
+   "Crece poco",
+   "Ventas +3% esperadas."
+  ],
+  [
+   "Deuda",
+   "Deuda neta de 2,2 veces EBITDA por compras."
+  ]
+ ],
+ "practica": "Calidad que espera que bajen las tasas. Balance el 17/11.",
+ "mirar": [
+  [
+   "2026-11-17",
+   "Balance trimestral"
+  ]
+ ]
+},
+"ABBV": {
+ "fecha": "2026-11-16",
+ "tesis": "La farmacéutica que reemplazó con éxito a Humira: crece, en máximos, pero con mucha deuda.",
+ "bull": [
+  [
+   "Reemplazó a Humira",
+   "Skyrizi y Rinvoq compensaron la caída de su ex medicamento estrella."
+  ],
+  [
+   "Tendencia",
+   "En máximos, +30% en un año."
+  ],
+  [
+   "Dividendo",
+   "Rinde 2,4% y lo sube todos los años."
+  ]
+ ],
+ "bear": [
+  [
+   "Deuda",
+   "Deuda neta de 4,1 veces EBITDA: nota de solidez 3,5."
+  ],
+  [
+   "Cara contra su historia",
+   "P/E esperado de 18 y analistas con 6% de potencial."
+  ],
+  [
+   "Precios",
+   "Presión del gobierno de EE.UU. sobre precios de medicamentos."
+  ]
+ ],
+ "practica": "Farmacéutica de calidad para carteras moderadas. Comprar en bajas.",
+ "mirar": [
+  [
+   "2027-02-03",
+   "Próximo balance"
+  ]
+ ]
+},
+"TLN": {
+ "fecha": "2026-11-16",
+ "tesis": "Generadora eléctrica con central nuclear que alimenta centros de datos de Amazon: crece, pero muy endeudada.",
+ "bull": [
+  [
+   "Contrato con Amazon",
+   "Vende energía nuclear a un centro de datos de Amazon con contrato de largo plazo."
+  ],
+  [
+   "Crece fuerte",
+   "Ventas +96% en el último trimestre."
+  ],
+  [
+   "Analistas positivos",
+   "Recomendación de compra fuerte."
+  ]
+ ],
+ "bear": [
+  [
+   "Mucha deuda",
+   "Deuda de muchas veces su EBITDA: nota de solidez 3,6."
+  ],
+  [
+   "Último balance flojo",
+   "Ganó 21% menos de lo esperado."
+  ],
+  [
+   "Regulación",
+   "Los reguladores revisan las conexiones directas de centros de datos a centrales."
+  ]
+ ],
+ "practica": "Como hablamos, interesante para clientes, pero más riesgosa que Constellation. Posición chica.",
+ "mirar": [
+  [
+   "2027-02-25",
+   "Próximo balance"
+  ]
+ ]
+},
+"DE": {
+ "fecha": "2026-11-16",
+ "tesis": "El líder mundial de maquinaria agrícola: tendencia fuerte, pero cara y con el campo de EE.UU. en un ciclo flojo.",
+ "bull": [
+  [
+   "Tendencia",
+   "+42% en un año, cerca de máximos."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 8% más de lo esperado y subió 7%."
+  ],
+  [
+   "Tecnología",
+   "Lidera en agricultura de precisión y tractores autónomos."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 37 y analistas con solo 3% de potencial."
+  ],
+  [
+   "Deuda",
+   "La deuda viene de su financiera (presta a los productores): nota de solidez 3,0, menos grave de lo que parece."
+  ],
+  [
+   "Campo flojo",
+   "Precios de granos bajos y tasas altas frenan compras de maquinaria."
+  ]
+ ],
+ "practica": "Excelente empresa a precio alto. Balance el 25/11.",
+ "mirar": [
+  [
+   "2026-11-25",
+   "Balance trimestral"
+  ]
+ ]
+},
+"NEM": {
+ "fecha": "2026-11-16",
+ "tesis": "La minera de oro más grande del mundo: gana muchísimo con el oro cerca de US$ 3.900 y no tiene deuda neta.",
+ "bull": [
+  [
+   "Oro alto",
+   "Margen operativo de 50% y flujo libre de 6% del valor."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 13% más de lo esperado."
+  ],
+  [
+   "Sin deuda neta",
+   "Nota de solidez 9,3."
+  ],
+  [
+   "Precio razonable",
+   "P/E de 13."
+  ]
+ ],
+ "bear": [
+  [
+   "Atada al oro",
+   "Si el oro corrige, la acción cae más que el oro."
+  ],
+  [
+   "Costos",
+   "Los costos de extracción suben con el combustible."
+  ],
+  [
+   "Cayó con el balance",
+   "Bajó 5% después del último balance."
+  ]
+ ],
+ "practica": "La forma más segura de tener oro en acciones. Buena cobertura en carteras moderadas.",
+ "mirar": [
+  [
+   "2027-02-18",
+   "Próximo balance"
+  ]
+ ]
+},
+"PM": {
+ "fecha": "2026-11-16",
+ "tesis": "Tabaco fuera de EE.UU. que se pasó a productos sin humo (IQOS, ZYN): crece y paga buen dividendo.",
+ "bull": [
+  [
+   "Productos sin humo",
+   "IQOS y ZYN crecen fuerte y ya son una parte grande de la ganancia."
+  ],
+  [
+   "Calidad",
+   "Nota de calidad 9,2 y margen operativo de 43%."
+  ],
+  [
+   "Dividendo",
+   "Rinde 3,2%."
+  ],
+  [
+   "Tendencia",
+   "+32% en un año."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 29 y analistas con 7% de potencial."
+  ],
+  [
+   "Regulación",
+   "Riesgo de impuestos y prohibiciones en distintos países."
+  ],
+  [
+   "Deuda",
+   "Deuda neta de 2,6 veces EBITDA."
+  ]
+ ],
+ "practica": "Mejor opción que Altria si se quiere tabaco: crece y tiene futuro. Para carteras que buscan renta.",
+ "mirar": [
+  [
+   "2027-02-04",
+   "Próximo balance"
+  ]
+ ]
+},
+"CCJ": {
+ "fecha": "2026-11-16",
+ "tesis": "El mayor productor de uranio de Occidente y dueño de parte de Westinghouse: gran historia nuclear, pero la acción ya era cara.",
+ "bull": [
+  [
+   "Renacimiento nuclear",
+   "EE.UU. arma un plan de US$ 120.000 millones para nuevos reactores con Westinghouse, donde Cameco es socio."
+  ],
+  [
+   "Sin deuda neta",
+   "Nota de solidez 8,5."
+  ],
+  [
+   "Crecimiento esperado",
+   "Se espera ganancia +116% el año próximo."
+  ]
+ ],
+ "bear": [
+  [
+   "Último balance flojo",
+   "Tuvo pérdida ajustada en el trimestre y cayó 9%."
+  ],
+  [
+   "Cara",
+   "P/E esperado de 41, nota de valuación 2,7."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 25% las estimaciones; nota de analistas 2,4."
+  ],
+  [
+   "Tendencia",
+   "−47% desde el máximo."
+  ]
+ ],
+ "practica": "Como hablamos, buena historia de largo plazo. Con la corrección, de a poco y en posición chica.",
+ "mirar": [
+  [
+   "2027-02-12",
+   "Próximo balance"
+  ]
+ ]
 }
 }
 }
