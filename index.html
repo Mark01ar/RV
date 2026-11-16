@@ -1846,7 +1846,9 @@ function panelNarrativa(f){
   const hoy = new Date().toISOString().slice(0,10);
   const dias = Math.round((new Date(hoy)-new Date(N.fecha))/864e5);
   const mirar = (N.mirar||[]).filter(([d])=>d>=hoy);
-  return `<section class="card nv-top" data-sc="#e8c264"><h3>Narrativa <span class="mut">· escrita el ${fch2(N.fecha)}${dias>45?" · puede estar desactualizada":""}</span></h3>
+  const ubf = f.ultimo_balance?.fecha, vieja = ubf && ubf > N.fecha;
+  return `<section class="card nv-top" data-sc="#e8c264"><h3>Narrativa <span class="mut">· escrita el ${fch2(N.fecha)}${!vieja&&dias>45?" · puede estar desactualizada":""}</span></h3>
+      ${vieja?`<div class="aviso" style="margin-bottom:10px">Presentó balance el ${fch2(ubf)}, después de escrita esta narrativa: hay que renovarla.</div>`:""}
       ${pos?`<div style="margin-bottom:10px">${pos}</div>`:""}<p class="nv-tesis">${esc(N.tesis)}</p></section>
     <section class="fgrid"><div class="card nv-c" data-sc="#45c27c"><h3>Bullish case <span class="mut">· por qué puede subir</span></h3>${lista(N.bull||[],"var(--pos)")}</div>
       <div class="card nv-c" data-sc="#ef6b6b"><h3>Bearish case <span class="mut">· por qué puede bajar</span></h3>${lista(N.bear||[],"var(--neg)")}</div></section>
