@@ -1790,6 +1790,902 @@
    "Balance del tercer trimestre"
   ]
  ]
+},
+"UBER": {
+ "fecha": "2026-11-16",
+ "tesis": "La app de viajes y comida domina su mercado y gana plata; la gran duda es si los autos sin conductor la ayudan o la reemplazan.",
+ "bull": [
+  [
+   "Crece parejo",
+   "Las reservas totales crecen 20% por quinto trimestre seguido; comida a domicilio +22%."
+  ],
+  [
+   "Más ganancia por delante",
+   "Para el cuarto trimestre espera ganancia por acción +34–39% contra un año atrás."
+  ],
+  [
+   "Recompra acciones",
+   "Recompró US$ 4.300 millones en nueve meses."
+  ],
+  [
+   "Precio razonable",
+   "P/E esperado de 16 y flujo libre de 7% del valor por año."
+  ]
+ ],
+ "bear": [
+  [
+   "Autos autónomos",
+   "Si Tesla o Waymo operan sus propias flotas sin Uber, pierde el negocio de los viajes. Uber apuesta a ser la plataforma: espera 700 autos sin conductor a fin de año y más de 2.000 en 2027."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 19% la ganancia esperada en 90 días: la nota de analistas es 1,8."
+  ],
+  [
+   "Faltan conductores",
+   "Los viajes crecieron menos de lo esperado por escasez de choferes."
+  ],
+  [
+   "Juicios",
+   "Apartó casi US$ 500 millones para reclamos legales e impositivos en el trimestre."
+  ]
+ ],
+ "practica": "Negocio sólido a precio razonable, con un riesgo tecnológico real. Para carteras moderadas como posición mediana.",
+ "mirar": [
+  [
+   "2027-02-03",
+   "Próximo balance"
+  ]
+ ]
+},
+"COIN": {
+ "fecha": "2026-11-16",
+ "tesis": "La casa de cambio de cripto más grande de EE.UU.: gana cuando la gente opera cripto, y hoy la gente opera poco.",
+ "bull": [
+  [
+   "Diversifica ingresos",
+   "Cada vez gana más por intereses de la stablecoin USDC y por suscripciones, no solo por comisiones."
+  ],
+  [
+   "Sin deuda neta",
+   "Tiene más caja que deuda: nota de solidez 9,5."
+  ],
+  [
+   "Muy castigada",
+   "−58% en un año: si vuelve el interés por cripto, rebota fuerte."
+  ]
+ ],
+ "bear": [
+  [
+   "El trading se cae",
+   "Los ingresos por operaciones cayeron 44% y las ventas totales bajaron por tercer trimestre seguido."
+  ],
+  [
+   "Atada al bitcoin",
+   "Con el bitcoin en baja, caen los volúmenes; volatilidad de 72% anual."
+  ],
+  [
+   "Analistas recortando",
+   "Bajaron fuerte las estimaciones en 90 días y 10% de las acciones están en corto."
+  ],
+  [
+   "Tendencia muy mala",
+   "Nota de tendencia 2,1."
+  ]
+ ],
+ "practica": "Es una apuesta a que vuelva el ciclo cripto. Solo para perfiles agresivos y en posición chica.",
+ "mirar": [
+  [
+   "2027-02-11",
+   "Próximo balance"
+  ]
+ ]
+},
+"V": {
+ "fecha": "2026-11-16",
+ "tesis": "El peaje más grande de los pagos con tarjeta: crece 13% con márgenes de 60% y casi sin riesgo de crédito.",
+ "bull": [
+  [
+   "Negocio de peaje",
+   "Cobra por cada pago sin prestar plata: margen operativo de 61% y flujo libre de 48% de las ventas."
+  ],
+  [
+   "Crece parejo",
+   "Ventas +13% en el último trimestre; los pagos entre países siguen fuertes."
+  ],
+  [
+   "Tendencia muy buena",
+   "+27% en un año, a 2% de su máximo."
+  ],
+  [
+   "Calidad",
+   "Nota de calidad 9,6."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 34: el precio ya refleja lo bueno; los analistas ven solo 5% de potencial."
+  ],
+  [
+   "Consumo",
+   "Si el consumo de EE.UU. se enfría con tasas más altas, crecen menos los pagos."
+  ],
+  [
+   "Competencia nueva",
+   "Stablecoins, pagos instantáneos y leyes que buscan bajar comisiones son riesgos de largo plazo."
+  ]
+ ],
+ "practica": "Igual que MasterCard: núcleo de calidad para perfiles moderados. Hoy conviene sumar en bajas.",
+ "mirar": [
+  [
+   "2027-01-26",
+   "Próximo balance"
+  ]
+ ]
+},
+"JPM": {
+ "fecha": "2026-11-16",
+ "tesis": "El banco más grande y mejor manejado de EE.UU.: gana mucho con tasas altas, pero su CEO avisa que hay riesgos.",
+ "bull": [
+  [
+   "Ganancias récord",
+   "Ganó US$ 15.300 millones en el trimestre; ingresos +8% y rentabilidad sobre capital de 20%."
+  ],
+  [
+   "Tasas altas ayudan",
+   "Los ingresos por intereses subieron 13%: la suba de la Fed lo favorece."
+  ],
+  [
+   "Banca de inversión",
+   "Es número uno del mundo en banca de inversión, con comisiones +14%."
+  ],
+  [
+   "Precio razonable",
+   "P/E de 14 y dividendo de 1,9%."
+  ]
+ ],
+ "bear": [
+  [
+   "Dimon advierte",
+   "Su CEO dice que inflación y tasas altas pueden pegar: está preparado para varios escenarios malos."
+  ],
+  [
+   "Gastos en suba",
+   "Los gastos subieron 12%, más que los ingresos."
+  ],
+  [
+   "Menos recompras",
+   "Redujo las recompras de acciones este trimestre."
+  ],
+  [
+   "Riesgo de crédito",
+   "Si la economía se frena, suben los préstamos que no se pagan."
+  ]
+ ],
+ "practica": "La mejor forma de tener un banco de EE.UU. en cartera. Sirve para perfiles moderados; se beneficia si la Fed sube tasas.",
+ "mirar": [
+  [
+   "2026-12-09",
+   "Decisión de la Fed"
+  ],
+  [
+   "2027-01-14",
+   "Próximo balance"
+  ]
+ ]
+},
+"QCOM": {
+ "fecha": "2026-11-16",
+ "tesis": "El chip de los celulares Android, en un mal momento del celular: busca crecer en autos y centros de datos.",
+ "bull": [
+  [
+   "Barata",
+   "P/E de 14 y dividendo de 2,1%: nota de valuación 8,1."
+  ],
+  [
+   "Nuevos negocios",
+   "Apunta a US$ 15.000 millones de ventas en centros de datos para 2029; Amazon puede comprarle hasta US$ 60.000 millones en chips de IA."
+  ],
+  [
+   "Pronóstico aceptable",
+   "Para el próximo trimestre espera ventas algo mejores que lo esperado."
+  ]
+ ],
+ "bear": [
+  [
+   "Los celulares se caen",
+   "Ventas de chips para celulares −26%: la memoria cara subió el precio de los teléfonos y las ventas mundiales cayeron 20%."
+  ],
+  [
+   "Pierde a Apple",
+   "Apple pasa a fabricar sus propios módems: el pronóstico ya no incluye ventas a Apple."
+  ],
+  [
+   "Margen en baja",
+   "La acción cayó 9,5% por el pronóstico de margen."
+  ],
+  [
+   "Analistas tibios",
+   "Recomendación promedio 'mantener' y bajan estimaciones."
+  ]
+ ],
+ "practica": "Valor con dividendo, pero sin disparador cercano. Para el cliente que busca tecnología barata y paciencia.",
+ "mirar": [
+  [
+   "2027-02-03",
+   "Próximo balance"
+  ]
+ ]
+},
+"NFLX": {
+ "fecha": "2026-11-16",
+ "tesis": "El líder del streaming gana más que nunca, pero el crecimiento se frena y la acción cayó 46% en un año.",
+ "bull": [
+  [
+   "Gana mucho",
+   "Ganancia +44% en el último trimestre y margen operativo de 35%."
+  ],
+  [
+   "Más barata que nunca",
+   "P/E de 17, de los más bajos de su historia."
+  ],
+  [
+   "Recompra",
+   "Genera mucha caja y recompra acciones."
+  ],
+  [
+   "Sin la compra de Warner",
+   "Dejó la oferta por Warner Bros: evita una compra grande y cara."
+  ]
+ ],
+ "bear": [
+  [
+   "Crece menos",
+   "Ventas +12% y el pronóstico del cuarto trimestre quedó apenas debajo de lo esperado."
+  ],
+  [
+   "Publicidad floja",
+   "Bajó lo que espera ganar por publicidad, su gran apuesta de crecimiento."
+  ],
+  [
+   "Competencia más grande",
+   "Paramount compró Warner y juntó HBO Max con Paramount+."
+  ],
+  [
+   "Tendencia muy mala",
+   "Nota de tendencia 2,4: −46% desde el máximo."
+  ]
+ ],
+ "practica": "Calidad a precio bajo, pero el mercado no la quiere. Para entrar de a poco en carteras moderadas.",
+ "mirar": [
+  [
+   "2027-01-19",
+   "Próximo balance"
+  ]
+ ]
+},
+"NBIS": {
+ "fecha": "2026-11-16",
+ "tesis": "Nube de IA nacida de Yandex: crece por cientos de porcentaje con contratos de Microsoft y Meta, pero quema caja y se endeuda.",
+ "bull": [
+  [
+   "Contratos grandes",
+   "Tiene un contrato con Microsoft de US$ 17.400–19.400 millones y uno nuevo con Meta de unos US$ 3.000 millones."
+  ],
+  [
+   "Crecimiento explosivo",
+   "Ventas +571% contra un año atrás."
+  ],
+  [
+   "Barata para lo que crece",
+   "Cotiza a unas 5 veces las ventas esperadas, la mitad de su promedio."
+  ]
+ ],
+ "bear": [
+  [
+   "Último balance flojo",
+   "Las ventas quedaron debajo de lo esperado y la pérdida fue mayor: la acción cayó 17%."
+  ],
+  [
+   "Deuda en camino",
+   "Los analistas esperan que la deuda neta llegue a unos US$ 34.000 millones en 2027."
+  ],
+  [
+   "Microsoft ajusta",
+   "Microsoft revisa más de cerca a estos proveedores y frenó gasto con otros parecidos."
+  ],
+  [
+   "Muy volátil",
+   "−60% desde el máximo y 20% de las acciones en corto."
+  ]
+ ],
+ "practica": "Igual que CoreWeave: lo más arriesgado de la cadena de IA. Solo posición chica y especulativa.",
+ "mirar": [
+  [
+   "2027-02-11",
+   "Próximo balance"
+  ]
+ ]
+},
+"BABA": {
+ "fecha": "2026-11-16",
+ "tesis": "El gigante chino del comercio y la nube: barato y con IA propia, pero gasta fuerte en una guerra de entregas rápidas.",
+ "bull": [
+  [
+   "Barata",
+   "P/E esperado de 10 y analistas que ven 95% de potencial."
+  ],
+  [
+   "Nube e IA",
+   "Su nube crece con la demanda de IA en China y tiene sus propios modelos (Qwen)."
+  ],
+  [
+   "Devuelve",
+   "Paga dividendo y recompra acciones."
+  ]
+ ],
+ "bear": [
+  [
+   "Guerra de entregas",
+   "Pierde plata compitiendo en entregas en minutos con Meituan y JD: el margen operativo cayó de 14% a 7%."
+  ],
+  [
+   "Último balance flojo",
+   "La ganancia quedó 21% debajo de lo esperado."
+  ],
+  [
+   "Riesgo China",
+   "Regulación, tensión con EE.UU. y economía china floja."
+  ],
+  [
+   "Tendencia muy débil",
+   "−46% desde el máximo, nota de tendencia 2,6."
+  ]
+ ],
+ "practica": "Apuesta de valor a China. El balance del 19/11 dirá si la guerra de entregas empieza a ceder.",
+ "mirar": [
+  [
+   "2026-11-19",
+   "Balance trimestral"
+  ]
+ ]
+},
+"VALE": {
+ "fecha": "2026-11-16",
+ "tesis": "La gran minera de hierro de Brasil: paga dividendos altos, pero el hierro baja con China y los costos suben con el petróleo.",
+ "bull": [
+  [
+   "Dividendo alto",
+   "Rinde cerca de 7,5% anual."
+  ],
+  [
+   "Cobre y níquel",
+   "Crecen sus negocios de cobre y níquel, que tienen mejor futuro que el hierro."
+  ],
+  [
+   "Barata",
+   "P/E esperado de 6."
+  ]
+ ],
+ "bear": [
+  [
+   "Hierro en baja",
+   "El precio que cobró por el hierro cayó 10% y la ganancia operativa bajó 20%."
+  ],
+  [
+   "Costos en suba",
+   "Los costos subieron 23% por el combustible y los fletes, efecto de la guerra con Irán."
+  ],
+  [
+   "Producción por debajo",
+   "Produjo 6% menos y quedaría en la parte baja de su pronóstico del año."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 14% las estimaciones en 90 días; nota de analistas 1,9."
+  ]
+ ],
+ "practica": "Para cobrar dividendo aceptando el riesgo China y Brasil. Hoy no hay disparador para que suba.",
+ "mirar": [
+  [
+   "2027-02-11",
+   "Próximo balance"
+  ]
+ ]
+},
+"WMT": {
+ "fecha": "2026-11-16",
+ "tesis": "El supermercado más grande del mundo se volvió también una empresa de tecnología y publicidad: sólido, pero carísimo.",
+ "bull": [
+  [
+   "Gana clientes",
+   "Las ventas por internet crecen 24% y la publicidad 38%: dos negocios que dejan más margen."
+  ],
+  [
+   "Defensivo",
+   "Cuando la economía se complica, la gente compra más en Walmart."
+  ],
+  [
+   "Subió el pronóstico",
+   "En agosto subió lo que espera vender y ganar en el año."
+  ]
+ ],
+ "bear": [
+  [
+   "Muy cara",
+   "P/E de 46 para una empresa que crece 4–5%: nota de valuación 3,6."
+  ],
+  [
+   "Costos",
+   "Avisó más de US$ 2.000 millones de costos extra por el combustible."
+  ],
+  [
+   "Sin potencial según analistas",
+   "Los analistas ven solo 2% de potencial."
+  ],
+  [
+   "Cayó con el último balance",
+   "Bajó 9% después del balance de agosto."
+  ]
+ ],
+ "practica": "Excelente empresa a precio exigente. Para carteras conservadoras, mejor esperar una baja.",
+ "mirar": [
+  [
+   "2026-11-19",
+   "Balance trimestral"
+  ]
+ ]
+},
+"YELP": {
+ "fecha": "2026-11-16",
+ "tesis": "La guía de restaurantes y comercios que la IA de Google le está sacando tráfico: baratísima, pero achicándose.",
+ "bull": [
+  [
+   "Regalada",
+   "P/E esperado de 6 y flujo libre de 29% del valor por año: nota de valuación 10."
+  ],
+  [
+   "Sin deuda neta",
+   "Tiene más caja que deuda (aunque usó buena parte en una compra)."
+  ],
+  [
+   "Mucho corto",
+   "35% de las acciones están apostadas a la baja: cualquier buena noticia puede generar subas fuertes."
+  ],
+  [
+   "Ganancia por acción sube",
+   "Recompró tanto que la ganancia por acción sube aunque la empresa venda menos."
+  ]
+ ],
+ "bear": [
+  [
+   "Pierde publicidad",
+   "Los clics de publicidad cayeron 8% y la publicidad de restaurantes 13%: las respuestas con IA de Google le sacan visitas."
+  ],
+  [
+   "Bajó el pronóstico",
+   "Segundo recorte seguido del pronóstico de ventas del año."
+  ],
+  [
+   "Frenó recompras",
+   "Pausó las recompras hasta pagar la deuda que tomó para comprar Hatch."
+  ],
+  [
+   "Value trap",
+   "Puede seguir barata por años si las ventas siguen cayendo."
+  ]
+ ],
+ "practica": "Como hablamos: parece más trampa de valor que oportunidad. Solo como apuesta chica a una posible compra por otra empresa.",
+ "mirar": [
+  [
+   "2027-02-11",
+   "Próximo balance"
+  ]
+ ]
+},
+"CAT": {
+ "fecha": "2026-11-16",
+ "tesis": "La fabricante de maquinaria más grande del mundo, impulsada por los generadores para centros de datos: el mercado duda de cuánto dura.",
+ "bull": [
+  [
+   "Pedidos récord",
+   "Ventas +17% y cartera de pedidos récord; los motores y generadores para IA crecen fuerte."
+  ],
+  [
+   "Márgenes mejores",
+   "Margen operativo de 20%, contra 17% un año atrás."
+  ],
+  [
+   "Ya corrigió",
+   "−43% desde el máximo: el precio ya descuenta un freno en la IA."
+  ]
+ ],
+ "bear": [
+  [
+   "Cae con la IA",
+   "Bajó 10% después de superar lo esperado porque el mercado duda del gasto en centros de datos."
+  ],
+  [
+   "Ciclo económico",
+   "Con tasas altas, la construcción y la minería invierten menos."
+  ],
+  [
+   "Deuda",
+   "Deuda neta de 2,5 veces EBITDA (incluye su financiera)."
+  ],
+  [
+   "Tendencia débil",
+   "25% debajo de su media de 200 ruedas."
+  ]
+ ],
+ "practica": "Buena empresa para una cartera de mediano plazo que ya cayó bastante. Comprar de a poco.",
+ "mirar": [
+  [
+   "2027-02-02",
+   "Próximo balance"
+  ]
+ ]
+},
+"MRVL": {
+ "fecha": "2026-11-16",
+ "tesis": "Diseña chips de IA a medida para Amazon y Microsoft: crece fuerte, pero el mercado teme que pierda clientes contra Broadcom.",
+ "bull": [
+  [
+   "Crece mucho",
+   "Ventas +37% y se espera +64% el año próximo."
+  ],
+  [
+   "Valuación razonable",
+   "P/E esperado de 21 y analistas que ven 98% de potencial."
+  ],
+  [
+   "Su CEO dice que no perdió pedidos",
+   "Dice que la transición al próximo chip de Amazon está en sus pronósticos."
+  ]
+ ],
+ "bear": [
+  [
+   "Riesgo de perder clientes",
+   "Hubo reportes de que Microsoft podría pasarse a Broadcom y Amazon a otro proveedor taiwanés."
+  ],
+  [
+   "Muy volátil",
+   "−50% desde el máximo y volatilidad de 85% anual."
+  ],
+  [
+   "Cayó con el último balance",
+   "Bajó 10% después del balance de agosto."
+  ],
+  [
+   "Arrastre de Nvidia",
+   "Cae con el sector si el balance de Nvidia decepciona."
+  ]
+ ],
+ "practica": "Más riesgo que Broadcom por depender de pocos clientes. El balance del 1/12 es clave.",
+ "mirar": [
+  [
+   "2026-11-17",
+   "Balance de Nvidia"
+  ],
+  [
+   "2026-12-01",
+   "Balance trimestral"
+  ]
+ ]
+},
+"RIOT": {
+ "fecha": "2026-11-16",
+ "tesis": "Minera de bitcoin que se transforma en dueña de centros de datos para IA: firmó un contrato gigante y vende bitcoin para construir.",
+ "bull": [
+  [
+   "Contrato enorme",
+   "Firmó un alquiler de 15 años por 910 MW con un laboratorio de IA: unos US$ 28.000 millones."
+  ],
+  [
+   "Ingresos asegurados",
+   "Ya tiene unos US$ 38.000 millones de contratos de centros de datos, incluido AMD."
+  ],
+  [
+   "Sin emitir acciones",
+   "Dice que no necesita emitir acciones para estos proyectos."
+  ]
+ ],
+ "bear": [
+  [
+   "Falta construir",
+   "Las primeras entregas son en septiembre de 2027: hasta ahí hay riesgo de obra y de financiamiento."
+  ],
+  [
+   "Vendió su bitcoin",
+   "Vendió más de 20.000 bitcoin para financiarse: le quedan unos 2.400."
+  ],
+  [
+   "Pierde plata",
+   "La minería rinde menos con el bitcoin en baja."
+  ],
+  [
+   "Cliente sin nombre",
+   "No se sabe quién es el inquilino."
+  ]
+ ],
+ "practica": "Apuesta especulativa a la transformación. Mejor que Hut 8 por tener contrato firmado, pero sigue siendo de alto riesgo.",
+ "mirar": [
+  [
+   "2027-03-01",
+   "Próximo balance"
+  ]
+ ]
+},
+"ASML": {
+ "fecha": "2026-11-16",
+ "tesis": "La única empresa del mundo que fabrica las máquinas para hacer los chips más avanzados: monopolio, pero cara.",
+ "bull": [
+  [
+   "Monopolio",
+   "Nadie más fabrica las máquinas de litografía EUV: sin ASML no hay chips de IA."
+  ],
+  [
+   "Crece fuerte",
+   "Ventas +59% en el último trimestre y margen operativo de 44%."
+  ],
+  [
+   "Analistas suben",
+   "Suben 9% las estimaciones en 90 días."
+  ],
+  [
+   "Calidad",
+   "Nota de calidad 9,7 y general 8,1."
+  ]
+ ],
+ "bear": [
+  [
+   "China en baja",
+   "Las ventas a China, que llegaron a ser casi la mitad, vienen cayendo por restricciones."
+  ],
+  [
+   "Cíclica",
+   "Si los fabricantes de chips frenan inversiones, las máquinas dejan de venderse."
+  ],
+  [
+   "Cara",
+   "P/E de 37 y 24 esperado."
+  ],
+  [
+   "Europa y aranceles",
+   "Es holandesa: expuesta a la tensión comercial EE.UU.–Europa–China."
+  ]
+ ],
+ "practica": "Una de las mejores empresas del analizador. Con −25% desde el máximo, es buena para sumar de a poco en mediano plazo.",
+ "mirar": [
+  [
+   "2027-01-27",
+   "Próximo balance"
+  ]
+ ]
+},
+"NKE": {
+ "fecha": "2026-11-16",
+ "tesis": "La marca deportiva más grande del mundo en plena reestructuración: vende menos, recorta costos y paga buen dividendo.",
+ "bull": [
+  [
+   "Dividendo alto",
+   "Rinde 4,3% anual."
+  ],
+  [
+   "Plan de ahorro",
+   "Su plan apunta a ahorrar US$ 2.500 millones para 2031."
+  ],
+  [
+   "Margen bruto mejora",
+   "El margen bruto subió a 42,8%."
+  ],
+  [
+   "Marca",
+   "Sigue siendo la marca deportiva número uno."
+  ]
+ ],
+ "bear": [
+  [
+   "Vende menos",
+   "Ventas −4% y espera que caigan casi 10% este año fiscal."
+  ],
+  [
+   "China floja",
+   "China y Europa siguen cayendo; Converse −28%."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 27% la ganancia esperada en 90 días."
+  ],
+  [
+   "Despidos por venir",
+   "Habrá reducción de personal desde el año próximo."
+  ]
+ ],
+ "practica": "Recuperación todavía sin señales claras. Solo para clientes pacientes que valoren el dividendo.",
+ "mirar": [
+  [
+   "2026-12-17",
+   "Balance trimestral"
+  ]
+ ]
+},
+"LLY": {
+ "fecha": "2026-11-16",
+ "tesis": "La reina de los medicamentos para bajar de peso: crece como tecnológica, pero ya cotiza como tal.",
+ "bull": [
+  [
+   "Crece muy fuerte",
+   "Ventas +39% en el último trimestre por Mounjaro y Zepbound; subió fuerte el pronóstico del año."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 18% más de lo esperado en el último balance."
+  ],
+  [
+   "Pastilla en camino",
+   "Su versión en pastilla (orforglipron) puede ampliar mucho el mercado."
+  ],
+  [
+   "Tendencia muy fuerte",
+   "En máximos, nota de tendencia 8,6."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 47 y 28 esperado: nota de valuación 3,1."
+  ],
+  [
+   "Precios en baja",
+   "El gobierno de EE.UU. presiona para bajar el precio de estos medicamentos."
+  ],
+  [
+   "Competencia",
+   "Novo Nordisk y nuevos laboratorios lanzan sus propias versiones."
+  ],
+  [
+   "Sin potencial según analistas",
+   "Los analistas ven solo 1% de potencial."
+  ]
+ ],
+ "practica": "Calidad y crecimiento a precio alto. Para mantener; para comprar nuevo, mejor esperar una baja.",
+ "mirar": [
+  [
+   "2027-02-03",
+   "Próximo balance"
+  ]
+ ]
+},
+"ASTS": {
+ "fecha": "2026-11-16",
+ "tesis": "Quiere conectar celulares comunes directo con satélites: idea enorme, pero se atrasa una y otra vez.",
+ "bull": [
+  [
+   "Mercado gigante",
+   "Si funciona, cualquier celular tendría señal en cualquier lugar."
+  ],
+  [
+   "Socios grandes",
+   "Trabaja con AT&T, Verizon y Vodafone, y suma contratos con el gobierno de EE.UU."
+  ],
+  [
+   "Caja",
+   "Tiene unos US$ 3.200 millones en caja."
+  ]
+ ],
+ "bear": [
+  [
+   "Atrasos",
+   "El objetivo de 45 satélites en órbita se pasó de fin de 2026 a mediados de 2027; el servicio sería intermitente al principio."
+  ],
+  [
+   "Quema caja y se endeuda",
+   "La deuda subió a US$ 4.080 millones y la inversión sigue."
+  ],
+  [
+   "Pierde plata",
+   "Le cuesta más fabricar que lo que vende."
+  ],
+  [
+   "Tendencia destruida",
+   "−76% desde el máximo y 22% de las acciones en corto."
+  ]
+ ],
+ "practica": "Apuesta tecnológica de alto riesgo. Solo posición muy chica para clientes que acepten perderla.",
+ "mirar": [
+  [
+   "2027-03-01",
+   "Próximo balance"
+  ]
+ ]
+},
+"AMAT": {
+ "fecha": "2026-11-16",
+ "tesis": "Fabrica las máquinas que usan TSMC, Samsung e Intel: gana con el gasto en IA, pero es cíclica y expuesta a China.",
+ "bull": [
+  [
+   "Calidad",
+   "Nota de calidad 9,3 y solidez 9,7: mucha caja y márgenes altos."
+  ],
+  [
+   "La IA demanda máquinas",
+   "Las fábricas de chips de IA y memoria invierten récord."
+  ],
+  [
+   "Barata para el sector",
+   "P/E esperado de 15 y analistas que ven 59% de potencial."
+  ]
+ ],
+ "bear": [
+  [
+   "China",
+   "Las restricciones de EE.UU. le recortan ventas a China, que es un cliente grande."
+  ],
+  [
+   "Cíclica",
+   "Si la memoria llega a su pico, los fabricantes frenan compras de máquinas."
+  ],
+  [
+   "Tendencia débil",
+   "−49% desde el máximo y 17% debajo de su media de 200 ruedas."
+  ]
+ ],
+ "practica": "Buena forma de estar en la cadena de chips a precio razonable. Comprar de a poco por el ciclo.",
+ "mirar": [
+  [
+   "2027-02-11",
+   "Próximo balance"
+  ]
+ ]
+},
+"CRM": {
+ "fecha": "2026-11-16",
+ "tesis": "El software para vender y atender clientes que se está reinventando con agentes de IA: barato y con caja.",
+ "bull": [
+  [
+   "Agentes de IA que venden",
+   "Su producto Agentforce factura más de US$ 1.500 millones por año y crece 240%."
+  ],
+  [
+   "Barata",
+   "P/E esperado de 14 y flujo libre de 8% del valor por año."
+  ],
+  [
+   "Último balance muy bueno",
+   "Superó lo esperado y subió el pronóstico; la acción subió 12%."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 18% las estimaciones en 90 días."
+  ]
+ ],
+ "bear": [
+  [
+   "Crecimiento moderado",
+   "Ventas +11%: lejos de sus años de crecimiento fuerte."
+  ],
+  [
+   "Ganancia inflada",
+   "Parte de la ganancia vino de la suba de su participación en Anthropic, no del negocio."
+  ],
+  [
+   "Miedo a la IA",
+   "Si la IA hace innecesario el software por usuario, su modelo de negocio cambia."
+  ],
+  [
+   "Compras",
+   "Compra empresas seguido; hay que ver cómo las integra."
+  ]
+ ],
+ "practica": "De las tecnológicas de software más baratas con IA que ya vende. El balance del 2/12 es clave.",
+ "mirar": [
+  [
+   "2026-12-02",
+   "Balance trimestral"
+  ]
+ ]
 }
 }
 }
