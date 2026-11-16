@@ -3562,6 +3562,866 @@
    "Próximo balance"
   ]
  ]
+},
+"SHEL": {
+ "fecha": "2026-11-16",
+ "tesis": "Petrolera europea barata, con buen dividendo y recompras: gana con el crudo alto y los analistas suben estimaciones.",
+ "bull": [
+  [
+   "Barata",
+   "P/E de 9 y flujo libre de 8,5% del valor por año: nota de valuación 8,3."
+  ],
+  [
+   "Devuelve mucho",
+   "Dividendo de 3,1% más recompras constantes."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 24% las estimaciones en 90 días."
+  ],
+  [
+   "Gas natural licuado",
+   "Es líder mundial en GNL, que gana importancia con la guerra en Medio Oriente."
+  ]
+ ],
+ "bear": [
+  [
+   "El crudo afloja",
+   "Si la guerra con Irán se calma, baja la ganancia."
+  ],
+  [
+   "No crece",
+   "Se esperan ventas −6% y ganancia −16% el año próximo."
+  ],
+  [
+   "Europa",
+   "Más presión regulatoria y de impuestos que las petroleras de EE.UU."
+  ]
+ ],
+ "practica": "La petrolera grande más barata. Para cobrar dividendo con algo de cobertura contra el crudo caro.",
+ "mirar": [
+  [
+   "2027-02-04",
+   "Próximo balance"
+  ]
+ ]
+},
+"JD": {
+ "fecha": "2026-11-16",
+ "tesis": "El comercio electrónico chino con logística propia: baratísimo, pero metido en la guerra de entregas rápidas que destruye márgenes.",
+ "bull": [
+  [
+   "Barato",
+   "P/E esperado de 7 y dividendo de 3,6%."
+  ],
+  [
+   "Caja",
+   "Tiene mucha más caja que deuda."
+  ],
+  [
+   "Analistas ven potencial",
+   "Potencial de 39% y recomendación de compra fuerte."
+  ]
+ ],
+ "bear": [
+  [
+   "Margen casi cero",
+   "Margen operativo de 0–1%: la guerra de entregas con Alibaba y Meituan le come la ganancia."
+  ],
+  [
+   "Crece poco",
+   "Ventas +3% en el último trimestre."
+  ],
+  [
+   "Riesgo China",
+   "Economía china floja y tensión con EE.UU."
+  ]
+ ],
+ "practica": "Valor chino con dividendo, pero sin disparador. El balance del 17/11 dirá si la guerra de precios cede.",
+ "mirar": [
+  [
+   "2026-11-17",
+   "Balance trimestral"
+  ]
+ ]
+},
+"GT": {
+ "fecha": "2026-11-16",
+ "tesis": "La fabricante de neumáticos más conocida de EE.UU. en problemas: pierde plata, quema caja y tiene mucha deuda.",
+ "bull": [
+  [
+   "Muy castigada",
+   "−61% desde el máximo: si la reestructuración funciona, el rebote puede ser grande."
+  ],
+  [
+   "Vende activos",
+   "Está vendiendo negocios para bajar deuda."
+  ],
+  [
+   "Mucho corto",
+   "25% de las acciones en corto: una buena noticia la puede disparar."
+  ]
+ ],
+ "bear": [
+  [
+   "Pierde plata",
+   "Perdió US$ 238 millones en el trimestre y quemó más caja de lo esperado."
+  ],
+  [
+   "Deuda",
+   "Deuda neta de 4 veces EBITDA: nota de solidez 2,9."
+  ],
+  [
+   "Competencia asiática",
+   "Los neumáticos baratos de Asia le sacan mercado."
+  ],
+  [
+   "Tendencia destruida",
+   "Nota de tendencia 2,0."
+  ]
+ ],
+ "practica": "No es para clientes minoristas: riesgo de que siga cayendo.",
+ "mirar": [
+  [
+   "2027-02-09",
+   "Próximo balance"
+  ]
+ ]
+},
+"OKLO": {
+ "fecha": "2026-11-16",
+ "tesis": "Reactores nucleares chicos para centros de datos: promesa enorme, pero todavía no vende nada y se atrasa.",
+ "bull": [
+  [
+   "Energía para la IA",
+   "Los centros de datos necesitan energía constante y limpia: los reactores chicos son una solución."
+  ],
+  [
+   "Apoyo del gobierno",
+   "Tiene el visto bueno del Departamento de Energía para avanzar."
+  ],
+  [
+   "Caja",
+   "Recaudó mucho en emisiones de acciones."
+  ]
+ ],
+ "bear": [
+  [
+   "Sin ventas",
+   "No vende nada todavía: todo depende de construir y licenciar el primer reactor."
+  ],
+  [
+   "Atrasos",
+   "Se atrasó su primer reactor (Aurora) y tuvo un revés con la red eléctrica PJM."
+  ],
+  [
+   "Diluye",
+   "Se financia emitiendo acciones."
+  ],
+  [
+   "Se desplomó",
+   "−79% desde el máximo, nota general 2,9 (la más baja del analizador)."
+  ]
+ ],
+ "practica": "Especulación pura. No es para clientes minoristas salvo posición mínima.",
+ "mirar": [
+  [
+   "2027-03-16",
+   "Próximo balance"
+  ]
+ ]
+},
+"DISN": {
+ "fecha": "2026-11-16",
+ "tesis": "Parques, películas y streaming: Disney recuperó ganancias y la tendencia, pero crece poco.",
+ "bull": [
+  [
+   "Streaming ya gana",
+   "Disney+ y Hulu pasaron a ganar plata."
+  ],
+  [
+   "Parques fuertes",
+   "Los parques y cruceros siguen siendo la máquina de caja."
+  ],
+  [
+   "Precio razonable",
+   "P/E esperado de 16."
+  ],
+  [
+   "Tendencia",
+   "+15% en 3 meses, cerca de su máximo."
+  ]
+ ],
+ "bear": [
+  [
+   "Crece poco",
+   "Ventas +5% esperadas."
+  ],
+  [
+   "TV tradicional en caída",
+   "Los canales de cable (ESPN, ABC) pierden abonados."
+  ],
+  [
+   "Consumo",
+   "Si el consumo se enfría, los parques son de lo primero que se resiente."
+  ],
+  [
+   "Analistas tibios",
+   "Potencial de 7%."
+  ]
+ ],
+ "practica": "Marca de calidad a precio razonable para carteras moderadas. Balance esta semana.",
+ "mirar": [
+  [
+   "2026-11-17",
+   "Balance trimestral"
+  ]
+ ]
+},
+"PG": {
+ "fecha": "2026-11-16",
+ "tesis": "Pañales, detergentes y shampoo: la defensiva más pura, en máximos.",
+ "bull": [
+  [
+   "Defensiva",
+   "La gente compra sus productos siempre: volatilidad de 21% anual."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 6% más de lo esperado y la acción subió 6%."
+  ],
+  [
+   "Dividendo",
+   "Rinde 2,6% y lo sube hace casi 70 años."
+  ],
+  [
+   "Tendencia",
+   "En máximos, +19% en 3 meses."
+  ]
+ ],
+ "bear": [
+  [
+   "Crece poco",
+   "Ventas +3–4% por año."
+  ],
+  [
+   "Cara",
+   "P/E de 25 y analistas que ven solo 2% de potencial."
+  ],
+  [
+   "Costos",
+   "El petróleo caro encarece envases y fletes."
+  ]
+ ],
+ "practica": "Para carteras conservadoras. En máximos: comprar de a poco.",
+ "mirar": [
+  [
+   "2027-01-21",
+   "Próximo balance"
+  ]
+ ]
+},
+"HOOD": {
+ "fecha": "2026-11-16",
+ "tesis": "La app de inversiones de los jóvenes, ahora con cripto, apuestas y banca: crece mucho, pero muy ligada al ánimo del mercado.",
+ "bull": [
+  [
+   "Calidad y crecimiento",
+   "Notas de 10 en calidad, solidez y crecimiento; margen operativo de 48%."
+  ],
+  [
+   "Negocios nuevos",
+   "Mercados de predicción, banca y su propia cadena de bloques suman ingresos."
+  ],
+  [
+   "Analistas ven potencial",
+   "Potencial de 65%."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 35, nota de valuación 1,6."
+  ],
+  [
+   "Último balance flojo",
+   "Ganó menos de lo esperado."
+  ],
+  [
+   "Ánimo del mercado",
+   "Cuando la gente opera menos (y cae el bitcoin) bajan sus ingresos."
+  ],
+  [
+   "Tendencia",
+   "−43% desde el máximo."
+  ]
+ ],
+ "practica": "Buena empresa en mal momento del ciclo. Para perfiles agresivos, de a poco.",
+ "mirar": [
+  [
+   "2027-02-10",
+   "Próximo balance"
+  ]
+ ]
+},
+"HIMS": {
+ "fecha": "2026-11-16",
+ "tesis": "Telemedicina que creció vendiendo tratamientos para adelgazar: ventas fuertes, pero el último balance mostró grietas.",
+ "bull": [
+  [
+   "Ventas fuertes",
+   "Ventas +49% en el último trimestre."
+  ],
+  [
+   "Muy castigada",
+   "−51% desde el máximo."
+  ],
+  [
+   "Mucho corto",
+   "27% de las acciones en corto."
+  ]
+ ],
+ "bear": [
+  [
+   "Pasó a perder plata",
+   "Pérdida sorpresiva por caída del margen bruto."
+  ],
+  [
+   "Pierde suscriptores",
+   "Primera baja de suscriptores de su historia."
+  ],
+  [
+   "Recortó el pronóstico",
+   "Tercer recorte del pronóstico de EBITDA; la acción cayó 17%."
+  ],
+  [
+   "Competencia",
+   "Lilly y Novo venden directo al paciente."
+  ]
+ ],
+ "practica": "No la recomendaría a minoristas en este momento.",
+ "mirar": [
+  [
+   "2027-03-01",
+   "Próximo balance"
+  ]
+ ]
+},
+"PANW": {
+ "fecha": "2026-11-16",
+ "tesis": "El líder de ciberseguridad empresarial: crece fuerte con compras, pero su ganancia contable está aplastada por ellas.",
+ "bull": [
+  [
+   "Crece fuerte",
+   "Ventas +34% en el último trimestre."
+  ],
+  [
+   "Mucha caja",
+   "Flujo libre de 36% de las ventas."
+  ],
+  [
+   "Tendencia fuerte",
+   "+53% en un año, nota de tendencia 8,8."
+  ],
+  [
+   "Ciberseguridad",
+   "Gasto que las empresas no recortan."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E esperado de 66."
+  ],
+  [
+   "Ganancia contable baja",
+   "La compra de CyberArk aplastó el margen operativo de 20% a 5%."
+  ],
+  [
+   "Cayó con el último balance",
+   "Bajó 9% después de agosto."
+  ]
+ ],
+ "practica": "Calidad de crecimiento a precio alto. Balance el 18/11.",
+ "mirar": [
+  [
+   "2026-11-18",
+   "Balance trimestral"
+  ]
+ ]
+},
+"SCCO": {
+ "fecha": "2026-11-16",
+ "tesis": "La minera de cobre con más reservas del mundo: el cobre tiene buen futuro por la electrificación, pero la acción es cara.",
+ "bull": [
+  [
+   "Cobre para la IA y los autos eléctricos",
+   "Los centros de datos y la red eléctrica necesitan mucho cobre."
+  ],
+  [
+   "Muy rentable",
+   "Margen operativo de 52% y casi sin deuda."
+  ],
+  [
+   "Dividendo",
+   "Rinde 3,2%."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 22, contra 14 del sector."
+  ],
+  [
+   "Analistas negativos",
+   "Recomendación promedio 'por debajo del mercado'."
+  ],
+  [
+   "Riesgo Perú y México",
+   "Opera en Perú y México: conflictos sociales y cambios regulatorios."
+  ],
+  [
+   "Mucho corto",
+   "11% de las acciones en corto."
+  ]
+ ],
+ "practica": "Para tener cobre a largo plazo. Comprar en bajas.",
+ "mirar": [
+  [
+   "2027-01-26",
+   "Próximo balance"
+  ]
+ ]
+},
+"PLD": {
+ "fecha": "2026-11-16",
+ "tesis": "El dueño de galpones logísticos más grande del mundo: alquileres estables, pero sensible a las tasas.",
+ "bull": [
+  [
+   "Ingresos estables",
+   "Alquila galpones a Amazon y miles de empresas con contratos largos."
+  ],
+  [
+   "Centros de datos",
+   "Está convirtiendo terrenos en centros de datos."
+  ],
+  [
+   "Dividendo",
+   "Rinde 3,3%."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 22% las estimaciones en 90 días."
+  ]
+ ],
+ "bear": [
+  [
+   "Tasas altas",
+   "Como toda inmobiliaria, sufre cuando suben las tasas: con la Fed subiendo, pesa."
+  ],
+  [
+   "Deuda",
+   "Deuda de 4,9 veces EBITDA, normal para el sector pero alta."
+  ],
+  [
+   "Comercio",
+   "Si el comercio global se frena por aranceles, necesita menos galpones."
+  ]
+ ],
+ "practica": "Alternativa de renta inmobiliaria en dólares. Mejor momento de compra cuando la Fed deje de subir.",
+ "mirar": [
+  [
+   "2026-12-09",
+   "Decisión de la Fed"
+  ],
+  [
+   "2027-01-20",
+   "Próximo balance"
+  ]
+ ]
+},
+"GE": {
+ "fecha": "2026-11-16",
+ "tesis": "Motores de avión: monopolio de hecho con un negocio de repuestos que deja muchísimo margen.",
+ "bull": [
+  [
+   "Repuestos de por vida",
+   "Cada motor vendido le deja décadas de mantenimiento y repuestos."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 11% más de lo esperado en el último balance."
+  ],
+  [
+   "Aviación fuerte",
+   "Las aerolíneas vuelan cada vez más."
+  ],
+  [
+   "Analistas positivos",
+   "Nota de analistas 7,4."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 38, nota de valuación 3,7."
+  ],
+  [
+   "Cuellos de botella",
+   "Problemas de proveedores limitan la producción."
+  ],
+  [
+   "Aerolíneas en apuros",
+   "Si el combustible caro golpea a las aerolíneas, compran menos aviones."
+  ]
+ ],
+ "practica": "Calidad industrial a precio alto. Para mantener en carteras moderadas.",
+ "mirar": [
+  [
+   "2027-01-21",
+   "Próximo balance"
+  ]
+ ]
+},
+"ARM": {
+ "fecha": "2026-11-16",
+ "tesis": "Diseña la arquitectura de casi todos los chips de celulares y cada vez más de servidores: crece, pero carísima.",
+ "bull": [
+  [
+   "Está en todos lados",
+   "Casi todos los celulares y muchos servidores de IA usan su diseño."
+  ],
+  [
+   "Crece",
+   "Ventas +27% en el último trimestre."
+  ],
+  [
+   "Chips propios",
+   "Planea vender sus propios chips para centros de datos."
+  ],
+  [
+   "Sin deuda neta",
+   "Nota de solidez 9,3."
+  ]
+ ],
+ "bear": [
+  [
+   "Carísima",
+   "P/E esperado de 62, nota de valuación 2,3."
+  ],
+  [
+   "Regalías que se frenan",
+   "Las regalías crecieron menos de lo esperado; la acción cayó 13% con el balance."
+  ],
+  [
+   "Celulares en baja",
+   "La memoria cara hizo caer las ventas de celulares."
+  ],
+  [
+   "Competir con clientes",
+   "Hacer chips propios puede enfrentarla con sus clientes."
+  ]
+ ],
+ "practica": "Como hablamos, interesante para clientes, pero a este precio conviene posición chica y de a poco.",
+ "mirar": [
+  [
+   "2027-02-03",
+   "Próximo balance"
+  ]
+ ]
+},
+"MO": {
+ "fecha": "2026-11-16",
+ "tesis": "Cigarrillos en EE.UU.: un negocio en declive que igual paga uno de los dividendos más altos del mercado.",
+ "bull": [
+  [
+   "Dividendo",
+   "Rinde 5,7% anual y lo sube todos los años."
+  ],
+  [
+   "Máquina de caja",
+   "Margen operativo de 61% y flujo libre de 7% del valor."
+  ],
+  [
+   "Barata",
+   "P/E esperado de 13, nota de valuación 9,6."
+  ],
+  [
+   "Defensiva",
+   "Volatilidad de 25%, +45% en un año."
+  ]
+ ],
+ "bear": [
+  [
+   "Fuma menos gente",
+   "El volumen de cigarrillos cae todos los años; sube precios para compensar."
+  ],
+  [
+   "Regulación",
+   "Riesgo de prohibiciones de sabores o nicotina."
+  ],
+  [
+   "Sin potencial según analistas",
+   "El precio objetivo está 7% debajo del actual."
+  ]
+ ],
+ "practica": "Para el cliente que busca renta alta en dólares y no tiene reparos éticos con el tabaco.",
+ "mirar": [
+  [
+   "2027-01-28",
+   "Próximo balance"
+  ]
+ ]
+},
+"EBAY": {
+ "fecha": "2026-11-16",
+ "tesis": "El viejo comercio electrónico que se reinventó con coleccionables y usados: crece de nuevo y recompra mucho.",
+ "bull": [
+  [
+   "Vuelve a crecer",
+   "Ventas +14% en el último trimestre."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 7% más de lo esperado."
+  ],
+  [
+   "Recompra",
+   "Devuelve casi todo lo que gana en recompras y dividendos."
+  ],
+  [
+   "Tendencia",
+   "+39% en un año."
+  ]
+ ],
+ "bear": [
+  [
+   "Competencia",
+   "Amazon, Temu y Shein compiten fuerte."
+  ],
+  [
+   "Ya subió",
+   "Cerca de su máximo; analistas ven solo 5% de potencial."
+  ],
+  [
+   "Deuda",
+   "Deuda neta de 1,4 veces EBITDA."
+  ]
+ ],
+ "practica": "Buena empresa con buen momento. Para mantener; no perseguirla.",
+ "mirar": [
+  [
+   "2027-02-24",
+   "Próximo balance"
+  ]
+ ]
+},
+"CRWD": {
+ "fecha": "2026-11-16",
+ "tesis": "La ciberseguridad que más crece entre las grandes: el mercado la paga carísimo.",
+ "bull": [
+  [
+   "Crece",
+   "Ventas +26% y se espera +23% el año próximo."
+  ],
+  [
+   "Caja",
+   "Flujo libre de 27% de las ventas."
+  ],
+  [
+   "Tendencia muy fuerte",
+   "+66% en un año, nota de tendencia 9,5."
+  ],
+  [
+   "Gran balance anterior",
+   "Subió 20% después del balance de agosto."
+  ]
+ ],
+ "bear": [
+  [
+   "Carísima",
+   "P/E esperado de 141, nota de valuación 1,8."
+  ],
+  [
+   "Pierde en lo contable",
+   "Margen operativo todavía negativo."
+  ],
+  [
+   "Sin margen de error",
+   "Con este precio, cualquier tropiezo la hace caer fuerte."
+  ]
+ ],
+ "practica": "Para el que quiere ciberseguridad con crecimiento, a precio alto. Balance el 1/12.",
+ "mirar": [
+  [
+   "2026-12-01",
+   "Balance trimestral"
+  ]
+ ]
+},
+"COST": {
+ "fecha": "2026-11-16",
+ "tesis": "El supermercado mayorista por membresía: de las mejores empresas del mundo, a uno de los precios más altos.",
+ "bull": [
+  [
+   "Clientes fieles",
+   "Sus socios renuevan la membresía casi siempre: ingresos muy previsibles."
+  ],
+  [
+   "Crece",
+   "Ventas +11% en el último trimestre."
+  ],
+  [
+   "Defensiva",
+   "Volatilidad de 20% anual y en máximos."
+  ]
+ ],
+ "bear": [
+  [
+   "Carísima",
+   "P/E de 53, nota de valuación 2,9."
+  ],
+  [
+   "Sin potencial según analistas",
+   "El precio objetivo está 3% debajo del actual."
+  ],
+  [
+   "Margen finito",
+   "Gana 4 de cada 100 que vende: cualquier costo extra se nota."
+  ]
+ ],
+ "practica": "Excelente empresa, pero a este precio el retorno futuro es limitado. Para mantener; comprar en bajas.",
+ "mirar": [
+  [
+   "2026-12-10",
+   "Balance trimestral"
+  ]
+ ]
+},
+"CSCO": {
+ "fecha": "2026-11-16",
+ "tesis": "El viejo gigante de redes que se subió a la IA: vende más equipos para centros de datos, pero con menos margen.",
+ "bull": [
+  [
+   "Pedidos de IA",
+   "Crecen las ventas de equipos para centros de datos de IA."
+  ],
+  [
+   "Precio razonable",
+   "P/E esperado de 16 y dividendo de 1,7%."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 7% las estimaciones en 90 días."
+  ],
+  [
+   "Calidad",
+   "Nota de calidad 8,3."
+  ]
+ ],
+ "bear": [
+  [
+   "Margen en baja",
+   "El hardware de IA deja menos margen: la acción cayó entre 6 y 9% con el último balance."
+  ],
+  [
+   "Competencia",
+   "Arista y Nvidia le ganan en las redes de IA más grandes."
+  ],
+  [
+   "Crece poco",
+   "Ventas +8% esperadas."
+  ]
+ ],
+ "practica": "Opción defensiva para estar en redes de IA. Arista crece más; Cisco es más barata.",
+ "mirar": [
+  [
+   "2027-02-10",
+   "Próximo balance"
+  ]
+ ]
+},
+"NTRA": {
+ "fecha": "2026-11-16",
+ "tesis": "Análisis genéticos para embarazo y cáncer: crece fuerte y sube pronósticos, pero cambió de CEO y todavía pierde plata.",
+ "bull": [
+  [
+   "Crece fuerte",
+   "Ventas +34% en el último trimestre; tercera suba del pronóstico del año."
+  ],
+  [
+   "Meta ambiciosa",
+   "Apunta a US$ 6.000 millones de ventas en 2029."
+  ],
+  [
+   "Tendencia",
+   "+52% en un año."
+  ]
+ ],
+ "bear": [
+  [
+   "Se va el CEO",
+   "Su CEO dejó el cargo y la acción cayó entre 14 y 20%."
+  ],
+  [
+   "Pierde plata",
+   "Margen operativo negativo."
+  ],
+  [
+   "Cara",
+   "Nota de valuación 3,2."
+  ]
+ ],
+ "practica": "Crecimiento en salud con riesgo alto. Posición chica para perfiles agresivos.",
+ "mirar": [
+  [
+   "2027-02-25",
+   "Próximo balance"
+  ]
+ ]
+},
+"GEV": {
+ "fecha": "2026-11-16",
+ "tesis": "Turbinas de gas y equipos para la red eléctrica: la gran beneficiada de la demanda de electricidad de la IA.",
+ "bull": [
+  [
+   "Pedidos récord",
+   "Tiene una cartera enorme de pedidos de turbinas de gas para años."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 20% más de lo esperado y subió el pronóstico de caja."
+  ],
+  [
+   "Caja neta",
+   "Tiene más caja que deuda."
+  ],
+  [
+   "Analistas positivos",
+   "Potencial de 47%."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E esperado de 31."
+  ],
+  [
+   "Tendencia débil",
+   "−32% desde el máximo con la corrección de la IA."
+  ],
+  [
+   "Eólica",
+   "El negocio de energía eólica sigue perdiendo plata."
+  ]
+ ],
+ "practica": "Una de las mejores formas de jugar la demanda eléctrica de la IA. Con la corrección, buena para sumar de a poco.",
+ "mirar": [
+  [
+   "2027-01-27",
+   "Próximo balance"
+  ]
+ ]
 }
 }
 }
