@@ -393,6 +393,11 @@ th{text-transform:uppercase;letter-spacing:.06em;font-size:11px;font-weight:600;
 .fh-kpis small{color:var(--muted);font-size:12.5px;line-height:1.4;display:block}
 @media (max-width:900px){.fh-top{grid-template-columns:auto 1fr}.fh-score{grid-column:1/-1;text-align:left}.fh-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.fh-logo{width:96px;height:64px}}
 .fh-tend{margin-top:8px;font-weight:600;font-size:15px}
+.nv-pos{display:inline-block;font-weight:700;font-size:13px;padding:4px 12px;border-radius:999px;border:1px solid}.nv-ow{color:var(--pos);border-color:var(--pos);background:rgba(69,194,124,.1)}.nv-uw{color:var(--neg);border-color:var(--neg);background:rgba(239,107,107,.1)}
+.nv-tesis{font-size:17px;line-height:1.5;margin:0;font-weight:500;color:var(--text)}
+.nv-l{list-style:none;margin:0;padding:0}.nv-l li{padding:10px 0 10px 14px;border-bottom:1px solid var(--line);border-left:3px solid var(--nc);margin-bottom:6px;font-size:14px;line-height:1.5}.nv-l li:last-child{border-bottom:0}.nv-l b{display:block;font-size:14.5px;margin-bottom:2px}.nv-l span{color:var(--text)}
+.nv-prac{font-size:15px;line-height:1.6;margin:0;border-left:3px solid var(--accent);padding-left:12px}
+.nv-m{list-style:none;margin:0;padding:0}.nv-m li{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px}.nv-m li:last-child{border-bottom:0}.nv-m b{flex:none;min-width:70px;color:var(--blue)}
 .alist{list-style:none;margin:0;padding:0}.alist li{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-bottom:1px solid var(--line);font-size:14px;line-height:1.45}.alist li:last-child{border-bottom:0}.alist i{flex:none;width:8px;height:8px;border-radius:50%;transform:translateY(-1px)}
 .logo-s.osc{background:#141d40}
 .fh-logo:has(img.osc){background:#141d40}
@@ -807,7 +812,7 @@ function hoyTab(m){
     const rv = x.sin_precio ? `<div class="r" style="color:var(--muted)">—<small>sin precio</small></div>` : x.nueva ? `<div class="r" style="color:var(--muted)">—<small>recién cargada</small></div>`
       : `<div class="r ${cls(f)}">${pct(f)}<small>${x.tipo==="UW"?(f>=0?"a favor: rinde menos que el S&P":"en contra: rinde más que el S&P"):"contra el S&P"}</small></div>`;
     const sp = x.nueva||x.sin_precio ? "" : hySpark((x.serie||[]).map(v=>x.tipo==="UW"?-v:v), f>=0?"var(--pos)":"var(--neg)");
-    return `<div class="id" style="--c:${c}"><div class="t"><a data-hyt="${esc(x.ticker)}">${esc(x.byma||x.ticker)}</a><span class="tg">${x.tipo}</span><span class="n">${sofa(nota,"sin")}</span></div>
+    return `<div class="id" style="--c:${c}"><div class="t"><a data-hyt="${esc(x.ticker)}" data-hyf="narrativa">${esc(x.byma||x.ticker)}</a><span class="tg">${x.tipo}</span><span class="n">${sofa(nota,"sin")}</span></div>
       <div class="nm">${esc(x.nombre||e?.nombre||"")} · desde ${hyFecha(x.desde)}${x.ret!=null&&!x.nueva?` · precio ${pct(x.ret)}`:""}</div>
       <div class="rv">${rv}${sp}</div>
       ${(x.alertas||[]).length?`<div class="al">${x.alertas.slice(0,2).map(a=>esc(a[1])).join("<br>")}</div>`:""}
@@ -853,7 +858,7 @@ function hoyTab(m){
     <p class="nota-pie">Son apuestas, no pronósticos: sirven para ver qué espera el mercado y cuánto cambió en la semana.</p></div>` : "";
   m.innerHTML = `<div class="hy"><div class="hola"><div><h1>${titulo}</h1><p>Lo que pasó y lo que viene, <b>en 5 minutos</b>.</p></div><span class="upd"><i></i>Actualizado ${hyHora(h.actualizado)}${hyDia(h.actualizado)!==hoyS?` del ${hyFecha(hyDia(h.actualizado))}`:""} · próxima ${hyProxima()}</span></div>
     <div class="frase">${hyFrase(h)}</div>${kp}${sec2}<section class="dos">${sec3}${sec4}</section>${sec1}</div>`;
-  m.querySelectorAll("[data-hyt]").forEach(a=>a.onclick=ev=>{ ev.preventDefault(); const e = hyEmp(a.dataset.hyt); if (!e) return; EST.sel=e.ticker; EST.ftab="resumen"; EST.bloque=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
+  m.querySelectorAll("[data-hyt]").forEach(a=>a.onclick=ev=>{ ev.preventDefault(); const e = hyEmp(a.dataset.hyt); if (!e) return; EST.sel=e.ticker; EST.ftab=a.dataset.hyf||"resumen"; EST.bloque=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
   m.querySelectorAll("[data-hyf]").forEach(b=>b.onclick=()=>{ EST.hyf=b.dataset.hyf; EST.hyabre=false; hoyTab(m); });
 
 }
@@ -863,7 +868,7 @@ function decorar(){
   const m = document.getElementById("main"); if (!m) return;
   const hs = [...m.querySelectorAll(".card > h3, .bsec > .bh")].filter(h => !h.closest(".hy") && !h.parentElement.parentElement.closest(".card, .bsec"));
   hs.forEach((h, i) => {
-    const c = DECC[i % DECC.length], n = String(i+1).padStart(2,"0"), box = h.parentElement;
+    const box = h.parentElement, c = box.dataset.sc || DECC[i % DECC.length], n = String(i+1).padStart(2,"0");
     if (box.style.getPropertyValue("--sc") !== c) box.style.setProperty("--sc", c);
     if (!box.classList.contains("dec-c")) box.classList.add("dec-c");
     if (!h.classList.contains("dec-h")) h.classList.add("dec-h");
@@ -1607,8 +1612,8 @@ function barras(an){
 
 function kv(pares){ return `<div class="kv">${pares.map(([k,v,c])=>`<div><span>${k}</span><b class="${c||""}">${v}</b></div>`).join("")}</div>`; }
 
-const FTABS = [["resumen","Resumen"],["sensib","Qué la mueve"],["analisis","Análisis"],["numeros","Números y valuación"],["mercado","Analistas y mercado"]];
-const FGRUPO = {resumen:["resumen"], sensib:["sensib"], analisis:["nicho","analisis","vigilar"], numeros:["numeros","valuacion"], mercado:["analistas","posicion","cedear"]};
+const FTABS = [["resumen","Resumen"],["narrativa","Narrativa"],["sensib","Qué la mueve"],["analisis","Análisis"],["numeros","Números y valuación"],["mercado","Analistas y mercado"]];
+const FGRUPO = {resumen:["resumen"], narrativa:["narrativa"], sensib:["sensib"], analisis:["nicho","analisis","vigilar"], numeros:["numeros","valuacion"], mercado:["analistas","posicion","cedear"]};
 const FVIEJA = {nicho:"analisis", vigilar:"analisis", valuacion:"numeros", analistas:"mercado", cedear:"mercado", posicion:"mercado"};
 const logoImg = (b, cls="logo") => `<img class="${cls}${(LM||{})[b]?" osc":""}" src="data/logos/${encodeURIComponent(b)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} sinlogo',textContent:'${esc(b).slice(0,2)}'}))">`;
 
@@ -1816,13 +1821,47 @@ async function comparador(m){
   m.querySelectorAll("[data-per]").forEach(b=>b.onclick=()=>{EST.per=b.dataset.per; comparador(m);});
 }
 
-let DESC = null;
+let DESC = null, NARR = null, IDEAS = null;
+async function cargarNarr(){
+  if (NARR) return;
+  try{ const r = await fetch("data/narrativas.json?v="+Date.now()); NARR = r.ok ? await r.json() : {empresas:{}}; }catch(e){ NARR = {empresas:{}}; }
+  try{ const r = await fetch("data/ideas.csv?v="+Date.now()); const tx = r.ok ? await r.text() : "";
+    IDEAS = {}; tx.trim().split(/\r?\n/).slice(1).forEach(l=>{ const [tk,tp,ds] = l.split(","); if (tk) IDEAS[tk.trim()] = {tipo:(tp||"").trim(), desde:(ds||"").trim()}; }); }catch(e){ IDEAS = {}; }
+}
+function panelNarrativa(f){
+  const N = NARR?.empresas?.[f.byma] || NARR?.empresas?.[f.ticker];
+  const A = analizar(f);
+  const vistos = new Set(), uniq = l => l.filter(t=>{ const k=t.slice(0,40); if (vistos.has(k)) return false; vistos.add(k); return true; });
+  const aB = uniq(A.motivos.filter(m=>m.c>0).map(m=>m.txt).concat(A.fort)).slice(0,6);
+  const aR = uniq(A.motivos.filter(m=>m.c<0).map(m=>m.txt).concat(A.ries)).slice(0,6);
+  const id = IDEAS?.[f.byma] || IDEAS?.[f.ticker];
+  const pos = id ? `<span class="nv-pos nv-${id.tipo==="OW"?"ow":"uw"}">${id.tipo==="OW"?"▲ Sobreponderar (OW)":"▼ Subponderar (UW)"}${id.desde?` · desde ${fch2(id.desde)}`:""}</span>` : "";
+  const lista = (l, c) => `<ul class="nv-l">${l.map(x=>Array.isArray(x)?`<li style="--nc:${c}"><b>${esc(x[0])}</b><span>${esc(x[1])}</span></li>`:`<li style="--nc:${c}"><span>${x}</span></li>`).join("")}</ul>`;
+  const vacio = `<p class="mut">Nada claro en los datos.</p>`;
+  const auto = (titB, titR) => `<section class="fgrid"><div class="card nv-c" data-sc="#45c27c"><h3>${titB}</h3>${aB.length?lista(aB,"var(--pos)"):vacio}</div>
+    <div class="card nv-c" data-sc="#ef6b6b"><h3>${titR}</h3>${aR.length?lista(aR,"var(--neg)"):vacio}</div></section>`;
+  if (!N) return `<section class="card nv-top" data-sc="#e8c264"><h3>Narrativa <span class="mut">· automática, con los datos de la ficha</span></h3>
+      ${pos?`<div style="margin-bottom:8px">${pos}</div>`:""}<p class="mut small" style="margin:0">Todavía no hay una narrativa escrita para esta empresa. Abajo, los argumentos que surgen de los números; se actualizan cada semana.</p></section>
+    ${auto("Bullish case","Bearish case")}`;
+  const hoy = new Date().toISOString().slice(0,10);
+  const dias = Math.round((new Date(hoy)-new Date(N.fecha))/864e5);
+  const mirar = (N.mirar||[]).filter(([d])=>d>=hoy);
+  return `<section class="card nv-top" data-sc="#e8c264"><h3>Narrativa <span class="mut">· escrita el ${fch2(N.fecha)}${dias>45?" · puede estar desactualizada":""}</span></h3>
+      ${pos?`<div style="margin-bottom:10px">${pos}</div>`:""}<p class="nv-tesis">${esc(N.tesis)}</p></section>
+    <section class="fgrid"><div class="card nv-c" data-sc="#45c27c"><h3>Bullish case <span class="mut">· por qué puede subir</span></h3>${lista(N.bull||[],"var(--pos)")}</div>
+      <div class="card nv-c" data-sc="#ef6b6b"><h3>Bearish case <span class="mut">· por qué puede bajar</span></h3>${lista(N.bear||[],"var(--neg)")}</div></section>
+    <section class="fgrid"><div class="card" data-sc="#e8c264"><h3>En la práctica</h3><p class="nv-prac">${esc(N.practica||"")}</p></div>
+      <div class="card" data-sc="#6ea8ff"><h3>Qué mirar</h3>${mirar.length?`<ul class="nv-m">${mirar.map(([d,t])=>`<li><b>${fch2(d)}</b><span>${esc(t)}</span></li>`).join("")}</ul>`:`<p class="mut">Sin fechas próximas cargadas.</p>`}</div></section>
+    ${auto("Lo que dicen los números: a favor","Lo que dicen los números: en contra")}
+    <p class="mut small">La narrativa escrita resume noticias y balances a la fecha indicada; los puntos de abajo salen solos de los datos de la ficha y se actualizan cada semana. No es una recomendación.</p>`;
+}
 async function ficha(m, t){
   if (!FCACHE[t]){
     m.innerHTML = `<p class="mut">Cargando ficha…</p>`;
     try{ const r = await fetch(`data/fichas/${encodeURIComponent(t)}.json?v=${Date.now()}`); FCACHE[t] = r.ok ? await r.json() : {sin:true}; }catch(e){ FCACHE[t] = {sin:true}; }
   }
   if (!FX) await cargarFX();
+  await cargarNarr();
   if (!DESC){ try{ const r = await fetch("data/desc_es.json?v="+Date.now()); DESC = r.ok ? await r.json() : {}; }catch(e){ DESC = {}; } }
   const f = FCACHE[t], x = E.empresas.find(z=>z.ticker===t) || {};
   const volver = `<button class="btn" id="fv">${EST.bloque?"← Volver al bloque":"← Volver"}</button>`;
@@ -1960,6 +1999,8 @@ async function ficha(m, t){
       <div class="wrap" style="max-height:none"><table><thead><tr><th class="l">CEDEAR</th><th>Capitalización</th><th>P/E</th><th>P/E esp.</th><th>PEG</th><th>EV/EBITDA</th><th>FCF/precio</th><th>Devolución</th><th>Valuación</th><th>12M</th></tr></thead><tbody>
       ${pares.map(z=>`<tr data-e="${esc(z.ticker)}" style="cursor:pointer${z.ticker===f.ticker?";background:var(--panel2)":""}"><td class="tk l">${logoImg(z.byma,"logo-s")}${esc(z.byma)}</td><td>${big(z.mcap)}</td><td>${xx(z.val?.pe)}</td><td>${xx(z.val?.pe_fwd)}</td><td>${z.val?.peg==null?"—":nx(z.val.peg,2)}</td><td>${xx(z.val?.ev_ebitda)}</td><td>${pc(z.val?.fcf_yield)}</td><td>${pc(z.val?.rend_accionista)}</td><td>${chip(z.notas?.valuacion)}</td><td class="${cls(z.r12m)}">${pct(z.r12m,0)}</td></tr>`).join("")}
       </tbody></table></div><p class="mut small">Hacé clic en una para abrir su ficha.</p></section>`;
+  } else if (sub==="narrativa"){
+    cuerpo = panelNarrativa(f);
   } else if (sub==="sensib"){
     cuerpo = queMueve(f) + cicloCard(f);
   } else if (sub==="cedear"){

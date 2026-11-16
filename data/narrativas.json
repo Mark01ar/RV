@@ -1,0 +1,321 @@
+{
+"actualizado": "2026-11-15",
+"empresas": {
+"NVDA": {
+"fecha": "2026-11-15",
+"tesis": "El negocio está mejor que nunca y la acción, en el peor momento en años: el balance del 17/11 decide cuál de las dos cosas pesa más.",
+"bull": [
+["Barata para lo que crece", "Cotiza a unas 10 veces la ganancia esperada del año próximo con ventas que casi se duplican: valuación de empresa madura para una que crece como startup."],
+["Vera Rubin en plena producción", "El chip nuevo ya aporta cerca de un quinto de las ventas de centros de datos, con pedidos de todos los grandes clientes."],
+["Los clientes siguen gastando", "Las ventas de centros de datos pasaron de US$ 51.000 a 89.000 millones en un año; Microsoft solo invirtió US$ 39.400 millones en el trimestre."],
+["Lo malo ya está en el precio", "Escándalo, márgenes y miedo a la burbuja: un buen pronóstico puede disparar el rebote. En el balance anterior subió 8,7% al día siguiente."]
+],
+"bear": [
+["Márgenes en baja", "La memoria se encareció más rápido de lo previsto: el margen bruto baja de 75% a 74% y tocaría piso en 71–72%. Lo que gana la memoria lo pierde Nvidia."],
+["Escándalo de Jensen Huang", "El directorio y el FBI investigan su relación con una mujer acusada de ser espía china. Riesgo de cambio de CEO y de más trabas para vender a China."],
+["Restricciones a China", "El Congreso empuja leyes para rastrear chips y cerrar el acceso remoto desde el sudeste asiático."],
+["Tasas y tendencia", "Con la Fed por subir y la tasa a 10 años en 5,15%, el mercado paga menos por crecimiento. La acción perforó el piso de US$ 170 y está 20% debajo de su media de 200 ruedas."]
+],
+"practica": "Superar las estimaciones no alcanza: el mercado ya espera 2,60 por acción. Lo que mueve es el pronóstico y el tono sobre márgenes y China. Para entrar, mejor en dos partes: una antes y otra después del balance.",
+"mirar": [["2026-11-17", "Balance del tercer trimestre, después del cierre"], ["2026-12-09", "Decisión de la Fed"]]
+},
+"ANET": {
+"fecha": "2026-11-15",
+"tesis": "La que conecta los chips de IA entre sí: crece 58% con caja neta y ya dio pronóstico de 2027 con +38–40%.",
+"bull": [
+["Crecimiento visible", "Ventas +58% en el último trimestre y pronóstico de 2027 de US$ 18.500 millones (+38–40%). Pocas empresas dan un número del año que viene."],
+["La IA duplica", "Las ventas de redes para IA pasarían de US$ 3.500 a 7.000 millones en 2027. Ya tiene más de 100 clientes de esa línea y suma uno o dos clientes grandes nuevos."],
+["Muy rentable y sin deuda", "Margen operativo de 49%, flujo libre de 47% de las ventas y US$ 14.400 millones en caja."],
+["Tendencia fuerte", "Subió 26% desde tu recomendación del 2/11 y está 18% arriba de su media de 200 ruedas. Superó lo esperado en el último balance por 11%."]
+],
+"bear": [
+["Cara", "P/E de 52 y 33 esperado. Si el gasto en IA frena, la caída puede ser fuerte."],
+["Pocos clientes grandes", "Dos clientes (Meta y Microsoft) pesan muchísimo en las ventas: si uno recorta, se nota enseguida."],
+["Margen bajo presión", "El margen bruto bajó de 65% a 64% por suba de costos de componentes, memoria incluida."],
+["Depende de Nvidia", "Si el balance de Nvidia del 17/11 decepciona, Arista suele caer detrás aunque su negocio vaya bien."]
+],
+"practica": "Es la de mejor nota (8,3) y más tendencia de tus OW. Con +26% en dos semanas, tomar una parte de ganancia antes de Nvidia es razonable; el resto se puede dejar correr.",
+"mirar": [["2026-11-17", "Balance de Nvidia (arrastra a todo hardware de IA)"], ["2027-02-09", "Próximo balance"]]
+},
+"GOOGL": {
+"fecha": "2026-11-15",
+"tesis": "El mejor negocio de IA integrado (chips propios, nube y modelos) a un precio castigado por el gasto: la duda es cuándo se transforma en caja.",
+"bull": [
+["La nube se duplica", "Google Cloud vendió US$ 30.700 millones en el trimestre, más del doble que un año antes, en parte vendiendo sus chips TPU a otras empresas."],
+["Chips propios", "Las TPU le dan una alternativa a Nvidia y un negocio nuevo para vender a terceros."],
+["Precio castigado", "Cayó 26% desde su máximo y está 13% debajo de su media de 200 ruedas. P/E esperado de 19, de los más bajos entre las grandes tecnológicas."],
+["Caída por algo contable", "La ganancia del trimestre la hundió una pérdida de US$ 8.700 millones en inversiones (SpaceX entre ellas), no el negocio."]
+],
+"bear": [
+["Quema caja por la inversión", "Invirtió US$ 51.400 millones en el trimestre y el flujo libre fue negativo en US$ 9.000 millones. Y avisó que el año que viene invierte bastante más."],
+["El buscador se frena", "Búsqueda creció 12%, menos que antes, y las respuestas con IA hoy se monetizan peor que la búsqueda clásica."],
+["Analistas bajando", "Bajaron 5% la ganancia esperada en 90 días; para el año próximo esperan menos ganancia que este (que tuvo ganancias por inversiones)."],
+["Tendencia débil", "Nota de tendencia 4,6: el mercado todavía no la quiere comprar."]
+],
+"practica": "No mirar el P/E de 15: está inflado por ganancias de inversiones del año pasado. El número honesto es el esperado, 19. Tesis de mediano plazo; el disparador sería que el gasto empiece a bajar como porcentaje de las ventas.",
+"mirar": [["2027-02-03", "Próximo balance y plan de inversión 2027"]]
+},
+"ADBE": {
+"fecha": "2026-11-15",
+"tesis": "Valuación de empresa en declive con números de empresa sana: el mercado apuesta a que la IA le come el negocio y los números todavía no lo muestran.",
+"bull": [
+["Muy barata", "P/E esperado de 9 y flujo libre de 10% del valor de la empresa por año: de las más baratas de todo el analizador."],
+["Sigue creciendo y ganando", "Ventas +13% en el último trimestre, margen operativo de 37% y récord de ventas."],
+["La IA también suma", "Las ventas de sus productos nacidos con IA crecen 150% y superó los 1.000 millones de usuarios mensuales."],
+["Recompra fuerte", "Con ese flujo de caja recompra acciones a precios bajos, lo que sube la ganancia por acción."]
+],
+"bear": [
+["El miedo a la IA", "Las herramientas de IA que generan imágenes y videos pueden hacer innecesario pagar Photoshop. Si eso pasa, el precio barato es una trampa."],
+["Crecimiento que se frena", "El pronóstico de ventas quedó apenas debajo de lo esperado: el mercado castiga cualquier desaceleración."],
+["Analistas tibios", "Recomendación promedio 'mantener' y potencial de solo 10%: nota de analistas 3,6."],
+["Sin tendencia", "Cae 28% en un año y no logra recuperar su media de 200 ruedas."]
+],
+"practica": "Es una apuesta de valor: el balance del 9/12 es clave. Si muestra que la IA suma clientes y el pronóstico no se frena, el rebote puede ser grande desde estos múltiplos.",
+"mirar": [["2026-12-09", "Balance y pronóstico de 2027"]]
+},
+"MSFT": {
+"fecha": "2026-11-15",
+"tesis": "La forma más estable de estar en IA: Azure crece 48% y el resto del negocio paga la inversión.",
+"bull": [
+["Azure acelera", "La nube creció 48% y el total de la empresa 19%, con margen operativo de 50%."],
+["Diversificada", "Office, Windows, LinkedIn y juegos generan caja aunque la IA tarde en rendir."],
+["Tendencia sana", "Sube 9% en 3 meses y está 19% arriba de su media de 200 ruedas; los analistas suben estimaciones."],
+["Disciplina en la inversión", "Invirtió US$ 39.400 millones en el trimestre, menos de lo que esperaba el mercado: no gasta a cualquier costo."]
+],
+"bear": [
+["El gasto sigue subiendo", "La inversión casi se duplicó contra un año atrás y el flujo libre cayó 27%."],
+["No tan barata", "P/E de 27 y 22 esperado: necesita que la IA siga rindiendo para justificarlo."],
+["Proveedores con problemas", "Frenó gasto por demoras de proveedores como IREN y dejó contratos con Oracle: muestra que también ajusta, y eso pega en todo el sector."]
+],
+"practica": "Es la OW más defensiva dentro de tecnología. Sirve como base de cartera; no es la que más sube si la IA rebota fuerte.",
+"mirar": [["2027-01-27", "Próximo balance"]]
+},
+"MA": {
+"fecha": "2026-11-15",
+"tesis": "Un peaje sobre cada compra con tarjeta en el mundo: crece 14% con margen de 60% y no depende de la IA.",
+"bull": [
+["Negocio de peaje", "Cobra por cada transacción sin prestar plata: margen operativo de 60% y flujo libre de 52% de las ventas."],
+["Crece sin depender de la IA", "Ventas +14% y ganancia por acción +21% en el último trimestre. Las compras entre países crecen 11%."],
+["Devuelve mucho", "US$ 3.000 millones de recompras en un trimestre más dividendos."],
+["Tendencia muy buena", "Subió 19% desde tu recomendación de octubre y está a 2% de su máximo."]
+],
+"bear": [
+["Cara contra su historia", "P/E de 34: el precio ya refleja buena parte de lo bueno; potencial de analistas de solo 9%."],
+["Dependencia del consumo", "Si el consumo de EE.UU. se enfría con tasas más altas, crecen menos las transacciones."],
+["Competencia nueva", "Pagos con stablecoins y leyes que buscan bajar las comisiones de tarjetas son riesgos de largo plazo."]
+],
+"practica": "La OW más tranquila de la lista: sirve para perfiles moderados. Después de +19% en un mes y medio, conviene sumar en bajas, no perseguirla.",
+"mirar": [["2027-01-28", "Próximo balance"]]
+},
+"ORCL": {
+"fecha": "2026-11-15",
+"tesis": "Apuesta todo a construir centros de datos con deuda: si la IA cumple, está regalada; si OpenAI flaquea, el balance aprieta.",
+"bull": [
+["Cartera de contratos gigante", "Tiene US$ 664.000 millones de contratos firmados por cobrar, varias veces sus ventas anuales."],
+["Barata para lo que crece", "P/E esperado de 11 con ventas que crecen 46%. Los analistas ven 88% de potencial, el más alto de tus OW."],
+["Ya cayó mucho", "−44% en un año y −49% desde el máximo: buena parte del miedo está en el precio. Trade asimétrico para el accionista."]
+],
+"bear": [
+["Mucha deuda", "La deuda con alquileres pasó de US$ 76.000 a 167.000 millones en cuatro años. Calificación BBB−, un escalón arriba de basura."],
+["Depende de OpenAI", "OpenAI es cerca de la mitad de la cartera de contratos. Si recorta planes, el agujero es enorme."],
+["Quema caja", "Flujo libre negativo de US$ 23.700 millones en el último año: tiene que construir antes de cobrar."],
+["Clientes que se van", "Microsoft dejó un contrato de capacidad y Oracle canceló otro con Tencent; en noviembre emitió US$ 20.000 millones entre acciones y bonos al 7–8,65%."]
+],
+"practica": "Para el accionista es asimétrica, pero con la Fed subiendo tasas el lado malo pesa más. Posición chica y que el cliente entienda que puede caer otro 30%.",
+"mirar": [["2026-12-14", "Balance (aprox.)"], ["2026-12-09", "Decisión de la Fed: tasas más altas encarecen su deuda"]]
+},
+"TSM": {
+"fecha": "2026-11-15",
+"tesis": "La fábrica de los chips de todos: gana sea quien sea el ganador de la IA, con récord de ganancias seis trimestres seguidos.",
+"bull": [
+["Monopolio de hecho", "Fabrica los chips de Nvidia, Apple, AMD, Broadcom y Google. La demanda de IA sigue superando su capacidad."],
+["Números récord", "Ventas +41% en dólares y margen operativo de 59%. Para el cuarto trimestre pronostica US$ 52.300–54.300 millones, +60% contra un año atrás."],
+["Precio razonable", "P/E esperado de 17, menos que las empresas que le compran los chips."],
+["Analistas suben", "Suben 5% las estimaciones en 90 días; potencial de 47%."]
+],
+"bear": [
+["Prudente con 2027", "Su CEO avisó que el consumo (celulares, PC) sufre por el aumento de los componentes: planifica 2027 con cautela."],
+["Taiwán", "El riesgo geopolítico con China nunca desaparece del precio."],
+["Inversión enorme", "Invierte US$ 60.000–64.000 millones por año y va a subir: si la demanda frena, queda capacidad ociosa."],
+["Arrastre de Nvidia", "Cae con el sector si el balance de Nvidia decepciona."]
+],
+"practica": "Es la OW de hardware de IA más equilibrada: menos cara que Arista y más diversificada que Nvidia. Ideal para posición de mediano plazo.",
+"mirar": [["2026-11-17", "Balance de Nvidia"], ["2026-12-10", "Ventas de noviembre (sale cerca del 10 de cada mes)"], ["2027-01-14", "Próximo balance"]]
+},
+"DAL": {
+"fecha": "2026-11-15",
+"tesis": "La mejor aerolínea de EE.UU., castigada por el combustible: si el crudo afloja, la ganancia rebota rápido.",
+"bull": [
+["Demanda fuerte", "Ventas récord, +16% en el último trimestre. Pasajes premium y programa de millas crecen 18%: el cliente de mayor poder adquisitivo sigue viajando."],
+["Traslada costos", "Subió tarifas y para el cuarto trimestre espera ventas +20% con casi la misma cantidad de asientos."],
+["Barata", "P/E esperado de 12 y nota de valuación 9,0."],
+["Refinería propia", "Su refinería de Pensilvania le ahorra unos 40 centavos por galón de combustible."],
+["El crudo afloja", "El WTI cae en noviembre después del salto por la guerra con Irán: es justo lo que necesita."]
+],
+"bear": [
+["El combustible", "El galón le costó US$ 3,61 contra 2,25 un año atrás. Bajó la ganancia esperada de 2026 de 6,50–7,50 a 5,10–5,60 por acción."],
+["Analistas recortando", "Bajaron 19% la ganancia esperada en 90 días: la peor revisión de tus OW."],
+["Primera decepción en dos años", "El último balance no llegó a lo que la propia empresa había prometido."],
+["Ciclo económico", "Si la economía se enfría con la suba de tasas, las aerolíneas son de las primeras en sufrir."]
+],
+"practica": "Es una apuesta a que el crudo baja. Si el WTI vuelve a subir, es la primera OW que revisaría. Mirarla junto con la tarjeta de ciclo del petróleo.",
+"mirar": [["2027-01-13", "Próximo balance"]]
+},
+"PYPL": {
+"fecha": "2026-11-15",
+"tesis": "Barata y con un piso: Stripe ya ofreció US$ 60,50 por acción y el directorio quiere cerca de 70.",
+"bull": [
+["Piso por la oferta", "En julio Stripe y Advent ofrecieron US$ 60,50 por acción; el directorio la rechazó y pide cerca de 70. Hoy cotiza a 59."],
+["Muy barata", "P/E de 10 y flujo libre de 11% del valor de la empresa por año: nota de valuación 9,6."],
+["El nuevo CEO cumple", "Enrique Lores superó lo esperado en el último balance y subió la ganancia esperada de 2026 de 5,38 a 5,60 por acción."],
+["Recompra acciones", "Con tanto flujo de caja, la cantidad de acciones baja todos los años."]
+],
+"bear": [
+["Casi no crece", "Ventas +2% en el trimestre y por debajo de lo esperado. El negocio internacional cae."],
+["El botón de pago se estanca", "El 'pagar con PayPal' pierde frente a Apple Pay y otros: algunos analistas bajaron la recomendación por eso."],
+["Si se cae la venta", "Parte del precio se sostiene por la posible compra. Sin oferta, puede volver a cotizar como empresa que no crece."]
+],
+"practica": "Riesgo acotado y potencial claro si aparece una oferta mejor. Para perfiles moderados es de las OW más defensivas por valuación.",
+"mirar": [["2027-02-02", "Próximo balance"]]
+},
+"FSLR": {
+"fecha": "2026-11-15",
+"tesis": "El único gran fabricante de paneles solares de EE.UU.: muy barata y muy rentable, pero los pedidos se frenaron por la incertidumbre con los aranceles.",
+"bull": [
+["Muy barata y rentable", "P/E esperado de 7 con margen bruto de 58%: nota de valuación 9,2."],
+["Ganadora de la política de Trump", "Con aranceles a los paneles importados y créditos fiscales a la fabricación local, es la principal beneficiada."],
+["La IA necesita energía", "Los centros de datos demandan electricidad nueva y la solar es la más rápida de instalar."],
+["Caja neta", "No tiene deuda neta: aguanta un año flojo sin problema."]
+],
+"bear": [
+["Pedidos frenados", "Ventas −23% en el trimestre y bajó el pronóstico de 2026: los clientes esperan a ver cómo quedan los aranceles."],
+["Mucho corto", "14% de las acciones están apostadas a la baja."],
+["Tendencia muy débil", "−46% desde el máximo y 20% debajo de su media de 200 ruedas: nota de tendencia 2,7."],
+["Riesgo político", "Cualquier cambio en los créditos fiscales le pega directo."]
+],
+"practica": "La clave es el balance del 23/2: pedidos nuevos y pronóstico de 2027. Hasta entonces, posición chica y paciencia.",
+"mirar": [["2027-02-23", "Balance con pronóstico de 2027"]]
+},
+"MSTR": {
+"fecha": "2026-11-15",
+"tesis": "Una caja de bitcoin con deuda y acciones preferidas encima: con el bitcoin debajo de su precio de compra, el apalancamiento juega en contra.",
+"bull": [
+["Si el bitcoin rebota", "Tiene unos 840.000 bitcoin: cada suba del bitcoin se amplifica en la acción."],
+["Sin deudas que la obliguen a vender", "Su deuda no tiene cláusulas que la fuercen a liquidar bitcoin si el precio cae."],
+["Reserva en dólares", "Guardó una reserva para pagar casi tres años de dividendos de sus preferidas."]
+],
+"bear": [
+["Bitcoin bajo el costo", "Compró a un promedio de US$ 75.400 y el bitcoin está en 68.000: la apuesta hoy pierde plata."],
+["Ya vende bitcoin", "En 2026 vendió bitcoin por primera vez para pagar dividendos de sus preferidas: cambia la historia de 'nunca vender'."],
+["Ya no cotiza con premio", "Antes valía más que el bitcoin que tiene; hoy vale lo mismo o menos. Sin premio, no puede emitir acciones para comprar más."],
+["Costos fijos altos", "Paga cerca de US$ 1.760 millones por año en intereses y dividendos de preferidas, con un negocio de software que casi no genera caja."]
+],
+"practica": "El UW está bien: si se quiere bitcoin, es más simple y barato tenerlo directo o por ETF que a través de una empresa endeudada.",
+"mirar": [["2027-02-04", "Próximo balance"]]
+},
+"INTC": {
+"fecha": "2026-11-15",
+"tesis": "Recuperación en marcha en centros de datos, pero las PC se caen y el pronóstico decepcionó: tuvo su peor día desde 1974.",
+"bull": [
+["Centros de datos vuelven", "Esa división crece 78%, la mejor en 15 años."],
+["La fábrica para terceros crece", "Intel Foundry vendió US$ 6.700 millones, +58%. Si consigue clientes grandes, cambia la historia."],
+["Ya cayó mucho", "−58% desde el máximo: el pesimismo está bastante en el precio."]
+],
+"bear": [
+["Pronóstico flojo", "Para el cuarto trimestre espera ventas 9% debajo de lo esperado y la mitad de la ganancia. La acción cayó 29% en un día."],
+["Las PC se caen", "La división de computadoras cae 5% y avisó que sigue floja al menos hasta mediados de 2027."],
+["Pierde plata", "Margen operativo anual negativo y flujo libre negativo."],
+["Pierde mercado", "Los analistas esperan que siga perdiendo participación contra AMD y los chips propios de cada empresa."]
+],
+"practica": "UW correcto. Recién la miraría si consigue un cliente grande para su fábrica: hasta entonces, cada rebote es para vender.",
+"mirar": [["2027-01-28", "Próximo balance"]]
+},
+"CRWV": {
+"fecha": "2026-11-15",
+"tesis": "Alquila chips de Nvidia a las grandes de IA: crece 168% pero con US$ 47.000 millones de deuda y pierde plata.",
+"bull": [
+["Crecimiento explosivo", "Ventas +168% y subió el pronóstico del año a US$ 13.000–13.300 millones."],
+["Contratos firmados", "Tiene US$ 132.500 millones de contratos por cobrar, y la demanda supera su capacidad."],
+["Rebote posible", "Subió 25% el día del último balance: con 23% de las acciones en corto, cualquier buena noticia la dispara."]
+],
+"bear": [
+["Deuda enorme", "Casi US$ 47.000 millones de deuda, 7,6 veces su EBITDA, con tasas en suba."],
+["Pierde plata y quema caja", "Perdió US$ 709 millones en el trimestre y planea invertir US$ 37.000–39.000 millones."],
+["Pocos clientes", "Depende de Microsoft, OpenAI y Meta: Microsoft ya frenó gasto con otros proveedores parecidos."],
+["El chip envejece", "Los chips que alquila pierden valor rápido cuando sale una generación nueva."]
+],
+"practica": "UW correcto para clientes minoristas: es lo más apalancado de la cadena de IA. Si la IA sigue fuerte, gana más Nvidia o TSMC con menos riesgo.",
+"mirar": [["2027-02-25", "Próximo balance"]]
+},
+"NIO": {
+"fecha": "2026-11-15",
+"tesis": "Autos eléctricos chinos en una guerra de precios: crecía mucho, pero en octubre las entregas cayeron por primera vez en dos años y medio.",
+"bull": [
+["Marcas nuevas", "Firefly, su marca barata, hizo récord de entregas en octubre (+31%)."],
+["Acercándose al equilibrio", "El margen operativo mejoró de −26% a −1% contra un año atrás."],
+["Muy barata por ventas", "Vale 0,4 veces lo que vende en un año."]
+],
+"bear": [
+["Entregas en baja", "Octubre: 34.246 autos, −15% contra un año atrás. Cortó 31 meses seguidos de crecimiento; Onvo cayó 52%."],
+["Guerra de precios", "Compite con BYD, Tesla y decenas de marcas chinas que bajan precios."],
+["Pierde plata", "Sigue con pérdidas y suele emitir acciones para financiarse, lo que diluye al accionista."],
+["Tendencia muy mala", "−58% desde el máximo, nota de tendencia 1,4. Los analistas recortaron fuerte las estimaciones."]
+],
+"practica": "UW correcto. El balance del 24/11 puede mover mucho la acción en cualquier dirección: no es para minoristas conservadores.",
+"mirar": [["2026-11-24", "Balance del tercer trimestre"], ["2026-12-01", "Entregas de noviembre"]]
+},
+"IREN": {
+"fecha": "2026-11-15",
+"tesis": "Ex minera de bitcoin que se pasó a alquilar chips de IA a Microsoft: todo depende de entregar a tiempo en Texas.",
+"bull": [
+["Contrato con Microsoft", "Cuando esté completo, el contrato le deja unos US$ 1.940 millones por año, la mitad de sus ventas contratadas."],
+["Analistas muy optimistas", "Subieron 77% las estimaciones y ven 212% de potencial: la nota de analistas es 7,8."],
+["Ya cayó 73%", "Si cumple las entregas, el rebote puede ser violento: 23% de las acciones están en corto."]
+],
+"bear": [
+["Demoras en Texas", "Microsoft frenó gasto por demoras en su sitio de Childress. Las tres cuartas partes del contrato deben entregarse este trimestre; si se atrasa, paga multas."],
+["Bitcoin en baja", "Los ingresos por minería cayeron 58%."],
+["Deuda y caja", "Deuda muy alta contra lo que genera y flujo libre muy negativo."],
+["Tendencia destruida", "−60% en 3 meses, nota de tendencia 1,2."]
+],
+"practica": "UW correcto, pero es la de más riesgo de rebote violento en contra: si confirma las entregas a Microsoft, puede duplicar rápido. No conviene estar vendido en corto.",
+"mirar": [["2026-12-31", "Fin de trimestre: plazo para entregar las fases 2 a 4 a Microsoft"], ["2027-02-04", "Próximo balance"]]
+},
+"VST": {
+"fecha": "2026-11-15",
+"tesis": "Generadora eléctrica de Texas con contratos nucleares con Meta y Amazon: buenos números, pero el riesgo regulatorio en Texas manda.",
+"bull": [
+["Récord de EBITDA", "EBITDA del trimestre de US$ 2.378 millones (+50%) y pronóstico de 2027 de US$ 7.700–8.500 millones."],
+["Contratos con big tech", "Contrato nuclear de 20 años con Meta y otro con Amazon: ingresos asegurados."],
+["Cubierta para 2027", "Ya vendió por adelantado el 98% de la energía de 2027 a precio fijo."],
+["Recompra acciones", "Amplió la recompra en US$ 1.500 millones."]
+],
+"bear": [
+["Riesgo político en Texas", "Cambio de gobernador, debate sobre frenar centros de datos, auditoría a la red eléctrica (ERCOT) y pausa de permisos."],
+["Demanda más lenta", "Bajó la proyección de crecimiento del consumo en Texas y los precios futuros de la energía aflojaron."],
+["Deuda", "Deuda neta de 5 veces EBITDA (2,8 veces según la empresa)."],
+["Tendencia", "−26% desde el máximo de octubre: el mercado opera la lista de riesgos, no el balance."]
+],
+"practica": "UW razonable por el riesgo de Texas, aunque el negocio va bien. Si se aclara la regulación, puede pasar a neutral rápido.",
+"mirar": [["2027-02-25", "Próximo balance"]]
+},
+"MU": {
+"fecha": "2026-11-15",
+"tesis": "La mejor nota del analizador en el mejor momento del ciclo de la memoria: el UW apuesta a que el pico está cerca.",
+"bull": [
+["Números extraordinarios", "Ventas +379% contra un año atrás y margen operativo de 81%. P/E esperado de 4."],
+["La IA consume memoria", "Los chips de IA usan memoria de alta velocidad (HBM) y la oferta no alcanza: los precios subieron fuerte."],
+["Analistas siguen subiendo", "+13% las estimaciones en 90 días y 101% de potencial."],
+["Nota más alta", "8,5 de nota general: la número uno del analizador."]
+],
+"bear": [
+["Así se ven los picos", "La memoria es el sector más cíclico: en 2018 y 2022 el P/E estaba en mínimos justo en el techo. Un P/E de 4 suele anticipar que la ganancia va a caer."],
+["Inventarios subiendo", "Los inventarios de Micron subieron a 131 días, arriba de su promedio de 123: la misma señal que apareció cerca de los picos anteriores."],
+["Precios spot aflojan", "Los precios de memoria en el mercado inmediato empezaron a ceder, aunque los contratos siguen altos."],
+["Todos amplían fábricas", "SK Hynix, Samsung y Micron invierten récord: en 2–3 años sobra capacidad."]
+],
+"practica": "El UW va contra la nota, pero tiene argumento. No es para estar vendido: es para no sumar más y tomar ganancia si el cliente tiene mucho. El balance del 23/12 dirá si el ciclo sigue.",
+"mirar": [["2026-12-23", "Balance del trimestre"], ["2026-12-10", "Ventas mensuales de Nanya y TSMC (señal del ciclo)"]]
+}
+}
+}
