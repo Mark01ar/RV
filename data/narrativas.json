@@ -2686,6 +2686,882 @@
    "Balance trimestral"
   ]
  ]
+},
+"PLTR": {
+ "fecha": "2026-11-16",
+ "tesis": "El software de datos e IA que más crece entre las grandes: casi duplica ventas cada año, pero cotiza a un precio que exige perfección.",
+ "bull": [
+  [
+   "Crecimiento récord",
+   "Ventas +96% en el último trimestre, US$ 2.300 millones; las ventas a empresas de EE.UU. crecieron 148% y ya superan a las del gobierno."
+  ],
+  [
+   "Sube el pronóstico",
+   "Ahora espera vender unos US$ 8.500 millones en 2026 (+91%) y el cuarto trimestre por encima de lo esperado."
+  ],
+  [
+   "Muy rentable y sin deuda",
+   "Margen operativo de 47% en el trimestre y caja neta."
+  ],
+  [
+   "Analistas suben",
+   "Suben 6% las estimaciones en 90 días."
+  ]
+ ],
+ "bear": [
+  [
+   "Carísima",
+   "P/E de 110 y 66 esperado: nota de valuación 2,3. Cualquier decepción la hace caer fuerte."
+  ],
+  [
+   "Sensible al humor con la IA",
+   "Superó todo lo esperado y la acción igual cayó por la venta general de tecnológicas."
+  ],
+  [
+   "Contratos que crecen menos",
+   "El valor de los contratos firmados creció 6%, mucho menos que las ventas."
+  ],
+  [
+   "Volátil",
+   "Volatilidad de 60% anual."
+  ]
+ ],
+ "practica": "La mejor historia de crecimiento del software, al precio más exigente. Posición chica y para perfiles agresivos.",
+ "mirar": [
+  [
+   "2027-02-01",
+   "Próximo balance"
+  ]
+ ]
+},
+"PEP": {
+ "fecha": "2026-11-16",
+ "tesis": "Gaseosas y snacks: una defensiva barata con dividendo de 4%, pero que vende menos volumen y tiene un fondo activista encima.",
+ "bull": [
+  [
+   "Dividendo alto",
+   "Rinde 4,1% y lo sube todos los años."
+  ],
+  [
+   "Barata para su historia",
+   "P/E de 17, nota de valuación 8,5."
+  ],
+  [
+   "Presión para mejorar",
+   "El fondo Elliott, con unos US$ 4.000 millones invertidos, empuja a vender marcas y tercerizar el embotellado para ganar más."
+  ],
+  [
+   "Defensiva",
+   "Volatilidad de 22% anual."
+  ]
+ ],
+ "bear": [
+  [
+   "Vende menos",
+   "Los volúmenes cayeron 4% en snacks de Norteamérica y 3% en bebidas: la gente compra menos con precios altos."
+  ],
+  [
+   "Ganancia estancada",
+   "Espera ganar lo mismo que el año pasado."
+  ],
+  [
+   "Medicamentos para adelgazar",
+   "Los nuevos tratamientos para bajar de peso pueden reducir el consumo de snacks."
+  ],
+  [
+   "Deuda",
+   "Deuda neta de 2,7 veces EBITDA."
+  ]
+ ],
+ "practica": "Para el cliente conservador que busca dividendo. Más barata que Coca-Cola, pero con peor momento del negocio.",
+ "mirar": [
+  [
+   "2027-02-02",
+   "Próximo balance"
+  ]
+ ]
+},
+"BBD": {
+ "fecha": "2026-11-16",
+ "tesis": "Uno de los grandes bancos privados de Brasil en recuperación: barato y con dividendo alto, pero lejos de los mejores.",
+ "bull": [
+  [
+   "Mejora la ganancia",
+   "Ganó R$ 7.100 millones en el trimestre, +14,6% contra un año atrás."
+  ],
+  [
+   "Muy barato",
+   "P/E de 6 y nota de valuación 10."
+  ],
+  [
+   "Dividendo",
+   "Rinde cerca de 9% anual."
+  ]
+ ],
+ "bear": [
+  [
+   "Rentabilidad mediocre",
+   "ROE de 16%, por debajo de Itaú y Nubank."
+  ],
+  [
+   "Brasil",
+   "Tasas altas, real y política: todo pega en los bancos."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 7% las estimaciones; nota de analistas 2,7."
+  ],
+  [
+   "Tendencia débil",
+   "−42% desde el máximo y 26% debajo de su media de 200 ruedas."
+  ]
+ ],
+ "practica": "Si se quiere un banco brasileño, Nubank o Itaú tienen mejor nota. Bradesco es solo para quien busca dividendo y valor.",
+ "mirar": [
+  [
+   "2027-02-04",
+   "Próximo balance"
+  ]
+ ]
+},
+"ADGO": {
+ "fecha": "2026-11-16",
+ "tesis": "Agro argentino-brasileño que ahora también fabrica fertilizantes (Profertil): más diversificada, pero más endeudada.",
+ "bull": [
+  [
+   "Profertil rinde",
+   "El negocio de fertilizantes ganó US$ 109 millones de EBITDA en el trimestre, con ventas de urea +31%."
+  ],
+  [
+   "Récord en nueve meses",
+   "El EBITDA de nueve meses es el más alto de su historia, +25%."
+  ],
+  [
+   "Azúcar cubierta",
+   "Tiene vendido todo el azúcar de 2026 a precio fijo."
+  ],
+  [
+   "Dividendo",
+   "Rinde 2,7% anual."
+  ]
+ ],
+ "bear": [
+  [
+   "Más deuda",
+   "Deuda neta de US$ 1.810 millones, 3,2 veces EBITDA, por la compra de Profertil y de un ingenio."
+  ],
+  [
+   "Ganancia en baja",
+   "La ganancia neta ajustada cayó 48% en el trimestre por los intereses."
+  ],
+  [
+   "Real fuerte",
+   "El real caro sube sus costos de azúcar en Brasil."
+  ],
+  [
+   "Último balance flojo",
+   "Ganó 30% menos de lo esperado."
+  ]
+ ],
+ "practica": "Interesante para el cliente que entiende el agro y Argentina. El objetivo es bajar la deuda a 2,5 veces a fin de año: si lo cumple, mejora.",
+ "mirar": [
+  [
+   "2026-11-19",
+   "Pago de dividendo"
+  ],
+  [
+   "2027-03-15",
+   "Próximo balance"
+  ]
+ ]
+},
+"GPRK": {
+ "fecha": "2026-11-16",
+ "tesis": "Petrolera colombiana que apuesta fuerte a Vaca Muerta: invierte para crecer, por eso suspendió el dividendo.",
+ "bull": [
+  [
+   "Vaca Muerta",
+   "La producción en Argentina subió 51% en el trimestre y sumó un nuevo bloque."
+  ],
+  [
+   "Precio cubierto",
+   "Tiene cubierto el precio del cuarto trimestre entre US$ 69 y 79 por barril."
+  ],
+  [
+   "Barata",
+   "P/E esperado de 6."
+  ]
+ ],
+ "bear": [
+  [
+   "Sin dividendo",
+   "Suspendió el dividendo para financiar Vaca Muerta."
+  ],
+  [
+   "Ganancia en baja",
+   "Ventas −19% y EBITDA −37% en el trimestre por precios más bajos y costos más altos."
+  ],
+  [
+   "Más deuda y más cara",
+   "Emitió US$ 550 millones al 9,5% anual; flujo libre negativo."
+  ],
+  [
+   "Venezuela",
+   "Entró a un bloque en Venezuela: más riesgo político."
+  ]
+ ],
+ "practica": "Para quien quiere exposición a Vaca Muerta con riesgo alto. Mirarla junto con la tarjeta del ciclo del petróleo.",
+ "mirar": [
+  [
+   "2027-02-24",
+   "Próximo balance"
+  ]
+ ]
+},
+"NMR": {
+ "fecha": "2026-11-16",
+ "tesis": "El banco de inversión más grande de Japón: barato y con buen dividendo, beneficiado por la reactivación del mercado japonés.",
+ "bull": [
+  [
+   "Barato",
+   "P/E de 11 y nota de valuación 7,4."
+  ],
+  [
+   "Dividendo",
+   "Rinde 3,3% anual."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 12,5% más de lo esperado en el último balance."
+  ],
+  [
+   "Tendencia",
+   "+32% en un año."
+  ]
+ ],
+ "bear": [
+  [
+   "Cíclico",
+   "Gana cuando hay mucha actividad en los mercados; si se frena, cae la ganancia."
+  ],
+  [
+   "Endeudado",
+   "Como todo banco de inversión, opera con mucha deuda: nota de solidez 3,9."
+  ],
+  [
+   "Yen y tasas de Japón",
+   "Expuesto a la política del Banco de Japón y al tipo de cambio."
+  ]
+ ],
+ "practica": "Una forma poco común de tener Japón en cartera. Para posición chica de diversificación.",
+ "mirar": [
+  [
+   "2027-01-29",
+   "Próximo balance"
+  ]
+ ]
+},
+"ANF": {
+ "fecha": "2026-11-16",
+ "tesis": "La marca de ropa que se reinventó y volvió a ganar: barata, con tendencia fuerte y muchos apostando en contra.",
+ "bull": [
+  [
+   "Barata",
+   "P/E de 12 y nota de valuación 9,5."
+  ],
+  [
+   "Tendencia muy fuerte",
+   "+109% en un año y 38% arriba de su media de 200 ruedas."
+  ],
+  [
+   "Sorpresas grandes",
+   "En el último balance ganó el doble de lo esperado y la acción subió 36% en un día."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 25% las estimaciones en 90 días."
+  ]
+ ],
+ "bear": [
+  [
+   "Crece poco",
+   "Ventas +5% y se espera crecimiento bajo el año próximo."
+  ],
+  [
+   "Muy volátil",
+   "Volatilidad de 73% anual: lo que sube rápido baja rápido."
+  ],
+  [
+   "Moda",
+   "Las marcas de ropa pasan de moda; Hollister y Abercrombie dependen del gusto joven."
+  ],
+  [
+   "Consumo",
+   "Con tasas altas, el consumo de ropa es de lo primero que se recorta."
+  ]
+ ],
+ "practica": "Nota 7,8, de las mejores. El balance del 24/11 es clave: con 15% de las acciones en corto, el movimiento puede ser grande en cualquier dirección.",
+ "mirar": [
+  [
+   "2026-11-24",
+   "Balance trimestral"
+  ]
+ ]
+},
+"JNJ": {
+ "fecha": "2026-11-16",
+ "tesis": "La farmacéutica más diversificada y segura: crece, sube el pronóstico y está en máximos, pero con juicios por el talco.",
+ "bull": [
+  [
+   "Medicamentos fuertes",
+   "Medicamentos +7,7%, ya dos tercios de las ventas; subió el pronóstico del año."
+  ],
+  [
+   "Defensiva",
+   "Volatilidad de 21% anual y dividendo de 1,9% que sube todos los años."
+  ],
+  [
+   "Tendencia",
+   "En máximos, +50% en un año."
+  ]
+ ],
+ "bear": [
+  [
+   "Juicios por talco",
+   "Apartó US$ 5.500 millones para cerrar los reclamos por talco; necesita que acepte el 95% de los demandantes."
+  ],
+  [
+   "Dispositivos médicos se frenan",
+   "El negocio de dispositivos creció solo 2,5%."
+  ],
+  [
+   "Cara",
+   "P/E de 43 contable y 25 esperado; analistas sin potencial."
+  ],
+  [
+   "Cayó con el balance",
+   "Bajó 6% el día del último balance."
+  ]
+ ],
+ "practica": "Excelente para perfiles conservadores, pero después de +50% en un año conviene comprar en bajas.",
+ "mirar": [
+  [
+   "2027-01-26",
+   "Próximo balance"
+  ]
+ ]
+},
+"CVX": {
+ "fecha": "2026-11-16",
+ "tesis": "Segunda petrolera de EE.UU.: gana con el crudo alto, paga buen dividendo y los analistas suben estimaciones.",
+ "bull": [
+  [
+   "Crudo alto",
+   "Ventas +35% en el último trimestre con el petróleo arriba por la guerra con Irán."
+  ],
+  [
+   "Dividendo",
+   "Rinde 3,2% y lo sube todos los años."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 16% las estimaciones en 90 días."
+  ],
+  [
+   "Tendencia",
+   "+49% en un año."
+  ]
+ ],
+ "bear": [
+  [
+   "El crudo afloja",
+   "El WTI baja en noviembre: si la guerra se calma, la ganancia cae."
+  ],
+  [
+   "No crece",
+   "Los analistas esperan menos ventas y ganancia el año próximo."
+  ],
+  [
+   "Ya subió",
+   "Cerca de su máximo: buena parte del crudo alto ya está en el precio."
+  ]
+ ],
+ "practica": "Cobertura contra el petróleo caro y para cobrar dividendo. Mirarla con la tarjeta del ciclo del petróleo.",
+ "mirar": [
+  [
+   "2027-01-29",
+   "Próximo balance"
+  ]
+ ]
+},
+"HMY": {
+ "fecha": "2026-11-16",
+ "tesis": "Minera de oro sudafricana: muy barata con el oro cerca de US$ 3.900, pero con riesgo Sudáfrica.",
+ "bull": [
+  [
+   "Oro alto",
+   "Con el oro cerca de US$ 3.900 la onza, gana muchísimo: margen operativo de 42%."
+  ],
+  [
+   "Muy barata",
+   "P/E de 5 y flujo libre de 10% del valor por año."
+  ],
+  [
+   "Dividendo",
+   "Rinde 5,2% anual."
+  ]
+ ],
+ "bear": [
+  [
+   "Sudáfrica",
+   "Energía, sindicatos y política sudafricana son riesgos permanentes."
+  ],
+  [
+   "Atada al oro",
+   "Si el oro corrige, la acción cae más que el oro."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 12% las estimaciones; nota de analistas 1,9."
+  ],
+  [
+   "Tendencia",
+   "−39% desde el máximo."
+  ]
+ ],
+ "practica": "Si se quiere oro en acciones, Newmont es más segura. Harmony es más barata pero más riesgosa.",
+ "mirar": [
+  [
+   "2027-03-04",
+   "Próximo balance"
+  ]
+ ]
+},
+"JMIA": {
+ "fecha": "2026-11-16",
+ "tesis": "El Mercado Libre de África: crece y pierde menos plata, pero todavía pierde.",
+ "bull": [
+  [
+   "Pierde menos",
+   "El margen operativo mejoró de −36% a −24% contra un año atrás."
+  ],
+  [
+   "Crece",
+   "Ventas +14% y se espera +24% el año próximo."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 22% las estimaciones en 90 días."
+  ]
+ ],
+ "bear": [
+  [
+   "Pierde plata",
+   "Sigue con pérdidas y flujo libre negativo."
+  ],
+  [
+   "Mercados difíciles",
+   "Nigeria, Egipto y Kenia tienen monedas que se devalúan seguido."
+  ],
+  [
+   "Tendencia destruida",
+   "−63% desde el máximo, nota de tendencia 2,5."
+  ]
+ ],
+ "practica": "Apuesta especulativa a África. Posición muy chica, si acaso.",
+ "mirar": [
+  [
+   "2026-11-18",
+   "Balance trimestral"
+  ]
+ ]
+},
+"RGTI": {
+ "fecha": "2026-11-16",
+ "tesis": "Computación cuántica: tecnología prometedora, pero vende casi nada y se atrasa.",
+ "bull": [
+  [
+   "Tecnología",
+   "Logró su meta de precisión en sus chips cuánticos."
+  ],
+  [
+   "Caja",
+   "Tiene mucha caja de emisiones pasadas: nota de solidez 9,3."
+  ],
+  [
+   "Mercado futuro",
+   "Si la computación cuántica despega, el mercado es enorme."
+  ]
+ ],
+ "bear": [
+  [
+   "Vende casi nada",
+   "Ventas de US$ 1,4 millones en el trimestre, −28%."
+  ],
+  [
+   "Se atrasa",
+   "Demoró su hoja de ruta y quema más caja."
+  ],
+  [
+   "Pierde muchísimo",
+   "Las pérdidas son muchas veces sus ventas."
+  ],
+  [
+   "Tendencia destruida",
+   "−68% desde el máximo y 20% en corto."
+  ]
+ ],
+ "practica": "Puramente especulativa. No es para clientes minoristas salvo posición mínima.",
+ "mirar": [
+  [
+   "2027-03-04",
+   "Próximo balance"
+  ]
+ ]
+},
+"XOM": {
+ "fecha": "2026-11-16",
+ "tesis": "La petrolera más grande de EE.UU.: gana con el crudo alto, es sólida y paga dividendo, pero no crece.",
+ "bull": [
+  [
+   "Crudo alto",
+   "Ventas +33% en el último trimestre y margen operativo en suba."
+  ],
+  [
+   "Solidez",
+   "Poca deuda (nota de solidez 8,2) y dividendo de 2,5% que sube todos los años."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 19% las estimaciones en 90 días."
+  ],
+  [
+   "Tendencia",
+   "+49% en un año."
+  ]
+ ],
+ "bear": [
+  [
+   "El crudo afloja",
+   "Si la guerra con Irán se calma y el WTI baja, la ganancia cae."
+  ],
+  [
+   "No crece",
+   "Los analistas esperan ventas planas y ganancia −8% el año próximo."
+  ],
+  [
+   "Cara para su sector",
+   "P/E de 17 contra 16 del sector: nota de valuación 4,0."
+  ]
+ ],
+ "practica": "La petrolera más segura. Sirve como cobertura contra el crudo caro en carteras moderadas.",
+ "mirar": [
+  [
+   "2027-01-29",
+   "Próximo balance"
+  ]
+ ]
+},
+"C": {
+ "fecha": "2026-11-16",
+ "tesis": "El banco más internacional de EE.UU., en plena reestructuración: barato y mejorando, pero todavía menos rentable que sus pares.",
+ "bull": [
+  [
+   "Barato",
+   "P/E esperado de 9,5 y nota de valuación 8,1."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 8% más de lo esperado en el último balance."
+  ],
+  [
+   "Mejora",
+   "Se espera que la ganancia crezca 15% el año próximo."
+  ],
+  [
+   "Dividendo",
+   "Rinde 2,2%."
+  ]
+ ],
+ "bear": [
+  [
+   "Rentabilidad baja",
+   "Nota de calidad 4,1: gana menos sobre su capital que JPMorgan."
+  ],
+  [
+   "Reestructuración larga",
+   "Lleva años vendiendo negocios y recortando; los resultados tardan."
+  ],
+  [
+   "Cayó con el balance",
+   "Bajó 6% el día del último balance."
+  ]
+ ],
+ "practica": "Apuesta de valor a que la reestructuración funcione. JPMorgan es más seguro; Citi tiene más potencial.",
+ "mirar": [
+  [
+   "2027-01-14",
+   "Próximo balance"
+  ]
+ ]
+},
+"SPCE": {
+ "fecha": "2026-11-16",
+ "tesis": "Turismo espacial de Branson: sin vuelos, quema caja y vuelve a atrasarse.",
+ "bull": [
+  [
+   "Nave nueva",
+   "Su nave Delta promete hacer muchos vuelos por mes."
+  ],
+  [
+   "Caja",
+   "Todavía tiene caja para un tiempo."
+  ]
+ ],
+ "bear": [
+  [
+   "Atrasos",
+   "Pasó el primer vuelo de Delta a 2027."
+  ],
+  [
+   "Quema caja",
+   "Gasta mucho más de lo que vende; tuvo que emitir acciones."
+  ],
+  [
+   "Se desplomó",
+   "Cayó 31% después del último balance y 76% desde el máximo."
+  ],
+  [
+   "Nota mínima",
+   "3,3 de nota general, de las peores del analizador."
+  ]
+ ],
+ "practica": "No es para clientes minoristas.",
+ "mirar": [
+  [
+   "2027-03-03",
+   "Próximo balance"
+  ]
+ ]
+},
+"PFE": {
+ "fecha": "2026-11-16",
+ "tesis": "Farmacéutica barata con dividendo de 6%, pero con muchas patentes que vencen antes de 2028.",
+ "bull": [
+  [
+   "Dividendo alto",
+   "Rinde 6% anual."
+  ],
+  [
+   "Barata",
+   "P/E esperado de 10, nota de valuación 8,2."
+  ],
+  [
+   "Superó y subió el pronóstico",
+   "Ganó 18% más de lo esperado y subió el pronóstico del año."
+  ],
+  [
+   "Obesidad",
+   "Compró Metsera para entrar en medicamentos para adelgazar."
+  ]
+ ],
+ "bear": [
+  [
+   "Patentes que vencen",
+   "Unos US$ 22.700 millones de ventas pierden la patente en EE.UU. antes de 2028."
+  ],
+  [
+   "No crece",
+   "Ventas planas y se esperan −4% el año próximo."
+  ],
+  [
+   "Deuda",
+   "Deuda neta de 3 veces EBITDA."
+  ]
+ ],
+ "practica": "Para el cliente que busca dividendo alto en dólares. No esperar crecimiento.",
+ "mirar": [
+  [
+   "2027-02-02",
+   "Próximo balance"
+  ]
+ ]
+},
+"SPOT": {
+ "fecha": "2026-11-16",
+ "tesis": "El líder de la música en streaming por fin gana plata en serio: sube precios y los usuarios no se van.",
+ "bull": [
+  [
+   "Suscriptores récord",
+   "Sumó 6 millones de suscriptores pagos y llegó a 306 millones."
+  ],
+  [
+   "Gana plata",
+   "Va camino a unos US$ 3.300 millones de ganancia operativa en 2026."
+  ],
+  [
+   "Sube precios",
+   "Subió precios y no perdió clientes."
+  ],
+  [
+   "Sin deuda neta",
+   "Mucha caja: nota de solidez 9,3."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 36: nota de valuación 3,7; analistas ven solo 4% de potencial."
+  ],
+  [
+   "Depende de las discográficas",
+   "Paga la mayor parte de lo que cobra a los dueños de la música."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 4% las estimaciones en 90 días."
+  ]
+ ],
+ "practica": "Buena empresa con buen momento, pero cara. Para mantener si ya está en cartera.",
+ "mirar": [
+  [
+   "2027-02-09",
+   "Próximo balance"
+  ]
+ ]
+},
+"AXP": {
+ "fecha": "2026-11-16",
+ "tesis": "La tarjeta de los clientes de altos ingresos: calidad máxima y clientes que siguen gastando.",
+ "bull": [
+  [
+   "Calidad",
+   "Nota de calidad 10: sus clientes gastan mucho y pagan."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 20% más de lo esperado en el último balance."
+  ],
+  [
+   "Crece parejo",
+   "Ventas +9% y ganancia +10% esperada."
+  ],
+  [
+   "Analistas suben",
+   "Suben 4% las estimaciones en 90 días."
+  ]
+ ],
+ "bear": [
+  [
+   "Riesgo de crédito",
+   "A diferencia de Visa y MasterCard, presta plata: si la economía se frena, sube la morosidad."
+  ],
+  [
+   "Tendencia floja",
+   "−16% desde el máximo."
+  ],
+  [
+   "Cara para un banco",
+   "P/E de 17, por encima de los bancos."
+  ]
+ ],
+ "practica": "Buena forma de apostar al consumo de altos ingresos de EE.UU. con calidad. Para perfiles moderados.",
+ "mirar": [
+  [
+   "2027-01-29",
+   "Próximo balance"
+  ]
+ ]
+},
+"MP": {
+ "fecha": "2026-11-16",
+ "tesis": "La única gran minera de tierras raras de EE.UU.: socio estratégico del gobierno contra China, pero todavía pierde plata.",
+ "bull": [
+  [
+   "Apoyo del gobierno",
+   "El Pentágono le garantiza un precio mínimo y es su socio: estratégica contra China."
+  ],
+  [
+   "Crece fuerte",
+   "Ventas +176% en el último trimestre; empieza a venderle imanes a GM."
+  ],
+  [
+   "Analistas muy positivos",
+   "Suben fuerte las estimaciones."
+  ]
+ ],
+ "bear": [
+  [
+   "Pierde plata",
+   "Margen operativo negativo y flujo libre muy negativo por la inversión."
+  ],
+  [
+   "Cara",
+   "P/E esperado de 83."
+  ],
+  [
+   "China",
+   "Si China baja sus precios o levanta restricciones, pierde ventaja."
+  ],
+  [
+   "Tendencia débil",
+   "−47% desde el máximo y 22% en corto."
+  ]
+ ],
+ "practica": "Apuesta geopolítica a la independencia de China. Posición chica para perfiles agresivos.",
+ "mirar": [
+  [
+   "2027-02-25",
+   "Próximo balance"
+  ]
+ ]
+},
+"LRCX": {
+ "fecha": "2026-11-16",
+ "tesis": "Fabrica máquinas clave para chips de memoria y lógica: ganancias récord, pero el mercado teme que el ciclo esté arriba.",
+ "bull": [
+  [
+   "Récord",
+   "Primer margen operativo de 40% de su historia y ventas +54%."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 18% las estimaciones en 90 días y ven 60% de potencial."
+  ],
+  [
+   "Calidad",
+   "Nota de calidad 9,2 y solidez 9,7."
+  ],
+  [
+   "Precio razonable",
+   "P/E esperado de 18."
+  ]
+ ],
+ "bear": [
+  [
+   "Ciclo de memoria",
+   "Vende mucho a fabricantes de memoria: si la memoria llega al pico, frenan compras."
+  ],
+  [
+   "China",
+   "Avisó que China se va a frenar."
+  ],
+  [
+   "Cayó con un buen balance",
+   "Bajó 12% después del balance por un pronóstico apenas mejor de lo esperado."
+  ],
+  [
+   "Tendencia",
+   "−48% desde el máximo."
+  ]
+ ],
+ "practica": "Igual que Applied Materials: buena empresa a precio razonable, pero ligada al ciclo. Comprar de a poco.",
+ "mirar": [
+  [
+   "2027-01-27",
+   "Próximo balance"
+  ]
+ ]
 }
 }
 }
