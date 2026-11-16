@@ -4422,6 +4422,830 @@
    "Próximo balance"
   ]
  ]
+},
+"TEM": {
+ "fecha": "2026-11-16",
+ "tesis": "Usa IA y datos genéticos para personalizar tratamientos contra el cáncer: crece y mejora, pero todavía pierde plata.",
+ "bull": [
+  [
+   "Superó y subió el pronóstico",
+   "Ganó más de lo esperado, subió el pronóstico de ventas y la acción subió 4%."
+  ],
+  [
+   "Crece",
+   "Ventas +23% y pérdidas en baja."
+  ],
+  [
+   "Tendencia",
+   "+39% en 3 meses."
+  ]
+ ],
+ "bear": [
+  [
+   "Pierde plata",
+   "Margen operativo negativo y flujo libre negativo."
+  ],
+  [
+   "Deuda",
+   "Nota de solidez 3,7."
+  ],
+  [
+   "Mucho corto",
+   "24% de las acciones en corto y volatilidad de 77% anual."
+  ],
+  [
+   "Cara",
+   "Nota de valuación 2,5."
+  ]
+ ],
+ "practica": "Apuesta a IA aplicada a la salud. Posición chica para perfiles agresivos.",
+ "mirar": [
+  [
+   "2027-02-23",
+   "Próximo balance"
+  ]
+ ]
+},
+"LMT": {
+ "fecha": "2026-11-16",
+ "tesis": "El mayor contratista de defensa de EE.UU.: ingresos asegurados por gobiernos y dividendo, en un mundo con más guerras.",
+ "bull": [
+  [
+   "Más gasto en defensa",
+   "EE.UU. y Europa aumentan el gasto militar; la guerra con Irán lo acelera."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 6% más de lo esperado y la acción subió 7%."
+  ],
+  [
+   "Dividendo",
+   "Rinde 2,4% y genera caja estable."
+  ],
+  [
+   "Precio razonable",
+   "P/E esperado de 18."
+  ]
+ ],
+ "bear": [
+  [
+   "Crece poco",
+   "Ventas +7% esperadas."
+  ],
+  [
+   "Programas con problemas",
+   "Ha tenido sobrecostos en programas como el F-35."
+  ],
+  [
+   "Depende del presupuesto",
+   "Si cambian las prioridades del Congreso, cambian sus contratos."
+  ]
+ ],
+ "practica": "Defensiva con cobertura geopolítica. Buena para carteras moderadas.",
+ "mirar": [
+  [
+   "2027-01-26",
+   "Próximo balance"
+  ]
+ ]
+},
+"B": {
+ "fecha": "2026-11-16",
+ "tesis": "Una de las mineras de oro más grandes del mundo: barata y sin deuda, pero con problemas operativos en algunos países.",
+ "bull": [
+  [
+   "Oro alto",
+   "Con el oro cerca de US$ 3.900, margen operativo de 50%."
+  ],
+  [
+   "Barata",
+   "P/E de 9 y flujo libre de 6%: nota de valuación 8,1."
+  ],
+  [
+   "Sin deuda neta",
+   "Nota de solidez 9,7."
+  ],
+  [
+   "Cobre",
+   "Además del oro, crece en cobre."
+  ]
+ ],
+ "bear": [
+  [
+   "Riesgo país",
+   "Opera en países difíciles como Mali, donde tuvo conflictos con el gobierno."
+  ],
+  [
+   "Atada al oro",
+   "Si el oro corrige, la acción cae más."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 5% las estimaciones."
+  ]
+ ],
+ "practica": "Con nota 7,4, de las mejores formas de tener oro en acciones junto con Newmont.",
+ "mirar": [
+  [
+   "2027-02-04",
+   "Próximo balance"
+  ]
+ ]
+},
+"BA.C": {
+ "fecha": "2026-11-16",
+ "tesis": "El segundo banco de EE.UU.: barato y beneficiado por tasas altas, pero tuvo una multa grande en el último trimestre.",
+ "bull": [
+  [
+   "Barato",
+   "P/E esperado de 10 y dividendo de 2,5%."
+  ],
+  [
+   "Tasas altas",
+   "Gana más con la suba de la Fed."
+  ],
+  [
+   "Analistas ven potencial",
+   "Potencial de 22% y recomendación de compra fuerte."
+  ]
+ ],
+ "bear": [
+  [
+   "Multa",
+   "Una multa de US$ 1.200 millones por lavado de dinero le hizo ganar menos de lo esperado; la acción cayó 5%."
+  ],
+  [
+   "Bonos con pérdida",
+   "Tiene muchos bonos comprados con tasas bajas que hoy valen menos."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 7% las estimaciones; nota de analistas 2,7."
+  ],
+  [
+   "Tendencia",
+   "−20% en 3 meses."
+  ]
+ ],
+ "practica": "JPMorgan es más seguro; Bank of America es más barato. Para quien quiere un banco de EE.UU. con valor.",
+ "mirar": [
+  [
+   "2027-01-15",
+   "Próximo balance"
+  ]
+ ]
+},
+"TMUS": {
+ "fecha": "2026-11-16",
+ "tesis": "La telefónica que más crece en EE.UU.: barata, con dividendo y mucha caja, pero la acción viene floja.",
+ "bull": [
+  [
+   "Barata",
+   "P/E esperado de 12 y flujo libre de 10% del valor por año."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 11% más de lo esperado en el último balance."
+  ],
+  [
+   "Dividendo",
+   "Rinde 2,8% y recompra acciones."
+  ],
+  [
+   "Defensiva",
+   "La gente paga el celular aunque la economía empeore."
+  ]
+ ],
+ "bear": [
+  [
+   "Competencia",
+   "Verizon y AT&T bajan precios para recuperar clientes."
+  ],
+  [
+   "Deuda",
+   "Deuda neta de 2,5 veces EBITDA."
+  ],
+  [
+   "Tendencia débil",
+   "−22% desde el máximo, nota de tendencia 3,9."
+  ]
+ ],
+ "practica": "Defensiva barata con dividendo. Buena para carteras conservadoras que buscan algo distinto a consumo masivo.",
+ "mirar": [
+  [
+   "2027-02-10",
+   "Próximo balance"
+  ]
+ ]
+},
+"SAP": {
+ "fecha": "2026-11-16",
+ "tesis": "El software de gestión que usan las grandes empresas del mundo: crece con la nube y está cerca de máximos.",
+ "bull": [
+  [
+   "Nube que crece",
+   "Ventas +16% en el último trimestre con la migración de clientes a la nube."
+  ],
+  [
+   "Calidad",
+   "Nota de calidad 8,4 y casi sin deuda."
+  ],
+  [
+   "Tendencia",
+   "23% arriba de su media de 200 ruedas."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 29."
+  ],
+  [
+   "Analistas tibios",
+   "Bajan estimaciones; nota de analistas 3,5."
+  ],
+  [
+   "Miedo a la IA",
+   "Si la IA simplifica el software de gestión, puede perder poder de precio."
+  ]
+ ],
+ "practica": "Calidad europea en software. Para diversificar fuera de EE.UU.",
+ "mirar": [
+  [
+   "2027-01-28",
+   "Próximo balance"
+  ]
+ ]
+},
+"VRTX": {
+ "fecha": "2026-11-16",
+ "tesis": "La líder en fibrosis quística que busca crecer en dolor y riñón: sólida, pero sus nuevos medicamentos tardan en despegar.",
+ "bull": [
+  [
+   "Monopolio en fibrosis quística",
+   "Sus tratamientos son el estándar mundial: ingresos muy estables."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó más de lo esperado en el último balance."
+  ],
+  [
+   "Caja",
+   "Mucha caja y sin deuda: nota de solidez 9,7."
+  ]
+ ],
+ "bear": [
+  [
+   "Nuevos productos lentos",
+   "Su medicamento para el dolor y otros lanzamientos venden menos de lo esperado."
+  ],
+  [
+   "Margen en baja",
+   "El margen operativo cayó en el trimestre por gastos e inversiones."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 5% las estimaciones; cayó 4% con el balance."
+  ]
+ ],
+ "practica": "Biotecnológica de calidad y defensiva. Para mantener en carteras moderadas.",
+ "mirar": [
+  [
+   "2027-02-11",
+   "Próximo balance"
+  ]
+ ]
+},
+"KLAC": {
+ "fecha": "2026-11-16",
+ "tesis": "Fabrica las máquinas que controlan la calidad de los chips: la más rentable del sector de equipos, ligada al ciclo.",
+ "bull": [
+  [
+   "Muy rentable",
+   "Margen operativo de 45%, nota de calidad 9,5."
+  ],
+  [
+   "Crece",
+   "Ventas +29%; subió 5,5% con el último balance."
+  ],
+  [
+   "Analistas positivos",
+   "Potencial de 44%."
+  ]
+ ],
+ "bear": [
+  [
+   "Ciclo",
+   "Si los fabricantes de chips frenan inversiones, compran menos máquinas."
+  ],
+  [
+   "China",
+   "Las restricciones de EE.UU. limitan sus ventas a China."
+  ],
+  [
+   "Tendencia",
+   "−49% desde el máximo."
+  ]
+ ],
+ "practica": "La mejor nota del grupo de equipos (7,7). Para sumar de a poco con la corrección.",
+ "mirar": [
+  [
+   "2027-01-28",
+   "Próximo balance"
+  ]
+ ]
+},
+"FCX": {
+ "fecha": "2026-11-16",
+ "tesis": "La gran productora de cobre de EE.UU.: el cobre es el metal de la electrificación y la IA.",
+ "bull": [
+  [
+   "Cobre con futuro",
+   "La red eléctrica, los autos eléctricos y los centros de datos necesitan cada vez más cobre."
+  ],
+  [
+   "Crece",
+   "Se esperan ventas +22% y ganancia +34% el año próximo."
+  ],
+  [
+   "Analistas positivos",
+   "Potencial de 32%."
+  ]
+ ],
+ "bear": [
+  [
+   "Indonesia",
+   "Su mina principal (Grasberg) está en Indonesia: riesgo político y operativo."
+  ],
+  [
+   "Atada al cobre",
+   "Si China frena, cae el cobre."
+  ],
+  [
+   "Cara para el sector",
+   "P/E de 25."
+  ]
+ ],
+ "practica": "Para tener cobre en cartera. Más crecimiento que Southern Copper, más riesgo país.",
+ "mirar": [
+  [
+   "2027-01-21",
+   "Próximo balance"
+  ]
+ ]
+},
+"RKLB": {
+ "fecha": "2026-11-16",
+ "tesis": "La segunda empresa de cohetes privada después de SpaceX: crece fuerte, pero su cohete grande se atrasa.",
+ "bull": [
+  [
+   "Crece fuerte",
+   "Ventas +73% y cartera de pedidos récord."
+  ],
+  [
+   "Más que cohetes",
+   "Fabrica satélites y componentes, no solo lanzamientos."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 16% las estimaciones en 90 días."
+  ]
+ ],
+ "bear": [
+  [
+   "Neutron se atrasa",
+   "Su cohete grande Neutron pasó a 2027."
+  ],
+  [
+   "Pierde plata",
+   "Margen operativo de −30% y peor de lo esperado."
+  ],
+  [
+   "Muy volátil",
+   "−59% desde el máximo y volatilidad de 96% anual."
+  ]
+ ],
+ "practica": "Apuesta al espacio con más sustancia que otras. Posición chica para perfiles agresivos.",
+ "mirar": [
+  [
+   "2027-02-25",
+   "Próximo balance"
+  ]
+ ]
+},
+"HL": {
+ "fecha": "2026-11-16",
+ "tesis": "La mayor productora de plata de EE.UU.: gana con la plata cara, pero muy volátil.",
+ "bull": [
+  [
+   "Plata alta",
+   "Margen operativo de 41% y ventas +25%."
+  ],
+  [
+   "Superó por mucho",
+   "Ganó 51% más de lo esperado y subió 13%."
+  ],
+  [
+   "Sin deuda neta",
+   "Nota de solidez 9,2."
+  ]
+ ],
+ "bear": [
+  [
+   "Muy volátil",
+   "−59% desde el máximo y volatilidad de 72% anual."
+  ],
+  [
+   "Atada a la plata",
+   "Si la plata corrige, cae fuerte."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 9% las estimaciones."
+  ]
+ ],
+ "practica": "Para el que quiere plata en acciones. Posición chica.",
+ "mirar": [
+  [
+   "2027-02-17",
+   "Próximo balance"
+  ]
+ ]
+},
+"BIDU": {
+ "fecha": "2026-11-16",
+ "tesis": "El Google de China que apuesta a la IA y los autos autónomos: barato, pero su negocio de publicidad se achica.",
+ "bull": [
+  [
+   "IA propia",
+   "Tiene sus propios modelos (Ernie) y robotaxis (Apollo Go) operando en China."
+  ],
+  [
+   "Barato",
+   "P/E esperado de 11 y mucha caja."
+  ],
+  [
+   "Analistas ven potencial",
+   "Potencial de 68%."
+  ]
+ ],
+ "bear": [
+  [
+   "Publicidad en baja",
+   "Su buscador pierde publicidad frente a apps como las de ByteDance."
+  ],
+  [
+   "Último balance flojo",
+   "Ganó 27% menos de lo esperado y la acción cayó 13%."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 27% las estimaciones."
+  ],
+  [
+   "Tendencia destruida",
+   "Nota de tendencia 2,0."
+  ]
+ ],
+ "practica": "Valor chino sin disparador claro. Balance hoy 16/11.",
+ "mirar": [
+  [
+   "2026-11-16",
+   "Balance trimestral"
+  ]
+ ]
+},
+"TEN": {
+ "fecha": "2026-11-16",
+ "tesis": "Tubos para la industria petrolera, del grupo Techint: sólida, sin deuda, paga dividendo y gana con Vaca Muerta y el crudo caro.",
+ "bull": [
+  [
+   "Sin deuda y con caja",
+   "Nota de solidez 9,7."
+  ],
+  [
+   "Superó lo esperado",
+   "Ganó 22% más de lo esperado en el último balance."
+  ],
+  [
+   "Dividendo y recompras",
+   "Rinde 2,9% más recompras."
+  ],
+  [
+   "Analistas positivos",
+   "Nota de analistas 8,5; suben 9% las estimaciones."
+  ]
+ ],
+ "bear": [
+  [
+   "Atada al petróleo",
+   "Si baja el precio del crudo, las petroleras perforan menos y compran menos tubos."
+  ],
+  [
+   "Aranceles",
+   "Los aranceles al acero en EE.UU. afectan su comercio."
+  ],
+  [
+   "Ya subió",
+   "+53% en un año, cerca de máximos."
+  ]
+ ],
+ "practica": "Con nota 7,3, de las mejores formas de tener energía con calidad. Mirarla junto con la tarjeta del ciclo del petróleo.",
+ "mirar": [
+  [
+   "2027-02-17",
+   "Próximo balance"
+  ]
+ ]
+},
+"ALAB": {
+ "fecha": "2026-11-16",
+ "tesis": "Chips de conexión para servidores de IA: crece 154% con caja neta, pero cara y muy volátil.",
+ "bull": [
+  [
+   "Crecimiento explosivo",
+   "Ventas +154% en el último trimestre."
+  ],
+  [
+   "Rentable",
+   "Margen operativo de 31% y caja neta."
+  ],
+  [
+   "Analistas positivos",
+   "Nota de analistas 7,9 y potencial de 55%."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E esperado de 31, nota de valuación 2,7."
+  ],
+  [
+   "Muy volátil",
+   "−54% desde el máximo y volatilidad de 101% anual."
+  ],
+  [
+   "Arrastre de Nvidia",
+   "Depende del gasto en servidores de IA."
+  ]
+ ],
+ "practica": "Para perfiles agresivos que buscan crecimiento en hardware de IA. Posición chica.",
+ "mirar": [
+  [
+   "2026-11-17",
+   "Balance de Nvidia"
+  ],
+  [
+   "2027-02-09",
+   "Próximo balance"
+  ]
+ ]
+},
+"BB": {
+ "fecha": "2026-11-16",
+ "tesis": "El ex fabricante de celulares hoy vende software de seguridad y para autos: chica, recuperándose, pero cara.",
+ "bull": [
+  [
+   "Vuelve a ganar",
+   "Margen operativo de 21% en el último trimestre y sorpresa grande en el balance."
+  ],
+  [
+   "Software para autos",
+   "Su sistema QNX está en millones de autos."
+  ],
+  [
+   "Tendencia",
+   "+98% en un año."
+  ]
+ ],
+ "bear": [
+  [
+   "Cara",
+   "P/E de 65 para una empresa que crece 10%."
+  ],
+  [
+   "Chica",
+   "Ventas de apenas US$ 500 millones por año."
+  ],
+  [
+   "Analistas tibios",
+   "Recomendación promedio 'mantener'."
+  ]
+ ],
+ "practica": "Recuperación interesante, pero ya subió mucho. No es prioritaria.",
+ "mirar": [
+  [
+   "2026-12-17",
+   "Balance trimestral"
+  ]
+ ]
+},
+"WDC": {
+ "fecha": "2026-11-16",
+ "tesis": "Discos rígidos para centros de datos: nota 8,0 en pleno auge del almacenamiento para IA.",
+ "bull": [
+  [
+   "Crece fuerte",
+   "Ventas +55% y margen operativo de 48%."
+  ],
+  [
+   "Barata",
+   "P/E esperado de 7."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 23% las estimaciones y ven 107% de potencial."
+  ]
+ ],
+ "bear": [
+  [
+   "Ciclo",
+   "Igual que la memoria: después de los picos vienen caídas fuertes."
+  ],
+  [
+   "Tendencia",
+   "−60% desde el máximo y 30% debajo de su media de 200 ruedas."
+  ],
+  [
+   "Muy volátil",
+   "Volatilidad de 83% anual."
+  ]
+ ],
+ "practica": "Igual que Sandisk y Micron: el ciclo manda. Tomar ganancia más que sumar.",
+ "mirar": [
+  [
+   "2027-01-28",
+   "Próximo balance"
+  ]
+ ]
+},
+"UNH": {
+ "fecha": "2026-11-16",
+ "tesis": "La prepaga de salud más grande de EE.UU. en recuperación después de un 2025 terrible.",
+ "bull": [
+  [
+   "Recuperación",
+   "Superó lo esperado por 13% y subió el pronóstico de 2026."
+  ],
+  [
+   "Barata para su historia",
+   "P/E esperado de 18, nota de valuación 8,4."
+  ],
+  [
+   "Analistas positivos",
+   "Nota de analistas 7,5."
+  ],
+  [
+   "Dividendo",
+   "Rinde 2,3%."
+  ]
+ ],
+ "bear": [
+  [
+   "Costos médicos",
+   "Si los costos médicos vuelven a subir, el margen se aprieta."
+  ],
+  [
+   "Regulación",
+   "Investigaciones del gobierno y cambios en Medicare."
+  ],
+  [
+   "Margen bajo",
+   "Gana 4–6 de cada 100 que cobra."
+  ]
+ ],
+ "practica": "Recuperación en marcha a precio razonable. Para carteras moderadas.",
+ "mirar": [
+  [
+   "2027-01-12",
+   "Próximo balance"
+  ]
+ ]
+},
+"DELL": {
+ "fecha": "2026-11-16",
+ "tesis": "Vende los servidores de IA que arman los centros de datos: crece 58% y está barata, pero con margen fino.",
+ "bull": [
+  [
+   "Servidores de IA",
+   "Ventas +58% en el último trimestre."
+  ],
+  [
+   "Barata",
+   "P/E esperado de 11, nota de valuación 7,5."
+  ],
+  [
+   "Analistas suben",
+   "Subieron 39% las estimaciones en 90 días."
+  ],
+  [
+   "Último balance muy bueno",
+   "Superó por 43% y subió 16%."
+  ]
+ ],
+ "bear": [
+  [
+   "Margen fino",
+   "Gana 7 de cada 100 que vende: la memoria cara lo aprieta."
+  ],
+  [
+   "PC en baja",
+   "Las computadoras personales sufren por el precio de la memoria."
+  ],
+  [
+   "Deuda",
+   "Deuda neta de 1,8 veces EBITDA."
+  ]
+ ],
+ "practica": "Buena relación precio-crecimiento en hardware de IA. Balance el 24/11.",
+ "mirar": [
+  [
+   "2026-11-17",
+   "Balance de Nvidia"
+  ],
+  [
+   "2026-11-24",
+   "Balance trimestral"
+  ]
+ ]
+},
+"ITUB": {
+ "fecha": "2026-11-16",
+ "tesis": "El mejor banco privado de Brasil: rentable, barato y con dividendo.",
+ "bull": [
+  [
+   "Calidad",
+   "Nota de calidad 8,9: el banco más rentable entre los tradicionales de Brasil."
+  ],
+  [
+   "Barato",
+   "P/E de 9, nota de valuación 9,4."
+  ],
+  [
+   "Crece",
+   "Ventas +18% en el último trimestre."
+  ]
+ ],
+ "bear": [
+  [
+   "Brasil",
+   "Tasas, real y política pegan directo."
+  ],
+  [
+   "Último balance",
+   "Ganó 8% menos de lo esperado."
+  ],
+  [
+   "Analistas bajando",
+   "Bajaron 7% las estimaciones; nota de analistas 2,7."
+  ]
+ ],
+ "practica": "Si se quiere un banco brasileño tradicional, es el mejor. Nubank crece más; Itaú es más barato.",
+ "mirar": [
+  [
+   "2027-02-03",
+   "Próximo balance"
+  ]
+ ]
+},
+"ABT": {
+ "fecha": "2026-11-16",
+ "tesis": "Salud diversificada (diagnóstico, dispositivos, nutrición) que compró Exact Sciences para crecer en detección de cáncer.",
+ "bull": [
+  [
+   "Compra que suma",
+   "La compra de Exact Sciences hizo crecer diagnóstico 47%."
+  ],
+  [
+   "Diversificada",
+   "Monitores de glucosa, dispositivos cardíacos, leche infantil y análisis."
+  ],
+  [
+   "Dividendo",
+   "Rinde 2,3% y lo sube hace más de 50 años."
+  ]
+ ],
+ "bear": [
+  [
+   "Margen en baja",
+   "El margen operativo cayó por los costos de la compra."
+  ],
+  [
+   "Crece poco",
+   "Se esperan ventas +7%."
+  ],
+  [
+   "Tendencia",
+   "−14% en un año."
+  ]
+ ],
+ "practica": "Defensiva de salud a precio razonable (P/E esperado 18). Buena para carteras conservadoras.",
+ "mirar": [
+  [
+   "2027-01-28",
+   "Próximo balance"
+  ]
+ ]
 }
 }
 }
