@@ -844,7 +844,7 @@ def salida(lista, fichas, ccl):
         mc["bloque"] = bmap.get(L.at[t, "byma"])
         ciclo[t] = mc
     for t, mc in ciclo.items():
-        if mc.get("pares"):
+        if mc.get("pares") and mc["bloque"] == "memorias":
             fs = [m_["factor"] for m_ in ciclo.values() if m_["bloque"] == mc["bloque"] and m_["estado"] == "pico" and not m_.get("pares")]
             if fs:
                 mc["estado"], mc["factor"] = "pico", round(float(np.median(fs)), 3)
@@ -852,15 +852,25 @@ def salida(lista, fichas, ccl):
         pe_ = V.at[t, "pe"]
         mc["pe_normal"] = round(float(pe_) / mc["factor"], 1) if mc["estado"] and mc["factor"] > 0 and pd.notna(pe_) and pe_ > 0 else None
         mc["ciclico"] = True
-        if mc["estado"]:
-            for c_ in ["ey", "ee", "fcf_yield"]:
-                V.at[t, c_] = V.at[t, c_] * mc["factor"] if pd.notna(V.at[t, c_]) else V.at[t, c_]
     tam = V.groupby("sector")["ey"].transform("count")
     vr = []
     for c in ["ey", "ee", "fcf_yield"]:
         por_sec = V.groupby("sector")[c].rank(pct=True)
         vr.append(por_sec.where(tam >= 5, V[c].rank(pct=True)))
     valn = pd.concat(vr, axis=1).mean(axis=1)
+    for t, mc in ciclo.items():
+        if not mc["estado"]:
+            continue
+        ref = V[V["sector"] == V.at[t, "sector"]] if tam.get(t, 0) >= 5 else V
+        ref = ref.drop(index=t, errors="ignore")
+        ps = []
+        for c_ in ["ey", "ee", "fcf_yield"]:
+            v_ = V.at[t, c_]
+            col = ref[c_].dropna()
+            if pd.notna(v_) and len(col):
+                ps.append(float((col < v_ * mc["factor"]).mean()))
+        if ps:
+            valn[t] = float(np.mean(ps))
     an_n = pd.concat([rk(pd.to_numeric(L["rev90"], errors="coerce")), rk(pd.to_numeric(L["arriba_abajo"], errors="coerce")),
                       rk(pd.to_numeric(L["sorpresa_media"], errors="coerce"))], axis=1).mean(axis=1)
     sal = []
