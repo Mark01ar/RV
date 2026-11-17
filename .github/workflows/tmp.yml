@@ -17,6 +17,8 @@ jobs:
           python-version: "3.12"
       - run: pip install -r requirements.txt
       - run: python tmp/series.py > tmp/log.txt 2>&1 || true; tail -40 tmp/log.txt
+        env:
+          FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
