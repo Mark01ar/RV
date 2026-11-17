@@ -309,7 +309,7 @@
   "pais": null,
   "moneda": null,
   "mcap": null,
-  "fecha": "2026-11-14"
+  "fecha": "2026-11-17"
  },
  "BKNG": {
   "sector": "Consumer Cyclical",
@@ -692,8 +692,8 @@
   "industria": null,
   "pais": null,
   "moneda": "USD",
-  "mcap": 33934002176,
-  "fecha": "2026-11-14"
+  "mcap": 33689260032,
+  "fecha": "2026-11-17"
  },
  "FSLR": {
   "sector": "Technology",
@@ -1133,7 +1133,7 @@
   "pais": null,
   "moneda": null,
   "mcap": null,
-  "fecha": "2026-11-14"
+  "fecha": "2026-11-17"
  },
  "MMM": {
   "sector": "Industrials",
@@ -1405,7 +1405,7 @@
   "pais": null,
   "moneda": null,
   "mcap": null,
-  "fecha": "2026-11-14"
+  "fecha": "2026-11-17"
  },
  "ORCL": {
   "sector": "Technology",
@@ -1477,7 +1477,7 @@
   "pais": null,
   "moneda": null,
   "mcap": null,
-  "fecha": "2026-11-14"
+  "fecha": "2026-11-17"
  },
  "PEP": {
   "sector": "Consumer Defensive",
