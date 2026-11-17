@@ -7,7 +7,7 @@
  "bull": [
   [
    "Barata para lo que crece",
-   "Cotiza a unas 10 veces la ganancia esperada del año próximo con ventas que casi se duplican: valuación de empresa madura para una que crece como startup."
+   "Cotiza a unas 10 veces la ganancia esperada del año próximo con ventas que casi se duplican. Ojo: un P/E esperado tan bajo también puede significar que el mercado duda de que esas ganancias se sostengan."
   ],
   [
    "Vera Rubin en plena producción",
@@ -811,13 +811,13 @@
   [
    "Analistas siguen subiendo",
    "+13% las estimaciones en 90 días y 101% de potencial."
-  ],
-  [
-   "Nota más alta",
-   "8,5 de nota general: la número uno del analizador."
   ]
  ],
  "bear": [
+  [
+   "El analizador ya lo descuenta",
+   "Hoy gana 75 de cada 100 que vende contra 24 en un año normal: con margen normal, el P/E sería 29 y no 10. Por eso su nota de valuación bajó."
+  ],
   [
    "Así se ven los picos",
    "La memoria es el sector más cíclico: en 2018 y 2022 el P/E estaba en mínimos justo en el techo. Un P/E de 4 suele anticipar que la ganancia va a caer."
