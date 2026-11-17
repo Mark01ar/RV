@@ -786,6 +786,32 @@ def main():
     salida(lista, fichas, ccl)
 
 
+CICLICOS = {"memorias", "fabricacion", "petroleo", "mineria", "industriales"}
+
+
+def margen_ciclo(f):
+    try:
+        tr = [q for q in (f.get("trimestral") or []) if q.get("ventas") and q.get("m_ebit") is not None][-4:]
+        an = [a for a in (f.get("anual") or []) if a.get("ventas") and a.get("m_ebit") is not None]
+        if len(tr) < 4 or len(an) < 5:
+            return None
+        v = sum(q["ventas"] for q in tr)
+        m_ttm = sum(q["ventas"] * q["m_ebit"] for q in tr) / v
+        ult = max(a["anio"] for a in an)
+        hist = sorted(a["m_ebit"] for a in an if a["anio"] < ult)[-10:]
+        if len(hist) < 4:
+            return None
+        m_n = float(np.median(hist))
+        estado, factor = None, 1.0
+        if m_ttm > 0 and m_ttm >= 1.5 * max(m_n, 0.01) and m_ttm - m_n >= 0.10:
+            estado, factor = "pico", max(m_n, 0) / m_ttm
+        elif m_n > 0 and m_ttm < 0.5 * m_n and m_n - m_ttm >= 0.08 and m_ttm > 0:
+            estado, factor = "piso", min(m_n / m_ttm, 3.0)
+        return {"m_ttm": round(m_ttm, 4), "m_normal": round(m_n, 4), "estado": estado, "factor": round(factor, 3)}
+    except Exception:
+        return None
+
+
 def salida(lista, fichas, ccl):
     L = pd.DataFrame(lista).set_index("ticker")
     for c in ["rev90", "arriba_abajo", "sorpresa_media", "ficha", "notas_abs", "proximo_balance"]:
@@ -800,6 +826,35 @@ def salida(lista, fichas, ccl):
     V["ee"] = 1 / V["ev_ebitda"].where(V["ev_ebitda"] > 0)
     V["sector"] = L["sector"]
     V["tipo"] = L["tipo"]
+    try:
+        bmap = {b_: x_["id"] for x_ in json.loads((DATA / "bloques.json").read_text())["bloques"] for b_ in x_["empresas"]}
+    except Exception:
+        bmap = {}
+    ciclo = {}
+    for t in L.index:
+        f_ = fichas.get(t)
+        if f_ is None and (OUT / f"{t}.json").exists():
+            try:
+                f_ = json.loads((OUT / f"{t}.json").read_text())
+            except Exception:
+                f_ = None
+        if bmap.get(L.at[t, "byma"]) not in CICLICOS:
+            continue
+        mc = (margen_ciclo(f_) if f_ else None) or {"m_ttm": None, "m_normal": None, "estado": None, "factor": 1.0, "pares": True}
+        mc["bloque"] = bmap.get(L.at[t, "byma"])
+        ciclo[t] = mc
+    for t, mc in ciclo.items():
+        if mc.get("pares"):
+            fs = [m_["factor"] for m_ in ciclo.values() if m_["bloque"] == mc["bloque"] and m_["estado"] == "pico" and not m_.get("pares")]
+            if fs:
+                mc["estado"], mc["factor"] = "pico", round(float(np.median(fs)), 3)
+    for t, mc in ciclo.items():
+        pe_ = V.at[t, "pe"]
+        mc["pe_normal"] = round(float(pe_) / mc["factor"], 1) if mc["estado"] and mc["factor"] > 0 and pd.notna(pe_) and pe_ > 0 else None
+        mc["ciclico"] = True
+        if mc["estado"]:
+            for c_ in ["ey", "ee", "fcf_yield"]:
+                V.at[t, c_] = V.at[t, c_] * mc["factor"] if pd.notna(V.at[t, c_]) else V.at[t, c_]
     tam = V.groupby("sector")["ey"].transform("count")
     vr = []
     for c in ["ey", "ee", "fcf_yield"]:
@@ -822,6 +877,7 @@ def salida(lista, fichas, ccl):
         disp = {k_: nt[k_] for k_ in pes if nt.get(k_) is not None}
         nt["general"] = round(sum(nt[k_] * pes[k_] for k_ in disp) / sum(pes[k_] for k_ in disp), 1) if len(disp) >= 3 else None
         d["notas"] = nt
+        d["ciclo_val"] = ciclo.get(t)
         d.pop("notas_abs", None)
         d = {k_: (None if isinstance(v, float) and not math.isfinite(v) else v) for k_, v in d.items()}
         sal.append(d)
@@ -831,6 +887,9 @@ def salida(lista, fichas, ccl):
             f["notas_detalle"] = f["notas_abs"].get("detalle", {})
             f["notas_detalle"]["valuacion"] = {"P/E": d["val"]["pe"], "EV/EBITDA": d["val"]["ev_ebitda"], "Flujo libre / precio": d["val"]["fcf_yield"],
                                               "Comparado contra": f"su sector ({int(tam.get(t))} empresas)" if tam.get(t, 0) >= 5 else "todas las 125"}
+            f["ciclo_val"] = ciclo.get(t)
+            if (ciclo.get(t) or {}).get("ciclico") and ciclo[t]["estado"]:
+                f["notas_detalle"]["valuacion"]["Ajuste por ciclo"] = "ganancias en el pico del ciclo: se mide con margen normal" if ciclo[t]["estado"] == "pico" else "ganancias en el piso del ciclo: se mide con margen normal"
             f["notas_detalle"]["tendencia"] = {"Momentum 12-1": d["mom12_1"], "Distancia a la MA200": d["vs_ma200"], "Contra el SPY, 6 meses": d["rel6m"]}
             f["notas_detalle"]["analistas"] = {"Revisión de ganancias, 90 días": d.get("rev90"), "Revisiones netas, 30 días": d.get("arriba_abajo"), "Sorpresa promedio, 4 balances": d.get("sorpresa_media")}
             f.pop("notas_abs", None)
@@ -843,6 +902,7 @@ def salida(lista, fichas, ccl):
             try:
                 f = json.loads((OUT / f"{t}.json").read_text())
                 f["notas"] = nt
+                f["ciclo_val"] = ciclo.get(t)
                 (OUT / f"{t}.json").write_text(json.dumps(f, ensure_ascii=False, default=lambda o: None, separators=(",", ":")).replace("NaN", "null"))
             except Exception as e:
                 print(f"{t}: no se pudo actualizar la nota de la ficha ({e})")

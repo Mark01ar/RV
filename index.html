@@ -1688,7 +1688,7 @@ function analizar(f){
     if (nt.valuacion!=null && nt.valuacion>=7.5) add(fort, 0.3, `Barata contra su sector (nota de valuación ${nx(nt.valuacion)}).`);
     if (nt.valuacion!=null && nt.valuacion<=3) add(ries, 0.3, `Cara contra su sector (nota de valuación ${nx(nt.valuacion)}).`);
     if (v.pe && peMed){ const d=v.pe/peMed-1;
-      if (d<=-0.2) add(fort, -d, `Cotiza ${M(d)} por debajo de su P/E histórico (${X(v.pe)} contra ${X(peMed)}).`);
+      if (d<=-0.2 && f.ciclo_val?.estado!=="pico") add(fort, -d, `Cotiza ${M(d)} por debajo de su P/E histórico (${X(v.pe)} contra ${X(peMed)}).`);
       if (d>=0.3) add(ries, d/2, `Cotiza ${M(d)} por encima de su P/E histórico (${X(v.pe)} contra ${X(peMed)}).`); }
     if (v.pe && pr.pe && v.pe > pr.pe*1.8) add(ries, 0.35, `P/E de ${X(v.pe)}, muy por encima de la mediana de su sector (${X(pr.pe)}).`);
   }
@@ -1702,6 +1702,8 @@ function analizar(f){
   if (dil!=null && dil>0.03) add(ries, dil, `Dilución: la cantidad de acciones crece ${M(dil,1)} por año.`);
   if (dil!=null && dil<-0.02) add(fort, -dil, `Recompra acciones: la cantidad baja ${M(dil,1)} por año.`);
   if (f.tipo==="cripto") add(ries, 0.9, `Depende sobre todo del precio del bitcoin.`);
+  if (f.ciclo_val?.estado==="pico") add(ries, 0.95, `Ganancias en el pico del ciclo: el P/E bajo puede anticipar que la ganancia va a caer${f.ciclo_val.pe_normal?` (con margen normal sería ${X(f.ciclo_val.pe_normal)})`:""}.`);
+  if (f.ciclo_val?.estado==="piso") add(fort, 0.6, `Ganancias en el piso del ciclo: con margen normal el P/E sería ${f.ciclo_val.pe_normal?X(f.ciclo_val.pe_normal):"más bajo"}.`);
   if (f.pais && f.pais!=="United States") add(ries, 0.15, `Riesgo país: opera principalmente desde ${esc(PAIS[f.pais]||f.pais)}.`);
   const top = l => l.sort((x,y)=>y.peso-x.peso).slice(0,5).map(z=>z.txt);
   return {tend, pts, motivos, fort: top(fort), ries: top(ries)};
@@ -1822,6 +1824,14 @@ async function comparador(m){
 }
 
 let DESC = null, NARR = null, IDEAS = null;
+function cicloAviso(f){
+  const c = f.ciclo_val; if (!c?.estado) return "";
+  const xx = z => z==null ? "—" : nx(z)+"x";
+  const m = c.m_ttm!=null ? `Hoy gana ${nx(c.m_ttm*100,0)} de cada 100 que vende, contra ${nx(c.m_normal*100,0)} en un año normal de los últimos diez.` : `No hay historia suficiente: se usa el ajuste de sus pares del sector.`;
+  return c.estado==="pico"
+    ? `<div class="aviso" style="margin-top:10px"><b>Ganancias en el pico del ciclo.</b> ${m} En sectores cíclicos un P/E bajo suele anticipar que la ganancia va a caer, no que la acción esté barata.${c.pe_normal?` Con margen normal, el P/E sería <b>${xx(c.pe_normal)}</b>.`:""} La nota de valuación ya está calculada con ese margen normal.</div>`
+    : `<div class="aviso" style="margin-top:10px"><b>Ganancias en el piso del ciclo.</b> ${m} En sectores cíclicos un P/E alto en el piso puede esconder una oportunidad.${c.pe_normal?` Con margen normal, el P/E sería <b>${xx(c.pe_normal)}</b>.`:""} La nota de valuación ya está calculada con ese margen normal.</div>`;
+}
 async function cargarNarr(){
   if (NARR) return;
   try{ const r = await fetch("data/narrativas.json?v="+Date.now()); NARR = r.ok ? await r.json() : {empresas:{}}; }catch(e){ NARR = {empresas:{}}; }
@@ -1904,7 +1914,7 @@ async function ficha(m, t){
     <div class="fh-kpis">
       <div><span>Precio USD</span><b>${pb.precio?num(pb.precio,2):"—"}</b><small>CEDEAR $ ${f.px_ars?num(f.px_ars,0):"—"} · premio ${pct(f.premio)}</small></div>
       <div><span>12 meses</span><b class="${cls(pb.r12m)}">${pct(pb.r12m,0)}</b><small>SPY ${pct(pb.r12m_spy,0)} · vs. MA200 ${pct(pb.vs_ma200,0)}</small></div>
-      <div><span>P/E</span><b>${xx(f.val?.pe)}</b><small>sector ${xx(f.pares?.pe)} · esperado ${xx(f.val?.pe_fwd)}</small></div>
+      <div><span>P/E</span><b>${xx(f.val?.pe)}</b><small>${f.ciclo_val?.estado==="pico"&&f.ciclo_val.pe_normal?`<span style="color:var(--neg)">con margen normal ${xx(f.ciclo_val.pe_normal)}</span>`:`sector ${xx(f.pares?.pe)}`} · esperado ${xx(f.val?.pe_fwd)}</small></div>
       ${f.tipo==="banco"?`<div><span>ROE</span><b>${pct(roe,1).replace("+","")}</b><small>patrimonio / activo ${u_.patrimonio&&u_.activo?pct(u_.patrimonio/u_.activo,1).replace("+",""):"—"}</small></div>`
         :`<div><span>Deuda neta / EBITDA</span><b class="${lev==null?"":lev<=1?"pos":lev>3?"neg":""}">${lev==null?"—":lev<0?"caja neta":nx(lev)+"x"}</b><small>${u_.deuda!=null||u_.caja!=null?(dn<0?"caja neta US$ "+big(-dn):"deuda neta US$ "+big(dn)):"—"}</small></div>`}
       <div><span>Próximo balance</span><b>${fch2(a.proximo_balance)}</b><small>${ub0?`último: <span style="color:${ub0.sorpresa>0.02?"var(--pos)":ub0.sorpresa<-0.02?"var(--neg)":"var(--accent)"}">${esc((ub0.veredicto||"").replace(" lo esperado","").replace(" con lo esperado",""))}</span> (${pct(ub0.sorpresa)})`:"—"}</small></div>
@@ -1987,7 +1997,7 @@ async function ficha(m, t){
       ${f.tipo==="banco"?filaV("Precio / valor libro","pvl",xx,"El múltiplo clave para bancos: se mira junto con el ROE."):`${filaV("EV/EBITDA","ev_ebitda",xx)}${filaV("Precio / flujo libre","pfcf",xx)}`}
       ${filaV("Precio / ventas","ps",xx)}
       </tbody></table></div><p class="mut small">Mediana de su sector dentro de las 125 (${secE.length} empresas).</p>
-      ${f.tipo==="cripto"?`<p class="aviso">Valuación poco representativa: depende del bitcoin.</p>`:""}</div>
+      ${f.tipo==="cripto"?`<p class="aviso">Valuación poco representativa: depende del bitcoin.</p>`:""}${cicloAviso(f)}</div>
       <div class="card"><h3>P/E en los últimos años</h3>${bd?bandaPE(bd, v.pe):`<p class="mut">Sin historia suficiente de ganancias positivas.</p>`}</div></section>
     <section class="fgrid"><div class="card"><h3>Devolución al accionista</h3>
       ${kv([["Rendimiento total", pc(v.rend_accionista), v.rend_accionista>0.03?"pos":""],["Dividendo", pc(v.div_yield)],["Recompras netas", pc(v.recompra_yield)]])}
