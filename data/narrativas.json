@@ -1,9 +1,9 @@
 {
-"actualizado": "2026-11-16",
+"actualizado": "2026-11-17",
 "empresas": {
 "NVDA": {
- "fecha": "2026-11-15",
- "tesis": "El negocio está mejor que nunca y la acción, en el peor momento en años: el balance del 17/11 decide cuál de las dos cosas pesa más.",
+ "fecha": "2026-11-17",
+ "tesis": "El negocio está mejor que nunca, pero se quedó sin su fundador: Jensen Huang renunció el 12/11 y el balance del 17/11 es el primero sin él.",
  "bull": [
   [
    "Barata para lo que crece",
@@ -28,8 +28,8 @@
    "La memoria se encareció más rápido de lo previsto: el margen bruto baja de 75% a 74% y tocaría piso en 71–72%. Lo que gana la memoria lo pierde Nvidia."
   ],
   [
-   "Escándalo de Jensen Huang",
-   "El directorio y el FBI investigan su relación con una mujer acusada de ser espía china. Riesgo de cambio de CEO y de más trabas para vender a China."
+   "Se fue Jensen Huang",
+   "Renunció el 12/11 como CEO y director, después del escándalo con una mujer acusada de ser espía china y reportes de una segunda relación con una ejecutiva. La CFO Colette Kress es CEO interina y el directorio busca reemplazo. La acción llegó a abrir 8% abajo."
   ],
   [
    "Restricciones a China",
@@ -40,7 +40,7 @@
    "Con la Fed por subir y la tasa a 10 años en 5,15%, el mercado paga menos por crecimiento. La acción perforó el piso de US$ 170 y está 20% debajo de su media de 200 ruedas."
   ]
  ],
- "practica": "Superar las estimaciones no alcanza: el mercado ya espera 2,60 por acción. Lo que mueve es el pronóstico y el tono sobre márgenes y China. Para entrar, mejor en dos partes: una antes y otra después del balance.",
+ "practica": "Superar las estimaciones no alcanza: el mercado ya espera 2,60 por acción. Lo que mueve es el pronóstico, el tono sobre márgenes y China, y qué dice la conducción interina sobre la sucesión. Para entrar, mejor en dos partes: una antes y otra después del balance.",
  "mirar": [
   [
    "2026-11-17",
@@ -53,12 +53,16 @@
  ]
 },
 "ANET": {
- "fecha": "2026-11-15",
+ "fecha": "2026-11-17",
  "tesis": "La que conecta los chips de IA entre sí: crece 58% con caja neta y ya dio pronóstico de 2027 con +38–40%.",
  "bull": [
   [
    "Crecimiento visible",
    "Ventas +58% en el último trimestre y pronóstico de 2027 de US$ 18.500 millones (+38–40%). Pocas empresas dan un número del año que viene."
+  ],
+  [
+   "Gana con la salida de Huang",
+   "Evercore la ve como la más beneficiada: Nvidia le acaba de pasar en switches de centros de datos (20,4% contra 18,7%) y los clientes que no quieren depender de un solo proveedor pueden inclinarse por Arista."
   ],
   [
    "La IA duplica",
@@ -74,6 +78,10 @@
   ]
  ],
  "bear": [
+  [
+   "Nvidia también vende redes",
+   "Nvidia creció 181% en switches de centros de datos en un año y los vende en paquete con sus chips. La salida de Huang sola no le cierra la brecha a Arista: tiene que ganar contratos."
+  ],
   [
    "Cara",
    "P/E de 52 y 33 esperado. Si el gasto en IA frena, la caída puede ser fuerte."
