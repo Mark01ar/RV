@@ -1,0 +1,13 @@
+DGS10 779
+DFII10 287
+T10YIE 287
+CPIAUCSL 958
+BAA10Y 491
+ie_data.xls 200 1628672
+histimpl.xls 200 113152
+histimpl2.xls 200 113152
+Portfolios_Formed_on_BE-ME_CSV.zip 200 218775
+F-F_Research_Data_Factors_CSV.zip 200 13078
+Portfolios_Formed_on_E-P_CSV.zip 200 163925
+6_Portfolios_2x3_CSV.zip 200 149549
+yf (383, 53)
