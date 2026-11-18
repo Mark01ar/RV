@@ -209,21 +209,25 @@ def eventos(c, h, l, v):
     out = []
     n = len(c)
     previo = {}
-    for k in range(max(1, n - 63), n):
+    lado_p = lado_m = 0
+    for k in range(max(1, n - 126), n):
         f = c.index[k].strftime("%Y-%m-%d")
         p, q = c.iloc[k], c.iloc[k - 1]
         hoy = {}
-        if np.isfinite(ma200.iloc[k]) and np.isfinite(ma200.iloc[k - 1]):
-            a, b = q - ma200.iloc[k - 1], p - ma200.iloc[k]
-            if a <= 0 < b:
-                out.append([f, "pos", "Cruzó hacia arriba su MA200"])
-            elif a >= 0 > b:
-                out.append([f, "neg", "Cruzó hacia abajo su MA200"])
-            a, b = ma50.iloc[k - 1] - ma200.iloc[k - 1], ma50.iloc[k] - ma200.iloc[k]
-            if a <= 0 < b:
-                out.append([f, "pos", "La MA50 cruzó arriba de la MA200"])
-            elif a >= 0 > b:
-                out.append([f, "neg", "La MA50 cruzó abajo de la MA200"])
+        reciente = k >= n - 63
+        if np.isfinite(ma200.iloc[k]):
+            rp = p / ma200.iloc[k] - 1
+            nuevo = 1 if rp > 0.01 else -1 if rp < -0.01 else lado_p
+            if lado_p and nuevo != lado_p and reciente:
+                out.append([f, "pos" if nuevo > 0 else "neg", f"Cruzó hacia {'arriba' if nuevo > 0 else 'abajo'} su MA200"])
+            lado_p = nuevo
+            rm = ma50.iloc[k] / ma200.iloc[k] - 1
+            nuevo = 1 if rm > 0.005 else -1 if rm < -0.005 else lado_m
+            if lado_m and nuevo != lado_m and reciente:
+                out.append([f, "pos" if nuevo > 0 else "neg", f"La MA50 cruzó {'arriba' if nuevo > 0 else 'abajo'} de la MA200"])
+            lado_m = nuevo
+        if not reciente:
+            continue
         if np.isfinite(max12.iloc[k]) and p > max12.iloc[k]:
             hoy["max"] = "Nuevo máximo de 12 meses"
         elif np.isfinite(max3.iloc[k]) and p > max3.iloc[k]:
@@ -233,13 +237,14 @@ def eventos(c, h, l, v):
         elif np.isfinite(min3.iloc[k]) and p < min3.iloc[k]:
             hoy["min"] = "Perforó el mínimo de 3 meses"
         for key, tipo in (("max", "pos"), ("min", "neg")):
-            if key in hoy and previo.get(key) != hoy[key]:
-                out.append([f, tipo, hoy[key]])
-        previo = hoy
+            if key in hoy:
+                if k - previo.get(key, -99) > 15:
+                    out.append([f, tipo, hoy[key]])
+                previo[key] = k
         mv = p / q - 1
         if np.isfinite(atr.iloc[k]) and atr.iloc[k] > 0 and abs(p - q) >= 2.5 * atr.iloc[k]:
             out.append([f, "pos" if mv > 0 else "neg", f"{'Subió' if mv > 0 else 'Bajó'} {abs(mv) * 100:.1f}% en el día".replace(".", ",") + f" ({abs(p - q) / atr.iloc[k]:.1f} ATR)".replace(".", ",")])
-        if np.isfinite(vbase.iloc[k]) and vbase.iloc[k] > 0 and v.iloc[k] >= 2.5 * vbase.iloc[k]:
+        if np.isfinite(vbase.iloc[k]) and vbase.iloc[k] > 0 and v.iloc[k] >= 3 * vbase.iloc[k]:
             out.append([f, "neu", f"Volumen {v.iloc[k] / vbase.iloc[k]:.1f} veces el promedio".replace(".", ",")])
     return out[-15:]
 
