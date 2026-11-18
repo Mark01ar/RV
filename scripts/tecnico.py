@@ -53,8 +53,12 @@ def leer_csv():
         d = dict(zip(cab, v))
         tk = d.get("ticker", "").upper()
         tp = d.get("tipo", "").upper()
-        if not tk or tp not in ("OW", "UW"):
+        if tp in ("NEUTRAL", "NEUTRO"):
+            tp = "N"
+        if not tk or tp not in ("OW", "UW", "N"):
             continue
+        extra = [c.strip() for c in l.split(",")[len(cab):]]
+        nota = ", ".join([d.get("nota", "")] + extra).strip(", ") if "nota" in cab else ""
         filas.append({
             "ticker": tk,
             "tipo": tp,
@@ -63,6 +67,7 @@ def leer_csv():
             "objetivo": num(d.get("objetivo")),
             "objetivo2": num(d.get("objetivo2")),
             "stop": num(d.get("stop")),
+            "nota": nota,
         })
     return filas
 
@@ -187,7 +192,76 @@ def indicadores(c, h, l, v):
     return o
 
 
+def eventos(c, h, l, v):
+    c = c.dropna()
+    if len(c) < 60:
+        return []
+    h = h.reindex(c.index).fillna(c)
+    l = l.reindex(c.index).fillna(c)
+    v = v.reindex(c.index)
+    ma50, ma200 = c.rolling(50).mean(), c.rolling(200).mean()
+    pc = c.shift(1)
+    tr = pd.concat([h - l, (h - pc).abs(), (l - pc).abs()], axis=1).max(axis=1)
+    atr = tr.ewm(alpha=1 / 14, adjust=False).mean().shift(1)
+    vbase = v.rolling(20).mean().shift(1)
+    max12, min12 = h.rolling(252, min_periods=120).max().shift(1), l.rolling(252, min_periods=120).min().shift(1)
+    max3, min3 = h.rolling(63).max().shift(1), l.rolling(63).min().shift(1)
+    out = []
+    n = len(c)
+    previo = {}
+    for k in range(max(1, n - 63), n):
+        f = c.index[k].strftime("%Y-%m-%d")
+        p, q = c.iloc[k], c.iloc[k - 1]
+        hoy = {}
+        if np.isfinite(ma200.iloc[k]) and np.isfinite(ma200.iloc[k - 1]):
+            a, b = q - ma200.iloc[k - 1], p - ma200.iloc[k]
+            if a <= 0 < b:
+                out.append([f, "pos", "Cruzó hacia arriba su MA200"])
+            elif a >= 0 > b:
+                out.append([f, "neg", "Cruzó hacia abajo su MA200"])
+            a, b = ma50.iloc[k - 1] - ma200.iloc[k - 1], ma50.iloc[k] - ma200.iloc[k]
+            if a <= 0 < b:
+                out.append([f, "pos", "La MA50 cruzó arriba de la MA200"])
+            elif a >= 0 > b:
+                out.append([f, "neg", "La MA50 cruzó abajo de la MA200"])
+        if np.isfinite(max12.iloc[k]) and p > max12.iloc[k]:
+            hoy["max"] = "Nuevo máximo de 12 meses"
+        elif np.isfinite(max3.iloc[k]) and p > max3.iloc[k]:
+            hoy["max"] = "Rompió el máximo de 3 meses"
+        if np.isfinite(min12.iloc[k]) and p < min12.iloc[k]:
+            hoy["min"] = "Nuevo mínimo de 12 meses"
+        elif np.isfinite(min3.iloc[k]) and p < min3.iloc[k]:
+            hoy["min"] = "Perforó el mínimo de 3 meses"
+        for key, tipo in (("max", "pos"), ("min", "neg")):
+            if key in hoy and previo.get(key) != hoy[key]:
+                out.append([f, tipo, hoy[key]])
+        previo = hoy
+        mv = p / q - 1
+        if np.isfinite(atr.iloc[k]) and atr.iloc[k] > 0 and abs(p - q) >= 2.5 * atr.iloc[k]:
+            out.append([f, "pos" if mv > 0 else "neg", f"{'Subió' if mv > 0 else 'Bajó'} {abs(mv) * 100:.1f}% en el día".replace(".", ",") + f" ({abs(p - q) / atr.iloc[k]:.1f} ATR)".replace(".", ",")])
+        if np.isfinite(vbase.iloc[k]) and vbase.iloc[k] > 0 and v.iloc[k] >= 2.5 * vbase.iloc[k]:
+            out.append([f, "neu", f"Volumen {v.iloc[k] / vbase.iloc[k]:.1f} veces el promedio".replace(".", ",")])
+    return out[-15:]
+
+
+def balances():
+    res = {}
+    for q in (DATA / "fichas").glob("*.json"):
+        try:
+            j = json.loads(q.read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        f = (j.get("ultimo_balance") or {}).get("fecha")
+        if f and j.get("ticker"):
+            res[j["ticker"]] = f
+    return res
+
+
 def evaluar_idea(x, c, h, l, ind):
+    x = dict(x)
+    if x["tipo"] == "N":
+        for k in ("objetivo", "objetivo2", "stop"):
+            x[k] = None
     o = dict(x)
     o["vence"] = plazo_vence(x["desde"], x["plazo"])
     c = c.dropna()
@@ -216,8 +290,8 @@ def evaluar_idea(x, c, h, l, ind):
         pierde = (p - x["stop"]) if ow else (x["stop"] - p)
         if pierde > 0:
             o["rb"] = r(gana / pierde, 2)
-    estado, cuando = "Vigente", None
-    if d0 is not None:
+    estado, cuando = ("Vigente" if x["tipo"] != "N" else "Neutral"), None
+    if d0 is not None and x["tipo"] != "N":
         hh = h.reindex(c.index)[c.index > d0].fillna(c)
         ll = l.reindex(c.index)[c.index > d0].fillna(c)
         eventos = []
@@ -244,7 +318,7 @@ def evaluar_idea(x, c, h, l, ind):
                 estado, cuando = e_[1], e_[0]
                 if stops and stops[0][0] > e_[0]:
                     o["stop_despues"] = stops[0][0].strftime("%Y-%m-%d")
-    if estado == "Vigente" and o["vence"] and o["vence"] < dt.date.today().isoformat():
+    if estado in ("Vigente", "Neutral") and o["vence"] and o["vence"] < dt.date.today().isoformat():
         estado = "Plazo vencido"
     o["estado"] = estado
     if cuando is not None:
@@ -261,9 +335,14 @@ def main():
     vacio = pd.Series(dtype=float)
     col = lambda df, t: df[t] if t in df.columns else vacio
     out = {}
+    bal = balances()
     for t in tks:
         try:
             ind = indicadores(col(C, t), col(H, t), col(L, t), col(V, t))
+            if ind:
+                ind["eventos"] = eventos(col(C, t), col(H, t), col(L, t), col(V, t))
+                if t in bal:
+                    ind["balance"] = bal[t]
         except Exception as e:
             print(f"{t}: {e}", file=sys.stderr)
             ind = None
