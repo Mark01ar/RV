@@ -479,6 +479,9 @@ main{padding-left:28px;padding-right:28px}
 .hy .sem{display:inline-flex;gap:5px;margin-right:8px;vertical-align:middle}.hy .sem i{width:11px;height:11px;border-radius:50%;background:#28304f}
 .hy .sem i.verde{background:var(--pos);box-shadow:0 0 10px rgba(127,214,160,.6)}.hy .sem i.amarillo{background:var(--amb);box-shadow:0 0 10px rgba(232,184,96,.6)}.hy .sem i.rojo{background:var(--neg);box-shadow:0 0 10px rgba(240,122,122,.6)}
 .hy section{margin-bottom:40px}
+.tec{font-weight:700;font-size:12px;white-space:nowrap}.tec-ow{color:var(--pos)}.tec-uw{color:var(--neg)}
+.tlad{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px;margin-top:8px}.tlad td{padding:5px 6px;border-bottom:1px solid var(--line);text-align:right}.tlad td.l{text-align:left}.tlad tr.hoy td{font-weight:700;background:var(--panel2)}.tlad tr.obj td.l{color:var(--pos)}.tlad tr.stp td.l{color:var(--neg)}.tlad tr.ma td.l{color:var(--blue)}
+.hy .id .tl{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:10px;font-size:12.5px;color:var(--muted)}.hy .id .tl b{color:var(--text);font-weight:600}.hy .id .tl i{font-style:normal}
 .hy .sh{position:relative;padding-bottom:12px;margin-bottom:18px;display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .hy .sh:after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,var(--sc) 0,color-mix(in srgb,var(--sc) 25%,transparent) 30%,transparent 100%)}
 .hy .kick{font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--sc);display:flex;align-items:center;gap:8px;margin-bottom:4px}
@@ -794,6 +797,7 @@ function hyCuando(f){
   const d = new Date(f+"T12:00:00"); return `el ${["domingo","lunes","martes","miércoles","jueves","viernes","sábado"][d.getDay()]} ${d.getDate()}`;
 }
 function hoyTab(m){
+  if (!TEC){ cargarTec().then(()=>{ if (tab==="hoy") hoyTab(m); }); }
   if (HY===undefined){ m.innerHTML = `<p class="mut">Cargando…</p>`; fetch("data/hoy.json?v="+Date.now()).then(r=>r.ok?r.json():null).catch(()=>null).then(j=>{ HY=j; if (tab==="hoy") hoyTab(m); }); return; }
   if (!HY){ m.innerHTML = `<div class="card"><p class="mut">Todavía no hay datos de Hoy. Se generan los días hábiles a las 10:00, 13:00, 16:00 y 19:00.</p></div>`; return; }
   const h = HY, md = h.mercado?.datos||{}, sem = M?.semaforo, ar = h.argentina||{};
@@ -857,7 +861,7 @@ function hoyTab(m){
       : `<div class="pq"><a href="${esc(p.url)}" target="_blank" rel="noopener"><div class="q"><span>${esc(p.pregunta)}</span><b>${Math.round(p.p*100)}%</b></div><div class="trk"><i style="width:${(p.p*100).toFixed(0)}%"></i></div></a></div>`).join("")}</div>
     <p class="nota-pie">Son apuestas, no pronósticos: sirven para ver qué espera el mercado y cuánto cambió en la semana.</p></div>` : "";
   m.innerHTML = `<div class="hy"><div class="hola"><div><h1>${titulo}</h1><p>Lo que pasó y lo que viene, <b>en 5 minutos</b>.</p></div><span class="upd"><i></i>Actualizado ${hyHora(h.actualizado)}${hyDia(h.actualizado)!==hoyS?` del ${hyFecha(hyDia(h.actualizado))}`:""} · próxima ${hyProxima()}</span></div>
-    <div class="frase">${hyFrase(h)}</div>${kp}${sec2}<section class="dos">${sec3}${sec4}</section>${sec1}</div>`;
+    <div class="frase">${hyFrase(h)}</div>${kp}${sec2}<section class="dos">${sec3}${sec4}</section>${sec1}${hyTecnico()}</div>`;
   m.querySelectorAll("[data-hyt]").forEach(a=>a.onclick=ev=>{ ev.preventDefault(); const e = hyEmp(a.dataset.hyt); if (!e) return; EST.sel=e.ticker; EST.ftab=a.dataset.hyf||"resumen"; EST.bloque=null; EST.vista=null; tab="empresas"; navegar(); window.scrollTo(0,0); render(); });
   m.querySelectorAll("[data-hyf]").forEach(b=>b.onclick=()=>{ EST.hyf=b.dataset.hyf; EST.hyabre=false; hoyTab(m); });
 
@@ -1415,12 +1419,13 @@ const mini = v => sofa(v, "smini");
 async function lista(m){
   if (!E){ m.innerHTML = `<div class="soon"><h2>Lista</h2>Todavía no hay datos. Se generan con la próxima actualización.</div>`; return; }
   if (!FX){ m.innerHTML = `<p class="mut">Cargando…</p>`; await cargarFX(); }
+  if (!TEC) await cargarTec();
   const L = E.empresas, mot = b => FX.empresas?.[b]?.motores || [];
   const usados = FX.factores.filter(f=>L.some(x=>mot(x.byma).some(z=>z.f===f.id)));
   const q = (EST.lq||"").toLowerCase();
   const rows = L.filter(x=>(!q || (x.byma+" "+x.ticker+" "+x.nombre).toLowerCase().includes(q)) && (!EST.lb || BQDE(x.byma)?.id===EST.lb)
     && (!EST.lm || (EST.lm==="ninguno" ? !mot(x.byma).length : mot(x.byma).some(z=>z.f===EST.lm))) && (!EST.liq || x.liquidez===EST.liq) && (EST.lp==null || EST.lp==="" || perfil(x)===+EST.lp));
-  const V = {general:x=>x.notas?.general, perfil:x=>perfil(x), ...Object.fromEntries(SUBN.map(([k])=>[k, x=>x.notas?.[k]])), bloque:x=>BQDE(x.byma)?.nombre, pefwd:x=>x.val?.pe_fwd>0?x.val.pe_fwd:null, mueve:x=>mot(x.byma).map(z=>FX.F[z.f]?.nombre).join(" ")||null};
+  const V = {general:x=>x.notas?.general, perfil:x=>perfil(x), ...Object.fromEntries(SUBN.map(([k])=>[k, x=>x.notas?.[k]])), bloque:x=>BQDE(x.byma)?.nombre, pefwd:x=>x.val?.pe_fwd>0?x.val.pe_fwd:null, mueve:x=>mot(x.byma).map(z=>FX.F[z.f]?.nombre).join(" ")||null, tec:x=>tecOrden(x)};
   const val = x => (V[EST.sort]||(y=>y[EST.sort]))(x);
   rows.sort((a,b)=>{ const va=val(a), vb=val(b); if (va==null) return 1; if (vb==null) return -1; return (typeof va==="string" ? va.localeCompare(vb) : va-vb)*EST.dir; });
   const th = (k,t,c="") => `<th class="${c}" data-s="${k}">${t}${EST.sort===k?(EST.dir>0?" ▲":" ▼"):""}</th>`;
@@ -1431,6 +1436,7 @@ async function lista(m){
     <dt>Calidad, Solidez, Crecim., Valuac., Tendencia, Analistas</dt><dd>Las notas de 1 a 10 que arman la nota general. Tocá el encabezado para ordenar por cada una.</dd>
     <dt>Lo mueve</dt><dd>Los factores que la mueven más allá del mercado, con relación sólida. ✔: firme. Vacío: se mueve sobre todo por su propio negocio.</dd>
     <dt>vs MA200</dt><dd>Distancia al promedio de las últimas 200 ruedas.</dd>
+    <dt>Técnico</dt><dd>Tu idea técnica cargada en data/tecnico.csv: OW o UW con la distancia al objetivo, o si ya tocó objetivo o stop. Si no cargaste ninguna, en gris la tendencia de las medias: alcista, bajista o mixta. Detalle en la pestaña Técnico de cada ficha.</dd>
     <dt>P/E esp.</dt><dd>Precio sobre la ganancia que esperan los analistas para los próximos 12 meses.</dd>
     <dt>Premio</dt><dd>Cuánto más caro (+) o barato (−) cotiza el CEDEAR frente al CCL implícito de todo el mercado.</dd></dl></details>
   <div class="bar">
@@ -1442,11 +1448,11 @@ async function lista(m){
     <button class="btn" id="ecmp" style="margin:0" ${CMP.length<2?"disabled":""}>Comparar${CMP.length?` (${CMP.length})`:""}</button>${CMP.length?`<button class="btn" id="elim" style="margin:0">Limpiar</button>`:""}
     <span class="count">${rows.length} de ${L.length}</span>
   </div>
-  <div class="wrap lwrap"><table class="ltab"><thead><tr><th></th>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("bloque","Bloque","l")}${th("general","Nota")}${th("perfil","Perfil","l")}${SUBN.map(([k,t])=>th(k,t,"c-a sub")).join("")}${th("mueve","Lo mueve","l")}${th("vs_ma200","vs MA200")}${th("pefwd","P/E esp.")}${th("premio","Premio")}${th("liquidez","Liquidez","l c-liq")}${th("proximo_balance","Balance","c-bal")}</tr></thead>
+  <div class="wrap lwrap"><table class="ltab"><thead><tr><th></th>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("bloque","Bloque","l")}${th("general","Nota")}${th("perfil","Perfil","l")}${SUBN.map(([k,t])=>th(k,t,"c-a sub")).join("")}${th("mueve","Lo mueve","l")}${th("vs_ma200","vs MA200")}${th("tec","Técnico","l")}${th("pefwd","P/E esp.")}${th("premio","Premio")}${th("liquidez","Liquidez","l c-liq")}${th("proximo_balance","Balance","c-bal")}</tr></thead>
   <tbody>${rows.map(x=>{ const ms = mot(x.byma); return `<tr data-e="${esc(x.ticker)}" style="cursor:pointer"><td><input type="checkbox" class="cmpk" data-c="${esc(x.ticker)}" ${CMP.includes(x.ticker)?"checked":""}></td>
     <td class="tk l lt">${logoImg(x.byma,"logo-s logo-l")}${esc(x.byma)}</td><td class="nm l ln">${esc(x.nombre)}</td><td class="l mut">${esc(BQDE(x.byma)?.nombre||"—")}</td><td>${chip(x.notas?.general)}</td><td class="l">${perfTag(x)}</td>${SUBN.map(([k])=>`<td class="c-a sub">${mini(x.notas?.[k])}</td>`).join("")}
     <td class="l lm">${ms.length?ms.map(z=>`${esc(FX.F[z.f]?.nombre||z.f)}${okm(FX.empresas[x.byma].f[z.f]?.v)}`).join(" · "):'<span class="mut">—</span>'}</td>
-    <td class="${cls(x.vs_ma200)}">${pct(x.vs_ma200,0)}</td><td>${x.val?.pe_fwd>0?nx(x.val.pe_fwd)+"x":"—"}</td>
+    <td class="${cls(x.vs_ma200)}">${pct(x.vs_ma200,0)}</td><td class="l">${tecCelda(x)}</td><td>${x.val?.pe_fwd>0?nx(x.val.pe_fwd)+"x":"—"}</td>
     <td class="${x.premio>0.03?"neg":x.premio<-0.03?"pos":""}">${pct(x.premio)}</td><td class="l c-liq"><span class="tag ${(x.liquidez||"").split(" ")[0]}">${esc(x.liquidez)}</span></td><td class="c-bal">${fch2(x.proximo_balance)}</td></tr>`; }).join("")}</tbody></table></div>`;
   const re = ()=>lista(m);
   m.querySelector("#lq").oninput = e=>{EST.lq=e.target.value; re(); const i=m.querySelector("#lq"); i.focus(); i.setSelectionRange(i.value.length,i.value.length);};
@@ -1612,7 +1618,7 @@ function barras(an){
 
 function kv(pares){ return `<div class="kv">${pares.map(([k,v,c])=>`<div><span>${k}</span><b class="${c||""}">${v}</b></div>`).join("")}</div>`; }
 
-const FTABS = [["resumen","Resumen"],["narrativa","Narrativa"],["sensib","Qué la mueve"],["analisis","Análisis"],["numeros","Números y valuación"],["mercado","Analistas y mercado"]];
+const FTABS = [["resumen","Resumen"],["narrativa","Narrativa"],["sensib","Qué la mueve"],["analisis","Análisis"],["numeros","Números y valuación"],["mercado","Analistas y mercado"],["tecnico","Técnico"]];
 const FGRUPO = {resumen:["resumen"], narrativa:["narrativa"], sensib:["sensib"], analisis:["nicho","analisis","vigilar"], numeros:["numeros","valuacion"], mercado:["analistas","posicion","cedear"]};
 const FVIEJA = {nicho:"analisis", vigilar:"analisis", valuacion:"numeros", analistas:"mercado", cedear:"mercado", posicion:"mercado"};
 const logoImg = (b, cls="logo") => `<img class="${cls}${(LM||{})[b]?" osc":""}" src="data/logos/${encodeURIComponent(b)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} sinlogo',textContent:'${esc(b).slice(0,2)}'}))">`;
@@ -1824,6 +1830,77 @@ async function comparador(m){
 }
 
 let DESC = null, NARR = null, IDEAS = null;
+let TEC = null;
+async function cargarTec(){
+  if (TEC) return;
+  let j = null;
+  try{ const r = await fetch("data/tecnico.json?v="+Date.now()); j = r.ok ? await r.json() : null; }catch(e){ j = null; }
+  TEC = j || {tickers:{}, ideas:[]};
+  TEC.I = {}; (TEC.ideas||[]).forEach(x=>{ TEC.I[x.ticker] = x; });
+}
+const tecDe = x => TEC?.tickers?.[x.ticker] || TEC?.tickers?.[x.byma];
+const tecIdea = x => TEC?.I?.[x.ticker] || TEC?.I?.[x.byma];
+const TECEST = {"Vigente":"var(--accent)","Objetivo alcanzado":"var(--pos)","Objetivo 2 alcanzado":"var(--pos)","Stop tocado":"var(--neg)","Plazo vencido":"var(--muted)","Sin precio":"var(--muted)"};
+const tusd = v => v==null ? "—" : "US$ "+num(v,2);
+const TECCORTO = {"Objetivo alcanzado":"Objetivo","Objetivo 2 alcanzado":"Objetivo 2","Stop tocado":"Stop","Plazo vencido":"Vencida"};
+function tecCelda(x){
+  const i = tecIdea(x), t = tecDe(x);
+  if (i) return `<span class="tec tec-${i.tipo==="OW"?"ow":"uw"}">${i.tipo==="OW"?"▲":"▼"} ${i.tipo}</span>${i.estado&&i.estado!=="Vigente"?` <small style="color:${TECEST[i.estado]||"var(--muted)"}">${esc(TECCORTO[i.estado]||i.estado)}</small>`:i.a_objetivo!=null?` <small class="mut" title="Distancia al objetivo">${pct(i.a_objetivo,0)}</small>`:""}`;
+  return t?.tendencia ? `<span class="mut">${t.tendencia}</span>` : `<span class="mut">—</span>`;
+}
+const tecOrden = x => { const i = tecIdea(x); if (i) return i.tipo==="OW"?3:-3; const t = tecDe(x)?.tendencia; return t==="Alcista"?1:t==="Bajista"?-1:t==="Mixta"?0:null; };
+const TECAYUDA = `<details class="help" style="margin-top:10px"><summary>Cómo se cargan o se cambian</summary><p class="mut small">Están en el archivo <b>data/tecnico.csv</b> del repositorio, aparte de las recomendaciones de <b>ideas.csv</b>. Una línea por idea, con estas columnas separadas por coma: <b>ticker,tipo,desde,plazo,objetivo,objetivo2,stop</b>. Por ejemplo: <b>NVDA,OW,2026-11-18,3 meses,210,230,172</b>. El ticker es el de EE.UU.; tipo, OW o UW; la fecha, año-mes-día; el plazo puede ser "6 semanas", "3 meses", "1 año" o una fecha (2027-03-31). Objetivo 2 y stop son opcionales: si no van, dejá el lugar vacío entre comas. Los precios son los de la acción en EE.UU., en dólares, los mismos que ves en TradingView; no los del CEDEAR. Para editarlo desde GitHub: abrí el archivo, tocá el lápiz ("Edit this file"), cambiá la línea y apretá "Commit changes". Se recalcula solo al guardar y todos los días hábiles después del cierre de Wall Street.</p></details>`;
+function panelTecnico(f){
+  const k = {ticker:f.ticker, byma:f.byma}, t = tecDe(k), i = tecIdea(k);
+  if (!t) return `<section class="card"><h3>Análisis técnico</h3><p class="mut">Todavía no hay datos técnicos para esta empresa. Se calculan los días hábiles después del cierre de Wall Street.</p>${TECAYUDA}</section>`;
+  const p = t.precio, ow = i?.tipo==="OW", nv = t.niveles||{};
+  const dd = v => v==null ? "" : ` <small class="${cls(v)}">${pct(v)}</small>`;
+  let vista;
+  if (i){
+    const ec = TECEST[i.estado]||"var(--muted)", fav = i.ret==null ? null : (ow ? i.ret : -i.ret);
+    vista = `<div class="card"><h3>Tu visión técnica</h3>
+      <div style="margin-bottom:8px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><span class="nv-pos nv-${ow?"ow":"uw"}">${ow?"▲ Sobreponderar (OW)":"▼ Subponderar (UW)"} · desde ${fch2(i.desde)}</span><span class="ver" style="color:${ec};border-color:${ec};margin:0">${esc(i.estado||"—")}${i.estado_fecha?` · ${fch2(i.estado_fecha)}`:""}</span></div>
+      ${kv([["Plazo", /^\d{4}-\d{2}-\d{2}$/.test(i.plazo||"")?`hasta el ${fch2(i.plazo)}`:i.plazo?`${esc(i.plazo)}${i.vence?` <small class="mut">(vence ${fch2(i.vence)})</small>`:""}`:"—"],["Precio al cargarla", tusd(i.precio_desde)],["Desde entonces", `${pct(i.ret)}${i.ret!=null?` <small class="mut">${fav>=0?"a favor":"en contra"}</small>`:""}`, cls(fav)],
+        ["Objetivo", i.objetivo?`${tusd(i.objetivo)}${dd(i.a_objetivo)}`:"—"], ...(i.objetivo2?[["Objetivo 2", `${tusd(i.objetivo2)}${dd(i.a_objetivo2)}`]]:[]),
+        ["Stop", i.stop?`${tusd(i.stop)}${dd(i.a_stop)}`:"—"], ["Stop en ATR", i.stop_atr==null?"—":`${nx(i.stop_atr,1)} días de movimiento`], ["Riesgo / beneficio", i.rb==null?"—":`1 a ${nx(i.rb,1)}`, i.rb==null?"":i.rb>=2?"pos":i.rb<1?"neg":""]])}
+      ${i.stop_despues?`<div class="aviso">Después de llegar al objetivo también tocó el stop (${fch2(i.stop_despues)}).</div>`:""}</div>`;
+  } else {
+    vista = `<div class="card"><h3>Tu visión técnica</h3><p class="mut">No tenés una idea técnica cargada para esta empresa. Abajo, cómo cargarla.</p>${TECAYUDA}</div>`;
+  }
+  const cruce = t.cruce ? `${t.cruce==="dorado"?"MA50 arriba de MA200":"MA50 abajo de MA200"}${t.cruce_fecha?` <small class="mut">desde ${fch2(t.cruce_fecha)}</small>`:""}` : "—";
+  const medias = `<div class="card"><h3>Medias móviles <span class="mut">· tendencia ${esc((t.tendencia||"—").toLowerCase())}</span></h3>
+    ${kv([["Precio", tusd(p)],["MA20", `${tusd(t.ma20)}${dd(t.d20)}`],["MA50", `${tusd(t.ma50)}${dd(t.d50)}`],["MA200", `${tusd(t.ma200)}${dd(t.d200)}`],["Cruce", cruce, t.cruce==="dorado"?"pos":t.cruce==="muerte"?"neg":""],["Pendiente MA200 (1 mes)", pct(t.pend200), cls(t.pend200)]])}
+    <p class="mut small" style="margin-top:10px">Al lado de cada media, cuánto está el precio arriba (+) o abajo (−) de ella. Tendencia alcista: precio arriba de la MA50 y la MA50 arriba de la MA200; bajista, al revés; mixta, cualquier otra combinación.</p></div>`;
+  const L = [];
+  const add = (n, v, c="") => { if (v!=null && v>0) L.push({n, v, c}); };
+  [["12m","12 meses"],["3m","3 meses"],["1m","1 mes"]].forEach(([q,tt])=>{ if (nv[q]){ add(`Máximo ${tt}`, nv[q].max); add(`Mínimo ${tt}`, nv[q].min); } });
+  add("MA50", t.ma50, "ma"); add("MA200", t.ma200, "ma");
+  if (i){ add("Tu objetivo", i.objetivo, "obj"); add("Tu objetivo 2", i.objetivo2, "obj"); add("Tu stop", i.stop, "stp"); }
+  const G = [];
+  L.sort((a,b)=>b.v-a.v).forEach(z=>{ const g = G.find(y=>Math.abs(y.v/z.v-1)<0.0005 && y.c===z.c); if (g) g.n += " · "+z.n.replace(/^(Máximo|Mínimo) /,""); else G.push({...z}); });
+  const idx = G.findIndex(z=>z.v<p);
+  G.splice(idx<0?G.length:idx, 0, {n:"Precio hoy", v:p, c:"hoy"});
+  const escalera = `<div class="card"><h3>Soportes, resistencias y niveles</h3>
+    <table class="tlad"><tbody>${G.map(z=>`<tr class="${z.c}"><td class="l">${esc(z.n)}</td><td>${tusd(z.v)}</td><td class="${z.c==="hoy"?"":cls(z.v/p-1)}">${z.c==="hoy"?"":pct(z.v/p-1)}</td></tr>`).join("")}</tbody></table>
+    <p class="mut small" style="margin-top:10px">Ordenados de mayor a menor. Arriba del precio, posibles resistencias; abajo, posibles soportes. La última columna es cuánto tendría que moverse para llegar a cada uno. Máximos y mínimos usan los extremos de cada rueda.</p></div>`;
+  const vol = `<div class="card"><h3>Volumen y volatilidad</h3>
+    ${kv([["Volumen de la última rueda", t.vol_rel==null?"—":`${nx(t.vol_rel,1)} veces el promedio`, t.vol_rel>=1.5?"pos":""],["Últimas 5 ruedas", t.vol_5d==null?"—":`${nx(t.vol_5d,1)} veces el promedio`],
+      ["ATR (14 ruedas)", t.atr==null?"—":`${tusd(t.atr)} <small class="mut">${pct(t.atr_pct).replace("+","")} por día</small>`],["Stop a 2 ATR, si comprás", t.atr==null?"—":tusd(p-2*t.atr)],["Stop a 2 ATR, si vendés", t.atr==null?"—":tusd(p+2*t.atr)]])}
+    <p class="mut small" style="margin-top:10px">El promedio de volumen es el de las 20 ruedas anteriores: una ruptura con 1,5 veces o más tiene más respaldo. El ATR es cuánto se mueve la acción en un día normal, contando los saltos de apertura; un stop a menos de 1 ATR suele saltar por ruido.</p></div>`;
+  return `<section class="fgrid">${vista}${medias}</section><section class="fgrid">${escalera}${vol}</section>
+    <p class="mut small">Precios de la acción en EE.UU., en dólares, al cierre del ${fch2(t.fecha)}. El CEDEAR sigue a ese precio convertido por el CCL.</p>`;
+}
+function hyTecnico(){
+  const ti = [...(TEC?.ideas||[])].sort((a,b)=>(a.tipo===b.tipo?0:a.tipo==="OW"?-1:1) || (a.desde<b.desde?1:-1));
+  const tcard = x => { const e = hyEmp(x.ticker), c = x.tipo==="OW"?"var(--pos)":"var(--neg)", ec = TECEST[x.estado]||"var(--muted)", fav = x.ret==null?null:(x.tipo==="UW"?-x.ret:x.ret);
+    return `<div class="id" style="--c:${c}"><div class="t"><a data-hyt="${esc(x.ticker)}" data-hyf="tecnico">${esc(e?.byma||x.ticker)}</a><span class="tg">${x.tipo}</span><span class="n" style="color:${ec}">${esc(x.estado||"")}</span></div>
+      <div class="nm">${esc(e?.nombre||"")}${e?" · ":""}desde ${hyFecha(x.desde)}${/^\d{4}-\d{2}-\d{2}$/.test(x.plazo||"")?` · hasta el ${hyFecha(x.plazo)}`:`${x.plazo?` · ${esc(x.plazo)}`:""}${x.vence?` (vence ${hyFecha(x.vence)})`:""}`}</div>
+      <div class="rv"><div class="r ${cls(fav)}">${pct(fav)}<small>${x.tipo==="UW"?"a favor si la acción baja":"precio desde que la cargaste"}</small></div></div>
+      <div class="tl">${x.objetivo?`<span>Objetivo <b>${tusd(x.objetivo)}</b> <i class="${cls(x.tipo==="UW"?-x.a_objetivo:x.a_objetivo)}">${pct(x.a_objetivo,0)}</i></span>`:""}${x.stop?`<span>Stop <b>${tusd(x.stop)}</b> <i>${pct(x.a_stop,0)}</i></span>`:""}${x.rb!=null?`<span>R/B <b>1 a ${nx(x.rb,1)}</b></span>`:""}</div></div>`; };
+  return `<section><div class="sh" style="--sc:var(--hd)"><div><div class="kick"><em>05</em>Tu mirada técnica</div><h2>Ideas técnicas</h2><p>Lo que cargás desde TradingView: plazo, objetivo y stop, con el precio de EE.UU. al último cierre</p></div></div>
+    ${ti.length?`<div class="ideas">${ti.map(tcard).join("")}</div>`:`<p class="mut">Todavía no cargaste ideas técnicas.</p>`}
+    ${TECAYUDA}</section>`;
+}
 function cicloAviso(f){
   const c = f.ciclo_val; if (!c?.estado) return "";
   const xx = z => z==null ? "—" : nx(z)+"x";
@@ -1874,6 +1951,7 @@ async function ficha(m, t){
   }
   if (!FX) await cargarFX();
   await cargarNarr();
+  await cargarTec();
   if (!DESC){ try{ const r = await fetch("data/desc_es.json?v="+Date.now()); DESC = r.ok ? await r.json() : {}; }catch(e){ DESC = {}; } }
   const f = FCACHE[t], x = E.empresas.find(z=>z.ticker===t) || {};
   const volver = `<button class="btn" id="fv">${EST.bloque?"← Volver al bloque":"← Volver"}</button>`;
@@ -2041,6 +2119,8 @@ async function ficha(m, t){
       ${[["Este año","0y"],["Próximo año","+1y"]].map(([t_,p])=>`<tr><td class="l">${t_}</td><td>${a["eps_"+p]==null?"—":nx(a["eps_"+p],2)}</td>${["7","30","90"].map(d=>`<td class="${cls(a[`rev_${p}_${d}`])}">${pct(a[`rev_${p}_${d}`])}</td>`).join("")}</tr>`).join("")}
       </tbody></table><p class="mut small">Revisiones en los últimos 30 días: ${a.suben_30d??0} suben, ${a.bajan_30d??0} bajan. Crecimiento esperado próximo año: ventas ${pct(a.crec_ventas_1y,0)}, ganancias ${pct(a.crec_eps_1y,0)}.</p></div>
       <div class="card"><h3>Últimos balances</h3>${sorp}</div></section>`;
+  } else if (sub==="tecnico"){
+    cuerpo = panelTecnico(f);
   } else if (sub==="posicion"){
     const p = f.posicion || {};
     cuerpo = `<section class="fgrid"><div class="card"><h3>Venta en corto</h3>
