@@ -479,8 +479,6 @@ main{padding-left:28px;padding-right:28px}
 .hy .sem{display:inline-flex;gap:5px;margin-right:8px;vertical-align:middle}.hy .sem i{width:11px;height:11px;border-radius:50%;background:#28304f}
 .hy .sem i.verde{background:var(--pos);box-shadow:0 0 10px rgba(127,214,160,.6)}.hy .sem i.amarillo{background:var(--amb);box-shadow:0 0 10px rgba(232,184,96,.6)}.hy .sem i.rojo{background:var(--neg);box-shadow:0 0 10px rgba(240,122,122,.6)}
 .hy section{margin-bottom:40px}
-.tlad tr.zv td.l{color:var(--hd)}.tlad thead td{font-size:11px;border-bottom:1px solid var(--line)}
-.vp{display:grid;grid-template-columns:minmax(80px,1fr) auto;gap:1px 10px;align-items:center;font-family:var(--mono);font-size:11px}.vp span{white-space:nowrap}.vb{height:7px;position:relative}.vb i{position:absolute;left:0;top:0;bottom:0;background:color-mix(in srgb,var(--muted) 45%,transparent);border-radius:2px}.vb i.n{background:var(--blue)}.vb i.poc{background:var(--accent)}.vb.hoy{outline:1px solid var(--text);outline-offset:1px;border-radius:2px}
 .trv{display:inline-block;white-space:nowrap;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;color:var(--rc);border:1px solid color-mix(in srgb,var(--rc) 55%,transparent);background:color-mix(in srgb,var(--rc) 12%,transparent)}
 .trg{display:inline-block;width:64px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--neg),var(--accent),var(--pos));opacity:.85;position:relative;vertical-align:middle}.trg i{position:absolute;top:-3px;width:3px;height:12px;background:var(--text);border-radius:2px;transform:translateX(-50%)}
 .tnov{max-width:260px;white-space:normal;font-size:12px}
@@ -1890,11 +1888,8 @@ async function tecnicoTab(m){
   const rows = L.filter(z=>F[EST.tf](z) && (!q || (z.x.byma+" "+z.x.ticker+" "+z.x.nombre).toLowerCase().includes(q)) && (!EST.tb || BQDE(z.x.byma)?.id===EST.tb));
   const rng = z => { const n = z.t?.niveles?.["3m"]; return n && n.max>n.min ? Math.min(1, Math.max(0, (z.t.precio-n.min)/(n.max-n.min))) : null; };
   const ult = z => (z.R.mot[0]) || (z.t?.eventos||[]).slice(-1)[0] || null;
-  const zres = z => { const a = (z.t?.zonas||[]); if (a.some(w=>w.rol==="dentro")) return 0; const r_ = a.filter(w=>w.rol==="resistencia").map(w=>w.dist); return r_.length ? Math.min(...r_) : null; };
-  const zsop = z => { const a = (z.t?.zonas||[]); if (a.some(w=>w.rol==="dentro")) return 0; const r_ = a.filter(w=>w.rol==="soporte").map(w=>w.dist); return r_.length ? Math.max(...r_) : null; };
-  const zcel = (v, z) => v==null ? `<span class="mut">—</span>` : v===0 && (z.t?.zonas||[]).some(w=>w.rol==="dentro") ? `<span style="color:var(--accent)">En zona</span>` : `<span class="${cls(v)}">${pct(v,0)}</span>`;
   const V = {byma:z=>z.x.byma, nombre:z=>z.x.nombre, vision:z=>z.i?({OW:2,N:0,UW:-2})[z.i.tipo]:null, desde:z=>z.i?.desde, rev:z=>z.R.prio||null, obj:z=>z.i?.a_objetivo, stop:z=>z.i?.a_stop,
-    tend:z=>({Alcista:1,Mixta:0,Bajista:-1})[z.t?.tendencia], d50:z=>z.t?.d50, d200:z=>z.t?.d200, rng, vol:z=>z.t?.vol_rel, zr:zres, zs:zsop, nov:z=>ult(z)?.[0]};
+    tend:z=>({Alcista:1,Mixta:0,Bajista:-1})[z.t?.tendencia], d50:z=>z.t?.d50, d200:z=>z.t?.d200, rng, vol:z=>z.t?.vol_rel, nov:z=>ult(z)?.[0]};
   if (!EST.tsort){ EST.tsort = "rev"; EST.tdir = -1; }
   const val = V[EST.tsort];
   rows.sort((a,b)=>{ const va=val(a), vb=val(b); if (va==null&&vb==null) return 0; if (va==null) return 1; if (vb==null) return -1; return (typeof va==="string" ? va.localeCompare(vb) : va-vb)*EST.tdir; });
@@ -1910,7 +1905,6 @@ async function tecnicoTab(m){
       <td class="${cls(t?.d50)}">${pct(t?.d50,0)}</td><td class="${cls(t?.d200)}">${pct(t?.d200,0)}</td>
       <td>${rp==null?"—":`<span class="trg" title="Dónde está el precio entre el mínimo y el máximo de 3 meses"><i style="left:${(rp*100).toFixed(0)}%"></i></span>`}</td>
       <td class="${t?.vol_rel>=1.5?"pos":""}">${t?.vol_rel==null?"—":nx(t.vol_rel,1)+"x"}</td>
-      <td>${zcel(zres(z), z)}</td><td>${zcel(zsop(z), z)}</td>
       <td class="l tnov">${e?`<span style="color:${EVC[e[1]]||"var(--muted)"}">${esc(e[2])}</span> <small class="mut">${fch2(e[0])}</small>`:`<span class="mut">—</span>`}</td></tr>`; };
   m.innerHTML = `<section class="tec-top"><h2>Análisis técnico</h2><p class="mut">Tus análisis de TradingView, uno por empresa. Cada uno se revisa una vez por mes, o antes si pasa algo relevante: un balance, una ruptura o un cruce de medias.</p></section>
   <div class="tkp">
@@ -1924,15 +1918,14 @@ async function tecnicoTab(m){
     <input id="tq" placeholder="Buscar ticker o empresa" value="${esc(EST.tq||"")}">
     <select id="tb"><option value="">Todos los bloques</option>${BQ.bloques.map(b=>`<option value="${b.id}" ${b.id===EST.tb?"selected":""}>${esc(b.nombre)}</option>`).join("")}</select>
     <span class="count">${rows.length} de ${L.length}</span></div>
-  ${rows.length?`<div class="wrap lwrap"><table class="ltab"><thead><tr>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("vision","Tu visión","l")}${th("desde","Analizada")}${th("rev","Revisión","l")}${th("obj","Objetivo")}${th("stop","Stop")}${th("tend","Tendencia","l")}${th("d50","vs MA50")}${th("d200","vs MA200")}${th("rng","Rango 3 m.")}${th("vol","Volumen")}${th("zr","Resist. vol.")}${th("zs","Soporte vol.")}${th("nov","Último hecho","l")}</tr></thead>
+  ${rows.length?`<div class="wrap lwrap"><table class="ltab"><thead><tr>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("vision","Tu visión","l")}${th("desde","Analizada")}${th("rev","Revisión","l")}${th("obj","Objetivo")}${th("stop","Stop")}${th("tend","Tendencia","l")}${th("d50","vs MA50")}${th("d200","vs MA200")}${th("rng","Rango 3 m.")}${th("vol","Volumen")}${th("nov","Último hecho","l")}</tr></thead>
   <tbody>${rows.map(fila).join("")}</tbody></table></div>`:`<div class="card"><p class="mut">${EST.tf==="revisar"?"No hay nada para revisar: todos tus análisis están al día.":EST.tf==="mias"?"Todavía no cargaste ningún análisis.":"No hay empresas con ese filtro."}</p></div>`}
   <details class="help" style="margin-top:12px"><summary>Cómo se lee</summary><dl>
-    <dt>Revisión</dt><dd>"Al día" muestra la fecha de la próxima revisión: un mes después del análisis. "Revisar · N días" significa que pasó el mes. "Revisar · N hechos" significa que, después de tu análisis, pasó algo de esta lista: presentó balance, tocó tu objetivo o tu stop, se venció el plazo, cruzó la MA200, la MA50 cruzó la MA200, rompió el máximo o perforó el mínimo de 3 o 12 meses, rompió o perforó una de sus zonas de alto volumen, se movió en un día más de 2,5 veces lo normal (ATR), o tuvo un volumen de 3 veces su promedio o más. Pasá el mouse por encima para ver el detalle, o abrí la ficha.</dd>
+    <dt>Revisión</dt><dd>"Al día" muestra la fecha de la próxima revisión: un mes después del análisis. "Revisar · N días" significa que pasó el mes. "Revisar · N hechos" significa que, después de tu análisis, pasó algo de esta lista: presentó balance, tocó tu objetivo o tu stop, se venció el plazo, cruzó la MA200, la MA50 cruzó la MA200, rompió el máximo o perforó el mínimo de 3 o 12 meses, se movió en un día más de 2,5 veces lo normal (ATR), o tuvo un volumen de 3 veces su promedio o más. Pasá el mouse por encima para ver el detalle, o abrí la ficha.</dd>
     <dt>Tendencia</dt><dd>Alcista: precio arriba de la MA50 y la MA50 arriba de la MA200. Bajista: al revés. Mixta: cualquier otra combinación.</dd>
     <dt>vs MA50, vs MA200</dt><dd>Cuánto está el precio arriba (+) o abajo (−) de cada media.</dd>
     <dt>Rango 3 m.</dt><dd>Dónde está el precio entre el mínimo (izquierda) y el máximo (derecha) de los últimos 3 meses.</dd>
     <dt>Volumen</dt><dd>Volumen de la última rueda contra el promedio de las 20 anteriores.</dd>
-    <dt>Resist. vol. y Soporte vol.</dt><dd>Cuánto falta para la zona de alto volumen más cercana por arriba (resistencia) y por abajo (soporte). Las zonas salen de las 5 velas de los últimos 2 años con más volumen comparado con su promedio; el detalle, en la ficha. "En zona": el precio está adentro de una.</dd>
     <dt>Último hecho</dt><dd>El hecho más reciente que pide revisión. En las empresas sin analizar, lo último que pasó en los últimos 3 meses: sirve para elegir cuál mirar.</dd></dl>
     <p class="mut small">Precios de la acción en EE.UU., en dólares, al cierre del ${fch2(Object.values(TEC.tickers||{})[0]?.fecha)}. Se recalculan los días hábiles después del cierre de Wall Street.</p></details>
   ${TECAYUDA}`;
@@ -1971,8 +1964,6 @@ function panelTecnico(f){
   const add = (n, v, c="") => { if (v!=null && v>0) L.push({n, v, c}); };
   [["12m","12 meses"],["3m","3 meses"],["1m","1 mes"]].forEach(([q,tt])=>{ if (nv[q]){ add(`Máximo ${tt}`, nv[q].max); add(`Mínimo ${tt}`, nv[q].min); } });
   add("MA50", t.ma50, "ma"); add("MA200", t.ma200, "ma");
-  add("VWAP 2 años", t.perfil?.vwap, "ma"); add("VWAP del año", t.perfil?.vwap_anio, "ma");
-  (t.zonas||[]).forEach(z=>add(`Zona de volumen ${fch2(z.fecha)} (${num(z.bajo,2)}–${num(z.alto,2)})`, (z.alto+z.bajo)/2, "zv"));
   if (i){ add("Tu objetivo", i.objetivo, "obj"); add("Tu objetivo 2", i.objetivo2, "obj"); add("Tu stop", i.stop, "stp"); }
   const G = [];
   L.sort((a,b)=>b.v-a.v).forEach(z=>{ const g = G.find(y=>Math.abs(y.v/z.v-1)<0.0005 && y.c===z.c); if (g) g.n += " · "+z.n.replace(/^(Máximo|Mínimo) /,""); else G.push({...z}); });
@@ -1985,36 +1976,9 @@ function panelTecnico(f){
     ${kv([["Volumen de la última rueda", t.vol_rel==null?"—":`${nx(t.vol_rel,1)} veces el promedio`, t.vol_rel>=1.5?"pos":""],["Últimas 5 ruedas", t.vol_5d==null?"—":`${nx(t.vol_5d,1)} veces el promedio`],
       ["ATR (14 ruedas)", t.atr==null?"—":`${tusd(t.atr)} <small class="mut">${pct(t.atr_pct).replace("+","")} por día</small>`],["Stop a 2 ATR, si comprás", t.atr==null?"—":tusd(p-2*t.atr)],["Stop a 2 ATR, si vendés", t.atr==null?"—":tusd(p+2*t.atr)]])}
     <p class="mut small" style="margin-top:10px">El promedio de volumen es el de las 20 ruedas anteriores: una ruptura con 1,5 veces o más tiene más respaldo. El ATR es cuánto se mueve la acción en un día normal, contando los saltos de apertura; un stop a menos de 1 ATR suele saltar por ruido.</p></div>`;
-  const zs = [...(t.zonas||[])].sort((a,b)=>b.alto-a.alto);
-  const ROL = {resistencia:["Resistencia","var(--neg)"], soporte:["Soporte","var(--pos)"], dentro:["Precio adentro","var(--accent)"]};
-  const zrows = []; let puesto = false;
-  zs.forEach(z=>{ if (!puesto && z.alto < p){ zrows.push(`<tr class="hoy"><td class="l">Precio hoy</td><td>${tusd(p)}</td><td></td><td></td><td></td></tr>`); puesto = true; }
-    zrows.push(`<tr><td class="l">${fch2(z.fecha)}</td><td>${num(z.bajo,2)}–${num(z.alto,2)}</td><td>${nx(z.vol_rel,1)}x</td><td class="${cls(z.dist)}">${z.rol==="dentro"?"—":pct(z.dist)}</td><td class="l" style="color:${ROL[z.rol][1]}">${ROL[z.rol][0]}</td></tr>`); });
-  if (zs.length && !puesto) zrows.push(`<tr class="hoy"><td class="l">Precio hoy</td><td>${tusd(p)}</td><td></td><td></td><td></td></tr>`);
-  const zonasC = `<div class="card"><h3>Zonas de alto volumen <span class="mut">· 2 años</span></h3>${zs.length?`<table class="tlad"><thead><tr><td class="l mut">Día</td><td class="mut">Zona (US$)</td><td class="mut">Volumen</td><td class="mut">Distancia</td><td class="l mut">Hoy es</td></tr></thead><tbody>${zrows.join("")}</tbody></table>`:`<p class="mut">No hubo días con volumen de 2 veces su promedio o más.</p>`}
-    <p class="mut small" style="margin-top:10px">Las 5 ruedas de los últimos 2 años con más volumen comparado con su promedio de las 20 anteriores (al menos 2 veces), separadas por una semana como mínimo. La zona va del mínimo al máximo de esa vela y se extiende hacia adelante: si el precio está abajo, es resistencia; si está arriba, soporte. Distancia: cuánto falta para el borde más cercano.</p></div>`;
-  const pf = t.perfil;
-  let perfilC = `<div class="card"><h3>Perfil de volumen <span class="mut">· 2 años</span></h3><p class="mut">Sin datos suficientes.</p></div>`;
-  if (pf?.hist?.length){
-    const nb = pf.hist.length, paso = (pf.max-pf.min)/nb, bin = v => v==null ? -1 : Math.min(nb-1, Math.max(0, Math.floor((v-pf.min)/paso)));
-    const nodo = {}; (pf.nodos||[]).forEach(z=>{ nodo[bin((z.desde+z.hasta)/2)] = z; });
-    const bh = bin(p), bv = bin(pf.vwap), ba = bin(pf.vwap_anio);
-    const filas = [];
-    for (let k=nb-1; k>=0; k--){
-      const z = nodo[k], et = [];
-      if (z) et.push(`<b style="color:${z.poc?"var(--accent)":"var(--blue)"}">${num(z.desde,0)}–${num(z.hasta,0)}</b> ${pct(z.peso,1).replace("+","")}${z.poc?" · máx.":""}`);
-      if (k===bh) et.push(`<b>◀ hoy ${num(p,2)}</b>`);
-      if (k===bv) et.push(`VWAP 2 años ${num(pf.vwap,2)}`);
-      if (k===ba && pf.vwap_anio) et.push(`VWAP del año ${num(pf.vwap_anio,2)}`);
-      filas.push(`<div class="vb ${k===bh?"hoy":""}"><i class="${z?(z.poc?"poc":"n"):""}" style="width:${Math.max(1,pf.hist[k]*100).toFixed(1)}%"></i></div><span>${et.join(" · ")}</span>`);
-    }
-    perfilC = `<div class="card"><h3>Perfil de volumen <span class="mut">· 2 años</span></h3>
-      <div class="vp"><span class="mut">${tusd(pf.max)}</span><span></span>${filas.join("")}<span class="mut">${tusd(pf.min)}</span><span></span></div>
-      <p class="mut small" style="margin-top:10px">Cuánto se operó en cada franja de precio desde el ${fch2(pf.desde)}. Cada barra es una franja de US$ ${num(paso,2)}. En azul, las 5 franjas con más volumen; en amarillo, la de más volumen de todas. El porcentaje es la parte del volumen total que pasó por esa franja. Donde se operó mucho suele haber soporte o resistencia, porque mucha gente tiene su precio de compra ahí. El VWAP es el precio promedio ponderado por volumen.</p></div>`;
-  }
   const evs = [...(t.eventos||[])].reverse();
   const hechos = `<section class="card"><h3>Hechos técnicos de los últimos 3 meses</h3>${evs.length?`<table class="tlad"><tbody>${evs.map(e=>`<tr><td class="l" style="width:90px">${fch2(e[0])}</td><td class="l" style="color:${EVC[e[1]]||"var(--muted)"}">${esc(e[2])}</td></tr>`).join("")}</tbody></table>`:`<p class="mut">Nada fuera de lo normal.</p>`}${t.balance?`<p class="mut small" style="margin-top:8px">Último balance: ${fch2(t.balance)}.</p>`:""}</section>`;
-  return `<section class="fgrid">${vista}${medias}</section><section class="fgrid">${zonasC}${perfilC}</section><section class="fgrid">${escalera}${vol}</section>${hechos}
+  return `<section class="fgrid">${vista}${medias}</section><section class="fgrid">${escalera}${vol}</section>${hechos}
     <p class="mut small">Precios de la acción en EE.UU., en dólares, al cierre del ${fch2(t.fecha)}. El CEDEAR sigue a ese precio convertido por el CCL.</p>`;
 }
 function cicloAviso(f){

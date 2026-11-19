@@ -93,7 +93,7 @@ def descargar(tickers):
         df = None
         for intento in range(3):
             try:
-                df = yf.download(lote, period="3y", interval="1d", auto_adjust=True,
+                df = yf.download(lote, period="15mo", interval="1d", auto_adjust=True,
                                  progress=False, threads=True, group_by="column")
                 break
             except Exception as e:
@@ -249,98 +249,6 @@ def eventos(c, h, l, v):
     return out[-15:]
 
 
-def zonas_volumen(c, h, l, v, n=5, ventana=504, minimo=2.0):
-    c = c.dropna()
-    if len(c) < 60:
-        return []
-    h = h.reindex(c.index).fillna(c)
-    l = l.reindex(c.index).fillna(c)
-    v = v.reindex(c.index)
-    base = v.rolling(20).mean().shift(1)
-    rel = (v / base).iloc[-ventana:].replace([np.inf, -np.inf], np.nan).dropna()
-    p = float(c.iloc[-1])
-    pos = {f: i for i, f in enumerate(c.index)}
-    elegidos = []
-    for f, x in rel.sort_values(ascending=False).items():
-        if len(elegidos) >= n or x < minimo:
-            break
-        if any(abs(pos[f] - pos[e]) < 5 for e in elegidos):
-            continue
-        elegidos.append(f)
-    out = []
-    for f in sorted(elegidos):
-        hi, lo = float(h[f]), float(l[f])
-        if p < lo:
-            rol, dist = "resistencia", lo / p - 1
-        elif p > hi:
-            rol, dist = "soporte", hi / p - 1
-        else:
-            rol, dist = "dentro", 0.0
-        out.append({"fecha": f.strftime("%Y-%m-%d"), "alto": r(hi, 2), "bajo": r(lo, 2), "cierre": r(c[f], 2),
-                    "vol_rel": r(rel[f], 1), "rol": rol, "dist": r(dist)})
-    return out
-
-
-def perfil_volumen(c, h, l, v, ventana=504, bins=40, n=5):
-    c = c.dropna()
-    if len(c) < 60:
-        return None
-    h = h.reindex(c.index).fillna(c).iloc[-ventana:]
-    l = l.reindex(c.index).fillna(c).iloc[-ventana:]
-    v = v.reindex(c.index).fillna(0).iloc[-ventana:]
-    cc = c.iloc[-ventana:]
-    lo, hi = float(l.min()), float(h.max())
-    if not hi > lo or v.sum() <= 0:
-        return None
-    bordes = np.linspace(lo, hi, bins + 1)
-    vol = np.zeros(bins)
-    for a, b, q in zip(l.values, h.values, v.values):
-        i0 = int(min(bins - 1, max(0, np.searchsorted(bordes, a, "right") - 1)))
-        i1 = int(min(bins - 1, max(0, np.searchsorted(bordes, b, "right") - 1)))
-        vol[i0:i1 + 1] += q / (i1 - i0 + 1)
-    tot = vol.sum()
-    picos = [i for i in range(bins) if vol[i] >= (vol[i - 1] if i else 0) and vol[i] >= (vol[i + 1] if i < bins - 1 else 0)]
-    picos = sorted(picos, key=lambda i: -vol[i])[:n]
-    tp = (h + l + cc) / 3
-    anio = cc.index >= pd.Timestamp(cc.index[-1].year, 1, 1)
-    va = float(v[anio].sum())
-    return {
-        "desde": cc.index[0].strftime("%Y-%m-%d"),
-        "min": r(lo, 2), "max": r(hi, 2),
-        "hist": [r(x / vol.max(), 3) for x in vol],
-        "nodos": sorted([{"desde": r(bordes[i], 2), "hasta": r(bordes[i + 1], 2), "peso": r(vol[i] / tot), "poc": i == picos[0]} for i in picos], key=lambda z: -z["desde"]),
-        "vwap": r(float((tp * v).sum() / v.sum()), 2),
-        "vwap_anio": r(float((tp[anio] * v[anio]).sum() / va), 2) if va > 0 else None,
-    }
-
-
-def eventos_zonas(c, zonas):
-    c = c.dropna()
-    n = len(c)
-    out = []
-    vistas = []
-    for z in sorted(zonas, key=lambda z: z["fecha"], reverse=True):
-        if any(min(z["alto"], w["alto"]) - max(z["bajo"], w["bajo"]) > 0.5 * (z["alto"] - z["bajo"]) for w in vistas):
-            continue
-        vistas.append(z)
-        d = pd.Timestamp(z["fecha"])
-        etiqueta = d.strftime("%d/%m/%y")
-        lado = 0
-        for k in range(n):
-            if c.index[k] <= d:
-                continue
-            p = c.iloc[k]
-            nuevo = 1 if p > z["alto"] else -1 if p < z["bajo"] else lado
-            if lado and nuevo != lado and k >= n - 63:
-                f = c.index[k].strftime("%Y-%m-%d")
-                if nuevo > 0:
-                    out.append([f, "pos", f"Rompió la zona de volumen del {etiqueta} (US$ {z['alto']:.2f})".replace(".", ",")])
-                else:
-                    out.append([f, "neg", f"Perforó la zona de volumen del {etiqueta} (US$ {z['bajo']:.2f})".replace(".", ",")])
-            lado = nuevo
-    return out
-
-
 def balances():
     res = {}
     for q in (DATA / "fichas").glob("*.json"):
@@ -437,11 +345,7 @@ def main():
         try:
             ind = indicadores(col(C, t), col(H, t), col(L, t), col(V, t))
             if ind:
-                zs = zonas_volumen(col(C, t), col(H, t), col(L, t), col(V, t))
-                ind["zonas"] = zs
-                ind["perfil"] = perfil_volumen(col(C, t), col(H, t), col(L, t), col(V, t))
-                ev = eventos(col(C, t), col(H, t), col(L, t), col(V, t)) + eventos_zonas(col(C, t), zs)
-                ind["eventos"] = sorted(ev, key=lambda e: e[0])[-18:]
+                ind["eventos"] = eventos(col(C, t), col(H, t), col(L, t), col(V, t))
                 if t in bal:
                     ind["balance"] = bal[t]
         except Exception as e:
