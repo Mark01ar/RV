@@ -19,6 +19,7 @@ jobs:
       - run: python tmp/series.py > tmp/log.txt 2>&1 || true; tail -40 tmp/log.txt
         env:
           FRED_API_KEY: ${{ secrets.FRED_API_KEY }}
+          SEC_UA: ${{ secrets.SEC_UA }}
       - run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
