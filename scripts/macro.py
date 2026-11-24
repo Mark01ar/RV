@@ -396,7 +396,7 @@ def main():
     }
     SALIDA.write_text(json.dumps(salida, ensure_ascii=False, separators=(",", ":")))
     sm = salida["semaforo"]
-    print(f"semaforo: {sm['estado']} ({sm['duracion']} meses) dist={sm['dist']:.3f} alarmas={len(sm['alarmas'])} "
+    print(f"semaforo: {sm['estado']} (desde {sm['desde_estado']}) dist={sm['dist']:.3f} alarmas={len(sm['alarmas'])} "
           f"regla={sm['resultados']['regla']['anual']:.3f} spy={sm['resultados']['spy']['anual']:.3f}")
     print(f"cambios de regimen: {salida['cambios']} con regla, {salida['cambios_sin_regla']} sin regla")
     print(f"regimen: {CUADRANTES[actual]['nombre']} (crudo {crudo}) g={g0:.2f} i={i0:.2f} probs={ {k: round(v, 2) for k, v in probs.items()} }")
