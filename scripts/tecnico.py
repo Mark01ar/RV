@@ -178,6 +178,15 @@ def indicadores(c, h, l, v):
         mx, mn = float(h.iloc[-n:].max()), float(l.iloc[-n:].min())
         niv[k] = {"max": r(mx, 4), "min": r(mn, 4), "a_max": r(p / mx - 1), "a_min": r(p / mn - 1)}
     o["niveles"] = niv
+    emas = {}
+    for n in (10, 20, 50, 100):
+        if len(c) < n + 10:
+            continue
+        e = c.ewm(span=n, adjust=False).mean()
+        pend = float(e.iloc[-1] / e.iloc[-6] - 1)
+        emas[str(n)] = {"v": r(e.iloc[-1], 4), "d": r(p / e.iloc[-1] - 1), "pend": r(pend),
+                        "est": 1 if pend > 0.002 else -1 if pend < -0.002 else 0}
+    o["ema"] = emas
     pc = c.shift(1)
     tr = pd.concat([h - l, (h - pc).abs(), (l - pc).abs()], axis=1).max(axis=1).dropna()
     if len(tr) >= 14:

@@ -482,6 +482,7 @@ main{padding-left:28px;padding-right:28px}
 .hy section{margin-bottom:40px}
 .trv{display:inline-block;white-space:nowrap;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:999px;color:var(--rc);border:1px solid color-mix(in srgb,var(--rc) 55%,transparent);background:color-mix(in srgb,var(--rc) 12%,transparent)}
 .trg{display:inline-block;width:64px;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--neg),var(--accent),var(--pos));opacity:.85;position:relative;vertical-align:middle}.trg i{position:absolute;top:-3px;width:3px;height:12px;background:var(--text);border-radius:2px;transform:translateX(-50%)}
+.emaf{font-size:13px;letter-spacing:3px;white-space:nowrap;cursor:help}.emaf i{font-style:normal}
 .tnov{max-width:260px;white-space:normal;font-size:12px}
 .tec-top h2{margin:0 0 4px}.tec-top p{margin:0 0 14px;font-size:13px}
 .tkp{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:14px}.tkp div{background:var(--panel);border-radius:12px;padding:10px 14px}.tkp span{display:block;color:var(--muted);font-size:11.5px}.tkp b{font-size:22px;font-weight:700}.tkp small{font-size:12px;color:var(--muted);font-weight:400}
@@ -1853,6 +1854,13 @@ const tecDe = x => TEC?.tickers?.[x.ticker] || TEC?.tickers?.[x.byma];
 const tecIdea = x => TEC?.I?.[x.ticker] || TEC?.I?.[x.byma];
 const TECEST = {"Vigente":"var(--accent)","Objetivo alcanzado":"var(--pos)","Objetivo 2 alcanzado":"var(--pos)","Stop tocado":"var(--neg)","Plazo vencido":"var(--muted)","Sin precio":"var(--muted)"};
 const tusd = v => v==null ? "—" : "US$ "+num(v,2);
+const EMAK = ["10","20","50","100"];
+const EMAE = {1:["▲","var(--pos)","Sube"], "-1":["▼","var(--neg)","Baja"], 0:["▶","var(--muted)","Lateral"]};
+function emaFlechas(e){
+  if (!e) return `<span class="mut">—</span>`;
+  const tt = EMAK.filter(k=>e[k]).map(k=>`EMA ${k}: ${EMAE[e[k].est][2]} (${pct(e[k].pend,1)} en 5 ruedas); precio ${pct(e[k].d,1)}`).join("\n");
+  return `<span class="emaf" title="${esc(tt)}">${EMAK.map(k=>e[k]?`<i style="color:${EMAE[e[k].est][1]}">${EMAE[e[k].est][0]}</i>`:`<i class="mut">·</i>`).join("")}</span>`;
+}
 const TECAYUDA = `<details class="help" style="margin-top:10px"><summary>Cómo cargar o cambiar un análisis</summary><p class="mut small">Se cargan en el archivo <b>data/tecnico.csv</b> del repositorio, aparte de las recomendaciones de <b>ideas.csv</b>. Una línea por empresa, con estas columnas separadas por coma: <b>ticker,tipo,desde,plazo,objetivo,objetivo2,stop,nota</b>. Por ejemplo: <b>NVDA,OW,2026-11-18,3 meses,175,190,140,Rebote en soporte de 145</b>.</p><ul class="mut small">
   <li><b>ticker:</b> el de EE.UU.</li>
   <li><b>tipo:</b> OW, UW o N. N es neutral: la analizaste pero no tomás posición.</li>
@@ -1896,7 +1904,7 @@ async function tecnicoTab(m){
   const rng = z => { const n = z.t?.niveles?.["3m"]; return n && n.max>n.min ? Math.min(1, Math.max(0, (z.t.precio-n.min)/(n.max-n.min))) : null; };
   const ult = z => (z.R.mot[0]) || (z.t?.eventos||[]).slice(-1)[0] || null;
   const V = {byma:z=>z.x.byma, nombre:z=>z.x.nombre, vision:z=>z.i?({OW:2,N:0,UW:-2})[z.i.tipo]:null, desde:z=>z.i?.desde, rev:z=>z.R.prio||null, obj:z=>z.i?.a_objetivo, stop:z=>z.i?.a_stop,
-    tend:z=>({Alcista:1,Mixta:0,Bajista:-1})[z.t?.tendencia], d50:z=>z.t?.d50, d200:z=>z.t?.d200, rng, vol:z=>z.t?.vol_rel, nov:z=>ult(z)?.[0]};
+    tend:z=>({Alcista:1,Mixta:0,Bajista:-1})[z.t?.tendencia], emas:z=>{ const e = z.t?.ema; if (!e) return null; return ["10","20","50","100"].reduce((a,k)=>a+(e[k]?.est||0),0) + (e["10"]?.pend||0); }, d50:z=>z.t?.d50, d200:z=>z.t?.d200, rng, vol:z=>z.t?.vol_rel, nov:z=>ult(z)?.[0]};
   if (!EST.tsort){ EST.tsort = "rev"; EST.tdir = -1; }
   const val = V[EST.tsort];
   rows.sort((a,b)=>{ const va=val(a), vb=val(b); if (va==null&&vb==null) return 0; if (va==null) return 1; if (vb==null) return -1; return (typeof va==="string" ? va.localeCompare(vb) : va-vb)*EST.tdir; });
@@ -1909,6 +1917,7 @@ async function tecnicoTab(m){
       <td>${i?.objetivo?`${tusd(i.objetivo)} <small class="${cls(i.tipo==="UW"?-i.a_objetivo:i.a_objetivo)}">${pct(i.a_objetivo,0)}</small>`:"—"}</td>
       <td>${i?.stop?`${tusd(i.stop)} <small class="mut">${pct(i.a_stop,0)}</small>`:"—"}</td>
       <td class="l">${t?.tendencia?`<span style="color:${({Alcista:"var(--pos)",Bajista:"var(--neg)"})[t.tendencia]||"var(--muted)"}">${t.tendencia}</span>`:"—"}</td>
+      <td class="l">${emaFlechas(t?.ema)}</td>
       <td class="${cls(t?.d50)}">${pct(t?.d50,0)}</td><td class="${cls(t?.d200)}">${pct(t?.d200,0)}</td>
       <td>${rp==null?"—":`<span class="trg" title="Dónde está el precio entre el mínimo y el máximo de 3 meses"><i style="left:${(rp*100).toFixed(0)}%"></i></span>`}</td>
       <td class="${t?.vol_rel>=1.5?"pos":""}">${t?.vol_rel==null?"—":nx(t.vol_rel,1)+"x"}</td>
@@ -1925,10 +1934,11 @@ async function tecnicoTab(m){
     <input id="tq" placeholder="Buscar ticker o empresa" value="${esc(EST.tq||"")}">
     <select id="tb"><option value="">Todos los bloques</option>${BQ.bloques.map(b=>`<option value="${b.id}" ${b.id===EST.tb?"selected":""}>${esc(b.nombre)}</option>`).join("")}</select>
     <span class="count">${rows.length} de ${L.length}</span></div>
-  ${rows.length?`<div class="wrap lwrap"><table class="ltab"><thead><tr>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("vision","Tu visión","l")}${th("desde","Analizada")}${th("rev","Revisión","l")}${th("obj","Objetivo")}${th("stop","Stop")}${th("tend","Tendencia","l")}${th("d50","vs MA50")}${th("d200","vs MA200")}${th("rng","Rango 3 m.")}${th("vol","Volumen")}${th("nov","Último hecho","l")}</tr></thead>
+  ${rows.length?`<div class="wrap lwrap"><table class="ltab"><thead><tr>${th("byma","CEDEAR","l")}${th("nombre","Empresa","l")}${th("vision","Tu visión","l")}${th("desde","Analizada")}${th("rev","Revisión","l")}${th("obj","Objetivo")}${th("stop","Stop")}${th("tend","Tendencia","l")}${th("emas","EMA 10·20·50·100","l")}${th("d50","vs MA50")}${th("d200","vs MA200")}${th("rng","Rango 3 m.")}${th("vol","Volumen")}${th("nov","Último hecho","l")}</tr></thead>
   <tbody>${rows.map(fila).join("")}</tbody></table></div>`:`<div class="card"><p class="mut">${EST.tf==="revisar"?"No hay nada para revisar: todos tus análisis están al día.":EST.tf==="mias"?"Todavía no cargaste ningún análisis.":"No hay empresas con ese filtro."}</p></div>`}
   <details class="help" style="margin-top:12px"><summary>Cómo se lee</summary><dl>
     <dt>Revisión</dt><dd>"Al día" muestra la fecha de la próxima revisión: un mes después del análisis. "Revisar · N días" significa que pasó el mes. "Revisar · N hechos" significa que, después de tu análisis, pasó algo de esta lista: presentó balance, tocó tu objetivo o tu stop, se venció el plazo, cruzó la MA200, la MA50 cruzó la MA200, rompió el máximo o perforó el mínimo de 3 o 12 meses, se movió en un día más de 2,5 veces lo normal (ATR), o tuvo un volumen de 3 veces su promedio o más. Pasá el mouse por encima para ver el detalle, o abrí la ficha.</dd>
+    <dt>EMA 10·20·50·100</dt><dd>Hacia dónde va cada media móvil exponencial de 10, 20, 50 y 100 ruedas, en ese orden: ▲ sube, ▼ baja, ▶ lateral. Compara la media con su valor de hace 5 ruedas: si se movió más de 0,2%, sube o baja; si no, lateral. Las cortas muestran lo de las últimas semanas; la de 100, lo de los últimos meses. Ordenando por esta columna quedan arriba las que tienen las cuatro subiendo.</dd>
     <dt>Tendencia</dt><dd>Alcista: precio arriba de la MA50 y la MA50 arriba de la MA200. Bajista: al revés. Mixta: cualquier otra combinación.</dd>
     <dt>vs MA50, vs MA200</dt><dd>Cuánto está el precio arriba (+) o abajo (−) de cada media.</dd>
     <dt>Rango 3 m.</dt><dd>Dónde está el precio entre el mínimo (izquierda) y el máximo (derecha) de los últimos 3 meses.</dd>
@@ -1966,7 +1976,8 @@ function panelTecnico(f){
   const cruce = t.cruce ? `${t.cruce==="dorado"?"MA50 arriba de MA200":"MA50 abajo de MA200"}${t.cruce_fecha?` <small class="mut">desde ${fch2(t.cruce_fecha)}</small>`:""}` : "—";
   const medias = `<div class="card"><h3>Medias móviles <span class="mut">· tendencia ${esc((t.tendencia||"—").toLowerCase())}</span></h3>
     ${kv([["Precio", tusd(p)],["MA20", `${tusd(t.ma20)}${dd(t.d20)}`],["MA50", `${tusd(t.ma50)}${dd(t.d50)}`],["MA200", `${tusd(t.ma200)}${dd(t.d200)}`],["Cruce", cruce, t.cruce==="dorado"?"pos":t.cruce==="muerte"?"neg":""],["Pendiente MA200 (1 mes)", pct(t.pend200), cls(t.pend200)]])}
-    <p class="mut small" style="margin-top:10px">Al lado de cada media, cuánto está el precio arriba (+) o abajo (−) de ella. Tendencia alcista: precio arriba de la MA50 y la MA50 arriba de la MA200; bajista, al revés; mixta, cualquier otra combinación.</p></div>`;
+    <p class="mut small" style="margin-top:10px">Al lado de cada media, cuánto está el precio arriba (+) o abajo (−) de ella. Tendencia alcista: precio arriba de la MA50 y la MA50 arriba de la MA200; bajista, al revés; mixta, cualquier otra combinación.</p>
+    ${t.ema?`<table class="tlad" style="margin-top:12px"><thead><tr><td class="l mut">Media exponencial</td><td class="mut">Valor</td><td class="mut">Precio vs. media</td><td class="l mut">Pendiente (5 ruedas)</td></tr></thead><tbody>${EMAK.filter(k=>t.ema[k]).map(k=>{ const e = t.ema[k], z = EMAE[e.est]; return `<tr><td class="l">EMA ${k}</td><td>${tusd(e.v)}</td><td class="${cls(e.d)}">${pct(e.d)}</td><td class="l" style="color:${z[1]}">${z[0]} ${z[2]} <small class="mut">${pct(e.pend,1)}</small></td></tr>`; }).join("")}</tbody></table>`:""}</div>`;
   const L = [];
   const add = (n, v, c="") => { if (v!=null && v>0) L.push({n, v, c}); };
   [["12m","12 meses"],["3m","3 meses"],["1m","1 mes"]].forEach(([q,tt])=>{ if (nv[q]){ add(`Máximo ${tt}`, nv[q].max); add(`Mínimo ${tt}`, nv[q].min); } });
