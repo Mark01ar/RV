@@ -216,6 +216,7 @@ td.lm{font-size:12px;white-space:normal;max-width:230px;min-width:170px;line-hei
 .ctile{position:relative}.vd{position:absolute;top:8px;right:9px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:999px;border:1px solid;cursor:help;letter-spacing:.03em}
 .vd.bull{color:#7ad19a;border-color:#7ad19a66;background:#7ad19a1a}.vd.bear{color:#ef7b7b;border-color:#ef7b7b66;background:#ef7b7b1a}.vd.neu{color:#9aa5c8;border-color:#9aa5c855}
 .ctile small.vdr{font-style:italic;color:#aab3d1;font-size:11px}
+.ctile small.tav{margin-top:4px;padding-top:5px;border-top:1px dashed var(--line);font-size:11px;color:#f0c674;line-height:1.35}.ctile small.tav .tavt{display:block;font-weight:700;font-style:normal;margin-bottom:2px}
 @media (max-width:640px){.vd{position:static;align-self:flex-start;margin-bottom:2px}}
 @media (max-width:640px){.ctiles{grid-template-columns:1fr 1fr;gap:8px}.ctile{padding:8px 9px}.ctile b{font-size:16px}.ctile small{font-size:10.5px}.cspk{height:26px}}
 .mot{padding:10px 0 12px;border-bottom:1px solid var(--line)}.mot:last-of-type{border-bottom:0}
@@ -1153,6 +1154,9 @@ async function cargarFX(){
   if (!FX) FX = {factores:[], bloques:{}, empresas:{}, regimen:{}};
   FX.F = Object.fromEntries((FX.factores||[]).map(f=>[f.id,f]));
   try{ const r = await fetch("data/ciclos.json?v="+Date.now()); CI = r.ok ? await r.json() : null; }catch(e){ CI = null; }
+  if (CI){ try{ const r = await fetch("data/trendforce_avisos.csv?v="+Date.now()); const t = r.ok ? await r.text() : "";
+    CI.avisos = t.trim().split(/\r?\n/).slice(1).map(l=>{ const v = l.split(","); return {f:v[0], tipo:(v[1]||"").trim().toLowerCase(), tono:(v[2]||"neu").trim(), texto:v.slice(3).join(",").trim()}; }).filter(a=>a.f&&a.texto).sort((a,b)=>a.f<b.f?-1:1);
+  }catch(e){ CI.avisos = []; } }
   return FX;
 }
 let CI = null;
@@ -1205,8 +1209,11 @@ function tiles(cf, bid){
   const ps = pronosSerie(cf.pronos_de || (cf.pronos ? bid : ""), cf.solo);
   if (ps){ const xs = ps.xs, u = xs[xs.length-1], pv = xs.slice(-5,-1).filter(x=>x.m!=null), mx = pv.length ? pv.reduce((a,b)=>b.m>a.m?b:a) : null;
     const fr = mx && u.m!=null && mx.m>15 && u.m<mx.m/2;
-    const vd = fr ? ["bear","La suba de precios se frena: en los ciclos de memoria pesa más que se frene que el nivel."] : u.m>5 ? ["bull","Se esperan precios más altos."] : u.m<0 ? ["bear","Se esperan precios más bajos."] : ["neu","Precios casi estables."];
-    out.push(`<div class="ctile" style="--tc:#e0c26a"><span class="ct-n">Precio ${ps.nom} esperado</span>${vdTag(vd)}<b>${rngT(u.a,u.b)}</b><small>${fr?`venía de ${rngT(mx.a,mx.b)} (${qtxt(mx.q)})`:"contra el trimestre anterior"}</small>${spk2(xs.slice(-12).map(x=>x.m), "#e0c26a", true)}<small class="vdr">${esc(vd[1])} <span class="mut">· ${qtxt(u.q)}</span></small></div>`); }
+    let vd = fr ? ["bear","La suba de precios se frena: en los ciclos de memoria pesa más que se frene que el nivel."] : u.m>5 ? ["bull","Se esperan precios más altos."] : u.m<0 ? ["bear","Se esperan precios más bajos."] : ["neu","Precios casi estables."];
+    const av = (CI.avisos||[]).filter(a=>a.tipo===ps.nom.toLowerCase() && a.f>(u.pub||""));
+    const ua = av[av.length-1];
+    if (ua) vd = [ua.tono, vd[1]];
+    out.push(`<div class="ctile" style="--tc:#e0c26a"><span class="ct-n">Precio ${ps.nom} esperado</span>${vdTag(vd)}<b>${rngT(u.a,u.b)}</b><small>${fr?`venía de ${rngT(mx.a,mx.b)} (${qtxt(mx.q)})`:"contra el trimestre anterior"}</small>${spk2(xs.slice(-12).map(x=>x.m), "#e0c26a", true)}<small class="vdr">${esc(vd[1])} <span class="mut">· ${qtxt(u.q)}</span></small>${ua?`<small class="tav" title="${esc(av.map(a=>fch2(a.f)+": "+a.texto).join("\n"))}"><span class="tavt">Aviso de TrendForce · ${fch2(ua.f)}${av.length>1?` (y ${av.length-1} más)`:""}</span>${esc(ua.texto)}</small>`:""}</div>`); }
   return `<div class="ctiles">${out.join("")}</div>`;
 }
 function cicloCard(f){
