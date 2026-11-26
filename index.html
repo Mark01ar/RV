@@ -1630,9 +1630,9 @@ function barras(an){
 
 function kv(pares){ return `<div class="kv">${pares.map(([k,v,c])=>`<div><span>${k}</span><b class="${c||""}">${v}</b></div>`).join("")}</div>`; }
 
-const FTABS = [["resumen","Resumen"],["narrativa","Narrativa"],["sensib","Qué la mueve"],["analisis","Análisis"],["numeros","Números y valuación"],["mercado","Analistas y mercado"],["tecnico","Técnico"]];
-const FGRUPO = {resumen:["resumen"], narrativa:["narrativa"], sensib:["sensib"], analisis:["nicho","analisis","vigilar"], numeros:["numeros","valuacion"], mercado:["analistas","posicion","cedear"]};
-const FVIEJA = {nicho:"analisis", vigilar:"analisis", valuacion:"numeros", analistas:"mercado", cedear:"mercado", posicion:"mercado"};
+const FTABS = [["resumen","Resumen"],["narrativa","Narrativa"],["sensib","Qué la mueve"],["numeros","Números y valuación"],["mercado","Analistas y mercado"],["tecnico","Técnico"]];
+const FGRUPO = {resumen:["resumen"], narrativa:["narrativa","nicho","vigilar"], sensib:["sensib"], numeros:["numeros","valuacion"], mercado:["analistas","posicion","cedear"]};
+const FVIEJA = {nicho:"narrativa", vigilar:"narrativa", analisis:"narrativa", valuacion:"numeros", analistas:"mercado", cedear:"mercado", posicion:"mercado"};
 const logoImg = (b, cls="logo") => `<img class="${cls}${(LM||{})[b]?" osc":""}" src="data/logos/${encodeURIComponent(b)}.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'${cls} sinlogo',textContent:'${esc(b).slice(0,2)}'}))">`;
 
 function analizar(f){
@@ -1727,18 +1727,6 @@ function analizar(f){
   return {tend, pts, motivos, fort: top(fort), ries: top(ries)};
 }
 
-function panelAnalisis(f){
-  const A = analizar(f);
-  const col = A.tend==="Mejora" ? "var(--pos)" : A.tend==="Empeora" ? "var(--neg)" : "var(--accent)";
-  const li = (l, c, vacio) => l.length ? `<ul class="alist">${l.map(t=>`<li><i style="background:${c}"></i>${t}</li>`).join("")}</ul>` : `<p class="mut">${vacio}</p>`;
-  return `<section class="card"><h3>Tendencia del negocio</h3>
-    <div class="ver" style="color:${col};border-color:${col};font-size:15px;padding:5px 14px">${A.tend==="Mejora"?"▲ ":A.tend==="Empeora"?"▼ ":"= "}${A.tend}</div>
-    <p class="mut small" style="margin:8px 0 6px">Compara el último trimestre contra el mismo del año anterior, las revisiones de los analistas, el último balance y la deuda. Mejora o empeora cuando hay al menos dos señales netas en la misma dirección.</p>
-    ${A.motivos.length?`<ul class="alist">${A.motivos.map(m=>`<li><i style="background:${m.c>0?"var(--pos)":"var(--neg)"}"></i>${m.txt}</li>`).join("")}</ul>`:`<p class="mut">Sin cambios importantes respecto del año anterior.</p>`}</section>
-  <section class="fgrid"><div class="card"><h3>Fortalezas</h3>${li(A.fort,"var(--pos)","No se destacan fortalezas claras en los datos.")}</div>
-  <div class="card"><h3>Riesgos</h3>${li(A.ries,"var(--neg)","No se destacan riesgos claros en los datos.")}</div></section>
-  <p class="mut small">Análisis automático a partir de los números de la ficha; se actualiza cada semana. No reemplaza leer el balance ni las noticias.</p>`;
-}
 
 function bandaPE(b, hoy){
   const v = b.pe, n = v.length, W=620, H=240, pl=40, pb=22;
@@ -1788,7 +1776,7 @@ function panelVigilar(f){
   if ((a.bajan_30d||0) > (a.suben_30d||0)+1) al.push(["neg",`Los analistas vienen bajando estimaciones: ${a.bajan_30d} bajan contra ${a.suben_30d||0} que suben en 30 días.`]);
   if ((a.suben_30d||0) > (a.bajan_30d||0)+3) al.push(["pos",`Los analistas vienen subiendo estimaciones: ${a.suben_30d} suben contra ${a.bajan_30d||0} que bajan en 30 días.`]);
   if (p.short_cambio!=null && p.short_cambio>0.2) al.push(["neg",`El interés corto subió ${pct(p.short_cambio,0).replace("+","")} en el último mes.`]);
-  const A = analizar(f); if (A.tend==="Empeora") al.push(["neg","La tendencia del negocio empeora (ver Análisis)."]);
+  const A = analizar(f); if (A.tend==="Empeora") al.push(["neg","La tendencia del negocio empeora (ver Narrativa)."]);
   if (f.liquidez==="Baja"||f.liquidez==="Muy baja") al.push(["accent",`Liquidez ${f.liquidez.toLowerCase()} en BYMA: conviene operar con órdenes límite.`]);
   const key = "rvnota:"+f.ticker; let nota = ""; try{ nota = localStorage.getItem(key)||""; }catch(e){}
   return `<section class="fgrid"><div class="card"><h3>Qué vigilar <span class="mut">· automático, con los datos de esta semana</span></h3>
@@ -2023,7 +2011,11 @@ function panelNarrativa(f){
   const pos = id ? `<span class="nv-pos nv-${id.tipo==="OW"?"ow":"uw"}">${id.tipo==="OW"?"▲ Sobreponderar (OW)":"▼ Subponderar (UW)"}${id.desde?` · desde ${fch2(id.desde)}`:""}</span>` : "";
   const lista = (l, c) => `<ul class="nv-l">${l.map(x=>Array.isArray(x)?`<li style="--nc:${c}"><b>${esc(x[0])}</b><span>${esc(x[1])}</span></li>`:`<li style="--nc:${c}"><span>${x}</span></li>`).join("")}</ul>`;
   const vacio = `<p class="mut">Nada claro en los datos.</p>`;
-  const auto = (titB, titR) => `<section class="fgrid"><div class="card nv-c" data-sc="#45c27c"><h3>${titB}</h3>${aB.length?lista(aB,"var(--pos)"):vacio}</div>
+  const tcol = A.tend==="Mejora" ? "var(--pos)" : A.tend==="Empeora" ? "var(--neg)" : "var(--accent)";
+  const tendencia = `<section class="card"><h3>Lo que dicen los números <span class="mut">· automático, se actualiza cada semana</span></h3>
+    <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap"><span class="mut small">Tendencia del negocio</span><span class="ver" style="color:${tcol};border-color:${tcol};font-size:15px;padding:5px 14px;margin:0">${A.tend==="Mejora"?"▲ ":A.tend==="Empeora"?"▼ ":"= "}${A.tend}</span></div>
+    <p class="mut small" style="margin:8px 0 0">Compara el último trimestre contra el mismo del año anterior, las revisiones de los analistas, el último balance y la deuda. Mejora o empeora cuando hay al menos dos señales netas en la misma dirección. Abajo, los puntos a favor y en contra que salen de los datos.</p></section>`;
+  const auto = (titB, titR) => tendencia + `<section class="fgrid"><div class="card nv-c" data-sc="#45c27c"><h3>${titB}</h3>${aB.length?lista(aB,"var(--pos)"):vacio}</div>
     <div class="card nv-c" data-sc="#ef6b6b"><h3>${titR}</h3>${aR.length?lista(aR,"var(--neg)"):vacio}</div></section>`;
   if (!N) return `<section class="card nv-top" data-sc="#e8c264"><h3>Narrativa <span class="mut">· automática, con los datos de la ficha</span></h3>
       ${pos?`<div style="margin-bottom:8px">${pos}</div>`:""}<p class="mut small" style="margin:0">Todavía no hay una narrativa escrita para esta empresa. Abajo, los argumentos que surgen de los números; se actualizan cada semana.</p></section>
@@ -2039,7 +2031,7 @@ function panelNarrativa(f){
       <div class="card nv-c" data-sc="#ef6b6b"><h3>Bearish case <span class="mut">· por qué puede bajar</span></h3>${lista(N.bear||[],"var(--neg)")}</div></section>
     <section class="fgrid"><div class="card" data-sc="#e8c264"><h3>En la práctica</h3><p class="nv-prac">${esc(N.practica||"")}</p></div>
       <div class="card" data-sc="#6ea8ff"><h3>Qué mirar</h3>${mirar.length?`<ul class="nv-m">${mirar.map(([d,t])=>`<li><b>${fch2(d)}</b><span>${esc(t)}</span></li>`).join("")}</ul>`:`<p class="mut">Sin fechas próximas cargadas.</p>`}</div></section>
-    ${auto("Lo que dicen los números: a favor","Lo que dicen los números: en contra")}
+    ${auto("A favor","En contra")}
     <p class="mut small">La narrativa escrita resume noticias y balances a la fecha indicada; los puntos de abajo salen solos de los datos de la ficha y se actualizan cada semana. No es una recomendación.</p>`;
 }
 async function ficha(m, t){
@@ -2124,8 +2116,6 @@ async function ficha(m, t){
   const parte = sub => { let cuerpo = "";
   if (sub==="resumen"){
     cuerpo = `<section class="fgrid">${negocio}${balance}</section><section class="fgrid">${perfil}${precio}</section>`;
-  } else if (sub==="analisis"){
-    cuerpo = panelAnalisis(f);
   } else if (sub==="numeros"){
     const banco = f.tipo==="banco";
     const roic = r => { const cap=(r.patrimonio||0)+(r.deuda||0)-(r.caja||0); return r.ebit!=null && cap>0 ? r.ebit*0.79/cap : null; };
