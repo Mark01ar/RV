@@ -117,13 +117,16 @@ def descargar(tickers):
     viejos = [t for t, f in ultimo.items() if f is None or (tope - f).days > 3]
     for t in viejos:
         try:
-            h = yf.Ticker(t).history(period="2y", interval="1d", auto_adjust=True)
+            h = yf.download(t, period="10y", interval="1d", auto_adjust=True, progress=False)
+            if isinstance(h.columns, pd.MultiIndex):
+                h.columns = h.columns.get_level_values(0)
         except Exception as e:
             print(f"reintento {t}: {e}", file=sys.stderr)
             continue
         if h is None or h.empty:
             continue
         h.index = pd.to_datetime(h.index).tz_localize(None).normalize()
+        h = h[h.index >= h.index.max() - pd.Timedelta(days=800)]
         lv = h["Close"].last_valid_index() if "Close" in h.columns else None
         if lv is None or lv <= (ultimo.get(t) or pd.Timestamp.min):
             continue
