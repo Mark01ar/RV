@@ -137,6 +137,22 @@ def descargar(tickers):
                 df[t] = h[c].reindex(idx)
                 out[c] = df
         print(f"{t}: completado por separado hasta {h.index.max():%Y-%m-%d}")
+    C = out["Close"]
+    ultimo = C.apply(lambda s: s.last_valid_index())
+    viejos = [t for t, f in ultimo.items() if f is None or (tope - f).days > 3]
+    if viejos:
+        try:
+            import requests
+            vivo = {x.get("symbol"): x.get("c") for x in requests.get("https://data912.com/live/usa_stocks", timeout=30).json() if isinstance(x, dict) and x.get("c")}
+        except Exception as e:
+            print(f"data912: {e}", file=sys.stderr)
+            vivo = {}
+        for t in viejos:
+            px = vivo.get(t)
+            if px:
+                for c in ("Close", "High", "Low"):
+                    out[c].loc[tope, t] = float(px)
+                print(f"{t}: Yahoo sin datos desde {ultimo.get(t)}; cierre {tope:%Y-%m-%d} tomado de data912 ({px})")
     return out
 
 
