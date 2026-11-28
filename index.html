@@ -1156,7 +1156,7 @@ async function cargarFX(){
   FX.F = Object.fromEntries((FX.factores||[]).map(f=>[f.id,f]));
   try{ const r = await fetch("data/ciclos.json?v="+Date.now()); CI = r.ok ? await r.json() : null; }catch(e){ CI = null; }
   if (CI){ try{ const r = await fetch("data/trendforce_avisos.csv?v="+Date.now()); const t = r.ok ? await r.text() : "";
-    CI.avisos = t.trim().split(/\r?\n/).slice(1).map(l=>{ const v = l.split(","); return {f:v[0], tipo:(v[1]||"").trim().toLowerCase(), tono:(v[2]||"neu").trim(), texto:v.slice(3).join(",").trim()}; }).filter(a=>a.f&&a.texto).sort((a,b)=>a.f<b.f?-1:1);
+    CI.avisos = t.trim().split(/\r?\n/).slice(1).map(l=>{ const v = l.split(","); return {f:v[0], tipo:(v[1]||"").trim().toLowerCase(), tono:(v[2]||"neu").trim(), fuente:(v[3]||"").trim()||"TrendForce", texto:v.slice(4).join(",").trim()}; }).filter(a=>a.f&&a.texto).sort((a,b)=>a.f<b.f?-1:1);
   }catch(e){ CI.avisos = []; } }
   return FX;
 }
@@ -1214,7 +1214,7 @@ function tiles(cf, bid){
     const av = (CI.avisos||[]).filter(a=>a.tipo===ps.nom.toLowerCase() && a.f>(u.pub||""));
     const ua = av[av.length-1];
     if (ua) vd = [ua.tono, vd[1]];
-    out.push(`<div class="ctile" style="--tc:#e0c26a"><span class="ct-n">Precio ${ps.nom} esperado</span>${vdTag(vd)}<b>${rngT(u.a,u.b)}</b><small>${fr?`venía de ${rngT(mx.a,mx.b)} (${qtxt(mx.q)})`:"contra el trimestre anterior"}</small>${spk2(xs.slice(-12).map(x=>x.m), "#e0c26a", true)}<small class="vdr">${esc(vd[1])} <span class="mut">· ${qtxt(u.q)}</span></small>${ua?`<small class="tav" title="${esc(av.map(a=>fch2(a.f)+": "+a.texto).join("\n"))}"><span class="tavt">Aviso de TrendForce · ${fch2(ua.f)}${av.length>1?` (y ${av.length-1} más)`:""}</span>${esc(ua.texto)}</small>`:""}</div>`); }
+    out.push(`<div class="ctile" style="--tc:#e0c26a"><span class="ct-n">Precio ${ps.nom} esperado</span>${vdTag(vd)}<b>${rngT(u.a,u.b)}</b><small>${fr?`venía de ${rngT(mx.a,mx.b)} (${qtxt(mx.q)})`:"contra el trimestre anterior"}</small>${spk2(xs.slice(-12).map(x=>x.m), "#e0c26a", true)}<small class="vdr">${esc(vd[1])} <span class="mut">· ${qtxt(u.q)}</span></small>${ua?`<small class="tav" title="${esc(av.map(a=>fch2(a.f)+" · "+a.fuente+": "+a.texto).join("\n"))}"><span class="tavt">Aviso de ${esc(ua.fuente)} · ${fch2(ua.f)}${av.length>1?` (y ${av.length-1} más)`:""}</span>${esc(ua.texto)}</small>`:""}</div>`); }
   return `<div class="ctiles">${out.join("")}</div>`;
 }
 function cicloCard(f){

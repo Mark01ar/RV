@@ -1,4 +1,5 @@
-fecha,tipo,tono,texto
-2026-11-18,dram,bear,Las negociaciones de DRAM para celulares están frenadas y el faltante se achica: las subas de precio van a ser más chicas cada trimestre.
-2026-11-19,nand,bear,Bajó la suba de NAND para oct–dic de +15/20% a +8/13% y ahora espera una caída de 0 a 5% en ene–mar 2027; desde abr–jun bajarían todas las categorías.
-2026-11-25,dram,bear,Escenario base: las subas se achican en 2027, quedan planas en el 2.º semestre y los precios bajan en 2028. En el escenario malo, caídas más fuertes y antes.
+fecha,tipo,tono,fuente,texto
+2026-11-18,dram,bear,TrendForce,Las negociaciones de DRAM para celulares están frenadas y el faltante se achica: las subas de precio van a ser más chicas cada trimestre.
+2026-11-19,nand,bear,TrendForce,Bajó la suba de NAND para oct–dic de +15/20% a +8/13% y ahora espera una caída de 0 a 5% en ene–mar 2027; desde abr–jun bajarían todas las categorías.
+2026-11-25,dram,bear,TrendForce,Escenario base: las subas se achican en 2027, quedan planas en el 2.º semestre y los precios bajan en 2028. En el escenario malo, caídas más fuertes y antes.
+2026-11-25,nand,bear,inSpectrum (precio spot),El chip TLC de 512Gb cayó cerca de 38% desde su máximo de marzo y aceleró la baja desde octubre; los de 1Tb bajan menos (cerca de 18%). Igual siguen 4 a 5 veces arriba de mediados de 2025.
