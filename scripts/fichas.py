@@ -155,7 +155,7 @@ def sec_anual(ticker, cik):
                     prom.setdefault(pd.Timestamp(e["end"]), float(e["val"]))
     df = pd.DataFrame(out)
     df = df[df.index >= df.index.max() - pd.Timedelta(days=365 * 10 + 30)]
-    s = pd.Series(dtype=float)
+    s = pd.Series(dtype=float, index=pd.DatetimeIndex([]))
     if sh:
         s = pd.DataFrame(sh, columns=["end", "accn", "filed", "v"]).groupby(["end", "accn", "filed"], dropna=False)["v"].sum().reset_index()
         s = s.sort_values(["end", "filed"]).groupby("end")["v"].last().sort_index()
@@ -166,6 +166,8 @@ def sec_anual(ticker, cik):
         p = [x for d, x in prom.items() if abs((d - e).days) <= 20]
         return p[0] if p else np.nan
     df["sh"] = [acciones(e) for e in df.index]
+    if ticker.upper() == "BRK-B":
+        df["sh"] = df["sh"] * 1500
     df["fuente"] = "SEC"
     return df
 
