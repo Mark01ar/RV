@@ -108,7 +108,32 @@ def descargar(tickers):
             if isinstance(x, pd.Series):
                 x = x.to_frame(lote[0])
             campos[c].append(x)
-    return {c: (pd.concat(v, axis=1) if v else pd.DataFrame()) for c, v in campos.items()}
+    out = {c: (pd.concat(v, axis=1) if v else pd.DataFrame()) for c, v in campos.items()}
+    C = out["Close"]
+    if C.empty:
+        return out
+    ultimo = C.apply(lambda s: s.last_valid_index())
+    tope = ultimo.max()
+    viejos = [t for t, f in ultimo.items() if f is None or (tope - f).days > 3]
+    for t in viejos:
+        try:
+            h = yf.Ticker(t).history(period="15mo", interval="1d", auto_adjust=True)
+        except Exception as e:
+            print(f"reintento {t}: {e}", file=sys.stderr)
+            continue
+        if h is None or h.empty:
+            continue
+        h.index = pd.to_datetime(h.index).tz_localize(None).normalize()
+        if h.index.max() <= (ultimo.get(t) or pd.Timestamp.min):
+            continue
+        idx = out["Close"].index.union(h.index)
+        for c in campos:
+            if c in h.columns:
+                df = out[c].reindex(idx)
+                df[t] = h[c].reindex(idx)
+                out[c] = df
+        print(f"{t}: completado por separado hasta {h.index.max():%Y-%m-%d}")
+    return out
 
 
 def plazo_vence(desde, plazo):

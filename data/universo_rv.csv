@@ -60,7 +60,7 @@ BHP,BHP,BHP,2:1,INCLUIDO,
 BIDU,BIDU,Baidu,11:1,EXCLUIDO,Emergente (China)
 BIIB,BIIB,Biogen,13:1,INCLUIDO,
 BIOX,BIOX,Bioceres,1:1,EXCLUIDO,Emergente (Argentina)
-BK,BK,BNY Mellon,2:1,INCLUIDO,
+BK,BNY,BNY Mellon,2:1,INCLUIDO,Ticker en EE.UU. cambió de BK a BNY el 21/05/2026
 BKNG,BKNG,Booking,700:1,INCLUIDO,
 BKR,BKR,Baker Hughes,7:1,INCLUIDO,
 BMNR,BMNR,Bitmine,8:1,EXCLUIDO,Vehiculo cripto
@@ -237,7 +237,7 @@ MELI,MELI,MercadoLibre,120:1,EXCLUIDO,Emergente (Latam)
 META,META,Meta,24:1,INCLUIDO,
 MFG,MFG,Mizuho,1:1,INCLUIDO,
 MGLU3,MGLU3,Magazine Luiza,1:1,EXCLUIDO,Cotiza en B3
-MMC,MMC,Marsh McLennan,16:1,INCLUIDO,
+MMC,MRSH,Marsh McLennan,16:1,INCLUIDO,Ticker en EE.UU. cambió de MMC a MRSH el 14/01/2026
 MMM,MMM,3M,10:1,INCLUIDO,
 MO,MO,Altria,4:1,INCLUIDO,
 MOS,MOS,Mosaic,5:1,INCLUIDO,
@@ -319,7 +319,7 @@ RGTI,RGTI,Rigetti,2:1,INCLUIDO,
 RIO,RIO,Rio Tinto,8:1,INCLUIDO,
 RIOT,RIOT,Riot Platforms,3:1,INCLUIDO,Mineria cripto / data centers
 RKLB,RKLB,Rocket Lab,12:1,INCLUIDO,
-ROKU,ROKU,Roku,13:1,INCLUIDO,
+ROKU,ROKU,Roku,13:1,EXCLUIDO,Comprada por Fox el 06/11/2026: dejó de cotizar
 ROST,ROST,Ross Stores,4:1,INCLUIDO,
 RSP,RSP,Invesco S&P 500 Equal Weight,30:1,EXCLUIDO,ETF
 RTX,RTX,RTX,5:1,INCLUIDO,

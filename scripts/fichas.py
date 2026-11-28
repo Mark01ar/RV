@@ -142,12 +142,30 @@ def sec_anual(ticker, cik):
     sh = []
     for u, lst in f.get("facts", {}).get("dei", {}).get("EntityCommonStockSharesOutstanding", {}).get("units", {}).items():
         sh += [(pd.Timestamp(e["end"]), e.get("accn"), e.get("filed"), float(e["val"])) for e in lst]
+    prom = {}
+    for n in ("WeightedAverageNumberOfDilutedSharesOutstanding", "WeightedAverageNumberOfSharesOutstandingBasic"):
+        for u, lst in g.get(n, {}).get("units", {}).items():
+            if u != "shares":
+                continue
+            for e in lst:
+                if e.get("form") not in ("10-K", "10-K/A") or e.get("fp") != "FY" or "start" not in e:
+                    continue
+                d = (pd.Timestamp(e["end"]) - pd.Timestamp(e["start"])).days
+                if 330 <= d <= 400:
+                    prom.setdefault(pd.Timestamp(e["end"]), float(e["val"]))
     df = pd.DataFrame(out)
     df = df[df.index >= df.index.max() - pd.Timedelta(days=365 * 10 + 30)]
+    s = pd.Series(dtype=float)
     if sh:
         s = pd.DataFrame(sh, columns=["end", "accn", "filed", "v"]).groupby(["end", "accn", "filed"], dropna=False)["v"].sum().reset_index()
         s = s.sort_values(["end", "filed"]).groupby("end")["v"].last().sort_index()
-        df["sh"] = [s[s.index <= e + pd.Timedelta(days=120)].iloc[-1] if (s.index <= e + pd.Timedelta(days=120)).any() else np.nan for e in df.index]
+    def acciones(e):
+        v = s[(s.index >= e - pd.Timedelta(days=30)) & (s.index <= e + pd.Timedelta(days=120))]
+        if len(v):
+            return float(v.iloc[-1])
+        p = [x for d, x in prom.items() if abs((d - e).days) <= 20]
+        return p[0] if p else np.nan
+    df["sh"] = [acciones(e) for e in df.index]
     df["fuente"] = "SEC"
     return df
 
@@ -689,7 +707,7 @@ def main():
                                     for c_ in ["deuda", "caja", "recompras", "dividendos", "emisiones", "sbc", "id", "m_id"]:
                                         if z.get(c_) is not None:
                                             x[c_] = z[c_]
-                                    for c_ in ["bruto", "ebit", "ebitda", "id", "m_bruto", "m_ebit", "m_id", "capex", "fcf"]:
+                                    for c_ in ["bruto", "ebit", "ebitda", "id", "m_bruto", "m_ebit", "m_id", "capex", "fcf", "acciones"]:
                                         if x.get(c_) is None and z.get(c_) is not None:
                                             x[c_] = z[c_]
                                     if x.get("fcf") is not None and x.get("sbc") is not None:
