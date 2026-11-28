@@ -1,54 +1,54 @@
 {
-"actualizado": "2026-11-17",
+"actualizado": "2026-11-28",
 "empresas": {
 "NVDA": {
- "fecha": "2026-11-17",
- "tesis": "El negocio está mejor que nunca, pero se quedó sin su fundador: Jensen Huang renunció el 12/11 y el balance del 17/11 es el primero sin él.",
+ "fecha": "2026-11-28",
+ "tesis": "El negocio nunca anduvo mejor y la acción está 47% abajo de su máximo: el mercado castiga la salida de Jensen Huang, la demanda de inversores y el miedo a que la inversión en IA se frene.",
  "bull": [
   [
-   "Barata para lo que crece",
-   "Cotiza a unas 10 veces la ganancia esperada del año próximo con ventas que casi se duplican. Ojo: un P/E esperado tan bajo también puede significar que el mercado duda de que esas ganancias se sostengan."
+   "Balance récord",
+   "Ventas de US$ 115.800 millones en el trimestre, +103% en un año, y US$ 7.800 millones arriba de su propia guía. Para el próximo trimestre espera US$ 130.000 millones."
   ],
   [
-   "Vera Rubin en plena producción",
-   "El chip nuevo ya aporta cerca de un quinto de las ventas de centros de datos, con pedidos de todos los grandes clientes."
+   "Vera Rubin arrancó fuerte",
+   "La nueva plataforma ya se entrega a las grandes nubes de IA y la empresa subió su expectativa de crecimiento para el año fiscal 2028 a cerca de 75%."
   ],
   [
-   "Los clientes siguen gastando",
-   "Las ventas de centros de datos pasaron de US$ 51.000 a 89.000 millones en un año; Microsoft solo invirtió US$ 39.400 millones en el trimestre."
+   "Barata contra su propio crecimiento",
+   "Cotiza a 7,6 veces la ganancia esperada para el año que viene, con analistas que esperan +72% de ganancia y subieron 28% sus estimaciones en 90 días."
   ],
   [
-   "Lo malo ya está en el precio",
-   "Escándalo, márgenes y miedo a la burbuja: un buen pronóstico puede disparar el rebote. En el balance anterior subió 8,7% al día siguiente."
+   "Recompras enormes",
+   "Devolvió US$ 28.100 millones a los accionistas en el trimestre y le quedan US$ 227.000 millones autorizados para recomprar acciones."
   ]
  ],
  "bear": [
   [
-   "Márgenes en baja",
-   "La memoria se encareció más rápido de lo previsto: el margen bruto baja de 75% a 74% y tocaría piso en 71–72%. Lo que gana la memoria lo pierde Nvidia."
+   "Sin su fundador",
+   "Huang renunció el 12/11 sin una explicación completa; Colette Kress es CEO interina y también sigue de CFO. Hay una demanda colectiva de inversores y el directorio contrató a un ex fiscal federal."
   ],
   [
-   "Se fue Jensen Huang",
-   "Renunció el 12/11 como CEO y director, después del escándalo con una mujer acusada de ser espía china y reportes de una segunda relación con una ejecutiva. La CFO Colette Kress es CEO interina y el directorio busca reemplazo. La acción llegó a abrir 8% abajo."
+   "El margen empieza a bajar",
+   "El margen bruto pasó de 75% a 74,8% y la guía apunta a 71% para el próximo trimestre, por el arranque de Rubin."
   ],
   [
-   "Restricciones a China",
-   "El Congreso empuja leyes para rastrear chips y cerrar el acceso remoto desde el sudeste asiático."
+   "Financia a sus propios clientes",
+   "Da garantías y comparte ingresos con nubes de IA más chicas (neoclouds) para que le compren. Si esas empresas tienen problemas, el riesgo vuelve a Nvidia."
   ],
   [
-   "Tasas y tendencia",
-   "Con la Fed por subir y la tasa a 10 años en 5,15%, el mercado paga menos por crecimiento. La acción perforó el piso de US$ 170 y está 20% debajo de su media de 200 ruedas."
+   "Sin China",
+   "La guía no incluye ventas de chips para centros de datos en China."
   ]
  ],
- "practica": "Superar las estimaciones no alcanza: el mercado ya espera 2,60 por acción. Lo que mueve es el pronóstico, el tono sobre márgenes y China, y qué dice la conducción interina sobre la sucesión. Para entrar, mejor en dos partes: una antes y otra después del balance.",
+ "practica": "No es una idea cargada. Los números sostienen el negocio; lo que pesa es la incertidumbre de gobierno. Para clientes que no la tienen, conviene esperar a que se nombre un CEO definitivo; para los que la tienen, no es momento de vender en pánico.",
  "mirar": [
   [
-   "2026-11-17",
-   "Balance del tercer trimestre, después del cierre"
+   "2026-12-23",
+   "Pago de dividendo"
   ],
   [
-   "2026-12-09",
-   "Decisión de la Fed"
+   "2027-02-24",
+   "Balance del trimestre"
   ]
  ]
 },
@@ -805,53 +805,61 @@
  ]
 },
 "MU": {
- "fecha": "2026-11-15",
- "tesis": "La mejor nota del analizador en el mejor momento del ciclo de la memoria: el UW apuesta a que el pico está cerca.",
+ "fecha": "2026-11-28",
+ "tesis": "Gana como nunca, pero TrendForce ya pone fecha al techo del ciclo: subas de precio cada vez más chicas en 2027 y bajas en 2028. El UW apuesta a que la acción lo sigue anticipando.",
  "bull": [
   [
-   "Números extraordinarios",
-   "Ventas +379% contra un año atrás y margen operativo de 81%. P/E esperado de 4."
+   "Contratos firmados",
+   "Más del 75% de lo que va a vender en su año fiscal 2027 está comprometido con clientes, y tiene contratos de largo plazo que obligan a pagar aunque no retiren."
   ],
   [
-   "La IA consume memoria",
-   "Los chips de IA usan memoria de alta velocidad (HBM) y la oferta no alcanza: los precios subieron fuerte."
+   "Memoria a medida para Nvidia",
+   "Diseña junto a Nvidia una HBM4E a medida: es más difícil de reemplazar que la memoria común."
   ],
   [
-   "Analistas siguen subiendo",
-   "+13% las estimaciones en 90 días y 101% de potencial."
+   "Guía muy fuerte",
+   "Para el trimestre que reporta el 17/12 espera ventas de US$ 61.500 millones y un margen bruto de 86%."
+  ],
+  [
+   "Muy castigada",
+   "Está 51% abajo de su máximo mientras los analistas suben estimaciones: +22% para el año que viene en 90 días."
   ]
  ],
  "bear": [
   [
-   "El analizador ya lo descuenta",
-   "Hoy gana 75 de cada 100 que vende contra 24 en un año normal: con margen normal, el P/E sería 29 y no 10. Por eso su nota de valuación bajó."
+   "Gana como en un pico",
+   "Hoy gana 75 de cada 100 que vende; en un año normal gana 24. Con margen normal, el P/E sería 24 y no 3."
   ],
   [
-   "Así se ven los picos",
-   "La memoria es el sector más cíclico: en 2018 y 2022 el P/E estaba en mínimos justo en el techo. Un P/E de 4 suele anticipar que la ganancia va a caer."
+   "TrendForce le puso fecha",
+   "El 25/11 bajó su pronóstico: subas de DRAM cada vez más chicas en 2027, planas en el segundo semestre y bajas en 2028."
+  ],
+  [
+   "La NAND ya cae",
+   "El precio inmediato del chip NAND de 512Gb cayó cerca de 38% desde marzo y TrendForce espera bajas de precio de contrato desde enero."
   ],
   [
    "Inventarios subiendo",
-   "Los inventarios de Micron subieron a 131 días, arriba de su promedio de 123: la misma señal que apareció cerca de los picos anteriores."
-  ],
-  [
-   "Precios spot aflojan",
-   "Los precios de memoria en el mercado inmediato empezaron a ceder, aunque los contratos siguen altos."
+   "Los inventarios subieron a 131 días, arriba de su promedio de 123: la misma señal que apareció cerca de los picos anteriores."
   ],
   [
    "Todos amplían fábricas",
-   "SK Hynix, Samsung y Micron invierten récord: en 2–3 años sobra capacidad."
+   "Micron invirtió US$ 30.700 millones en 12 meses (+94%), igual que Samsung y SK Hynix: en uno o dos años puede sobrar memoria."
   ]
  ],
- "practica": "El UW va contra la nota, pero tiene argumento. No es para estar vendido: es para no sumar más y tomar ganancia si el cliente tiene mucho. El balance del 23/12 dirá si el ciclo sigue.",
+ "practica": "El UW sigue firme. No es para estar vendido: es para no sumar y tomar ganancia si el cliente tiene mucho. El balance del 17/12 define si los contratos sostienen precios y márgenes en 2027.",
  "mirar": [
-  [
-   "2026-12-23",
-   "Balance del trimestre"
-  ],
   [
    "2026-12-10",
    "Ventas mensuales de Nanya y TSMC (señal del ciclo)"
+  ],
+  [
+   "2026-12-17",
+   "Balance del trimestre"
+  ],
+  [
+   "2026-12-31",
+   "Pronóstico de TrendForce para ene–mar"
   ]
  ]
 },
@@ -903,49 +911,57 @@
  ]
 },
 "SKHY": {
- "fecha": "2026-11-16",
- "tesis": "El líder de la memoria para IA en su mejor momento histórico: gana 80 de cada 100 que vende, pero es el sector más cíclico de todos.",
+ "fecha": "2026-11-28",
+ "tesis": "La líder de la memoria para IA, con resultados récord y el mismo riesgo de ciclo que Micron: cayó 62% desde su máximo aunque gana 80 de cada 100 que vende.",
  "bull": [
   [
-   "Números récord",
-   "Ventas del trimestre de más de 100 billones de wones (+328% en un año) con margen operativo de 80%."
+   "Líder en HBM4",
+   "Dice que en el cuarto trimestre la HBM4 ya supera a la generación anterior en volumen y ventas, con rendimientos de fabricación mejores que lo planeado."
   ],
   [
-   "Vendido por adelantado",
-   "Tiene contratos por más de la mitad de su capacidad de 2027 y 2028, y espera falta de memoria hasta 2030."
+   "Capacidad vendida",
+   "Tiene contratos de largo plazo con 14 clientes que cubren más de la mitad de su capacidad de 2027 y 2028."
   ],
   [
    "Devuelve mucho",
-   "Planea devolver unos 100 billones de wones en 2026 entre dividendos y recompras."
+   "Anunció un plan de retorno al accionista de 100 billones de wones para 2026."
   ],
   [
-   "Muy barata",
-   "P/E esperado de 2,3: la más barata de todo el analizador."
+   "Precio de liquidación",
+   "Cotiza a cerca de 2 veces la ganancia esperada para el año que viene."
   ]
  ],
  "bear": [
   [
-   "Así se ven los picos",
-   "En memoria, un P/E bajísimo suele anticipar que las ganancias van a caer: el mercado no paga ganancias récord que cree pasajeras."
+   "Margen de pico",
+   "Gana 80 de cada 100 que vende. Con un margen normal, el analizador estima un P/E de 16,5 y no de 4."
   ],
   [
-   "Señales de enfriamiento",
-   "Kioxia avisó que la suba de precios del flash se está apagando y los precios spot de memoria aflojaron."
+   "TrendForce ve el techo",
+   "Espera que los precios de DRAM queden planos en el segundo semestre de 2027 y bajen en 2028."
   ],
   [
-   "Muy volátil",
-   "Volatilidad de 93% anual y −58% desde su máximo en dólares."
+   "La empresa dice que falta hasta 2030",
+   "Es lo que dicen los fabricantes en cada pico: en 2018 y 2022 también se hablaba de faltantes largos."
   ],
   [
-   "Todos amplían",
-   "Samsung, Micron y la propia SK Hynix invierten récord: en unos años puede sobrar capacidad."
+   "Corea pesa",
+   "Cotiza en Seúl y el CEDEAR suma el riesgo del won y del mercado coreano, que cayó fuerte en noviembre."
   ]
  ],
- "practica": "Es la forma más directa de jugar el ciclo de la memoria. Igual que con Micron, no conviene sumar fuerte ahora: si el cliente ya tiene, tomar algo de ganancia.",
+ "practica": "Misma lectura que Micron: no es momento de sumar memoria. Si un cliente quiere exposición al ciclo, mejor una sola de las dos y en tamaño chico.",
  "mirar": [
   [
+   "2026-12-10",
+   "Ventas mensuales de Nanya y TSMC (señal del ciclo)"
+  ],
+  [
+   "2026-12-31",
+   "Pronóstico de TrendForce para ene–mar"
+  ],
+  [
    "2027-01-27",
-   "Próximo balance"
+   "Balance del trimestre"
   ]
  ]
 },
@@ -1753,49 +1769,49 @@
  ]
 },
 "GLOB": {
- "fecha": "2026-11-16",
- "tesis": "La empresa de software de origen argentino que la IA puso en jaque: dejó de crecer, pero está muy barata.",
+ "fecha": "2026-11-28",
+ "tesis": "La argentina más barata del universo con nota de valuación 9: el negocio tradicional se achica y la apuesta es que los AI Pods crezcan lo suficiente para reemplazarlo.",
  "bull": [
   [
+   "AI Pods duplicando",
+   "Sus equipos de IA llegaron a ventas anualizadas de US$ 106,6 millones, más del doble que el trimestre anterior, y espera superar US$ 130 millones a fin de año."
+  ],
+  [
    "Muy barata",
-   "P/E esperado de 7 y flujo libre de 11% del valor por año: nota de valuación 9,3."
+   "P/E de 6,8 con la ganancia esperada: nota de valuación 9,0."
   ],
   [
-   "Se reinventa con IA",
-   "Sus servicios de IA (Glob.AI) crecen fuerte y cobran por resultado en vez de por hora."
+   "Más eficiente",
+   "Redujo 10% el personal y la venta por empleado es récord."
   ],
   [
-   "Rebote en marcha",
-   "+25% en 3 meses y 11% arriba de su media de 200 ruedas."
-  ],
-  [
-   "Mucho corto",
-   "26% de las acciones están apostadas a la baja: una buena noticia puede generar suba fuerte."
+   "Cumplió",
+   "Ventas y ganancia exactamente en línea con lo que había prometido; la acción subió 4,1% al día siguiente."
   ]
  ],
  "bear": [
   [
-   "Dejó de crecer",
-   "Ventas planas contra un año atrás; bajó el pronóstico del año."
+   "El negocio se achica",
+   "Ventas -1% en el trimestre y la guía del año implica una baja de 0,7% a 1,1%."
   ],
   [
-   "La IA amenaza el negocio",
-   "Si la IA escribe código, las empresas necesitan menos programadores contratados por hora."
+   "Menos margen",
+   "El margen operativo ajustado bajó a 14,1% desde 15,5%."
   ],
   [
-   "Márgenes en baja",
-   "El margen bruto cayó y despidió al 9% del personal."
+   "Más concentrada",
+   "Los 10 clientes más grandes ya son el 31% de las ventas."
   ],
   [
-   "Analistas bajando",
-   "Bajaron 5% la ganancia esperada en 90 días."
+   "La IA también compite",
+   "Las herramientas de IA pueden reemplazar parte del trabajo que hoy se paga por hora."
   ]
  ],
- "practica": "Apuesta de valor con riesgo de trampa. El balance del 19/11 dirá si la IA ya compensa la caída del negocio viejo.",
+ "practica": "Barata con razón. Para el cliente que la quiere por cercanía, posición chica: la señal a esperar es que las ventas vuelvan a crecer.",
  "mirar": [
   [
-   "2026-11-19",
-   "Balance del tercer trimestre"
+   "2027-02-25",
+   "Balance del trimestre"
   ]
  ]
 },
@@ -2117,45 +2133,49 @@
  ]
 },
 "BABA": {
- "fecha": "2026-11-16",
- "tesis": "El gigante chino del comercio y la nube: barato y con IA propia, pero gasta fuerte en una guerra de entregas rápidas.",
+ "fecha": "2026-11-28",
+ "tesis": "La nube de IA de Alibaba acelera a 53% y la entrega rápida pierde menos, pero la acción cayó 54% desde su máximo por la inversión enorme y el riesgo China.",
  "bull": [
   [
+   "Nube de IA acelerando",
+   "Las ventas de nube y cómputo de IA crecieron 53%, a 61.000 millones de yuanes, más rápido que el 45% del trimestre anterior."
+  ],
+  [
+   "Mejor rentabilidad",
+   "La ganancia operativa ajustada se triplicó por menores pérdidas en entrega rápida y mejores márgenes en la nube."
+  ],
+  [
+   "Chips propios",
+   "Planea separar y listar en Hong Kong a T-Head, su fabricante de chips: puede mostrar un valor oculto."
+  ],
+  [
    "Barata",
-   "P/E esperado de 10 y analistas que ven 95% de potencial."
-  ],
-  [
-   "Nube e IA",
-   "Su nube crece con la demanda de IA en China y tiene sus propios modelos (Qwen)."
-  ],
-  [
-   "Devuelve",
-   "Paga dividendo y recompra acciones."
+   "P/E de 9 con la ganancia esperada y los analistas ven 100% de potencial."
   ]
  ],
  "bear": [
   [
-   "Guerra de entregas",
-   "Pierde plata compitiendo en entregas en minutos con Meituan y JD: el margen operativo cayó de 14% a 7%."
+   "Gasta más de lo que genera",
+   "La inversión subió 60% a 50.500 millones de yuanes en el trimestre: la construcción de IA consume más caja de lo que entra."
   ],
   [
-   "Último balance flojo",
-   "La ganancia quedó 21% debajo de lo esperado."
+   "Ganancia por debajo",
+   "La ganancia por acción quedó 26% debajo de lo esperado."
+  ],
+  [
+   "Pérdidas en IA",
+   "La división de laboratorios y aplicaciones de IA perdió 10.500 millones de yuanes."
   ],
   [
    "Riesgo China",
-   "Regulación, tensión con EE.UU. y economía china floja."
-  ],
-  [
-   "Tendencia muy débil",
-   "−46% desde el máximo, nota de tendencia 2,6."
+   "Guerra de precios en comercio electrónico y riesgo regulatorio y geopolítico."
   ]
  ],
- "practica": "Apuesta de valor a China. El balance del 19/11 dirá si la guerra de entregas empieza a ceder.",
+ "practica": "Si se quiere China, es la mejor de las opciones del universo por la nube de IA. Posición chica y con horizonte largo: la tendencia sigue en contra.",
  "mirar": [
   [
-   "2026-11-19",
-   "Balance trimestral"
+   "2027-02-17",
+   "Balance del trimestre"
   ]
  ]
 },
@@ -2203,45 +2223,49 @@
  ]
 },
 "WMT": {
- "fecha": "2026-11-16",
- "tesis": "El supermercado más grande del mundo se volvió también una empresa de tecnología y publicidad: sólido, pero carísimo.",
+ "fecha": "2026-11-28",
+ "tesis": "Walmart sigue ganando mercado gracias al online y la publicidad, y subió la guía por tercera vez; el problema es el precio: 40 veces la ganancia esperada para un supermercado.",
  "bull": [
   [
-   "Gana clientes",
-   "Las ventas por internet crecen 24% y la publicidad 38%: dos negocios que dejan más margen."
+   "El online empuja",
+   "Las ventas online crecieron 17% en el mundo y 23% en EE.UU., y ya son el 24% de las ventas totales."
   ],
   [
-   "Defensivo",
-   "Cuando la economía se complica, la gente compra más en Walmart."
+   "Tercera suba de guía",
+   "Espera vender 4,9% a 5,2% más en el año, con ganancia por acción de US$ 2,84 a 2,89."
   ],
   [
-   "Subió el pronóstico",
-   "En agosto subió lo que espera vender y ganar en el año."
+   "Publicidad",
+   "El negocio de publicidad creció 25% y deja mucho más margen que vender productos."
+  ],
+  [
+   "Defensiva",
+   "Es de las pocas acciones con las cuatro medias móviles subiendo: el mercado la busca como refugio."
   ]
  ],
  "bear": [
   [
    "Muy cara",
-   "P/E de 46 para una empresa que crece 4–5%: nota de valuación 3,6."
+   "P/E de 40 con la ganancia esperada para crecer 12%: nota de valuación 3,6."
   ],
   [
-   "Costos",
-   "Avisó más de US$ 2.000 millones de costos extra por el combustible."
+   "Pocos analistas ven suba",
+   "El potencial promedio es de 6%."
   ],
   [
-   "Sin potencial según analistas",
-   "Los analistas ven solo 2% de potencial."
+   "Inversión que pesa",
+   "La nueva membresía combinada de Walmart+ y Sam's Club va a frenar el crecimiento de la ganancia operativa hasta el tercer trimestre del año fiscal 2028."
   ],
   [
-   "Cayó con el último balance",
-   "Bajó 9% después del balance de agosto."
+   "Defensiva cara",
+   "Es justo el tipo de acción que el informe Value vs. Growth recomienda vender: refugio caro."
   ]
  ],
- "practica": "Excelente empresa a precio exigente. Para carteras conservadoras, mejor esperar una baja.",
+ "practica": "Negocio excelente, precio exigente. Para el que la tiene, es candidata a tomar ganancia parcial y rotar a growth más barato, en línea con el informe.",
  "mirar": [
   [
-   "2026-11-19",
-   "Balance trimestral"
+   "2027-02-18",
+   "Balance del trimestre"
   ]
  ]
 },
@@ -3615,41 +3639,49 @@
  ]
 },
 "JD": {
- "fecha": "2026-11-16",
- "tesis": "El comercio electrónico chino con logística propia: baratísimo, pero metido en la guerra de entregas rápidas que destruye márgenes.",
+ "fecha": "2026-11-28",
+ "tesis": "JD volvió a ganar plata recortando los subsidios a la entrega de comida, pero vende poco más que hace un año y quemó caja en el trimestre.",
  "bull": [
   [
-   "Barato",
-   "P/E esperado de 7 y dividendo de 3,6%."
+   "Vuelve la ganancia",
+   "Pasó de perder 1.100 millones de yuanes a ganar 5.200 millones en el trimestre, sobre todo por gastar 26% menos en marketing."
   ],
   [
-   "Caja",
-   "Tiene mucha más caja que deuda."
+   "Las pérdidas nuevas se achican",
+   "Las pérdidas de la entrega de comida bajaron más de la mitad y las de los negocios nuevos pasaron de 15.700 a 9.600 millones de yuanes."
   ],
   [
-   "Analistas ven potencial",
-   "Potencial de 39% y recomendación de compra fuerte."
+   "Muy barata",
+   "P/E de 6 con la ganancia esperada y 49% de potencial según los analistas."
+  ],
+  [
+   "Europa",
+   "Desde el 12/11 controla a la dueña de MediaMarkt y Saturn."
   ]
  ],
  "bear": [
   [
-   "Margen casi cero",
-   "Margen operativo de 0–1%: la guerra de entregas con Alibaba y Meituan le come la ganancia."
-  ],
-  [
    "Crece poco",
-   "Ventas +3% en el último trimestre."
+   "Las ventas subieron 3,5%; el margen del negocio principal bajó a 5,8%."
   ],
   [
-   "Riesgo China",
-   "Economía china floja y tensión con EE.UU."
+   "Quemó caja",
+   "El flujo libre del trimestre fue negativo en 23.900 millones de yuanes."
+  ],
+  [
+   "Guerra de precios",
+   "Compite con Alibaba y Meituan en una guerra de precios que aprieta los márgenes de todos."
+  ],
+  [
+   "No convenció",
+   "Ganó menos de lo esperado y la acción cayó 7,7% al día siguiente."
   ]
  ],
- "practica": "Valor chino con dividendo, pero sin disparador. El balance del 17/11 dirá si la guerra de precios cede.",
+ "practica": "Barata por motivos: consumo chino flojo y competencia. Solo para el que quiere exposición a China y acepta volatilidad; en ese caso, Alibaba tiene una historia de IA más fuerte.",
  "mirar": [
   [
-   "2026-11-17",
-   "Balance trimestral"
+   "2027-03-04",
+   "Balance del trimestre"
   ]
  ]
 },
@@ -3740,49 +3772,49 @@
  ]
 },
 "DISN": {
- "fecha": "2026-11-16",
- "tesis": "Parques, películas y streaming: Disney recuperó ganancias y la tendencia, pero crece poco.",
+ "fecha": "2026-11-28",
+ "tesis": "Disney volvió a crecer con parques récord y streaming que ya da ganancia; el nuevo CEO promete crecer más de 10% la ganancia por acción en 2027 y recomprar US$ 9.000 millones.",
  "bull": [
   [
-   "Streaming ya gana",
-   "Disney+ y Hulu pasaron a ganar plata."
+   "Parques récord",
+   "Experiencias (parques y cruceros) facturó US$ 10.100 millones en el trimestre, +15%, con la ganancia operativa +20%."
   ],
   [
-   "Parques fuertes",
-   "Los parques y cruceros siguen siendo la máquina de caja."
+   "El streaming ya gana",
+   "Las ventas de streaming subieron 19% y el negocio cerró el año fiscal con margen operativo de 11,5%."
   ],
   [
-   "Precio razonable",
-   "P/E esperado de 16."
+   "Guía y premio al accionista",
+   "Para 2027 espera crecimiento de dos dígitos en la ganancia por acción, recompras por unos US$ 9.000 millones y sube el dividendo a US$ 2 por acción."
   ],
   [
-   "Tendencia",
-   "+15% en 3 meses, cerca de su máximo."
+   "Tendencia a favor",
+   "Está 4% abajo de su máximo y es de las pocas grandes con las medias móviles subiendo."
   ]
  ],
  "bear": [
   [
-   "Crece poco",
-   "Ventas +5% esperadas."
+   "Semana extra",
+   "El año fiscal tuvo 53 semanas: sin la semana extra, la ganancia operativa creció 10%, no 43%."
   ],
   [
-   "TV tradicional en caída",
-   "Los canales de cable (ESPN, ABC) pierden abonados."
+   "Asia y turistas",
+   "Bajó la asistencia en Hong Kong y Shanghái, y siguen llegando menos turistas extranjeros a los parques de EE.UU."
   ],
   [
-   "Consumo",
-   "Si el consumo se enfría, los parques son de lo primero que se resiente."
+   "Ya no está barata",
+   "P/E de 14 con la ganancia esperada y potencial de los analistas de 11%."
   ],
   [
-   "Analistas tibios",
-   "Potencial de 7%."
+   "Cambio de mando",
+   "El nuevo CEO busca recortar US$ 3.000 millones de costos: suele traer ruido en la ejecución."
   ]
  ],
- "practica": "Marca de calidad a precio razonable para carteras moderadas. Balance esta semana.",
+ "practica": "Buena para el perfil moderado que quiere consumo con algo de crecimiento. Sin urgencia: tras la suba, mejor entrar de a poco.",
  "mirar": [
   [
-   "2026-11-17",
-   "Balance trimestral"
+   "2027-02-01",
+   "Balance del trimestre"
   ]
  ]
 },
@@ -3916,45 +3948,49 @@
  ]
 },
 "PANW": {
- "fecha": "2026-11-16",
- "tesis": "El líder de ciberseguridad empresarial: crece fuerte con compras, pero su ganancia contable está aplastada por ellas.",
+ "fecha": "2026-11-28",
+ "tesis": "Ciberseguridad creciendo a 39% con CyberArk adentro y la guía en alza: la mejor tendencia del analizador, pero se paga 70 veces la ganancia esperada.",
  "bull": [
   [
-   "Crece fuerte",
-   "Ventas +34% en el último trimestre."
+   "Récord",
+   "Ventas +39% en un año, a US$ 3.440 millones, y los ingresos recurrentes de sus productos nuevos +66%, a US$ 9.730 millones."
   ],
   [
-   "Mucha caja",
-   "Flujo libre de 36% de las ventas."
+   "Subió la guía",
+   "Ahora espera ventas de US$ 14.520 a 14.570 millones en el año fiscal y ganancia por acción de US$ 4,26 a 4,30."
   ],
   [
-   "Tendencia fuerte",
-   "+53% en un año, nota de tendencia 8,8."
+   "La IA trae demanda",
+   "Ataques más rápidos con IA empujan a las empresas a plataformas de seguridad integradas; sumó CyberArk (identidad) y compra Applied Compute."
   ],
   [
-   "Ciberseguridad",
-   "Gasto que las empresas no recortan."
+   "Tendencia",
+   "Nota de tendencia 9,5 y +72% en 12 meses."
   ]
  ],
  "bear": [
   [
-   "Cara",
-   "P/E esperado de 66."
+   "Muy cara",
+   "P/E de 70 con la ganancia esperada: nota de valuación 2,6, de las más bajas del universo."
   ],
   [
-   "Ganancia contable baja",
-   "La compra de CyberArk aplastó el margen operativo de 20% a 5%."
+   "Margen contable cae",
+   "La ganancia operativa contable bajó de US$ 309 a 96 millones por los costos de las compras."
   ],
   [
-   "Cayó con el último balance",
-   "Bajó 9% después de agosto."
+   "Analistas",
+   "Bajaron 14% la ganancia esperada para el año que viene en 90 días, por el efecto de las adquisiciones."
+  ],
+  [
+   "Integraciones",
+   "Dos compras grandes en un año: si la integración falla, el múltiplo no lo perdona."
   ]
  ],
- "practica": "Calidad de crecimiento a precio alto. Balance el 18/11.",
+ "practica": "Calidad de crecimiento a precio de crecimiento. Para clientes agresivos y en posiciones chicas; si se quiere ciberseguridad, conviene entrar en caídas.",
  "mirar": [
   [
-   "2026-11-18",
-   "Balance trimestral"
+   "2027-02-16",
+   "Balance del trimestre"
   ]
  ]
 },
@@ -4881,45 +4917,45 @@
  ]
 },
 "BIDU": {
- "fecha": "2026-11-16",
- "tesis": "El Google de China que apuesta a la IA y los autos autónomos: barato, pero su negocio de publicidad se achica.",
+ "fecha": "2026-11-28",
+ "tesis": "Una empresa en transición: la nube de IA casi duplica sus ventas, pero la publicidad del buscador, su negocio de siempre, se cae 22% y se lleva puesto el margen.",
  "bull": [
   [
-   "IA propia",
-   "Tiene sus propios modelos (Ernie) y robotaxis (Apollo Go) operando en China."
+   "La nube de IA vuela",
+   "Las ventas de infraestructura de nube de IA subieron 94% en un año, a 8.200 millones de yuanes, con más clientes que pagan por adelantado y contratos más largos."
   ],
   [
-   "Barato",
-   "P/E esperado de 11 y mucha caja."
+   "La IA ya es más de la mitad",
+   "Los negocios ligados a la IA son el 53% de los ingresos del negocio principal, contra 39% un año antes."
   ],
   [
-   "Analistas ven potencial",
-   "Potencial de 68%."
+   "Barata",
+   "P/E de 10 con la ganancia esperada y 62% abajo de su máximo: mucho de lo malo ya está en el precio."
   ]
  ],
  "bear": [
   [
-   "Publicidad en baja",
-   "Su buscador pierde publicidad frente a apps como las de ByteDance."
+   "Se cae la publicidad",
+   "Los ingresos por publicidad bajaron 22% en un año. Las respuestas con IA en el buscador todavía no se monetizan como los avisos de siempre."
   ],
   [
-   "Último balance flojo",
-   "Ganó 27% menos de lo esperado y la acción cayó 13%."
+   "Margen muy flaco",
+   "Las ventas totales bajaron 1% y el margen operativo ajustado quedó en 6%, por los costos de la nube."
   ],
   [
-   "Analistas bajando",
-   "Bajaron 27% las estimaciones."
+   "Analistas en retirada",
+   "Bajaron 18% la ganancia esperada para este año y 27% para el próximo en 90 días."
   ],
   [
-   "Tendencia destruida",
-   "Nota de tendencia 2,0."
+   "Riesgo China",
+   "Competencia feroz en IA (Alibaba, Tencent, ByteDance) y riesgo regulatorio y de controles a los chips."
   ]
  ],
- "practica": "Valor chino sin disparador claro. Balance hoy 16/11.",
+ "practica": "No hay apuro. La transición puede salir bien, pero los analistas siguen bajando estimaciones: conviene esperar a que eso frene antes de entrar.",
  "mirar": [
   [
-   "2026-11-16",
-   "Balance trimestral"
+   "2027-02-25",
+   "Balance del trimestre"
   ]
  ]
 },
@@ -5767,41 +5803,45 @@
  ]
 },
 "HD": {
- "fecha": "2026-11-16",
- "tesis": "El mayor vendedor de materiales para el hogar: calidad, pero el mercado inmobiliario de EE.UU. está frenado por las tasas.",
+ "fecha": "2026-11-28",
+ "tesis": "La mejor venta comparable del año, pero el margen sigue bajando: Home Depot depende de que se reactive la vivienda en EE.UU., y con tasas altas eso no llega.",
  "bull": [
   [
+   "Ventas mejorando",
+   "Las ventas comparables subieron 2,2% (se esperaba cerca de 1,5%), el mejor trimestre del año, y las ventas online 13%."
+  ],
+  [
+   "Subió la guía de ventas",
+   "Ahora espera crecer cerca de 4,5% en el año, el techo del rango anterior."
+  ],
+  [
    "Calidad",
-   "Margen operativo de 13% y dividendo de 2,7%."
-  ],
-  [
-   "Si bajan las tasas",
-   "Un mercado inmobiliario más activo la beneficia directo."
-  ],
-  [
-   "Profesionales",
-   "Crece en ventas a constructores profesionales."
+   "Empresa líder, con buena rentabilidad y dividendo sólido: nota de calidad 7,5."
   ]
  ],
  "bear": [
   [
-   "Tasas altas",
-   "Con la Fed subiendo, la gente compra y remodela menos casas."
+   "Menos clientes",
+   "Las transacciones bajaron 0,5%: venden más por ticket, no a más gente."
   ],
   [
-   "Crece poco",
-   "Ventas +3% esperadas."
+   "El margen baja",
+   "El margen operativo ajustado bajó a 13,0% desde 13,3%, y la ganancia por acción del año crecería apenas 1,5%."
   ],
   [
-   "Deuda",
-   "Deuda neta de 2,2 veces EBITDA por compras."
+   "Cara para lo que crece",
+   "P/E de 21,5 con la ganancia esperada para crecer 5% el año que viene."
+  ],
+  [
+   "Cambio de CEO",
+   "Anunció un nuevo CEO en el mismo balance."
   ]
  ],
- "practica": "Calidad que espera que bajen las tasas. Balance el 17/11.",
+ "practica": "Es una apuesta a que bajen las tasas y se active la vivienda. Para eso hay opciones más baratas; no es prioridad.",
  "mirar": [
   [
-   "2026-11-17",
-   "Balance trimestral"
+   "2027-02-23",
+   "Balance del trimestre"
   ]
  ]
 },
