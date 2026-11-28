@@ -1,1 +1,10 @@
-Falta el secret SEC_UA
+
+1 Failed download:
+['AAPL']: OperationalError('database is locked')
+yfinance 1.8.0
+download 2y lote | filas 500 | ultimo valido 2026-11-19 00:00:00 | cola [94.39, None, None, None, None, None]
+download 10y lote | filas 2514 | ultimo valido 2026-11-19 00:00:00 | cola [94.39, None, None, None, None, None]
+download 10y solo | filas 446 | ultimo valido 2026-11-19 00:00:00 | cola [110.63, 101.14, 99.65, 97.03, 94.39, None]
+history 2y | filas 447 | ultimo valido 2026-11-19 00:00:00-05:00 | cola [101.14, 99.65, 97.03, 94.39, None, None]
+history start | filas 447 | ultimo valido 2026-11-19 00:00:00-05:00 | cola [101.14, 99.65, 97.03, 94.39, None, None]
+download start lote | filas 478 | ultimo valido 2026-11-19 00:00:00 | cola [94.39, None, None, None, None, None]
