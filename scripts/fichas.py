@@ -723,6 +723,10 @@ def main():
                     an = ajustar_acciones(an, k.splits.to_dict())
                 except Exception:
                     pass
+                if t == "BRK-B":
+                    for x_ in an:
+                        if x_.get("acciones") and x_["acciones"] < 1e8:
+                            x_["acciones"] = x_["acciones"] * 1500
                 fa = factor_acciones(an)
                 hist_pe = []
                 for x_ in an:
