@@ -692,8 +692,8 @@
   "industria": null,
   "pais": null,
   "moneda": "USD",
-  "mcap": 29730826240,
-  "fecha": "2026-11-21"
+  "mcap": 32715614208,
+  "fecha": "2026-11-28"
  },
  "FSLR": {
   "sector": "Technology",
@@ -1405,7 +1405,7 @@
   "pais": null,
   "moneda": null,
   "mcap": null,
-  "fecha": "2026-11-21"
+  "fecha": "2026-11-28"
  },
  "ORCL": {
   "sector": "Technology",
@@ -1477,7 +1477,7 @@
   "pais": null,
   "moneda": null,
   "mcap": null,
-  "fecha": "2026-11-21"
+  "fecha": "2026-11-28"
  },
  "PEP": {
   "sector": "Consumer Defensive",
@@ -2166,5 +2166,21 @@
   "moneda": "USD",
   "mcap": 63965421568,
   "fecha": "2026-11-14"
+ },
+ "BNY": {
+  "sector": "Financial Services",
+  "industria": "Banks - Diversified",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 100705992704,
+  "fecha": "2026-11-28"
+ },
+ "MRSH": {
+  "sector": "Financial Services",
+  "industria": "Insurance Brokers",
+  "pais": "United States",
+  "moneda": "USD",
+  "mcap": 103681138688,
+  "fecha": "2026-11-28"
  }
 }
