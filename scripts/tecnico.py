@@ -93,7 +93,7 @@ def descargar(tickers):
         df = None
         for intento in range(3):
             try:
-                df = yf.download(lote, period="15mo", interval="1d", auto_adjust=True,
+                df = yf.download(lote, period="2y", interval="1d", auto_adjust=True,
                                  progress=False, threads=True, group_by="column")
                 break
             except Exception as e:
@@ -117,14 +117,15 @@ def descargar(tickers):
     viejos = [t for t, f in ultimo.items() if f is None or (tope - f).days > 3]
     for t in viejos:
         try:
-            h = yf.Ticker(t).history(period="15mo", interval="1d", auto_adjust=True)
+            h = yf.Ticker(t).history(period="2y", interval="1d", auto_adjust=True)
         except Exception as e:
             print(f"reintento {t}: {e}", file=sys.stderr)
             continue
         if h is None or h.empty:
             continue
         h.index = pd.to_datetime(h.index).tz_localize(None).normalize()
-        if h.index.max() <= (ultimo.get(t) or pd.Timestamp.min):
+        lv = h["Close"].last_valid_index() if "Close" in h.columns else None
+        if lv is None or lv <= (ultimo.get(t) or pd.Timestamp.min):
             continue
         idx = out["Close"].index.union(h.index)
         for c in campos:
